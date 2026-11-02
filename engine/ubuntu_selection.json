@@ -1,0 +1,880 @@
+{
+  "schema": 1,
+  "date": "2026-11-02",
+  "platform": "Ubuntu 24.04",
+  "purpose": "Strict short-list from 125 uninstalled upstream GitHub prospects; no VPS action.",
+  "warning": "Source metadata and one runner APT check are NOT confirmation of functionality on user's VPS. Desktop candidates need GUI preflight and display.",
+  "rules": {
+    "allow_pirated": false,
+    "allow_paid_api_fallback": false,
+    "require_official_upstream": true,
+    "require_linux_evidence": true,
+    "require_license_review": true,
+    "require_ubuntu_host_certification": true,
+    "do_not_execute_discovered_code": true
+  },
+  "count": 41,
+  "tools": [
+    {
+      "id": "apktool",
+      "repo": "iBotPeaches/Apktool",
+      "category": "reverse",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "apktool",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "binwalk",
+      "repo": "ReFirmLabs/binwalk",
+      "category": "reverse",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "binwalk",
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "radare2",
+      "repo": "radareorg/radare2",
+      "category": "reverse",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "radare2",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "ffmpeg",
+      "repo": "FFmpeg/FFmpeg",
+      "category": "media",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "ffmpeg",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "imagemagick",
+      "repo": "ImageMagick/ImageMagick",
+      "category": "creative",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "imagemagick",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "libvips",
+      "repo": "libvips/libvips",
+      "category": "creative",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "libvips-tools",
+      "license": "LGPL-2.1",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "libreoffice",
+      "repo": "LibreOffice/core",
+      "category": "docs",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "libreoffice",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "pandoc",
+      "repo": "jgm/pandoc",
+      "category": "docs",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "pandoc",
+      "license": "GPL-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "tesseract",
+      "repo": "tesseract-ocr/tesseract",
+      "category": "docs",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "tesseract-ocr",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "ocrmypdf",
+      "repo": "OCRmyPDF/OCRmyPDF",
+      "category": "docs",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "ocrmypdf",
+      "license": "MPL-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "opencv",
+      "repo": "opencv/opencv",
+      "category": "vision",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "python3-opencv",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "ansible",
+      "repo": "ansible/ansible",
+      "category": "automation",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "ansible",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "ripgrep",
+      "repo": "BurntSushi/ripgrep",
+      "category": "dev",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "ripgrep",
+      "license": "Unlicense",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "ytdlp",
+      "repo": "yt-dlp/yt-dlp",
+      "category": "media",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "yt-dlp",
+      "license": "Unlicense",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "prometheus",
+      "repo": "prometheus/prometheus",
+      "category": "monitor",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "prometheus",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "wireshark",
+      "repo": "wireshark/wireshark",
+      "category": "reverse",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "tshark",
+      "license": "GPL-2.0",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "valkey",
+      "repo": "valkey-io/valkey",
+      "category": "data",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "headless_apt",
+      "selection_status": "apt_candidate_found_on_ubuntu2404_runner",
+      "installation_candidate": "valkey-server",
+      "license": "BSD-3-Clause",
+      "evidence": [
+        {
+          "kind": "ubuntu_runner_apt_cache",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41526210657"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": true
+    },
+    {
+      "id": "gimp",
+      "repo": "GNOME/gimp",
+      "category": "creative",
+      "priority": "core",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "gimp",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://www.gimp.org/downloads/"
+        }
+      ],
+      "runtime_note": "Official Linux builds; GUI or controlled batch processing",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "krita",
+      "repo": "KDE/krita",
+      "category": "creative",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "krita",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://krita.org/en/download/"
+        }
+      ],
+      "runtime_note": "Official Linux builds; GUI and OpenGL, 16GB RAM recommended",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "blender",
+      "repo": "blender/blender",
+      "category": "creative",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "blender",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html"
+        }
+      ],
+      "runtime_note": "CLI --background available; GPU acceleration optional, large jobs can need substantial resources",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "kdenlive",
+      "repo": "KDE/kdenlive",
+      "category": "media",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "kdenlive",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://docs.kdenlive.org/en/getting_started/installation.html"
+        }
+      ],
+      "runtime_note": "Official Linux AppImage/Flatpak, requires GUI/OpenGL; Ubuntu apt version may lag",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "scribus",
+      "repo": "scribusproject/scribus",
+      "category": "docs",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "scribus",
+      "license": "verify-license-before-use",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/scribusproject/scribus"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "darktable",
+      "repo": "darktable-org/darktable",
+      "category": "creative",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "darktable",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/darktable-org/darktable"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "freecad",
+      "repo": "FreeCAD/FreeCAD",
+      "category": "cad",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "freecad",
+      "license": "LGPL-2.1",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/FreeCAD/FreeCAD"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "openscad",
+      "repo": "openscad/openscad",
+      "category": "cad",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "openscad",
+      "license": "verify",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/openscad/openscad"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "librecad",
+      "repo": "LibreCAD/LibreCAD",
+      "category": "cad",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "librecad",
+      "license": "verify",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/LibreCAD/LibreCAD"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "qgis",
+      "repo": "qgis/QGIS",
+      "category": "geo",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "qgis",
+      "license": "GPL-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/qgis/QGIS"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "audacity",
+      "repo": "audacity/audacity",
+      "category": "audio",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "audacity",
+      "license": "verify",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/audacity/audacity"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "obs",
+      "repo": "obsproject/obs-studio",
+      "category": "media",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "obs-studio",
+      "license": "GPL-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/obsproject/obs-studio"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "lmms",
+      "repo": "LMMS/lmms",
+      "category": "audio",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "lmms",
+      "license": "GPL-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/LMMS/lmms"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "solvespace",
+      "repo": "solvespace/solvespace",
+      "category": "cad",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "solvespace",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/solvespace/solvespace"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "synfig",
+      "repo": "synfig/synfig",
+      "category": "animation",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "synfigstudio",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/synfig/synfig"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "openshot",
+      "repo": "openshot/openshot-qt",
+      "category": "media",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "openshot-qt",
+      "license": "verify",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/openshot/openshot-qt"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "calibre",
+      "repo": "kovidgoyal/calibre",
+      "category": "docs",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "calibre",
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/kovidgoyal/calibre"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "inkscape",
+      "repo": "inkscape/inkscape",
+      "category": "creative",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "desktop_candidate",
+      "selection_status": "awaiting_gui_apt_preflight",
+      "installation_candidate": "inkscape",
+      "license": "verify",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://wiki.inkscape.org/wiki/Installing_Inkscape"
+        }
+      ],
+      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "ghidra",
+      "repo": "NationalSecurityAgency/ghidra",
+      "category": "reverse",
+      "priority": "specialist",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/NationalSecurityAgency/ghidra/blob/master/GhidraDocs/GettingStarted.md"
+        }
+      ],
+      "runtime_note": "Requires 64-bit Java/JDK 25 in current Ghidra docs; Ubuntu apt JDK 21 not sufficient",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "jadx",
+      "repo": "skylot/jadx",
+      "category": "reverse",
+      "priority": "advanced",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/skylot/jadx/blob/master/README.md"
+        }
+      ],
+      "runtime_note": "Official CLI release ZIP; Java 11+ required, final runtime must be tested",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "rea",
+      "repo": "morluto/rea",
+      "category": "reverse",
+      "priority": "advanced",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/morluto/rea/blob/main/docs/installation.md"
+        }
+      ],
+      "runtime_note": "Node.js 22.23.4+ / 24.22.1+ / 26.12.1+ only; use separately pinned Node runtime",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "penpot",
+      "repo": "penpot/penpot",
+      "category": "design",
+      "priority": "advanced",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MPL-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://help.penpot.app/technical-guide/getting-started/"
+        }
+      ],
+      "runtime_note": "Self-host via Docker Compose, requires resources and a container runtime",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "ruflo",
+      "repo": "ruvnet/ruflo",
+      "category": "orchestration",
+      "priority": "advanced",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/ruvnet/ruflo"
+        }
+      ],
+      "runtime_note": "Orchestrator runtime; not a utility toolbox and not tested on VPS",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    },
+    {
+      "id": "comfyui",
+      "repo": "Comfy-Org/ComfyUI",
+      "category": "image-ai",
+      "priority": "advanced",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "GPL-3.0",
+      "evidence": [
+        {
+          "kind": "upstream_linux_install_or_candidate",
+          "url": "https://github.com/Comfy-Org/ComfyUI"
+        }
+      ],
+      "runtime_note": "GPU and model weights commonly required, cannot promise no-cost remotely",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "selected_for_auto_install": false
+    }
+  ]
+}
