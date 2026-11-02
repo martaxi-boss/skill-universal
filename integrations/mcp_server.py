@@ -43,5 +43,30 @@ def motor_execute(request: str, output: str, title: str = "Projeto Criativo", in
     """Execute only the bounded local website, SVG or static inspection task."""
     return json.dumps(execute(request, Path(output), title, Path(input_file) if input_file else None), ensure_ascii=False)
 
+
+
+# Ferrari v1 tools. No model or third-party hosting SDK is required here.
+from engine import ferrari as ferrari_engine
+
+@mcp.tool()
+def ferrari_doctor() -> str:
+    """Inspect Ubuntu host and real detected executables. Inventory, not certification."""
+    return json.dumps(ferrari_engine.doctor(), ensure_ascii=False)
+
+@mcp.tool()
+def ferrari_catalog(category: str = "") -> str:
+    """List upstream free-tool candidates, GitHub metadata, and binary detection."""
+    return json.dumps(ferrari_engine.inventory(category or None), ensure_ascii=False)
+
+@mcp.tool()
+def ferrari_plan(request: str) -> str:
+    """Route a user request to candidates without starting tools or charging providers."""
+    return json.dumps(ferrari_engine.plan(request), ensure_ascii=False)
+
+@mcp.tool()
+def ferrari_run(operation: str, output: str, input_file: str = "", title: str = "Novo Projeto") -> str:
+    """Run one supported typed Ubuntu operation; never shell commands from prompts."""
+    return json.dumps(ferrari_engine.run(operation, output, input_file or None, title), ensure_ascii=False)
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
