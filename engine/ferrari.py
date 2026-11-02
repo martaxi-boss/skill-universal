@@ -120,6 +120,7 @@ def ubuntu_selection():
                        "curated_tier": item["installation_tier"],
                        "curated_priority": item["priority"],
                        "curated_license": item["license"],
+                       "license_review_required": item.get("license_review_required", True),
                        "ubuntu_evidence": item["evidence"],
                        "package_candidate": item.get("installation_candidate"),
                        "runtime_note": item["runtime_note"],
@@ -249,6 +250,7 @@ def packages(profile="maximum",include_gui=True):
     base.update(p["package_candidate"] for p in approved
                 if p["category"] in cats[profile] and p.get("package_candidate")
                 and (include_gui or p["curated_tier"] != "desktop_candidate")
+                and not p["license_review_required"]
                 and p["curated_status"] in {
                     "apt_candidate_found_on_ubuntu2404_runner",
                     "gui_apt_candidate_found_on_ubuntu2404_runner"})
