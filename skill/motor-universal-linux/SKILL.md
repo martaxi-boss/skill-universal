@@ -12,11 +12,12 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 1. Compreender a tarefa, os ficheiros de entrada e o resultado pedido.
 2. Verificar a ligação autenticada ao motor (CLI, MCP do projeto ou workflow autorizado). A Skill não proporciona acesso SSH automaticamente.
 3. Pedir ao motor o diagnóstico e o plano: `python3 -m engine.ferrari doctor` e `python3 -m engine.ferrari plan 'pedido'`. Ler `engine/ferrari_registry.json`, `engine/ferrari_expansion.json` e `engine/catalog.json`; os dois registos novos totalizam 125 candidatos GitHub.
-4. Escolher ferramentas Ubuntu gratuitas e realmente instaladas. Confirmar formato, dependências, licença e recursos; não presumir acesso grátis ilimitado a APIs.
-5. Usar o executor local disponível, por exemplo web-template, svg-poster, pdf-text, image-resize, video-thumbnail, apk-decompile ou binary-strings. Nunca executar livremente texto do pedido como shell.
+4. **Filtragem obrigatória:** ler `engine/ubuntu_selection.json` e usar apenas os projetos selecionados. Os 125 itens de `engine/ferrari_registry.json` + `engine/ferrari_expansion.json` são inventário de investigação, **não** autorização para instalar. Exigir prova oficial de Linux e, antes da VPS, prova de pacote Ubuntu 24.04 ou instalação Linux oficial. Cada fornecedor requer licença livre confirmada, versões e recursos compatíveis.
+5. Escolher ferramentas Ubuntu gratuitas e realmente instaladas. Confirmar formato, dependências, licença e recursos; não presumir acesso grátis ilimitado a APIs.
+6. Usar o executor local disponível, por exemplo web-template, svg-poster, pdf-text, image-resize, video-thumbnail, apk-decompile ou binary-strings. Nunca executar livremente texto do pedido como shell.
 6. Se faltar ferramenta livre ou fornecedor, consultar `ferrari_alternatives` para um produto comercial conhecido e `ferrari_discover` para procurar alternativas licenciadas no GitHub. Avaliar licença, Linux/Ubuntu, arquitetura, dependências, RAM, GPU, manutenção e risco antes de instalar; NUNCA executar o código de um repositório encontrado apenas porque tem muitas estrelas. Implementar e testar o adaptador neste projeto; dizer o que falta.
-7. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
-8. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
+8. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
+9. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
 
 ## Domínios
 
@@ -27,3 +28,13 @@ Engenharia reversa legítima de compatibilidade é possível, mas não transform
 Comandos opcionais do motor: `python3 -m engine.ferrari discover 'linux open source CAD' --min-stars 100`, `python3 -m engine.ferrari alternatives 'Adobe Creative Cloud'`.  Nenhuma procura instala binários ou concede acesso à VPS.
 
 Documentação e critérios de certificação: docs/FERRARI.md no repositório do motor e references/workflows.md neste pacote Skill.
+
+## Política de qualidade e implantação
+
+- Uma Skill pessoal, com seleção por tipo de tarefa; não exigir outra Skill nem ferramentas proprietárias dos anfitriões.
+- Não recomendar repositórios arquivados, binários não verificados, licenças duvidosas ou sistemas sem prova de execução Linux. As estrelas são critério secundário.
+- Para REA, exigir Node.js na gama documentada; Ghidra atual exige JDK 25, não confundir com JDK 21 do Ubuntu.
+- Distinguir ferramentas CLI/headless, aplicações que exigem interface gráfica, motores que requerem GPU ou grandes pesos, e fornecedores cloud sujeitos a quotas. Nunca fingir GPU ou API grátis ilimitada.
+- Instalação APT, AppImage, npm, Python venv ou contentores só após diagnóstico do Ubuntu real, validação de versão, hash/release/licença e teste funcional; não tocar na VPS durante a filtragem.
+- Em caso de solução comercial paga: procurar alternativas livres e implementações independentes compatíveis. Não aceitar cracks ou licenças contornadas como fornecedores gratuitos.
+- Referência: `docs/SELECAO_UBUNTU.md`; os níveis são catálogo -> Ubuntu documentado -> pacote detectado -> instalado -> teste real -> utilização confirmada via Skill.
