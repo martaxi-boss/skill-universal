@@ -23,11 +23,37 @@ ROUTES = {
  "automation": ("autom","agente","orquestr","workflow"),
  "dev": ("codigo","program","api","backend","teste","debug")
 }
+ROUTES.update({
+ "cad": ("cad", "freecad", "openscad", "desenho tecnico", "modelo 3d", "modelacao", "pcb", "eletronica", "prototipagem"),
+ "diagrams": ("diagrama", "fluxograma", "mapa mental", "wireframe", "whiteboard", "erd", "esquema"),
+ "geo": ("mapas", "cartografia", "gis", "qgis", "geoespacial", "fotogrametria", "geografia"),
+ "animation": ("animacao", "animar", "motion graphics", "efeitos especiais", "vfx", "composicao"),
+ "audio": ("audio", "podcast", "musica", "som", "voz", "narracao", "transcricao", "sintese de voz"),
+ "vision": ("visao computacional", "identificar imagem", "opencv", "reconhecimento de imagem", "remover fundo"),
+ "data": ("dados", "estatistica", "analise de dados", "sql", "base de dados", "dashboard", "dashboards", "grafico"),
+ "monitor": ("monitorizacao", "metricas", "observabilidade", "prometheus", "grafana"),
+ "infra": ("servidor", "deploy", "implantacao", "infraestrutura", "containers", "vps", "git"),
+ "game": ("jogo", "game", "godot", "videojogo"),
+ "productivity": ("notas", "gestao de projeto", "produtividade", "documentacao"),
+})
 LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
 OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings")
 
 def registry():
+    """Merge checked GitHub repositories without claiming installation or license validation."""
     items = json.loads(REGISTRY.read_text(encoding="utf-8"))["projects"]
+    expansion = ROOT / "engine" / "ferrari_expansion.json"
+    if expansion.is_file():
+        for source in json.loads(expansion.read_text(encoding="utf-8"))["projects"]:
+            extra = dict(source)
+            extra["binary"] = None
+            extra["apt"] = None  # APT candidates are NOT certified Ubuntu package names.
+            extra["gui"] = source.get("resources") == "gui"
+            extra["requires_gpu"] = source.get("resources") == "gpu"
+            extra["stars_snapshot"] = int(source["stars_snapshot"])
+            extra["installation"] = source["install_method"] + "-candidate"
+            extra["license"] = source.get("license_spdx") or "REVIEW_REQUIRED"
+            items.append(extra)
     if len({p["id"] for p in items}) != len(items):
         raise ValueError("Duplicate tools")
     return items
@@ -73,20 +99,53 @@ def normalize(s):
     return "".join(c for c in unicodedata.normalize("NFKD",s.lower()) if not unicodedata.combining(c))
 
 def plan(request):
+    """Rank every supported domain, keeping separate installation and execution evidence."""
     if not request.strip():
         raise ValueError("Empty request")
-    q=normalize(request)
-    rank={k:sum(3 if len(t)>5 else 1 for t in terms if t in q) for k,terms in ROUTES.items()}
-    best=max(rank,key=lambda k:(rank[k],k=="reverse"))
-    if rank[best]==0:
-        best="dev"
-    cats={"creative":{"creative","image-ai"},"media":{"media","image-ai"},
-          "automation":{"automation","orchestration"},"dev":{"dev","local-ai"}}.get(best,{best})
-    selected=[p for p in inventory() if p["category"] in cats]
-    selected.sort(key=lambda p:(not p["binary_found"],p.get("requires_gpu",False),-p["stars_snapshot"]))
-    return {"request":request,"route":best,"selected":[{"id":p["id"],"repository":p["repository"],
-            "binary_found":p["binary_found"],"apt":p.get("apt")} for p in selected[:15]],
-            "executed":False,"notice":"Candidates only; no tool launched"}
+    q = normalize(request)
+    scores = {key: sum((4 if len(term) > 5 else 2) for term in terms if term in q)
+              for key, terms in ROUTES.items()}
+    ordered = sorted(scores, key=lambda key: (-scores[key], key != "reverse", key))
+    best = ordered[0] if scores[ordered[0]] else "dev"
+    active = [key for key in ordered if scores[key] > 0][:4] or ["dev"]
+    cats = {
+        "creative": {"creative", "design", "image-ai", "vision", "animation"},
+        "media": {"media", "animation", "audio"},
+        "automation": {"automation", "orchestration", "infra"},
+        "dev": {"dev", "infra"},
+        "docs": {"docs", "productivity"},
+        "data": {"data", "diagrams"},
+        "web": {"web", "design", "diagrams"},
+        "cad": {"cad", "geo"},
+        "audio": {"audio", "media"},
+        "game": {"game", "animation", "creative"},
+    }
+    categories = set()
+    for route in active:
+        categories.update(cats.get(route, {route}))
+    selected = [p for p in inventory() if p["category"] in categories]
+    # Real executors first; otherwise prefer simpler/free-license-reviewed tools,
+    # then GitHub popularity as one of several secondary signals.
+    selected.sort(key=lambda p: (
+        not p["binary_found"],
+        p.get("license_status") == "review_required" or p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
+        p.get("resources") in {"gpu", "heavy"} or p.get("requires_gpu", False),
+        -p["stars_snapshot"]
+    ))
+    results = [{
+        "id": p["id"], "repository": p["repository"], "category": p["category"],
+        "binary_found": p["binary_found"], "ubuntu_certified": False,
+        "license_review_required": p.get("license_status") == "review_required" or
+            p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
+        "installation": p.get("installation", "unknown"),
+        "apt": p.get("apt"), "resources": p.get("resources", "unknown"),
+        "capabilities": p.get("capabilities", []),
+        "stars_snapshot": p["stars_snapshot"]
+    } for p in selected[:30]]
+    return {"request": request, "route": best, "routes": active,
+            "selected": results, "executed": False,
+            "catalogued_total": len(registry()),
+            "notice": "Candidates only, not Ubuntu-installed or certified. No executor launched."}
 
 def packages(profile="maximum",include_gui=True):
     cats={"core":{"dev","automation"},"web":{"dev","web"},"reverse":{"dev","reverse"},
