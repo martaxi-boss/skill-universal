@@ -34,6 +34,28 @@ class FerrariTests(unittest.TestCase):
         self.assertIsNone(expanded[0]["apt"])
         self.assertFalse(ferrari.present(expanded[0]))
         self.assertTrue(any(x["id"]=="penpot" for x in ferrari.plan("desenhar um wireframe web")["selected"]))
+    def test_quality_gate(self):
+        approved=ferrari.ubuntu_selection()
+        self.assertGreaterEqual(len(approved),50)
+        self.assertEqual(len(approved),len(set(p["id"] for p in approved)))
+        self.assertLess(len(approved),len(ferrari.registry()))
+        self.assertNotIn("helix", [p["id"] for p in approved])
+        self.assertTrue(all(p.get("ubuntu_evidence") for p in approved))
+        self.assertTrue(all(p.get("ubuntu_certified") is False for p in approved))
+    def test_only_ubuntu_repositories_are_suggested(self):
+        ids=set(p["id"] for p in ferrari.ubuntu_selection())
+        for query in ["site e loja profissional","CAD modelação","processar PDF","criar música e som","base de dados SQL"]:
+            suggestion=ferrari.plan(query)
+            self.assertTrue(all(p["id"] in ids for p in suggestion["selected"]))
+    def test_no_unchecked_apt_candidates_in_install_plan(self):
+        approved=ferrari.ubuntu_selection()
+        allowed={p["package_candidate"] for p in approved if
+                 p.get("package_candidate") and p["curated_status"] in {
+                 "apt_candidate_found_on_ubuntu2404_runner","gui_apt_candidate_found_on_ubuntu2404_runner"}}
+        packages=set(ferrari.packages("maximum"))
+        packages_core=set(ferrari.packages("core"))
+        self.assertTrue((packages-packages_core).issubset(allowed|{"openjdk-21-jdk-headless","binutils","gdb","strace","graphviz","poppler-utils","nodejs","npm","build-essential"}))
+        self.assertNotIn("freecad",packages)
     def test_packages(self):
         x=ferrari.packages()
         self.assertIn("apktool",x)

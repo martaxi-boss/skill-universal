@@ -92,7 +92,8 @@ def inventory(category=None):
 def doctor():
     found=[p["id"] for p in inventory() if p["binary_found"]]
     return {"time":datetime.now(timezone.utc).isoformat(),"system":system(),
-            "catalogued":len(registry()),"binary_found":found,
+            "catalogued":len(registry()),"ubuntu_shortlisted":len(ubuntu_selection()),
+            "binary_found":found, "vps_certified_count":0,
             "status":"inventory_only_not_functional_certification"}
 
 
@@ -250,8 +251,7 @@ def packages(profile="maximum",include_gui=True):
                 and (include_gui or p["curated_tier"] != "desktop_candidate")
                 and p["curated_status"] in {
                     "apt_candidate_found_on_ubuntu2404_runner",
-                    "gui_apt_candidate_found_on_ubuntu2404_runner",
-                    "awaiting_gui_apt_preflight"})
+                    "gui_apt_candidate_found_on_ubuntu2404_runner"})
 
     return sorted(base)
 
@@ -288,8 +288,8 @@ def _call(args,timeout=240,stdout=None):
 def run(op,output,source=None,title="Novo Projeto",layout="landing"):
     if op not in OPS:
         raise ValueError("Unsupported operation: no arbitrary shell")
-    if platform.system()!="Linux":
-        raise RuntimeError("Linux required")
+    if system()["distro"] != "ubuntu":
+        raise RuntimeError("Ferrari execution is supported only on Ubuntu")
     p=_input(source) if op not in {"web-template","svg-poster"} else None
     if op=="web-template":
         dest=_output(output,"site/index.html")
@@ -346,6 +346,7 @@ def main(argv=None):
     sub=ap.add_subparsers(dest="cmd",required=True)
     sub.add_parser("doctor")
     ls=sub.add_parser("list");ls.add_argument("--category")
+    ls.add_argument("--include-discovery",action="store_true",help="Show unvetted sources too")
     pl=sub.add_parser("plan");pl.add_argument("request")
     al=sub.add_parser("alternatives");al.add_argument("product")
     ds=sub.add_parser("discover");ds.add_argument("query");ds.add_argument("--min-stars",type=int,default=100);ds.add_argument("--limit",type=int,default=15)
@@ -360,7 +361,7 @@ def main(argv=None):
     ru.add_argument("--layout",choices=sorted(LAYOUTS),default="landing")
     a=ap.parse_args(argv)
     if a.cmd=="doctor": result=doctor()
-    elif a.cmd=="list": result=inventory(a.category)
+    elif a.cmd=="list": result=inventory(a.category) if a.include_discovery else [p for p in ubuntu_selection() if not a.category or p["category"]==a.category]
     elif a.cmd=="plan": result=plan(a.request)
     elif a.cmd=="alternatives": result=alternatives(a.product)
     elif a.cmd=="discover": result=discover(a.query,a.min_stars,a.limit)
