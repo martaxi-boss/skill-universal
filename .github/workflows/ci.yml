@@ -21,5 +21,7 @@ jobs:
           python3 -m engine.ferrari doctor
           python3 -m engine.ferrari plan 'Analisar APK com JADX'
           python3 -m engine.ferrari packages --profile maximum --headless
+      - name: Ubuntu 24.04 free-tool APT candidate preflight (no install)
+        run: bash install/ferrari-ubuntu.sh --profile maximum --headless
       - name: Inspect original engine
         run: python3 -m engine.cli doctor
