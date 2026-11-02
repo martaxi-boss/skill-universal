@@ -23,7 +23,7 @@ class BootstrapTests(unittest.TestCase):
         ref = ROOT / "skill/motor-universal-linux/references/bootstrap.md"
         self.assertTrue(ref.is_file())
         self.assertIn("CAD", ref.read_text(encoding="utf-8"))
-        self.assertIn("uma só", ref.read_text(encoding="utf-8").lower() + " uma só")
+        self.assertIn("uma skill universal", ref.read_text(encoding="utf-8").lower())
 
     def test_selection_is_not_installed_state(self):
         data = json.loads((ROOT / "engine/ubuntu_selection.json").read_text(encoding="utf-8"))
