@@ -95,6 +95,36 @@ def doctor():
             "catalogued":len(registry()),"binary_found":found,
             "status":"inventory_only_not_functional_certification"}
 
+
+def ubuntu_selection():
+    """Only curated Ubuntu evidence; unreviewed discovery stays out of planning."""
+    manifest = json.loads((ROOT / "engine" / "ubuntu_selection.json").read_text(encoding="utf-8"))
+    if manifest.get("platform") != "Ubuntu 24.04":
+        raise ValueError("Curated platform must be Ubuntu 24.04")
+    ids = [p["id"] for p in manifest["tools"]]
+    if len(set(ids)) != len(ids):
+        raise ValueError("Duplicated curated tools")
+    valid = {"apt_candidate_found_on_ubuntu2404_runner", "upstream_linux_supported_not_host_certified",
+             "awaiting_gui_apt_preflight", "gui_apt_candidate_found_on_ubuntu2404_runner"}
+    known = {p["id"]: p for p in inventory()}
+    result = []
+    for item in manifest["tools"]:
+        if item["selection_status"] not in valid:
+            continue
+        upstream = known.get(item["id"])
+        if upstream is None:
+            upstream = {"id": item["id"], "repository": item["repo"], "category": item["category"],
+                        "stars_snapshot": 0, "binary_found": False}
+        result.append({**upstream, "curated_status": item["selection_status"],
+                       "curated_tier": item["installation_tier"],
+                       "curated_priority": item["priority"],
+                       "curated_license": item["license"],
+                       "ubuntu_evidence": item["evidence"],
+                       "package_candidate": item.get("installation_candidate"),
+                       "runtime_note": item["runtime_note"],
+                       "ubuntu_certified": False, "vps_installed": False})
+    return result
+
 def normalize(s):
     return "".join(c for c in unicodedata.normalize("NFKD",s.lower()) if not unicodedata.combining(c))
 
@@ -124,7 +154,7 @@ def plan(request):
     categories = set()
     for route in active:
         categories.update(cats.get(route, {route}))
-    selected = [p for p in inventory() if p["category"] in categories]
+    selected = [p for p in ubuntu_selection() if p["category"] in categories]
     # Real executors first; otherwise prefer simpler/free-license-reviewed tools,
     # then GitHub popularity as one of several secondary signals.
     selected.sort(key=lambda p: (
@@ -155,7 +185,8 @@ def plan(request):
         "license_review_required": p.get("license_status") == "review_required" or
             p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
         "installation": p.get("installation", "unknown"),
-        "apt": p.get("apt"), "resources": p.get("resources", "unknown"),
+        "apt": p.get("package_candidate"), "resources": p.get("resources", "unknown"),
+        "ubuntu_selection_status": p["curated_status"], "ubuntu_evidence": p["ubuntu_evidence"],
         "capabilities": p.get("capabilities", []),
         "stars_snapshot": p["stars_snapshot"]
     } for p in selected[:30]]
@@ -213,8 +244,15 @@ def packages(profile="maximum",include_gui=True):
         base.update({"binutils","gdb","strace","openjdk-21-jdk-headless"})
     if profile in {"docs","maximum"}:
         base.update({"poppler-utils","graphviz"})
-    base.update(p["apt"] for p in registry() if p["category"] in cats[profile] and
-                p.get("apt") and (include_gui or not p.get("gui")))
+    approved = ubuntu_selection()
+    base.update(p["package_candidate"] for p in approved
+                if p["category"] in cats[profile] and p.get("package_candidate")
+                and (include_gui or p["curated_tier"] != "desktop_candidate")
+                and p["curated_status"] in {
+                    "apt_candidate_found_on_ubuntu2404_runner",
+                    "gui_apt_candidate_found_on_ubuntu2404_runner",
+                    "awaiting_gui_apt_preflight"})
+
     return sorted(base)
 
 def _input(path):

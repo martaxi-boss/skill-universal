@@ -11,7 +11,8 @@
     "require_linux_evidence": true,
     "require_license_review": true,
     "require_ubuntu_host_certification": true,
-    "do_not_execute_discovered_code": true
+    "do_not_execute_discovered_code": true,
+    "do_not_install_without_explicit_apply": true
   },
   "count": 41,
   "tools": [
@@ -34,7 +35,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "binwalk",
@@ -55,7 +58,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "radare2",
@@ -76,7 +81,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "ffmpeg",
@@ -97,7 +104,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "imagemagick",
@@ -118,7 +127,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "libvips",
@@ -139,7 +150,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "libreoffice",
@@ -160,7 +173,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "pandoc",
@@ -181,7 +196,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "tesseract",
@@ -202,7 +219,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "ocrmypdf",
@@ -223,7 +242,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "opencv",
@@ -244,7 +265,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "ansible",
@@ -265,7 +288,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "ripgrep",
@@ -286,7 +311,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "ytdlp",
@@ -307,7 +334,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "prometheus",
@@ -328,7 +357,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "wireshark",
@@ -349,7 +380,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "valkey",
@@ -370,7 +403,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": true
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": true
     },
     {
       "id": "gimp",
@@ -391,7 +426,9 @@
       "runtime_note": "Official Linux builds; GUI or controlled batch processing",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "krita",
@@ -412,7 +449,9 @@
       "runtime_note": "Official Linux builds; GUI and OpenGL, 16GB RAM recommended",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "blender",
@@ -433,7 +472,9 @@
       "runtime_note": "CLI --background available; GPU acceleration optional, large jobs can need substantial resources",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "kdenlive",
@@ -454,7 +495,9 @@
       "runtime_note": "Official Linux AppImage/Flatpak, requires GUI/OpenGL; Ubuntu apt version may lag",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "scribus",
@@ -475,7 +518,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "darktable",
@@ -496,7 +541,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "freecad",
@@ -517,7 +564,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "openscad",
@@ -538,7 +587,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "librecad",
@@ -559,7 +610,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "qgis",
@@ -580,7 +633,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "audacity",
@@ -601,7 +656,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "obs",
@@ -622,7 +679,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "lmms",
@@ -643,7 +702,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "solvespace",
@@ -664,7 +725,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "synfig",
@@ -685,7 +748,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "openshot",
@@ -706,7 +771,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "calibre",
@@ -727,7 +794,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "inkscape",
@@ -748,7 +817,9 @@
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": true,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "ghidra",
@@ -769,7 +840,9 @@
       "runtime_note": "Requires 64-bit Java/JDK 25 in current Ghidra docs; Ubuntu apt JDK 21 not sufficient",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "jadx",
@@ -790,7 +863,9 @@
       "runtime_note": "Official CLI release ZIP; Java 11+ required, final runtime must be tested",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "rea",
@@ -811,7 +886,9 @@
       "runtime_note": "Node.js 22.23.4+ / 24.22.1+ / 26.12.1+ only; use separately pinned Node runtime",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "penpot",
@@ -832,7 +909,9 @@
       "runtime_note": "Self-host via Docker Compose, requires resources and a container runtime",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "ruflo",
@@ -853,7 +932,9 @@
       "runtime_note": "Orchestrator runtime; not a utility toolbox and not tested on VPS",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     },
     {
       "id": "comfyui",
@@ -874,7 +955,9 @@
       "runtime_note": "GPU and model weights commonly required, cannot promise no-cost remotely",
       "installed_on_vps": false,
       "certified_on_vps": false,
-      "selected_for_auto_install": false
+      "selected_for_auto_install": false,
+      "license_review_required": false,
+      "eligible_for_ubuntu_preflight": false
     }
   ]
 }
