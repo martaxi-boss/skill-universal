@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Ampliação CAD/3D/Office — novembro 2026
+
+Foram acrescentadas três operações tipadas (`cad-stl`, `blender-house`, `office-pdf`) com adaptadores reais OpenSCAD/Blender/LibreOffice, bem como instalador adicional `install/vps-cad-3d.sh`. **A prova operacional é o GitHub Actions VPS e não apenas a presença das funções no código.** A casa 3D é conceptual, não estrutural ou BIM.
+
 ## Instalação real na VPS — 02/11/2026 (mais recente)
 
 **GitHub Actions VPS [#41538472015](https://github.com/martaxi-boss/VPS/actions/runs/41538472015): SUCCESS.** O motor Ferrari foi instalado sob `/home/ubuntu/.local/share/motor-ferrari/current` (release `b8a7de8695b16bf064e0796c3cb9276d3a8254ed`). **41 testes PASS na própria VPS**, execução de HTML/SVG/strings pelo orquestrador, JADX e Ghidra com testes funcionais; REA/Ruflo instalados com smoke de CLI, não com análise/swarm certificados. Node 22.23.4 e Temurin Java 25 estão isolados. A ligação direta da Skill e as 56 ferramentas ainda não estão certificadas. [Ver relatório e evidência](docs/RELATORIO_REAL_VPS_20261102.md).

@@ -12,7 +12,7 @@ Documento canónico no repositório: [BOOTSTRAP.md](https://github.com/martaxi-b
 
 - 125 candidatos GitHub pesquisados; 56 pré-selecionados para Ubuntu.
 - 34 pacotes APT identificados numa runner Ubuntu 24.04; 22 candidatos exigem instalação Linux externa; **nenhum desses números prova instalação na VPS**.
-- Sete operações tipadas no motor: website HTML, cartaz SVG, PDF para texto, redimensionar imagem, miniatura de vídeo, descompilação de APK, strings binárias.
+- Dez operações tipadas no motor (as últimas três exigem prova real de instalação CAD/Office na VPS): website HTML, cartaz SVG, PDF para texto, redimensionar imagem, miniatura de vídeo, descompilação de APK, strings binárias, STL via OpenSCAD, casa conceptual 3D via Blender, DOCX/ODT/PPTX/XLSX para PDF via LibreOffice.
 - Orquestrador DAG com pré-visualização, série/paralelo e relatórios, sem recuperação persistente.
 - Skill e MCP preparados, mas **não existe evidência de ligação ponta a ponta à VPS nem de ferramentas certificadas nela**.
 - Projetos de construção, BIM/IFC, CAD e modelação/renderização 3D profissionais **ainda não têm adaptadores completos certificados**.

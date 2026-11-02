@@ -5,6 +5,10 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
+## Expansão profissional em curso: CAD/3D/Office
+
+Operações novas no código: `cad-stl` (exportar modelo OpenSCAD → STL), `blender-house` (casa conceptual → BLEND, GLB e PNG CPU) e `office-pdf` (documentos Office → PDF). **O suporte só se considera operacional na VPS após execução real e log de certificação.** Manter separada a certificação prévia do motor base.
+
 ## Instalação real — prova mais recente de 02/11/2026
 
 **GitHub Actions VPS #41538472015: SUCCESS.** Release `b8a7de8695b16bf064e0796c3cb9276d3a8254ed` instalado em `/home/ubuntu/.local/share/motor-ferrari/current`. **41 testes na VPS PASS**; orquestrador executou fluxo real HTML/SVG/strings. **JADX 1.5.6 passou na descompilação de Java; Ghidra 12.2 analisou /usr/bin/true com Java 25 isolado.** REA 6.8.0 e Ruflo 3.71.0 instalados e CLIs iniciadas (`--help`), mas sem certificação funcional profunda. Os 56 candidatos não equivalem a 56 programas instalados; ainda falta ligação direta da Skill.
