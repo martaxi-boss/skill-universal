@@ -5,6 +5,10 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
+## Skill diretamente ligada ao Motor Ferrari na VPS — 02/11/2026
+
+**Certificação real:** [instalação #41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719) SUCCESS com **68 testes PASS na VPS**. Release ativa `1ff6e472b5ea4eab95785be224155f400c51aeaa`. **Dois pedidos reais completos** via conector GitHub → workflow dedicado → SSH existente → motor Ferrari → ZIP de resultados: [SVG #41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) SUCCESS e [Markdown→DOCX automático #41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999) SUCCESS. Report e ficheiros comprovados pela extração do artefacto. Ver [relatório da ponte](docs/CERTIFICACAO_SKILL_VPS_20261102.md). **Não foram alteradas as pontes/workflows antigos, nem outros projetos.** A Skill ZIP atualizada precisa de estar instalada/selecionada no cliente e o conector GitHub precisa de estar autorizado. Repositórios públicos: **não enviar pedidos sensíveis**.
+
 ## Última prova real — Motor Ferrari universal (02/11/2026)
 
 **GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664): SUCCESS.** Release `1b7ee15508d5780c3dbf22205ec625c2679348c5` ativa; **59 testes na VPS PASS**; 12 ações tipadas disponíveis em 45 programas detetados nos catálogos combinados (não 45/56). **Pedido natural → seleção automática → Pandoc → DOCX real: PASS**. Graphviz/JQ/file e fluxo multiexecutor PASS. Consultar [certificação universal](docs/CERTIFICACAO_UNIVERSAL_20261102.md). Mantêm-se pendentes a integração profunda REA/Ruflo, os restantes programas sem adaptador e a ligação direta Skill → VPS.

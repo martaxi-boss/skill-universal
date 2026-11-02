@@ -1,3 +1,7 @@
+## Ponte Ferrari Skill ↔ VPS — certificada em 02/11/2026
+
+Execução #41546722719: 68 testes na VPS PASS; #41546901101 SVG em ZIP PASS; #41547060999 Markdown→DOCX via Pandoc automaticamente em ZIP PASS. A Skill pode solicitar via conector GitHub um ficheiro novo `martaxi-boss/VPS/ferrari-requests/job-*.json`, com `version=1`, `id`, `kind=operation|auto|invoke|inventory` e campos adequados. Workflow Ferrari exclusivo encaminha e recolhe ZIP de resultados (sem alterar ponte SSH existente). **Os pedidos GitHub são públicos**. Usar apenas dados não sensíveis; ligar GitHub e instalar a Skill atualizada para a utilizar no cliente.
+
 # Última prova: catálogo operacional na VPS
 
 Execução GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664) SUCCESS. 59 testes PASS, 12 ações instaladas, 45 programas detetados nos catálogos combinados. O comando `auto` selecionou e executou Pandoc a partir de pedido em linguagem natural para DOCX real. Ferramentas de catálogo sem adaptador não são automaticamente executáveis. Consultar BOOTSTRAP canónico no repositório para estado e limitações.

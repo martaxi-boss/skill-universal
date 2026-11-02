@@ -29,6 +29,10 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 9. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
 10. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
 
+## Estado real certificado da ponte
+
+**GitHub Actions #41546722719 PASS (68 testes na VPS)**; pedido ChatGPT/conector GitHub → GitHub Actions → Ferrari → SVG/ZIP **#41546901101 PASS**; pedido em linguagem natural com Markdown → Pandoc → DOCX/ZIP **#41547060999 PASS**. Ambos os artefactos foram descarregados e inspecionados. Só o transporte de tarefas suportadas está certificado; REA/Ruflo profundos e tarefas livres complexas ainda têm trabalho. O chat precisa do ZIP atualizado desta Skill instalado e do conector GitHub com as autorizações adequadas. Nunca enviar conteúdo sensível em pedidos públicos.
+
 ## Ligação Skill → GitHub Actions → VPS (pedido remoto)
 
 A ligação operacional da Skill usa o conector GitHub autenticado e a ponte **exclusiva Ferrari** `.github/workflows/ferrari-skill-request.yml` de `martaxi-boss/VPS`. Não alterar a ponte SSH já existente nem outros projetos. O GitHub Actions apenas transporta o pedido e recolhe o ZIP; `engine.skill_job` do Ferrari valida, escolhe ferramentas e executa na VPS. A prova end-to-end deve ser verificada no ID real da execução antes de declarar que está operacional.

@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Ligação direta da Skill ao Ferrari no Ubuntu — PASS (02/11/2026)
+
+Motor na VPS: [deploy #41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719), **68 testes PASS**. Dois pedidos reais enviados com conector GitHub: [criar SVG #41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [converter Markdown para DOCX automaticamente #41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999), ambos SUCCESS. ZIP de resultados efetivamente recolhido e inspecionado. Novo transportador exclusivo Ferrari em `martaxi-boss/VPS/.github/workflows/ferrari-skill-request.yml`, usando autenticação SSH antiga. **Os pedidos ficam públicos no repositório VPS**; não enviar ficheiros ou segredos privados. A Skill terá de ser instalada e o conector GitHub tem de estar ligado no ChatGPT. [Ver relatório de certificação](docs/CERTIFICACAO_SKILL_VPS_20261102.md).
+
 ## Novo: ferramentas externas com descoberta e execução automáticas — 02/11/2026
 
 **GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664): SUCCESS.** 59 testes PASS; 12 adaptadores executáveis, 45 programas detetados nos catálogos combinados, seleção automática de Pandoc para pedido Markdown→DOCX, Graphviz SVG, jq JSON e orquestração real em três ferramentas. Novos comandos: `python3 -m engine.ferrari tools`, `actions`, `route`, `auto` e `invoke`. [Relatório de certificação](docs/CERTIFICACAO_UNIVERSAL_20261102.md). A Skill ainda não tem ligação direta certificada à VPS.
