@@ -132,6 +132,22 @@ def plan(request):
         p.get("resources") in {"gpu", "heavy"} or p.get("requires_gpu", False),
         -p["stars_snapshot"]
     ))
+    # Reserve places across every selected category. A niche design/CAD tool must
+    # not disappear simply because broad web repositories have more stars.
+    balanced = []
+    seen_ids = set()
+    for category in sorted(categories):
+        for project in (p for p in selected if p["category"] == category):
+            if project["id"] not in seen_ids:
+                balanced.append(project)
+                seen_ids.add(project["id"])
+            if sum(1 for p in balanced if p["category"] == category) >= 3:
+                break
+    for project in selected:
+        if project["id"] not in seen_ids:
+            balanced.append(project)
+            seen_ids.add(project["id"])
+    selected = balanced
     results = [{
         "id": p["id"], "repository": p["repository"], "category": p["category"],
         "binary_found": p["binary_found"], "ubuntu_certified": False,
