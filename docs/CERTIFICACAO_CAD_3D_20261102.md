@@ -10,3 +10,9 @@
 - **Evidência adicional:** scripts `install/vps-cad-3d.sh`, `engine/cad_tools.py`, `engine/blender_house.py`.
 - **Nota de capacidade:** casa 3D conceptual, não é projeto BIM nem estrutural validado; FreeCAD e restantes fornecedores CAD ainda não certificados. Sem ligação direta da Skill à VPS comprovada.
 - **Disco:** 13.61 GiB livres medidos no início da execução, antes de finalizar CAD/3D. É prioritário limpar somente as releases antigas do Ferrari, mantendo a ativa e uma versão de recuperação. Não inferir 56/56 instaladas.
+
+## Revalidação e higienização final
+
+- [GitHub Actions VPS #41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347) **SUCCESS**: 49 testes na VPS PASS, CAD/3D/Office e Ghidra/JADX funcional PASS, REA/Ruflo CLI PASS.
+- SHA ativo `d7708a825797cc40b8726b32cbe00673929f3e4c`.
+- Limpeza cirúrgica das 8 releases antigas do Ferrari: **7 318 695 936 bytes / 6,82 GiB** de espaço recuperado, **20,42 GiB livres**. Foi preservada a release ativa e uma versão de recuperação; `outside_ferrari_touched=false`.

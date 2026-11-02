@@ -5,6 +5,14 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
+## Fecho da fase CAD/3D/Office + limpeza — 2026-11-02
+
+- **Entrega real na VPS:** GitHub Actions [#41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347) **SUCCESS**.
+- **Versão ativa:** `d7708a825797cc40b8726b32cbe00673929f3e4c`; segunda versão de recuperação `b8a7de8695b16bf064e0796c3cb9276d3a8254ed`.
+- **Testes na VPS:** 49 unitários PASS; operações `cad-stl`, `blender-house`, `office-pdf` exportaram realmente STL, BLEND, GLB, PNG e PDF, todos confirmados. REA/Ruflo testes CLI, JADX/Ghidra testes funcionais anteriores e desta release PASS.
+- **Higienização EXCLUSIVAMENTE Ferrari:** 8 releases desatualizadas removidas, 7 318 695 936 bytes de espaço livre adicional (**~6,82 GiB**); espaço livre final **20,42 GiB**. Nenhuma pasta fora de Ferrari alterada por esta limpeza.
+- **Still pending:** 56/56 shortlist certificada, fornecedores/modelos opcionais, execução real profunda REA/Ruflo, adaptação de FreeCAD/BIМ/IFC e ligação direta ChatGPT Skill -> Ferrari motor. Não declarar plataforma profissional ilimitada.
+
 ## CAD/3D/Office — instalado e testado em 02/11/2026
 
 **GitHub Actions VPS #41540947069: SUCCESS.** Blender 4.0.2, OpenSCAD 2021.01 e LibreOffice foram executados na VPS. Modelos `solid.stl`, `house.blend`, `house.glb`, `house.png` e `document.pdf` gerados com confirmação. **48 testes PASS na VPS.** Release: `21735c20baa163cded0551144c9f8f7ef8db7431`. A limpeza segura de antigas releases é um trabalho separado e limitado ao próprio Ferrari.

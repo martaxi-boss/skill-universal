@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Resultado mais recente: VPS limpa e Ferrari CAD/3D confirmado — 02/11/2026
+
+**GitHub Actions VPS [#41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347): SUCCESS.** Release ativa `d7708a825797cc40b8726b32cbe00673929f3e4c`; 49 testes na VPS PASS, OpenSCAD STL, Blender BLEND/GLB/PNG, Office DOCX/PDF, Ghidra/JADX teste funcional. A limpeza Ferrari-only removeu 8 releases antigas e libertou **6,82 GiB**, ficando **20,42 GiB livres**, sem alterar outras pastas. A plataforma ainda necessita de integração Skill → VPS, adaptação REA/Ruflo profunda e expansão dos restantes domínios.
+
 ## CAD/3D/Office reais na VPS — 02/11/2026
 
 **GitHub Actions VPS [#41540947069](https://github.com/martaxi-boss/VPS/actions/runs/41540947069): SUCCESS.** OpenSCAD 2021.01 exportou STL, Blender 4.0.2 produziu BLEND/GLB/PNG em CPU e LibreOffice converteu DOCX em PDF. **48 testes unitários PASS na VPS** e smoke real dos três executores. O motor continua sem ser uma plataforma BIM de engenharia estrutural e as 56 ferramentas não estão todas instaladas/certificadas.
