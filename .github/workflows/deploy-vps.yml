@@ -72,7 +72,9 @@ jobs:
           cd "$RELEASE"
           tar -xzf source.tar.gz
           rm source.tar.gz
-          python3 -m unittest discover -s tests -v
+          # Before APT installation, only verify syntax and inventory.
+          # Some integration tests require binutils/ffmpeg absent on a fresh VPS.
+          python3 -m compileall -q engine integrations
           python3 -m engine.ferrari doctor
           bash install/ferrari-ubuntu.sh --profile maximum --headless
           ln -sfn "$RELEASE" "$PROJECT/current.next"
