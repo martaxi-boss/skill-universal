@@ -25,5 +25,11 @@ jobs:
         run: bash install/ferrari-ubuntu.sh --profile maximum --headless
       - name: Ubuntu 24.04 GUI package availability (dry run; no install)
         run: bash install/ferrari-ubuntu.sh --profile maximum
+      - name: Ubuntu 24.04 specialized apt candidate checks (no install)
+        run: |
+          for p in inkscape audacity freecad librecad openscad openshot-qt; do
+            printf '%s ' "$p"
+            apt-cache policy "$p" | grep -m 1 "Candidate:" || true
+          done
       - name: Inspect original engine
         run: python3 -m engine.cli doctor
