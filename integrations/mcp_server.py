@@ -64,9 +64,9 @@ def ferrari_plan(request: str) -> str:
     return json.dumps(ferrari_engine.plan(request), ensure_ascii=False)
 
 @mcp.tool()
-def ferrari_run(operation: str, output: str, input_file: str = "", title: str = "Novo Projeto") -> str:
+def ferrari_run(operation: str, output: str, input_file: str = "", title: str = "Novo Projeto", layout: str = "landing") -> str:
     """Run one supported typed Ubuntu operation; never shell commands from prompts."""
-    return json.dumps(ferrari_engine.run(operation, output, input_file or None, title), ensure_ascii=False)
+    return json.dumps(ferrari_engine.run(operation, output, input_file or None, title, layout), ensure_ascii=False)
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")

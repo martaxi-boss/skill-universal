@@ -23,6 +23,7 @@ ROUTES = {
  "automation": ("autom","agente","orquestr","workflow"),
  "dev": ("codigo","program","api","backend","teste","debug")
 }
+LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
 OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings")
 
 def registry():
@@ -134,7 +135,7 @@ def _call(args,timeout=240,stdout=None):
     if p.returncode:
         raise RuntimeError("Executor failed: "+p.stderr.decode("utf-8","replace")[:800])
 
-def run(op,output,source=None,title="Novo Projeto"):
+def run(op,output,source=None,title="Novo Projeto",layout="landing"):
     if op not in OPS:
         raise ValueError("Unsupported operation: no arbitrary shell")
     if platform.system()!="Linux":
@@ -142,8 +143,16 @@ def run(op,output,source=None,title="Novo Projeto"):
     p=_input(source) if op not in {"web-template","svg-poster"} else None
     if op=="web-template":
         dest=_output(output,"site/index.html")
-        artifacts=core.create_website(dest.parent.parent,title)
-        exe="built-in:website"
+        if layout not in LAYOUTS:
+            raise ValueError("Unknown layout")
+        if layout=="landing":
+            artifacts=core.create_website(dest.parent.parent,title)
+        else:
+            import html
+            base=ROOT/"templates"/LAYOUTS[layout]
+            dest.write_text(base.read_text(encoding="utf-8").replace("{{TITLE}}",html.escape(title[:90],quote=True)),encoding="utf-8")
+            artifacts=[dest]
+        exe="built-in:website:"+layout
     elif op=="svg-poster":
         dest=_output(output,"creative/poster.svg")
         artifacts=core.create_creative(dest.parent.parent,title)
@@ -196,6 +205,7 @@ def main(argv=None):
     ru.add_argument("--input",dest="source")
     ru.add_argument("--output",required=True)
     ru.add_argument("--title",default="Novo Projeto")
+    ru.add_argument("--layout",choices=sorted(LAYOUTS),default="landing")
     a=ap.parse_args(argv)
     if a.cmd=="doctor": result=doctor()
     elif a.cmd=="list": result=inventory(a.category)
@@ -204,7 +214,7 @@ def main(argv=None):
         result=packages(a.profile,not a.headless)
         if a.plain:
             print("\n".join(result));return
-    else: result=run(a.operation,a.output,a.source,a.title)
+    else: result=run(a.operation,a.output,a.source,a.title,a.layout)
     print(json.dumps(result,ensure_ascii=False,indent=2))
 
 if __name__=="__main__":

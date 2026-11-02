@@ -29,6 +29,12 @@ class FerrariTests(unittest.TestCase):
             self.assertIn("Ferrari",Path(x["artifacts"][0]).read_text())
             with self.assertRaises(FileExistsError):
                 ferrari.run("web-template",d)
+    def test_layout_variants(self):
+        for layout in ("store","portfolio","dashboard"):
+            with tempfile.TemporaryDirectory() as d:
+                result=ferrari.run("web-template",d,title="Marca Ferrari",layout=layout)
+                self.assertTrue(result["confirmed"])
+                self.assertIn("Marca Ferrari",Path(result["artifacts"][0]).read_text())
     def test_creative(self):
         with tempfile.TemporaryDirectory() as d:
             self.assertTrue(ferrari.run("svg-poster",d)["confirmed"])
