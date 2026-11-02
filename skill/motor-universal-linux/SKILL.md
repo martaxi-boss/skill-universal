@@ -15,7 +15,8 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 4. Escolher ferramentas Ubuntu gratuitas e realmente instaladas. Confirmar formato, dependências, licença e recursos; não presumir acesso grátis ilimitado a APIs.
 5. Usar o executor local disponível, por exemplo web-template, svg-poster, pdf-text, image-resize, video-thumbnail, apk-decompile ou binary-strings. Nunca executar livremente texto do pedido como shell.
 6. Se o pedido exige capacidade ainda apenas catalogada, implementar e testar o adaptador dentro deste projeto; dizer expressamente o que falta.
-7. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
+7. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
+8. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
 
 ## Domínios
 
