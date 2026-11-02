@@ -2,6 +2,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Implementação real na VPS Ubuntu
+
+O projeto tem agora um [workflow de instalação por fases](.github/workflows/deploy-vps.yml) e um [guia de operação](docs/INSTALACAO_VPS.md). O workflow `workflow_dispatch` é **manual**: PRECHECK (SSH e inspeção real Ubuntu, sem alteração), DEPLOY (código isolado em `$HOME/.local/share/motor-ferrari/`) e INSTALL_HEADLESS (pacotes aprovados, testes e evidência). É necessária ligação SSH configurada nos secrets deste repositório. **Nenhuma destas fases foi executada na VPS a partir desta conversa.** As 56 ferramentas são uma seleção técnica, não 56 instalações confirmadas.
+
 ## Estado operacional em 02/11/2026
 
 - **Orquestrador próprio (novo):** `engine/orchestrator.py` executa planos JSON validados com dependências, etapas paralelas/serie, modo pré-visualização sem alterações, relatório e teste real Ubuntu. Prefect, Ruflo e LangGraph ficam opcionais e não são instalados por defeito.
