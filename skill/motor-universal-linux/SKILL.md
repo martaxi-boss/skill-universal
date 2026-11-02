@@ -5,6 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## Bootstrap permanente do projeto
+
+**Ler primeiro** o ficheiro canónico `BOOTSTRAP.md` deste repositório; se estiver a utilizar apenas o ZIP da Skill, ler `references/bootstrap.md`. Esta decisão prevalece sobre ideias vagas de expansão: **uma só Skill, um só Motor Ferrari isolado em Ubuntu, um orquestrador próprio e ferramentas instaladas/testadas antes de serem anunciadas como disponíveis**. O objetivo é cobrir todas as áreas possíveis progressivamente, incluindo **projetos de construção, plantas 2D, arquitetura, BIM/IFC e modelação 3D**, mas hoje **não está tudo implementado**. Nunca confundir os 56 candidatos Ubuntu com ferramentas certificadas na VPS.
+
+
 A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e organiza pedidos. As ferramentas e execução pertencem ao Motor Ferrari independente instalado no Ubuntu. Não reutilizar outros repositórios nem programas proprietários dos anfitriões.
 
 ## Operação

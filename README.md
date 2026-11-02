@@ -1,5 +1,7 @@
 # Motor Ferrari — Skill Universal Ubuntu
 
+**[Ler primeiro o BOOTSTRAP — objetivo definitivo, arquitetura, situação real e próximos passos](BOOTSTRAP.md).** É o documento de continuidade de todo o Motor Ferrari, incluindo construção, CAD, BIM e 3D. O catálogo não equivale a software instalado.
+
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
 ## Implementação real na VPS Ubuntu
