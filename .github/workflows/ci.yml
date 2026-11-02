@@ -10,9 +10,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test motor
+      - name: Unit tests, core and Ferrari
         run: python3 -m unittest discover -s tests -v
-      - name: Validate installer syntax
-        run: bash -n install/install-ubuntu.sh
-      - name: Preview tool inventory
+      - name: Validate both installers
+        run: |
+          bash -n install/install-ubuntu.sh
+          bash -n install/ferrari-ubuntu.sh
+      - name: Inspect Ferrari registry and routing
+        run: |
+          python3 -m engine.ferrari doctor
+          python3 -m engine.ferrari plan 'Analisar APK com JADX'
+          python3 -m engine.ferrari packages --profile maximum --headless
+      - name: Inspect original engine
         run: python3 -m engine.cli doctor

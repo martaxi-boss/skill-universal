@@ -1,39 +1,26 @@
 ---
 name: motor-universal-linux
-description: Orquestrar tarefas criativas e técnicas num motor Linux autónomo, incluindo criação de sites e layouts, criativos/imagens, engenharia reversa de APK e binários, programação, dados e documentos. Usar quando o utilizador invocar Motor Universal Linux para executar ou planear tarefas através de ChatGPT, Codex ou outro cliente com CLI/MCP disponível. Selecionar automaticamente ferramentas locais gratuitas compatíveis e fornecedores gratuitos configurados, sem confundir catálogo com instalação real.
+description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usar em tarefas de websites e layouts, programação, engenharia reversa autorizada, imagens, criativos, vídeo, áudio, documentos, dados e automação; a IA anfitriã apenas interpreta e organiza, e as ferramentas são as do motor Linux.
 ---
 
-# Motor Universal Linux
+# Motor Ferrari — Skill Universal
 
-Trabalhar exclusivamente no novo projeto independente `motor-universal-linux`. A Skill é o ponto único de entrada; o motor na VPS ou no anfitrião executa apenas através de ligação verificada e autorizada.
+A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e organiza pedidos. As ferramentas e execução pertencem ao Motor Ferrari independente instalado no Ubuntu. Não reutilizar outros repositórios nem programas proprietários dos anfitriões.
 
-## Protocolo obrigatório
+## Operação
 
-1. Interpretar o pedido natural, incluindo pedidos ditados, e identificar objetivo, entradas e resultado concreto (ficheiros, explicação, auditoria ou aplicação).
-2. Detetar que executores reais existem no contexto atual: `motor_*` via MCP autenticado, CLI do novo projeto, ou ferramentas nativas apropriadas do anfitrião. **A Skill sozinha não cria acesso à VPS.**
-3. Pedir ao motor `motor_health`/`doctor`, `motor_catalog` e `motor_plan` antes de iniciar uma tarefa remota. Confirmar sistemas, versão, ferramentas instaladas, recursos e requisitos.
-4. Selecionar a ferramenta gratuita compatível de maior adequação, e considerar fornecedores externos gratuitos *apenas* se disponíveis e autenticados. Distinguir open-source sem custos de APIs com quotas gratuitas. Nunca cair silenciosamente num fornecedor pago.
-5. Executar com o motor real quando ele disponibilizar a rota. Caso contrário, usar ferramentas nativas realmente disponíveis ou relatar precisamente a parte indisponível. Nunca marcar uma integração como testada apenas por constar no catálogo.
-6. Devolver artefacto final ou evidência técnica: executor usado, saídas, versão, testes, erros e limitações. Nunca afirmar que a VPS foi modificada sem logs de execução genuínos.
+1. Compreender a tarefa, os ficheiros de entrada e o resultado pedido.
+2. Verificar a ligação autenticada ao motor (CLI, MCP do projeto ou workflow autorizado). A Skill não proporciona acesso SSH automaticamente.
+3. Pedir ao motor o diagnóstico e o plano: python3 -m engine.ferrari doctor; python3 -m engine.ferrari plan 'pedido'. Ler o registo engine/ferrari_registry.json e o catálogo engine/catalog.json.
+4. Escolher ferramentas Ubuntu gratuitas e realmente instaladas. Confirmar formato, dependências, licença e recursos; não presumir acesso grátis ilimitado a APIs.
+5. Usar o executor local disponível, por exemplo web-template, svg-poster, pdf-text, image-resize, video-thumbnail, apk-decompile ou binary-strings. Nunca executar livremente texto do pedido como shell.
+6. Se o pedido exige capacidade ainda apenas catalogada, implementar e testar o adaptador dentro deste projeto; dizer expressamente o que falta.
+7. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
 
-## Encaminhamento por tipo de tarefa
+## Domínios
 
-- Website/loja/layout: preferir template local apropriado, componentes de layout livres e projeto responsivo; conferir funcionamento e acessibilidade.
-- Criativo/imagem: escolher edição/composição gráfica local para SVG/artefactos, ferramenta de imagem do anfitrião se disponível, ou modelo gratuito autenticado. Não confundir SVG tipográfico com geração de imagem fotorealista.
-- APK/binário/firmware: detetar formatos e selecionar REA Linux próprio, Ghidra, JADX, Apktool, binutils ou outros programas realmente instalados. O REA do novo projeto tem instalação isolada. Inspecionar o alvo sem executá-lo por defeito. Não garantir recuperação de código-fonte original.
-- Programação/testes/dados/documentos/vídeo: selecionar ferramentas correspondentes efetivamente disponíveis e produzir testes verificáveis. Funções catalogadas mas não implementadas requerem um executor adequado no anfitrião.
-- Orquestração: Ruflo é opção de investigação/integração do novo projeto, não gestor ativo por pressuposto; não inicializar em repositórios antigos.
+Web: Next.js, Astro, Vite, Tailwind, shadcn/ui, Playwright; engenharia reversa: REA independente, Ghidra, JADX, Apktool, Rizin, radare2, Binwalk; criativos: GIMP, Krita, Inkscape, Blender, Scribus, ImageMagick; vídeo: FFmpeg, Kdenlive; documentos: LibreOffice, Pandoc, Tesseract, OCRmyPDF, Typst; motores opcionais: Ruflo, LangGraph, ComfyUI, Ollama conforme recursos do Ubuntu.
 
-## Comandos CLI (quando existe checkout local)
+Não usar programas pirateados ou mecanismos de desbloqueio de licenças comerciais. Preferir alternativas profissionais livres.
 
-- `python3 -m engine.cli doctor`
-- `python3 -m engine.cli catalog`
-- `python3 -m engine.cli providers`
-- `python3 -m engine.cli plan 'criar um site para barbearia'`
-- `python3 -m engine.cli run 'criar um site' --title 'A Minha Empresa' --output /caminho/de/saida`
-- `python3 -m engine.cli run 'criar um criativo' --title 'Promoção' --output /caminho/de/saida`
-- `python3 -m engine.cli run 'descompilar APK' --input /caminho/app.apk --output /caminho/de/saida` (inspeção estática básica, **não** descompilação completa)
-
-Não executar instalação Linux automaticamente apenas por receber uma tarefa. Instalar apenas os componentes necessários e aprovados após diagnóstico da VPS.
-
-Ler [references/workflows.md](references/workflows.md) para as ligações por anfitrião, estados de instalação e capacidades efetivamente implementadas. Consultar o catálogo `engine/catalog.json` no checkout da VPS como fonte primária, não valores memorizados nesta Skill.
+Documentação e critérios de certificação: docs/FERRARI.md no repositório do motor e references/workflows.md neste pacote Skill.
