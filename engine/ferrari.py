@@ -161,7 +161,7 @@ def plan(request):
     # then GitHub popularity as one of several secondary signals.
     selected.sort(key=lambda p: (
         not p["binary_found"],
-        p.get("license_status") == "review_required" or p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
+        p.get("license_review_required", False) or p.get("license_status") == "review_required" or p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
         p.get("resources") in {"gpu", "heavy"} or p.get("requires_gpu", False),
         -p["stars_snapshot"]
     ))
@@ -184,7 +184,7 @@ def plan(request):
     results = [{
         "id": p["id"], "repository": p["repository"], "category": p["category"],
         "binary_found": p["binary_found"], "ubuntu_certified": False,
-        "license_review_required": p.get("license_status") == "review_required" or
+        "license_review_required": bool(p.get("license_review_required")) or p.get("license_status") == "review_required" or
             p.get("license") in {"REVIEW_REQUIRED", "verify-license-before-use"},
         "installation": p.get("installation", "unknown"),
         "apt": p.get("package_candidate"), "resources": p.get("resources", "unknown"),

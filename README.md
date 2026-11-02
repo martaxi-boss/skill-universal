@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Entrega final para pré-diagnóstico da VPS (02/11/2026)
+
+**Não foi comprovada compatibilidade operacional de todas as 56 ferramentas na VPS; não instalar tudo.** O primeiro passo é um **PRECHECK por GitHub Actions, só de leitura**, sem APT nem escrita na VPS. O instalador de pacotes headless exclui Node.js/npm do Ubuntu (versão potencialmente incompatível com REA), serviços Prometheus/Valkey (evitar alterar serviços de outros projetos), recusa pacotes obrigatórios ausentes e testa resolução de dependências APT antes de instalar.
+
 ## Implementação real na VPS Ubuntu
 
 O projeto tem agora um [workflow de instalação por fases](.github/workflows/deploy-vps.yml) e um [guia de operação](docs/INSTALACAO_VPS.md). O workflow `workflow_dispatch` é **manual**: PRECHECK (SSH e inspeção real Ubuntu, sem alteração), DEPLOY (código isolado em `$HOME/.local/share/motor-ferrari/`) e INSTALL_HEADLESS (pacotes aprovados, testes e evidência). É necessária ligação SSH configurada nos secrets deste repositório. **Nenhuma destas fases foi executada na VPS a partir desta conversa.** As 56 ferramentas são uma seleção técnica, não 56 instalações confirmadas.

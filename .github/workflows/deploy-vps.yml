@@ -1,5 +1,9 @@
 name: Ferrari Ubuntu VPS - precheck, deploy, install
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/ferrari-readonly-precheck.request'
   workflow_dispatch:
     inputs:
       stage:
@@ -18,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   ferrari:
-    if: ${{ inputs.confirm == 'FERRARI' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.confirm == 'FERRARI') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     runs-on: ubuntu-24.04
     environment: vps-motor-universal
     steps:
@@ -53,7 +57,7 @@ jobs:
           SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
           ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" 'bash -s' < install/vps-preflight.sh
       - name: Deploy isolated versioned Ferrari release
-        if: ${{ inputs.stage != 'PRECHECK' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && (inputs.stage == 'DEPLOY' || inputs.stage == 'INSTALL_HEADLESS') }}
         env:
           HOST: ${{ secrets.MOTOR_SSH_HOST }}
           USERNAME: ${{ secrets.MOTOR_SSH_USER }}
@@ -83,7 +87,7 @@ jobs:
           echo 'FERRARI_DEPLOY=PASS_SOURCE_ONLY'
           REMOTE
       - name: Install approved Ubuntu headless packages and smoke test
-        if: ${{ inputs.stage == 'INSTALL_HEADLESS' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.stage == 'INSTALL_HEADLESS' }}
         env:
           HOST: ${{ secrets.MOTOR_SSH_HOST }}
           USERNAME: ${{ secrets.MOTOR_SSH_USER }}
