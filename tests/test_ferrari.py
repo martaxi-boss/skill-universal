@@ -71,6 +71,33 @@ class FerrariTests(unittest.TestCase):
             with patch("shutil.which",return_value=None):
                 with self.assertRaises(RuntimeError):
                     ferrari.run("pdf-text",d+"/out",source=p)
+    def test_legal_free_alternatives(self):
+        x=ferrari.alternatives("Adobe Photoshop")
+        self.assertEqual(x["match"],"Adobe Photoshop")
+        self.assertIn("gimp",[p["id"] for p in x["alternatives"]])
+        self.assertIn("not a cracked original",x["notice"])
+    def test_discovery_filtered_without_network(self):
+        import json
+        from engine.github_discovery import discover
+        payload={"items":[
+            {"full_name":"good/repo","html_url":"https://github.com/good/repo","stargazers_count":3000,
+             "archived":False,"fork":False,"license":{"spdx_id":"MIT"},"pushed_at":"2026-11-02T00:00:00Z"},
+            {"full_name":"notfree/proprietary","html_url":"https://github.com/notfree/proprietary",
+             "stargazers_count":9000,"archived":False,"fork":False,"license":{"spdx_id":"NOASSERTION"}},
+            {"full_name":"old/archived","html_url":"https://github.com/old/archived",
+             "stargazers_count":8000,"archived":True,"fork":False,"license":{"spdx_id":"MIT"}}]}
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self,*args): return False
+            def read(self,size): return json.dumps(payload).encode()
+        with patch("urllib.request.urlopen",return_value=Response()) as mock:
+            x=discover("image processing Ubuntu",minimum_stars=100,limit=5)
+            self.assertEqual(len(x["results"]),1)
+            self.assertEqual(x["results"][0]["repository"],"good/repo")
+            self.assertFalse(x["results"][0]["automatic_install_allowed"])
+            self.assertTrue(mock.call_args[0][0].full_url.startswith("https://api.github.com/search/repositories?"))
+        with self.assertRaises(ValueError):
+            discover("Adobe crack Photoshop")
     def test_doctor_no_false_cert(self):
         self.assertEqual(ferrari.doctor()["status"],"inventory_only_not_functional_certification")
 if __name__=="__main__":unittest.main()
