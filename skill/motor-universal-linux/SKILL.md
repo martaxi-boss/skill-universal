@@ -29,6 +29,16 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 9. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
 10. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
 
+## Ligação Skill → GitHub Actions → VPS (pedido remoto)
+
+A ligação operacional da Skill usa o conector GitHub autenticado e a ponte **exclusiva Ferrari** `.github/workflows/ferrari-skill-request.yml` de `martaxi-boss/VPS`. Não alterar a ponte SSH já existente nem outros projetos. O GitHub Actions apenas transporta o pedido e recolhe o ZIP; `engine.skill_job` do Ferrari valida, escolhe ferramentas e executa na VPS. A prova end-to-end deve ser verificada no ID real da execução antes de declarar que está operacional.
+
+1. Confirmar ligação GitHub com permissão de escrita em `martaxi-boss/VPS` e leitura em `martaxi-boss/skill-universal`. Não presumir que a Skill, por si, cria uma sessão SSH.
+2. Para pedir trabalho, criar **um novo ficheiro** `ferrari-requests/job-<identificador-unico>.json` na branch `main` de `martaxi-boss/VPS` usando a operação autenticada `mcp__GitHub__create_file` (ferramenta de GitHub, nunca shell). Exemplo de conteúdo: `{"version":1,"id":"skill-demo-001","kind":"operation","operation":"svg-poster","title":"Cartaz de teste Ferrari"}`. Outros tipos: `kind=inventory`; `kind=auto` (texto `request` + `input` com `name` e `content_base64`); `kind=invoke` (campo `action` + `input`); `kind=operation` com `operation` já implementada. Os nomes das ações disponíveis são descobertos no motor.
+3. **Cuidado: ambos os repositórios são públicos.** O conteúdo do novo ficheiro JSON fica público no histórico GitHub, incluindo dados codificados em base64. Nunca colocar chaves, segredos, dados pessoais, documentação privada ou ficheiros sensíveis neste transporte. Para esse tipo de pedido é preciso uma via privada antes de executar.
+4. Consultar os GitHub Actions de `martaxi-boss/VPS` e identificar a execução `Ferrari Skill - authenticated request delivery` associada ao commit de criação do pedido. Confirmar os logs e `FERRARI_SKILL_END_TO_END=PASS`. Obter o artefacto `ferrari-skill-result-<run_id>` pelo conector `mcp__GitHub__fetch_workflow_run_artifacts` / `mcp__GitHub__download_workflow_artifact` e disponibilizar o ZIP ou o link da execução ao utilizador.
+5. O ZIP contém `report.json` e ficheiros produzidos em `artifacts/`. Não declarar sucesso só porque o workflow arrancou; confirmar `status=completed` e artefactos existentes. Para um pedido novo, gerar sempre um caminho JSON novo, nunca modificar um pedido anterior. O transporte não altera os restantes projetos.
+
 ## Orquestrador profissional (obrigatório para tarefas compostas)
 
 Usar **o coordenador independente do Motor Ferrari**, nunca o coordenador do ChatGPT/Codex ou de projetos antigos. Para tarefas com vários passos:
