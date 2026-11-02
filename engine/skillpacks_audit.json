@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-11-02",
+  "scope": "GitHub skill collections and independent Ubuntu orchestrators for a single personal Ferrari skill",
+  "rules": [
+    "One SKILL.md entrypoint; integrate modular references only when needed.",
+    "Skill text is not a Linux executor or a free model/provider.",
+    "Never ingest third-party code automatically; audit exact skill license and shell scripts first.",
+    "Prefer free, open-source, non-archived repositories with Linux-supported execution.",
+    "Avoid proprietary/source-available document skills unless separately licensed.",
+    "No installer actions on the user's VPS during selection."
+  ],
+  "skills": [
+    {
+      "repo": "obra/superpowers",
+      "stars_snapshot": 311178,
+      "license": "MIT",
+      "decision": "adapt_patterns",
+      "capability": "specification, tests, code review, structured delivery",
+      "ubuntu": "text workflows portable; host-specific agents/hooks excluded",
+      "install_directly": false,
+      "reason": "Not an Ubuntu tool engine; adopt ideas with original documentation and attribution"
+    },
+    {
+      "repo": "wshobson/agents",
+      "stars_snapshot": 42112,
+      "license": "MIT",
+      "decision": "reference_only",
+      "capability": "185 skills, 202 agents, 94 plugins, many harness adapters according to upstream README",
+      "ubuntu": "Markdown skill bodies potentially portable, scripts and plugin commands need individual audit",
+      "install_directly": false,
+      "reason": "Multi-harness wrappers and tool permissions depend on external AI clients"
+    },
+    {
+      "repo": "agentskills/agentskills",
+      "stars_snapshot": 26886,
+      "license": "Apache-2.0 code; CC-BY-4.0 docs",
+      "decision": "adopt_standard",
+      "capability": "skill format and progressive loading",
+      "ubuntu": "No Ubuntu runtime dependency for spec",
+      "install_directly": false,
+      "reason": "Reference for one portable SKILL.md and modular references"
+    },
+    {
+      "repo": "vercel-labs/skills",
+      "stars_snapshot": 37791,
+      "license": "MIT",
+      "decision": "optional_discovery_cli",
+      "capability": "public skill finder/importer",
+      "ubuntu": "Node.js >=22.20 documented; CLI discovery optional; no automatic install",
+      "install_directly": false,
+      "reason": "Would create multiple installed client skills and brings npm dependency; instead use checked curated metadata"
+    },
+    {
+      "repo": "anthropics/skills",
+      "stars_snapshot": 186742,
+      "license": "per-skill review; some Apache-2.0, document skills source-available only",
+      "decision": "selective_read_only",
+      "capability": "patterns for technical and creative tasks",
+      "ubuntu": "not guaranteed; scripts and model-specific calls must be tested individually",
+      "install_directly": false,
+      "reason": "Some document skills are NOT open-source and cannot be repackaged as free"
+    },
+    {
+      "repo": "openai/skills",
+      "stars_snapshot": 28473,
+      "license": "individual skill license",
+      "decision": "reject_deprecated_source",
+      "capability": "legacy skill catalog",
+      "ubuntu": "host-oriented, not a Linux executable catalog",
+      "install_directly": false,
+      "reason": "README explicitly says repository deprecated"
+    },
+    {
+      "repo": "VoltAgent/awesome-claude-code-subagents",
+      "stars_snapshot": 26282,
+      "license": "MIT",
+      "decision": "reference_only",
+      "capability": "100+ subagent role descriptions",
+      "ubuntu": "claude-code-specific agent runtimes/harness not portable as-is",
+      "install_directly": false,
+      "reason": "Role examples useful; importing agents creates unwanted multi-skill dependency"
+    },
+    {
+      "repo": "ComposioHQ/awesome-claude-skills",
+      "stars_snapshot": 78595,
+      "license": "unverified / per item",
+      "decision": "discovery_only",
+      "capability": "curated links to external skills",
+      "ubuntu": "varies by linked project",
+      "install_directly": false,
+      "reason": "Directory is not a homogeneous package with transferable licenses"
+    },
+    {
+      "repo": "travisvn/awesome-claude-skills",
+      "stars_snapshot": 15678,
+      "license": "unverified / per item",
+      "decision": "discovery_only",
+      "capability": "list of Claude-oriented skills",
+      "ubuntu": "varies by linked repo",
+      "install_directly": false,
+      "reason": "Stars in index do not verify Ubuntu, scripts or supplier costs"
+    }
+  ],
+  "orchestrators": [
+    {
+      "repo": "PrefectHQ/prefect",
+      "stars_snapshot": 24109,
+      "license": "Apache-2.0",
+      "decision": "preferred_optional_runtime",
+      "ubuntu": "Python >=3.11; self-hosted server documented; can operate without paid cloud",
+      "scope": "durable workflow scheduling, retries, monitoring",
+      "status": "not_installed_or_tested_on_vps"
+    },
+    {
+      "repo": "langchain-ai/langgraph",
+      "stars_snapshot": 44338,
+      "license": "MIT",
+      "decision": "optional_stateful_agents",
+      "ubuntu": "Python package, compatible Linux expected; model/provider costs depend on configuration",
+      "scope": "durable stateful agent graphs",
+      "status": "not_installed_or_tested_on_vps"
+    },
+    {
+      "repo": "crewAIInc/crewAI",
+      "stars_snapshot": 60429,
+      "license": "MIT",
+      "decision": "optional_multiagent",
+      "ubuntu": "Python library; agent LLM/provider must be supplied",
+      "scope": "multi-agent reasoning and flows",
+      "status": "not_installed_or_tested_on_vps"
+    },
+    {
+      "repo": "ruvnet/ruflo",
+      "stars_snapshot": 80642,
+      "license": "MIT",
+      "decision": "optional_specialized_harness",
+      "ubuntu": "Node/npm project with stdio MCP; Claude/Codex-specific plugin elements optional",
+      "scope": "swarms and specialized agents",
+      "status": "not_installed_or_tested_on_vps"
+    },
+    {
+      "repo": "dagster-io/dagster",
+      "stars_snapshot": 16364,
+      "license": "Apache-2.0",
+      "decision": "not_primary",
+      "ubuntu": "Python supported; server resources and deployment required",
+      "scope": "data pipeline orchestration",
+      "status": "not_installed_or_tested_on_vps"
+    },
+    {
+      "repo": "apache/airflow",
+      "stars_snapshot": 47350,
+      "license": "Apache-2.0",
+      "decision": "not_primary",
+      "ubuntu": "heavy scheduling stack, unnecessary for general creative actions",
+      "scope": "recurring data workflows",
+      "status": "not_installed_or_tested_on_vps"
+    }
+  ],
+  "integration_policy": "Only one public Ferrari Skill; capability-specific guidance lives in references. The Ubuntu execution engine is independent of AI clients. Reuse of third-party texts requires license-compliant attribution and file-by-file inspection; this audit copies no third-party source."
+}
