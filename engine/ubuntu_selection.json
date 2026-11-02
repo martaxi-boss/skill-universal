@@ -595,17 +595,21 @@
       "category": "cad",
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
-      "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
-      "installation_candidate": "freecad",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
       "license": "LGPL-2.1",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://github.com/FreeCAD/FreeCAD"
+        },
+        {
+          "kind": "official_linux_appimage",
+          "url": "https://www.freecad.org/downloads.php?lang=us"
         }
       ],
-      "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
+      "runtime_note": "No freecad apt candidate on Ubuntu 24.04 runner; use official Linux x86_64 or aarch64 AppImage only after checking size, SHA256 and graphical requirements",
       "installed_on_vps": false,
       "certified_on_vps": false,
       "selected_for_auto_install": false,
@@ -619,13 +623,17 @@
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
       "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
+      "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "openscad",
       "license": "verify",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://github.com/openscad/openscad"
+        },
+        {
+          "kind": "ubuntu2404_apt_cache_candidate",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
@@ -642,13 +650,17 @@
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
       "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
+      "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "librecad",
       "license": "verify",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://github.com/LibreCAD/LibreCAD"
+        },
+        {
+          "kind": "ubuntu2404_apt_cache_candidate",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
@@ -692,13 +704,17 @@
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
       "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
+      "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "audacity",
       "license": "verify",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://github.com/audacity/audacity"
+        },
+        {
+          "kind": "ubuntu2404_apt_cache_candidate",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
@@ -823,13 +839,17 @@
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
       "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
+      "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "openshot-qt",
       "license": "verify",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://github.com/openshot/openshot-qt"
+        },
+        {
+          "kind": "ubuntu2404_apt_cache_candidate",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
@@ -873,13 +893,17 @@
       "priority": "specialist",
       "platform": "Ubuntu 24.04 LTS",
       "installation_tier": "desktop_candidate",
-      "selection_status": "awaiting_gui_apt_preflight",
+      "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "inkscape",
       "license": "verify",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
           "url": "https://wiki.inkscape.org/wiki/Installing_Inkscape"
+        },
+        {
+          "kind": "ubuntu2404_apt_cache_candidate",
+          "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
@@ -1375,8 +1399,8 @@
   ],
   "statistics": {
     "curated": 56,
-    "ubuntu_2404_apt_verified": 29,
-    "linux_upstream_candidates": 21,
-    "desktop_unproven": 6
+    "apt_candidates": 34,
+    "upstream_linux": 22,
+    "pending_gui": 0
   }
 }
