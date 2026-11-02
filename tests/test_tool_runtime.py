@@ -42,6 +42,23 @@ class ToolRuntimeTests(unittest.TestCase):
             self.assertFalse(r["executed"])
             unknown=tool_runtime.route("comando sem correspondencia nos adaptadores")
             self.assertEqual(unknown["suggestions"],[])
+    def test_auto_preview_and_execute_exact_supported_action(self):
+        with patch.object(tool_runtime,"executable",return_value="/usr/bin/fake"):
+            preview=tool_runtime.auto("Converter markdown para docx","/tmp/example.md")
+            self.assertEqual(preview["selected"]["action"],"pandoc-md-docx")
+            self.assertEqual(preview["status"],"preview")
+            with patch.object(tool_runtime,"invoke",return_value={"confirmed":True}) as invoke:
+                done=tool_runtime.auto("Converter markdown para docx","/tmp/example.md",
+                                       "/tmp/output",execute=True)
+                self.assertTrue(done["executed"])
+                self.assertEqual(done["status"],"completed")
+                invoke.assert_called_once_with("pandoc-md-docx","/tmp/example.md","/tmp/output")
+    def test_auto_never_executes_without_match(self):
+        with patch.object(tool_runtime,"executable",return_value="/usr/bin/fake"):
+            result=tool_runtime.auto("tarefa desconhecida xxx sem adaptador","/tmp/x.txt",
+                                     "/tmp/output",execute=True)
+            self.assertFalse(result["executed"])
+            self.assertEqual(result["status"],"no_matching_installed_adapter")
     def test_orchestrator_accepts_bound_tool_step(self):
         data={"version":1,"steps":[{"id":"convert","operation":"tool","tool":"pandoc",
               "action":"pandoc-md-docx","input":"/tmp/source.md"}]}
