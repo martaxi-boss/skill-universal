@@ -53,3 +53,19 @@ jobs:
           PY
       - name: Inspect original engine
         run: python3 -m engine.cli doctor
+
+      - name: Package updated Ferrari Skill for chat installation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f skill/motor-universal-linux/SKILL.md
+          test -f skill/motor-universal-linux/agents/openai.yaml
+          (cd skill && zip -q -r ../skill.zip motor-universal-linux)
+          unzip -t skill.zip | tail -n 1
+      - name: Publish Ferrari Skill package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ferrari-skill-installable
+          path: skill.zip
+          if-no-files-found: error
+          retention-days: 14
