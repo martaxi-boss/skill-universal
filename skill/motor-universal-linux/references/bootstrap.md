@@ -1,3 +1,11 @@
+# Atualização: catálogo operacional multidomínio do Ferrari
+
+O catálogo tem 56 candidatos Ubuntu. Em separado, `engine/tool_runtime.py` deteta a presença efetiva dos executáveis na VPS e consulta `engine/tool_actions.json`, que contém 12 ações tipadas nas áreas documentos, diagramas, multimédia, imagens, dados, identificação de ficheiros e engenharia reversa. Os comandos Ferrari são `tools`, `actions`, `route` e `invoke`. A seleção não é certificação: só declarar PASS depois de testes reais no Ubuntu, com outputs. REA/Ruflo não são o centro do Ferrari e a sua integração profunda continua pendente.
+
+A invocação tipada também é aceite pelo orquestrador em `operation=tool`, especificando `tool`, `action`, `input`. Nenhum pedido livre é executado como shell. A ligação direta Skill→VPS exige um transporte autenticado, ainda por confirmar.
+
+---
+
 # Bootstrap permanente — Motor Ferrari Ubuntu
 
 Documento canónico no repositório: [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Este resumo também acompanha o ZIP da única Skill, para que a visão permaneça disponível mesmo fora do checkout GitHub.
