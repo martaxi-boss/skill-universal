@@ -8,13 +8,32 @@ from engine import ferrari
 class FerrariTests(unittest.TestCase):
     def test_registry(self):
         x=ferrari.registry()
-        self.assertEqual(len(x),50)
-        self.assertEqual(len(set(i["id"] for i in x)),50)
+        self.assertGreaterEqual(len(x),125)
+        self.assertEqual(len(set(i["id"] for i in x)),len(x))
     def test_plan(self):
         x=ferrari.plan("Quero descompilar um APK")
         self.assertEqual(x["route"],"reverse")
         self.assertFalse(x["executed"])
         self.assertIn("jadx",[i["id"] for i in x["selected"]])
+    def test_new_domains(self):
+        cases = [
+            ("desenha modelo CAD 3D para uma peça", "cad"),
+            ("preciso de um fluxograma", "diagrams"),
+            ("produzir musica e audio para podcast", "audio"),
+            ("criar relatorio PDF com OCR", "docs"),
+            ("analisar dados e SQL", "data"),
+        ]
+        for message, expected in cases:
+            plan=ferrari.plan(message)
+            self.assertEqual(plan["route"],expected)
+            self.assertFalse(plan["executed"])
+            self.assertGreaterEqual(plan["catalogued_total"],125)
+    def test_new_upstreams_are_not_installed_by_assumption(self):
+        expanded=[x for x in ferrari.registry() if x["id"]=="penpot"]
+        self.assertEqual(len(expanded),1)
+        self.assertIsNone(expanded[0]["apt"])
+        self.assertFalse(ferrari.present(expanded[0]))
+        self.assertTrue(any(x["id"]=="penpot" for x in ferrari.plan("desenhar um wireframe web")["selected"]))
     def test_packages(self):
         x=ferrari.packages()
         self.assertIn("apktool",x)
