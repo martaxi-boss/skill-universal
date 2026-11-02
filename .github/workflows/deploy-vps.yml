@@ -92,7 +92,11 @@ jobs:
           ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" 'bash -s' <<'REMOTE'
           set -euo pipefail
           cd "$HOME/.local/share/motor-ferrari/current"
-          sudo -n bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
+          if [ "$(id -u)" -eq 0 ]; then
+            bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
+          else
+            sudo -n bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
+          fi
           for exe in git ffmpeg pdftotext tesseract; do
             command -v "$exe" || exit 2
           done

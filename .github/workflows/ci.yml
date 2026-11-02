@@ -16,6 +16,8 @@ jobs:
         run: |
           bash -n install/install-ubuntu.sh
           bash -n install/ferrari-ubuntu.sh
+          bash -n install/vps-preflight.sh
+          bash -n install/install-agent-engines.sh
       - name: Inspect Ferrari registry and routing
         run: |
           python3 -m engine.ferrari doctor
@@ -31,5 +33,19 @@ jobs:
             printf '%s ' "$p"
             apt-cache policy "$p" | grep -m 1 "Candidate:" || true
           done
+      - name: Validate locked external releases and manifest
+        run: |
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          manifest=json.loads(Path('install/external-release-lock.json').read_text())
+          keys={p['id']:p for p in manifest['projects']}
+          assert all(x in keys for x in ['ghidra','jadx','rea','ruflo'])
+          assert all(re.fullmatch('[a-f0-9]{64}',keys[x]['sha256']) for x in ('ghidra','jadx'))
+          selection=json.loads(Path('engine/ubuntu_selection.json').read_text())
+          assert selection['count'] == len(selection['tools'])
+          assert all(x['certified_on_vps'] is False for x in selection['tools'])
+          print('Ferrari release/selection integrity: PASS (static only)')
+          PY
       - name: Inspect original engine
         run: python3 -m engine.cli doctor
