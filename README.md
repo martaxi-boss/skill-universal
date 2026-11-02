@@ -4,11 +4,13 @@
 
 ## Estado operacional em 02/11/2026
 
-- Catálogo GitHub novo: **50 projetos curados** com metadados de estrelas e upstream; catálogo original: **69 entradas**, com sobreposição.
+- Catálogo GitHub: **125 projetos públicos curados (50 iniciais + 75 adicionais)** com metadados de estrelas e upstream; catálogo original: **69 entradas**, com sobreposição.
 - Motor Ferrari: diagnóstico, roteamento e **sete operações tipadas** (site HTML, cartaz SVG, PDF para texto, redimensionar imagem, thumbnail vídeo, descompilar APK com JADX e strings binárias).
 - Integração MCP independente: ferramentas ferrari_doctor, ferrari_catalog, ferrari_plan e ferrari_run.
 - Instalador APT Ubuntu 24.04+ por perfis e modo máximo: simulação por defeito; --apply explícito para instalar pacotes compatíveis encontrados.
 - **Não há instalação confirmada na VPS**, nem certificação de Ghidra/REA/Ruflo/ComfyUI nem ligação remota ponta a ponta. A execução GitHub Actions certifica apenas o que foi testado na runner Ubuntu.
+
+Inclui uma matriz de 18 alternativas legais a aplicações comerciais e pesquisa automática *read-only* de projetos gratuitos no GitHub. O software comercial não é desbloqueado por engenharia reversa.
 
 Consultar [arquitetura e comandos Ferrari](docs/FERRARI.md) e [Skill única](skill/motor-universal-linux/SKILL.md). Ferramentas Adobe pirateadas não são incluídas; existem alternativas gratuitas profissionais.
 

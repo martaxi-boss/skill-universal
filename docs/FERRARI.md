@@ -4,7 +4,7 @@ A inteligência artificial interpreta e organiza; os executores vivem no Motor F
 
 ## Estado
 
-- 50 projetos GitHub verificados por metadados a 02/11/2026, em engine/ferrari_registry.json, complementam o catálogo original de 69 entradas, com sobreposição. Não representam 119 ferramentas instaladas.
+- **125 projetos públicos GitHub** curados por metadados a 02/11/2026, em `engine/ferrari_registry.json` (50) e `engine/ferrari_expansion.json` (75). O catálogo antigo contém 69 entradas com sobreposição. Nenhuma destas contagens equivale a ferramentas instaladas.
 - O motor detecta binários, classifica pedidos, sugere ferramentas e disponibiliza sete operações reais e tipadas.
 - Ferramenta catalogada não é instalada; binário encontrado não implica execução certificada.
 - Ubuntu da VPS, recursos, REA, Ruflo, integridade dos downloads e ligação a IA ainda têm de ser verificados no anfitrião real.
@@ -54,3 +54,25 @@ Licenças comerciais não ficam desbloqueadas. Para funções Adobe, usar altern
 ## Para certificar o motor
 
 Verificar a VPS real, instalar o perfil máximo APT, incorporar ferramentas upstream compatíveis, certificar executores com ficheiros reais e configurar acesso autenticado da Skill até ao motor. Só assim pode ser atribuída uma percentagem séria de cobertura.
+
+## Descoberta automática de repositórios gratuitos
+
+O Ferrari pode procurar **repositórios GitHub públicos** através da API REST gratuita, sem instalar o código encontrado. Classifica candidatos por estrelas, exclui forks/arquivados e exige uma licença livre identificada. Os repositórios encontrados devem passar ainda por verificação de licença no upstream, suporte efetivo Ubuntu, dependências, arquitetura e testes.
+
+```bash
+python3 -m engine.ferrari discover "linux open source vector design" --min-stars 100 --limit 15
+python3 -m engine.ferrari alternatives "Adobe Photoshop"
+python3 -m engine.ferrari alternatives "AutoCAD"
+```
+
+Os 18 mapeamentos em `engine/commercial_alternatives.json` relacionam aplicações comerciais com **alternativas independentes legítimas**, nunca cracks, binários adulterados, licenças contornadas ou fornecedores pagos tornados gratuitos artificialmente. Implementações livres de formatos e protocolos podem ser úteis, mas não concedem direitos de utilização do software original.
+
+### Instalação e descoberta são operações diferentes
+
+- **Catálogo GitHub:** metadados verificados, sem provas de Ubuntu ou execução.
+- **Ferramenta APT:** proposta pelo instalador e só instalada com `--apply`; os pacotes APT da expansão continuam sem certificação e são excluídos da instalação automática.
+- **Ferramenta em execução:** precisa de binário verificado, testes de entrada/saída e integração MCP/CLI reais.
+- **Interface gráfica:** numa VPS sem display é preciso processamento headless válido ou sessão gráfica dedicada.
+- **IA local e difusão:** modelos, pesos e GPU podem não caber na VPS; um projeto open-source não implica GPU grátis ou API sem quotas.
+
+O motor continua a precisar de adaptadores por ferramenta; uma entrada no catálogo não é uma capacidade de execução automática.
