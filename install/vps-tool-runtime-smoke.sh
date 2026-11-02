@@ -28,6 +28,7 @@ printf '# Ferrari\n\nOperacao Ubuntu com ferramenta externa real.\n' > "$WORK/de
 printf '{"ferrari":"ubuntu","routed":true}\n' > "$WORK/demo.json"
 
 python3 -m engine.ferrari route "Converter markdown para docx" --input "$WORK/demo.md" > "$WORK/route.json"
+python3 -m engine.ferrari auto "Converter markdown para docx" --input "$WORK/demo.md" --output "$WORK/auto-office" --execute > "$WORK/auto-result.json"
 python3 -m engine.ferrari invoke --action graphviz-dot-svg --input "$WORK/demo.dot" --output "$WORK/diagram"
 python3 -m engine.ferrari invoke --action pandoc-md-docx --input "$WORK/demo.md" --output "$WORK/office"
 python3 -m engine.ferrari invoke --action jq-format-json --input "$WORK/demo.json" --output "$WORK/data"
@@ -47,6 +48,8 @@ import json,sys,zipfile
 from pathlib import Path
 p=Path(sys.argv[1])
 assert "<svg" in (p/"diagram/diagram.svg").read_text()
+assert zipfile.is_zipfile(p/"auto-office/document.docx")
+assert json.loads((p/"auto-result.json").read_text())["status"]=="completed"
 assert zipfile.is_zipfile(p/"office/document.docx")
 assert json.loads((p/"data/formatted.json").read_text())["routed"]
 assert "json" in (p/"file/mime.txt").read_text()
@@ -54,6 +57,7 @@ assert json.loads((p/"route.json").read_text())["suggestions"][0]["action"]=="pa
 result=json.loads((p/"flow-result.json").read_text())["result"]
 assert result["status"]=="completed"
 assert len(result["completed"])==3
+print("FERRARI_UNIVERSAL_AUTO_EXECUTION=PASS")
 print("FERRARI_UNIVERSAL_ROUTING=PASS")
 print("FERRARI_UNIVERSAL_REAL_MULTI_PROGRAM_EXECUTION=PASS")
 print("FERRARI_UNIVERSAL_ORCHESTRATOR=PASS")
