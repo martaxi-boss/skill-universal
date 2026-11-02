@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## CAD/3D/Office reais na VPS — 02/11/2026
+
+**GitHub Actions VPS [#41540947069](https://github.com/martaxi-boss/VPS/actions/runs/41540947069): SUCCESS.** OpenSCAD 2021.01 exportou STL, Blender 4.0.2 produziu BLEND/GLB/PNG em CPU e LibreOffice converteu DOCX em PDF. **48 testes unitários PASS na VPS** e smoke real dos três executores. O motor continua sem ser uma plataforma BIM de engenharia estrutural e as 56 ferramentas não estão todas instaladas/certificadas.
+
 ## Ampliação CAD/3D/Office — novembro 2026
 
 Foram acrescentadas três operações tipadas (`cad-stl`, `blender-house`, `office-pdf`) com adaptadores reais OpenSCAD/Blender/LibreOffice, bem como instalador adicional `install/vps-cad-3d.sh`. **A prova operacional é o GitHub Actions VPS e não apenas a presença das funções no código.** A casa 3D é conceptual, não estrutural ou BIM.

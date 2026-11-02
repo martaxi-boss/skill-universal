@@ -5,7 +5,11 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
-## Expansão profissional em curso: CAD/3D/Office
+## CAD/3D/Office — instalado e testado em 02/11/2026
+
+**GitHub Actions VPS #41540947069: SUCCESS.** Blender 4.0.2, OpenSCAD 2021.01 e LibreOffice foram executados na VPS. Modelos `solid.stl`, `house.blend`, `house.glb`, `house.png` e `document.pdf` gerados com confirmação. **48 testes PASS na VPS.** Release: `21735c20baa163cded0551144c9f8f7ef8db7431`. A limpeza segura de antigas releases é um trabalho separado e limitado ao próprio Ferrari.
+
+## Expansão profissional em curso: CAD/3D/Office (histórico pré-certificação)
 
 Operações novas no código: `cad-stl` (exportar modelo OpenSCAD → STL), `blender-house` (casa conceptual → BLEND, GLB e PNG CPU) e `office-pdf` (documentos Office → PDF). **O suporte só se considera operacional na VPS após execução real e log de certificação.** Manter separada a certificação prévia do motor base.
 
