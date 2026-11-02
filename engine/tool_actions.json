@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "actions": [
+    {
+      "id": "file-mime",
+      "tool": "file",
+      "binary": "file",
+      "category": "dev",
+      "keywords": [
+        "ficheiro",
+        "tipo",
+        "formato",
+        "mime"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "mime.txt",
+      "args": [
+        "--brief",
+        "--mime-type",
+        "{input}"
+      ]
+    },
+    {
+      "id": "pandoc-md-docx",
+      "tool": "pandoc",
+      "binary": "pandoc",
+      "category": "docs",
+      "keywords": [
+        "word",
+        "docx",
+        "markdown",
+        "documento"
+      ],
+      "extensions": [
+        ".md",
+        ".markdown"
+      ],
+      "mode": "file",
+      "artifact": "document.docx",
+      "args": [
+        "-f",
+        "markdown",
+        "-t",
+        "docx",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "graphviz-dot-svg",
+      "tool": "graphviz",
+      "binary": "dot",
+      "category": "diagrams",
+      "keywords": [
+        "fluxograma",
+        "diagrama",
+        "grafo",
+        "esquema"
+      ],
+      "extensions": [
+        ".dot",
+        ".gv"
+      ],
+      "mode": "file",
+      "artifact": "diagram.svg",
+      "args": [
+        "-Tsvg",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "imagemagick-identify",
+      "tool": "imagemagick",
+      "binary": "identify",
+      "category": "creative",
+      "keywords": [
+        "dimensoes",
+        "tamanho",
+        "imagem",
+        "metadados",
+        "fotografia"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "stdout",
+      "artifact": "image-info.txt",
+      "args": [
+        "-format",
+        "%m %wx%h\n",
+        "{input}"
+      ]
+    },
+    {
+      "id": "tesseract-ocr",
+      "tool": "tesseract",
+      "binary": "tesseract",
+      "category": "docs",
+      "keywords": [
+        "ocr",
+        "reconhecer texto",
+        "ler imagem",
+        "extrair texto",
+        "digitalizacao"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "stdout",
+      "artifact": "recognized.txt",
+      "args": [
+        "{input}",
+        "stdout"
+      ]
+    },
+    {
+      "id": "ffprobe-media-info",
+      "tool": "ffmpeg",
+      "binary": "ffprobe",
+      "category": "media",
+      "keywords": [
+        "metadados",
+        "video",
+        "audio",
+        "duracao",
+        "codec",
+        "informacoes"
+      ],
+      "extensions": [
+        ".mp4",
+        ".mov",
+        ".mkv",
+        ".mp3",
+        ".wav",
+        ".flac",
+        ".webm"
+      ],
+      "mode": "stdout",
+      "artifact": "media-info.json",
+      "args": [
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration,size,format_name",
+        "-of",
+        "json",
+        "{input}"
+      ]
+    },
+    {
+      "id": "ffmpeg-audio-wav",
+      "tool": "ffmpeg",
+      "binary": "ffmpeg",
+      "category": "audio",
+      "keywords": [
+        "wav",
+        "converter audio",
+        "extrair audio",
+        "pcm"
+      ],
+      "extensions": [
+        ".mp3",
+        ".flac",
+        ".m4a",
+        ".ogg",
+        ".wav"
+      ],
+      "mode": "file",
+      "artifact": "audio.wav",
+      "args": [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-n",
+        "-i",
+        "{input}",
+        "-vn",
+        "-c:a",
+        "pcm_s16le",
+        "{output}"
+      ]
+    },
+    {
+      "id": "jq-format-json",
+      "tool": "jq",
+      "binary": "jq",
+      "category": "data",
+      "keywords": [
+        "json",
+        "formatar",
+        "validar",
+        "dados",
+        "estruturar"
+      ],
+      "extensions": [
+        ".json"
+      ],
+      "mode": "stdout",
+      "artifact": "formatted.json",
+      "args": [
+        ".",
+        "{input}"
+      ]
+    },
+    {
+      "id": "binwalk-scan",
+      "tool": "binwalk",
+      "binary": "binwalk",
+      "category": "reverse",
+      "keywords": [
+        "firmware",
+        "assinaturas",
+        "binwalk",
+        "binario",
+        "inspecionar"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "signatures.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "readelf-header",
+      "tool": "readelf",
+      "binary": "readelf",
+      "category": "reverse",
+      "keywords": [
+        "elf",
+        "executavel",
+        "binario",
+        "cabecalho"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "elf-header.txt",
+      "args": [
+        "-h",
+        "{input}"
+      ]
+    },
+    {
+      "id": "pdfinfo-report",
+      "tool": "pdftotext",
+      "binary": "pdfinfo",
+      "category": "docs",
+      "keywords": [
+        "pdf",
+        "metadados",
+        "paginas",
+        "informacoes"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "stdout",
+      "artifact": "pdf-info.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "radare2-binary-info",
+      "tool": "radare2",
+      "binary": "r2",
+      "category": "reverse",
+      "keywords": [
+        "radare2",
+        "binario",
+        "cabecalho",
+        "arquitetura",
+        "executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "binary-info.txt",
+      "args": [
+        "-2",
+        "-q",
+        "-c",
+        "iI",
+        "{input}"
+      ]
+    }
+  ]
+}
