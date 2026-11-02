@@ -23,6 +23,12 @@ scene.unit_settings.system = "METRIC"
 scene.render.engine = "CYCLES"
 scene.cycles.device = "CPU"
 scene.cycles.samples = 8
+# Ubuntu Blender 4.0.2 builds may omit OpenImageDenoiser, so explicitly disable it.
+for layer in scene.view_layers:
+    if hasattr(layer, "cycles") and hasattr(layer.cycles, "use_denoising"):
+        layer.cycles.use_denoising = False
+if hasattr(scene.cycles, "use_denoising"):
+    scene.cycles.use_denoising = False
 scene.render.threads_mode = "FIXED"
 scene.render.threads = 2
 scene.render.resolution_x = 420
