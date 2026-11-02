@@ -4,17 +4,21 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
-## Estado da entrega real — 02/11/2026
+## Instalação real na VPS — 02/11/2026 (mais recente)
+
+**GitHub Actions VPS [#41538472015](https://github.com/martaxi-boss/VPS/actions/runs/41538472015): SUCCESS.** O motor Ferrari foi instalado sob `/home/ubuntu/.local/share/motor-ferrari/current` (release `b8a7de8695b16bf064e0796c3cb9276d3a8254ed`). **41 testes PASS na própria VPS**, execução de HTML/SVG/strings pelo orquestrador, JADX e Ghidra com testes funcionais; REA/Ruflo instalados com smoke de CLI, não com análise/swarm certificados. Node 22.23.4 e Temurin Java 25 estão isolados. A ligação direta da Skill e as 56 ferramentas ainda não estão certificadas. [Ver relatório e evidência](docs/RELATORIO_REAL_VPS_20261102.md).
+
+## Estado da entrega anterior (histórico, ultrapassado pela instalação) — 02/11/2026
 
 **CI Ubuntu 24.04: PASS (#41534293244).** **PRECHECK da VPS: bloqueado (#41534293085)** pela ausência de `MOTOR_SSH_*` no GitHub Actions; sem ligação SSH nem instalação. Ver `BOOTSTRAP.md` e `docs/AUDITORIA_ENTREGA_UBUNTU.md` para retomar.
 
-## Entrega final para pré-diagnóstico da VPS (02/11/2026)
+## Critérios de pré-diagnóstico anteriores à instalação (histórico)
 
 **Não foi comprovada compatibilidade operacional de todas as 56 ferramentas na VPS; não instalar tudo.** O primeiro passo é um **PRECHECK por GitHub Actions, só de leitura**, sem APT nem escrita na VPS. O instalador de pacotes headless exclui Node.js/npm do Ubuntu (versão potencialmente incompatível com REA), serviços Prometheus/Valkey (evitar alterar serviços de outros projetos), recusa pacotes obrigatórios ausentes e testa resolução de dependências APT antes de instalar.
 
-## Implementação real na VPS Ubuntu
+## Workflow manual alternativo no repositório Ferrari (não foi a via usada na instalação real)
 
-O projeto tem agora um [workflow de instalação por fases](.github/workflows/deploy-vps.yml) e um [guia de operação](docs/INSTALACAO_VPS.md). O workflow `workflow_dispatch` é **manual**: PRECHECK (SSH e inspeção real Ubuntu, sem alteração), DEPLOY (código isolado em `$HOME/.local/share/motor-ferrari/`) e INSTALL_HEADLESS (pacotes aprovados, testes e evidência). É necessária ligação SSH configurada nos secrets deste repositório. **Nenhuma destas fases foi executada na VPS a partir desta conversa.** As 56 ferramentas são uma seleção técnica, não 56 instalações confirmadas.
+O projeto tem agora um [workflow de instalação por fases](.github/workflows/deploy-vps.yml) e um [guia de operação](docs/INSTALACAO_VPS.md). O workflow `workflow_dispatch` é **manual**: PRECHECK (SSH e inspeção real Ubuntu, sem alteração), DEPLOY (código isolado em `$HOME/.local/share/motor-ferrari/`) e INSTALL_HEADLESS (pacotes aprovados, testes e evidência). É necessária ligação SSH configurada nos secrets deste repositório. **Estas fases deste workflow alternativo não foram usadas; a instalação foi efetuada pelo workflow independente do repositório VPS com os secrets existentes.** As 56 ferramentas são uma seleção técnica, não 56 instalações confirmadas.
 
 ## Estado operacional em 02/11/2026
 
@@ -25,7 +29,7 @@ O projeto tem agora um [workflow de instalação por fases](.github/workflows/de
 - Motor Ferrari: diagnóstico, roteamento e **sete operações tipadas** (site HTML, cartaz SVG, PDF para texto, redimensionar imagem, thumbnail vídeo, descompilar APK com JADX e strings binárias).
 - Integração MCP independente: ferrari_doctor, ferrari_catalog, ferrari_plan, ferrari_run e ferrari_orchestrate, mais pesquisa de alternativas livres.
 - Instalador APT Ubuntu 24.04+ por perfis e modo máximo: simulação por defeito; --apply explícito para instalar pacotes compatíveis encontrados.
-- **Não há instalação confirmada na VPS**, nem certificação de Ghidra/REA/Ruflo/ComfyUI nem ligação remota ponta a ponta. A execução GitHub Actions certifica apenas o que foi testado na runner Ubuntu.
+- **Instalação real comprovada na VPS pelo run #41538472015**; JADX/Ghidra têm testes funcionais e REA/Ruflo smoke CLI. ComfyUI e a ligação direta Skill → motor continuam pendentes. Os testes da runner e os da VPS estão documentados separadamente.
 
 Inclui uma matriz de 18 alternativas legais a aplicações comerciais e pesquisa automática *read-only* de projetos gratuitos no GitHub. O software comercial não é desbloqueado por engenharia reversa.
 
@@ -68,7 +72,7 @@ ChatGPT / Codex / outros agentes
 - Instalador Ubuntu em modo simulação por defeito, com perfis e verificação `apt-cache` antes de instalar.
 - Suite de testes para encaminhamento, geração de artefactos e isolamento de projetos.
 
-Este é um **protótipo funcional e um plano de instalação**, não uma instalação na VPS. A implantação completa (REA upstream autónomo, Ghidra, JADX, motores de media, modelos e integrações remotas) exige executar o instalador no Ubuntu e testar cada componente real. Um programa listado não significa que já esteja instalado ou seja compatível com a VPS concreta.
+Este é um **protótipo funcional já instalado na VPS, mas não ainda uma plataforma universal completa**. A implantação completa (REA upstream autónomo, Ghidra, JADX, motores de media, modelos e integrações remotas) exige executar o instalador no Ubuntu e testar cada componente real. Um programa listado não significa que já esteja instalado ou seja compatível com a VPS concreta.
 
 ## Testes sem alterar o sistema
 
@@ -113,7 +117,7 @@ Sem instalação automática ao receber um pedido; `--apply` é explícito. Sem 
 
 ## GitHub Actions independente (modelo incluído)
 
-O workflow `.github/workflows/deploy-vps.yml` usa apenas os quatro secrets `MOTOR_SSH_HOST`, `MOTOR_SSH_USER`, `MOTOR_SSH_PRIVATE_KEY`, `MOTOR_SSH_KNOWN_HOSTS` (e `MOTOR_SSH_PORT` opcional). Requer um repositório GitHub **novo** e autorização `workflow_dispatch` com `DEPLOY`. Copia o motor para `$HOME/.local/share/motor-universal-linux`, corre testes/doctor e não instala pacotes do sistema. Confirmação do host SSH via known_hosts é obrigatória. Sem configurar estes secrets não existe ligação funcional à VPS. Não criar workflows em projetos anteriores.
+O workflow `.github/workflows/deploy-vps.yml` usa apenas os quatro secrets `MOTOR_SSH_HOST`, `MOTOR_SSH_USER`, `MOTOR_SSH_PRIVATE_KEY`, `MOTOR_SSH_KNOWN_HOSTS` (e `MOTOR_SSH_PORT` opcional). Requer um repositório GitHub **novo** e autorização `workflow_dispatch` com `DEPLOY`. Copia o motor para `$HOME/.local/share/motor-universal-linux`, corre testes/doctor e não instala pacotes do sistema. Confirmação do host SSH via known_hosts é obrigatória. Estes secrets são necessários **apenas para este workflow alternativo**. A instalação real usou a credencial SSH previamente configurada no repo `martaxi-boss/VPS`, através de um workflow dedicado que não alterou os antigos.
 
 ## REA e Ruflo no mesmo projeto, mas com instalações independentes
 

@@ -3,7 +3,13 @@
 **Documento canónico de continuidade do projeto.**
 **Atualizado:** 2026-11-02. **Repositório exclusivo:** `martaxi-boss/skill-universal`.
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
-**Estado:** ARQUITETURA E SELEÇÃO INICIAIS; NÃO É UMA INSTALAÇÃO OPERACIONAL COMPLETA NA VPS.
+**Estado atual:** BASE INSTALADA E TESTADA NA VPS; REA/RUFLO INSTALADOS COM TESTE CLI; JADX/GHI## Instalação real — prova mais recente de 02/11/2026
+
+**GitHub Actions VPS #41538472015: SUCCESS.** Release `b8a7de8695b16bf064e0796c3cb9276d3a8254ed` instalado em `/home/ubuntu/.local/share/motor-ferrari/current`. **41 testes na VPS PASS**; orquestrador executou fluxo real HTML/SVG/strings. **JADX 1.5.6 passou na descompilação de Java; Ghidra 12.2 analisou /usr/bin/true com Java 25 isolado.** REA 6.8.0 e Ruflo 3.71.0 instalados e CLIs iniciadas (`--help`), mas sem certificação funcional profunda. Os 56 candidatos não equivalem a 56 programas instalados; ainda falta ligação direta da Skill.
+
+Consultar [relatório da implantação real](docs/RELATORIO_REAL_VPS_20261102.md) antes de alterar o motor. **A secção histórica abaixo descreve o estado de pré-instalação e não prevalece sobre esta prova.**
+
+DRA COM TESTE FUNCIONAL. CATÁLOGO COMPLETO E LIGAÇÃO SKILL → VPS AINDA NÃO CERTIFICADOS. Ver [relatório de instalação real](docs/RELATORIO_REAL_VPS_20261102.md).
 
 ## 1. Decisão central — não perder o objetivo
 
@@ -34,7 +40,7 @@ A **Skill** orienta; o **orquestrador** distribui operações; o **motor e os pr
 
 **Nunca misturar** o Ferrari com Project Leader, REA de outros projetos, Telegram, FADEGO, PINK IPTV ou outro repositório. Se REA ou Ruflo for necessário, instalar uma instância **independente**, no próprio Ferrari.
 
-## 2. Verdade operacional em 2026-11-02
+## 2. Registo anterior à instalação (histórico, substituído pelo relatório real de 02/11)
 
 | Componente | Situação confirmada |
 |---|---|

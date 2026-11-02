@@ -1,3 +1,5 @@
+> **Instalação real concluída em 02/11/2026.** O workflow operacional foi `martaxi-boss/VPS/.github/workflows/ferrari-independent-vps-delivery.yml`, usando o SSH existente; execução [#41538472015](https://github.com/martaxi-boss/VPS/actions/runs/41538472015) **PASS**. Ver [relatório real](RELATORIO_REAL_VPS_20261102.md). O método manual abaixo é uma **alternativa não utilizada nesta implantação**, cuja configuração SSH própria é diferente.
+
 # Instalar o Motor Ferrari na VPS Ubuntu — operação real
 
 Este é o procedimento **para a VPS real**, não para o runner GitHub Actions. O código foi criado na branch main do repositório exclusivo \`martaxi-boss/skill-universal\`.
