@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "steps": [
+    {
+      "id": "loja",
+      "operation": "web-template",
+      "layout": "store",
+      "title": "Ferrari Loja Profissional"
+    },
+    {
+      "id": "criativo",
+      "operation": "svg-poster",
+      "title": "Campanha Ferrari"
+    },
+    {
+      "id": "inspecao_html",
+      "operation": "binary-strings",
+      "depends_on": [
+        "loja"
+      ],
+      "input_from": "loja"
+    }
+  ]
+}
