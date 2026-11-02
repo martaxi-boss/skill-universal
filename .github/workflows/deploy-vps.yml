@@ -1,39 +1,103 @@
-name: Deploy independent universal motor to VPS
+name: Ferrari Ubuntu VPS - precheck, deploy, install
 on:
   workflow_dispatch:
     inputs:
-      deploy_confirm:
-        description: 'Type DEPLOY to copy this project to its own directory (no system packages)'
+      stage:
+        description: 'Choose PRECHECK, DEPLOY or INSTALL_HEADLESS'
+        type: choice
+        required: true
+        options: [PRECHECK, DEPLOY, INSTALL_HEADLESS]
+      confirm:
+        description: 'Type FERRARI to confirm the selected action'
         required: true
         type: string
+permissions:
+  contents: read
+concurrency:
+  group: ferrari-vps-deployment
+  cancel-in-progress: false
 jobs:
-  deploy:
-    if: ${{ inputs.deploy_confirm == 'DEPLOY' }}
+  ferrari:
+    if: ${{ inputs.confirm == 'FERRARI' }}
     runs-on: ubuntu-24.04
     environment: vps-motor-universal
     steps:
       - uses: actions/checkout@v4
-      - name: Configure isolated SSH session
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.MOTOR_SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.MOTOR_SSH_KNOWN_HOSTS }}
+      - name: Validate code on Ubuntu runner
         run: |
-          mkdir -p "$RUNNER_TEMP/motor-ssh"
-          chmod 700 "$RUNNER_TEMP/motor-ssh"
-          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/motor-ssh/key"
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/motor-ssh/known_hosts"
-          chmod 600 "$RUNNER_TEMP/motor-ssh/key" "$RUNNER_TEMP/motor-ssh/known_hosts"
-      - name: Copy motor into a separate VPS path and run doctor
+          set -euo pipefail
+          python3 -m unittest discover -s tests -v
+          bash -n install/vps-preflight.sh
+          bash -n install/ferrari-ubuntu.sh
+      - name: Check SSH secrets and known host
         env:
-          MOTOR_SSH_HOST: ${{ secrets.MOTOR_SSH_HOST }}
-          MOTOR_SSH_USER: ${{ secrets.MOTOR_SSH_USER }}
-          MOTOR_SSH_PORT: ${{ secrets.MOTOR_SSH_PORT }}
+          KEY: ${{ secrets.MOTOR_SSH_PRIVATE_KEY }}
+          KNOWN: ${{ secrets.MOTOR_SSH_KNOWN_HOSTS }}
+          HOST: ${{ secrets.MOTOR_SSH_HOST }}
+          USERNAME: ${{ secrets.MOTOR_SSH_USER }}
         run: |
-          set -eu
-          PORT="${MOTOR_SSH_PORT:-22}"
-          test -n "$MOTOR_SSH_HOST" && test -n "$MOTOR_SSH_USER"
-          OPTS=(-i "$RUNNER_TEMP/motor-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/motor-ssh/known_hosts")
-          tar --exclude=.git --exclude=examples --exclude=__pycache__ -czf "$RUNNER_TEMP/motor-package.tar.gz" .
-          ssh "${OPTS[@]}" -p "$PORT" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}" 'mkdir -p "$HOME/.local/share/motor-universal-linux"'
-          scp "${OPTS[@]}" -P "$PORT" "$RUNNER_TEMP/motor-package.tar.gz" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}:.local/share/motor-universal-linux/package.tar.gz"
-          ssh "${OPTS[@]}" -p "$PORT" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}" 'cd "$HOME/.local/share/motor-universal-linux" && tar -xzf package.tar.gz && rm package.tar.gz && python3 -m unittest discover -s tests -v && python3 -m engine.cli doctor'
+          set -euo pipefail
+          test -n "$KEY" && test -n "$KNOWN" && test -n "$HOST" && test -n "$USERNAME" || { echo 'Missing MOTOR_SSH_* secrets'; exit 2; }
+          mkdir -p "$RUNNER_TEMP/ferrari-ssh"
+          chmod 700 "$RUNNER_TEMP/ferrari-ssh"
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/ferrari-ssh/key"
+          printf '%s\n' "$KNOWN" > "$RUNNER_TEMP/ferrari-ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/ferrari-ssh/key" "$RUNNER_TEMP/ferrari-ssh/known_hosts"
+      - name: Read-only VPS Ubuntu preflight
+        env:
+          HOST: ${{ secrets.MOTOR_SSH_HOST }}
+          USERNAME: ${{ secrets.MOTOR_SSH_USER }}
+          PORT: ${{ secrets.MOTOR_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
+          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" 'bash -s' < install/vps-preflight.sh
+      - name: Deploy isolated versioned Ferrari release
+        if: ${{ inputs.stage != 'PRECHECK' }}
+        env:
+          HOST: ${{ secrets.MOTOR_SSH_HOST }}
+          USERNAME: ${{ secrets.MOTOR_SSH_USER }}
+          PORT: ${{ secrets.MOTOR_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
+          SHA="$GITHUB_SHA"
+          tar --exclude=.git --exclude=__pycache__ --exclude=.runtime -czf "$RUNNER_TEMP/source.tar.gz" .
+          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" "mkdir -p \"\$HOME/.local/share/motor-ferrari/releases/$SHA\""
+          scp "${SSH_ARGS[@]}" -P "${PORT:-22}" "$RUNNER_TEMP/source.tar.gz" "$USERNAME@$HOST:.local/share/motor-ferrari/releases/$SHA/source.tar.gz"
+          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" "bash -s -- '$SHA'" <<'REMOTE'
+          set -euo pipefail
+          PROJECT="$HOME/.local/share/motor-ferrari"
+          RELEASE="$PROJECT/releases/$1"
+          cd "$RELEASE"
+          tar -xzf source.tar.gz
+          rm source.tar.gz
+          python3 -m unittest discover -s tests -v
+          python3 -m engine.ferrari doctor
+          bash install/ferrari-ubuntu.sh --profile maximum --headless
+          ln -sfn "$RELEASE" "$PROJECT/current.next"
+          mv -Tf "$PROJECT/current.next" "$PROJECT/current"
+          printf 'FERRARI_RELEASE=%s\n' "$1"
+          echo 'FERRARI_DEPLOY=PASS_SOURCE_ONLY'
+          REMOTE
+      - name: Install approved Ubuntu headless packages and smoke test
+        if: ${{ inputs.stage == 'INSTALL_HEADLESS' }}
+        env:
+          HOST: ${{ secrets.MOTOR_SSH_HOST }}
+          USERNAME: ${{ secrets.MOTOR_SSH_USER }}
+          PORT: ${{ secrets.MOTOR_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
+          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          cd "$HOME/.local/share/motor-ferrari/current"
+          sudo -n bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
+          for exe in git ffmpeg pdftotext tesseract; do
+            command -v "$exe" || exit 2
+          done
+          python3 -m unittest discover -s tests -v
+          python3 -m engine.ferrari doctor
+          echo 'FERRARI_APT_SMOKE=PASS'
+          echo 'EXTERNAL_ENGINES=NOT_YET_INSTALLED_OR_CERTIFIED'
+          REMOTE
