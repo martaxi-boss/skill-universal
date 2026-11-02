@@ -35,7 +35,7 @@ for pkg in "${REQUESTED[@]}"; do
       continue
       ;;
   esac
-  candidate="$(apt-cache policy "$pkg" 2>/dev/null | awk '/Candidate:/ {print $2; exit}')"
+  candidate="$(apt-cache policy "$pkg" 2>/dev/null | awk '/Candidate:/ && !found {print $2; found=1}')"
   if [[ -n "$candidate" && "$candidate" != "(none)" ]]; then
     AVAILABLE+=("$pkg")
   else
