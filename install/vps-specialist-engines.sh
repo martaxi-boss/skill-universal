@@ -53,7 +53,7 @@ fi
 mkdir -p "$WORK/source" "$WORK/jadx-out"
 printf 'public class FerrariSmoke { public static int answer() { return 42; } }\n' \
   > "$WORK/source/FerrariSmoke.java"
-"$JDK/bin/javac" "$WORK/source/FerrariSmoke.java"
+"$JDK/bin/javac" --release 11 "$WORK/source/FerrariSmoke.java"
 "$JDK/bin/jar" cf "$WORK/ferrari-smoke.jar" -C "$WORK/source" FerrariSmoke.class
 "$JADX/bin/jadx" -d "$WORK/jadx-out" "$WORK/ferrari-smoke.jar"
 test -f "$WORK/jadx-out/sources/FerrariSmoke.java"
@@ -76,5 +76,5 @@ mkdir -p "$WORK/ghidra-projects" "$SOURCE/smoke/specialists"
 grep -E 'Importing|Analysis|Finished|success|Successfully' \
   "$SOURCE/smoke/specialists/ghidra-headless.log" | tail -n 16 || true
 echo 'FERRARI_GHIDRA_HEADLESS_FUNCTIONAL=PASS'
-echo "FERRARI_SPECIALISTS_JDK=$("$JDK/bin/java" --version | head -n 1)"
+echo "FERRARI_SPECIALISTS_JDK=$("$JDK/bin/java" --version | sed -n '1p')"
 echo 'FERRARI_JADX_GHIDRA_INSTALLED=YES'
