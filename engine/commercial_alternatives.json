@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "platform": "Ubuntu Linux",
+  "policy": "Only independently licensed free programs or legally reimplemented formats/protocols. No crack, license-bypass, stolen binary or paid provider use.",
+  "quality_note": "Alternative capabilities differ; no binary equivalence or identical feature set guaranteed.",
+  "entries": [
+    {
+      "product": "Adobe Creative Cloud",
+      "aliases": [
+        "adobe",
+        "creative cloud",
+        "adobe completo"
+      ],
+      "domain": "suite",
+      "tools": [
+        "gimp",
+        "krita",
+        "blender",
+        "darktable",
+        "kdenlive",
+        "scribus",
+        "imagemagick",
+        "ffmpeg",
+        "libreoffice",
+        "inkscape"
+      ],
+      "coverage": "multiple free independent apps; not a drop-in Adobe package",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Photoshop",
+      "aliases": [
+        "photoshop",
+        "psd"
+      ],
+      "domain": "raster",
+      "tools": [
+        "gimp",
+        "krita",
+        "darktable",
+        "imagemagick"
+      ],
+      "coverage": "photo editing and pixel art; PSD fidelity varies",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Illustrator",
+      "aliases": [
+        "illustrator",
+        "ai vector"
+      ],
+      "domain": "vector",
+      "tools": [
+        "inkscape",
+        "penpot",
+        "krita"
+      ],
+      "coverage": "vector design; format compatibility varies",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Premiere Pro",
+      "aliases": [
+        "premiere",
+        "premiere pro"
+      ],
+      "domain": "video",
+      "tools": [
+        "kdenlive",
+        "ffmpeg",
+        "openshot",
+        "losslesscut"
+      ],
+      "coverage": "video editing and exports; project files are not interchangeable",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe After Effects",
+      "aliases": [
+        "after effects",
+        "aftereffects"
+      ],
+      "domain": "motion",
+      "tools": [
+        "blender",
+        "natron",
+        "synfig",
+        "ffmpeg"
+      ],
+      "coverage": "compositing and animation, not plug-in compatible",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe InDesign",
+      "aliases": [
+        "indesign"
+      ],
+      "domain": "layout",
+      "tools": [
+        "scribus",
+        "libreoffice"
+      ],
+      "coverage": "professional page layout, no guaranteed INDD support",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Lightroom",
+      "aliases": [
+        "lightroom"
+      ],
+      "domain": "raw_photo",
+      "tools": [
+        "darktable",
+        "gimp"
+      ],
+      "coverage": "RAW adjustment and catalog, not catalog migration parity",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Acrobat Pro",
+      "aliases": [
+        "acrobat",
+        "acrobat pro"
+      ],
+      "domain": "pdf",
+      "tools": [
+        "libreoffice",
+        "ocrmypdf",
+        "pdfcpu",
+        "pypdf",
+        "qpdf"
+      ],
+      "coverage": "PDF creation/edit/ocr; not all signature/cloud features",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Audition",
+      "aliases": [
+        "audition"
+      ],
+      "domain": "audio",
+      "tools": [
+        "audacity",
+        "lmms",
+        "ffmpeg"
+      ],
+      "coverage": "audio edit and postproduction",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Adobe Animate",
+      "aliases": [
+        "adobe animate"
+      ],
+      "domain": "animation",
+      "tools": [
+        "synfig",
+        "opentoonz",
+        "blender"
+      ],
+      "coverage": "2D animation with different project formats",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Figma",
+      "aliases": [
+        "figma"
+      ],
+      "domain": "ui_design",
+      "tools": [
+        "penpot",
+        "excalidraw"
+      ],
+      "coverage": "UI and collaborative wireframes; migration support varies",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Autodesk AutoCAD",
+      "aliases": [
+        "autocad"
+      ],
+      "domain": "cad",
+      "tools": [
+        "freecad",
+        "librecad",
+        "openscad"
+      ],
+      "coverage": "CAD 2D/3D, not guaranteed DWG feature parity",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Autodesk Maya / 3ds Max",
+      "aliases": [
+        "maya",
+        "3ds max",
+        "3dsmax"
+      ],
+      "domain": "3d",
+      "tools": [
+        "blender"
+      ],
+      "coverage": "3D modeling/rendering/animation; distinct formats",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Microsoft Office",
+      "aliases": [
+        "microsoft office",
+        "ms office",
+        "word",
+        "excel"
+      ],
+      "domain": "office",
+      "tools": [
+        "libreoffice",
+        "onlyoffice",
+        "pandoc"
+      ],
+      "coverage": "office documents/spreadsheets; advanced macros differ",
+      "native_ubuntu": true
+    },
+    {
+      "product": "CapCut",
+      "aliases": [
+        "capcut"
+      ],
+      "domain": "video",
+      "tools": [
+        "kdenlive",
+        "openshot",
+        "ffmpeg"
+      ],
+      "coverage": "video and social editing",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Zapier",
+      "aliases": [
+        "zapier"
+      ],
+      "domain": "automation",
+      "tools": [
+        "prefect",
+        "airflow",
+        "ansible"
+      ],
+      "coverage": "workflow automations; connectors require configuration",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Notion",
+      "aliases": [
+        "notion"
+      ],
+      "domain": "productivity",
+      "tools": [
+        "appflowy",
+        "joplin"
+      ],
+      "coverage": "notes/projects, not a complete Notion clone",
+      "native_ubuntu": true
+    },
+    {
+      "product": "Google Analytics / Looker Studio",
+      "aliases": [
+        "looker",
+        "looker studio"
+      ],
+      "domain": "bi",
+      "tools": [
+        "superset",
+        "grafana",
+        "streamlit",
+        "dash"
+      ],
+      "coverage": "dashboards and BI, requires data sources",
+      "native_ubuntu": true
+    }
+  ]
+}
