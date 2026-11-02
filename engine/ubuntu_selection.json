@@ -14,7 +14,7 @@
     "do_not_execute_discovered_code": true,
     "do_not_install_without_explicit_apply": true
   },
-  "count": 41,
+  "count": 56,
   "tools": [
     {
       "id": "apktool",
@@ -1026,12 +1026,357 @@
       "selected_for_auto_install": false,
       "license_review_required": false,
       "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "nextjs",
+      "repo": "vercel/next.js",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://nextjs.org/docs/app/getting-started/installation"
+        }
+      ],
+      "runtime_note": "Linux Node.js >=20.9",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "vite",
+      "repo": "vitejs/vite",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://vite.dev/guide/"
+        }
+      ],
+      "runtime_note": "Node.js >=20.19 or >=22.12; scaffold per project",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "tailwind",
+      "repo": "tailwindlabs/tailwindcss",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://tailwindcss.com/docs/installation/using-vite"
+        }
+      ],
+      "runtime_note": "CSS build pipeline, not standalone system package",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "bootstrap",
+      "repo": "twbs/bootstrap",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://getbootstrap.com/docs/5.3/getting-started/download/"
+        }
+      ],
+      "runtime_note": "CSS/JS assets; project-specific build",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "playwright",
+      "repo": "microsoft/playwright",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://playwright.dev/docs/intro"
+        }
+      ],
+      "runtime_note": "Explicit Ubuntu 22.04, 24.04, 26.04 x86_64/ARM64; browser binaries and deps required",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "shadcn",
+      "repo": "shadcn-ui/ui",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://ui.shadcn.com/docs/installation"
+        }
+      ],
+      "runtime_note": "UI components; install into project with Node toolchain",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "docling",
+      "repo": "docling-project/docling",
+      "category": "docs",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://docling-project.github.io/docling/getting_started/installation/"
+        }
+      ],
+      "runtime_note": "Linux x86_64/arm64 supports Python CPU-only PyTorch; models and RAM required",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "typst",
+      "repo": "typst/typst",
+      "category": "docs",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://typst.app/docs/installation/"
+        }
+      ],
+      "runtime_note": "Cross-platform compiler; use pinned Linux release",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "duckdb",
+      "repo": "duckdb/duckdb",
+      "category": "data",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://duckdb.org/docs/stable/installation/"
+        }
+      ],
+      "runtime_note": "Local analytics DB; Python or CLI version specific",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "polars",
+      "repo": "pola-rs/polars",
+      "category": "data",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://docs.pola.rs/user-guide/installation/"
+        }
+      ],
+      "runtime_note": "Python/Rust packages; CPU feature checks",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "streamlit",
+      "repo": "streamlit/streamlit",
+      "category": "data",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://docs.streamlit.io/get-started/installation"
+        }
+      ],
+      "runtime_note": "Python app server, network binding only after review",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "gradio",
+      "repo": "gradio-app/gradio",
+      "category": "web",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://www.gradio.app/guides/quickstart"
+        }
+      ],
+      "runtime_note": "Python app interface, network binding only after review",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "godot",
+      "repo": "godotengine/godot",
+      "category": "game",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://docs.godotengine.org/en/stable/about/system_requirements.html"
+        }
+      ],
+      "runtime_note": "Linux game engine; headless export requires SDK/templates",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "faster-whisper",
+      "repo": "SYSTRAN/faster-whisper",
+      "category": "audio",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "MIT",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://github.com/SYSTRAN/faster-whisper"
+        }
+      ],
+      "runtime_note": "Python CTranslate2; CPU works with expected RAM and model downloads",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
+    },
+    {
+      "id": "prefect",
+      "repo": "prefecthq/prefect",
+      "category": "automation",
+      "priority": "professional",
+      "platform": "Ubuntu 24.04 LTS",
+      "installation_tier": "external_upstream",
+      "selection_status": "upstream_linux_supported_not_host_certified",
+      "installation_candidate": null,
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "kind": "upstream_documentation_linux",
+          "url": "https://docs.prefect.io/v3/get-started/install"
+        }
+      ],
+      "runtime_note": "Python workflows, server services optional",
+      "installed_on_vps": false,
+      "certified_on_vps": false,
+      "license_review_required": false,
+      "selected_for_auto_install": false,
+      "eligible_for_ubuntu_preflight": false
     }
   ],
   "statistics": {
-    "curated": 41,
+    "curated": 56,
     "ubuntu_2404_apt_verified": 29,
-    "upstream_doc": 6,
+    "linux_upstream_candidates": 21,
     "desktop_unproven": 6
   }
 }
