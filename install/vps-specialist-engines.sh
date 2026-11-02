@@ -77,14 +77,24 @@ if [[ ! -x "$GHIDRA/support/analyzeHeadless" ]]; then
   mkdir -p "$WORK/ghidra-extract"
   unzip -q "$WORK/ghidra.zip" -d "$WORK/ghidra-extract"
   found="$(find "$WORK/ghidra-extract" -mindepth 1 -maxdepth 1 -type d -name 'ghidra_*' -print -quit)"
-  test -n "$found" && test -f "$found/support/analyzeHeadless"
+  if [[ -z "$found" || ! -f "$found/support/analyzeHeadless" ]]; then
+    echo 'FERRARI_GHIDRA_ARCHIVE_LAYOUT_UNEXPECTED' >&2
+    find "$WORK/ghidra-extract" -mindepth 1 -maxdepth 3 -type f -name '*analyzeHeadless*' -print >&2
+    exit 4
+  fi
   chmod +x "$found/support/analyzeHeadless"
   mv "$found" "$GHIDRA"
 fi
+echo 'FERRARI_GHIDRA_INSTALLED_ARCHIVE=PASS'
 mkdir -p "$WORK/ghidra-projects" "$SOURCE/smoke/specialists"
-"$GHIDRA/support/analyzeHeadless" "$WORK/ghidra-projects" FerrariSmoke \
+echo 'FERRARI_GHIDRA_HEADLESS_ANALYSIS=START'
+if ! "$GHIDRA/support/analyzeHeadless" "$WORK/ghidra-projects" FerrariSmoke \
   -import /usr/bin/true -analysisTimeoutPerFile 60 -deleteProject \
-  > "$SOURCE/smoke/specialists/ghidra-headless.log" 2>&1
+  > "$SOURCE/smoke/specialists/ghidra-headless.log" 2>&1; then
+  echo 'FERRARI_GHIDRA_HEADLESS_FAILED_LOG_FOLLOWS' >&2
+  tail -n 90 "$SOURCE/smoke/specialists/ghidra-headless.log" >&2
+  exit 5
+fi
 grep -E 'Importing|Analysis|Finished|success|Successfully' \
   "$SOURCE/smoke/specialists/ghidra-headless.log" | tail -n 16 || true
 echo 'FERRARI_GHIDRA_HEADLESS_FUNCTIONAL=PASS'
