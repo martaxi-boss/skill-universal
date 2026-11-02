@@ -136,3 +136,14 @@ Ao retomar:
 6. Quando a necessidade for uma nova área, **alargar o mesmo Ferrari**, não desviar para outro motor.
 
 **Resumo permanente:** UMA Skill Universal + UM Motor Ferrari independente na VPS Ubuntu + UM Orquestrador próprio + ferramentas profissionais realmente instaladas, testadas e integradas. **Hoje o projeto tem uma base funcional e seleção prévia, mas não tem tudo implementado nem a VPS certificada.**
+
+## 7. Auditoria e delivery GitHub — execução em 2026-11-02
+
+- **Commit de auditoria/instalador:** `fa48826df447176afc2356efd66d4808c736f47c`.
+- **CI no Ubuntu 24.04:** [run #41534293244](https://github.com/martaxi-boss/skill-universal/actions/runs/41534293244) — `success`; teste de código, registo, dependências APT no runner e regras de segurança do workflow passaram.
+- **PRECHECK VPS real:** [run #41534293085](https://github.com/martaxi-boss/skill-universal/actions/runs/41534293085) — `failure` **por falta de credenciais GitHub `MOTOR_SSH_*`**. Passo SSH falhou antes de qualquer conexão. `Read-only VPS Ubuntu preflight` foi `skipped`.
+- **Instalação na VPS:** não iniciada. **Não há nova evidência de compatibilidade do hardware da VPS nem de software instalado nela.**
+- **Próximo desbloqueio necessário:** configurar os secrets SSH exclusivos deste repositório (ou ambiente `vps-motor-universal`) e executar manualmente `PRECHECK`; só após um PRECHECK PASS decidir `DEPLOY` e `INSTALL_HEADLESS`. Não colocar a chave privada nem os seus valores em ficheiros ou na conversa.
+- **Verificações oficiais externas:** Ubuntu 24.04 (noble) tem pacote `nodejs` 18.19.1 nos repositórios padrão; REA 6.8.0 requer Node >=22.23.4 na série 22 / >=24.22.1 na série 24 / >=26.12.1; Ghidra 12.2 exige JDK 25. O instalador Ferrari evita alterar o Node.js global e não tenta instalar Ghidra/REA até existir ambiente isolado compatível.
+
+**Delivery atual:** pronto para diagnóstico na VPS após configuração SSH; não pronto para declarar que todas as 56 ferramentas trabalham na VPS.

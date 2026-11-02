@@ -35,3 +35,9 @@ O workflow `.github/workflows/deploy-vps.yml` pode executar **PRECHECK** por `wo
 Referências: `BOOTSTRAP.md`, `engine/ubuntu_selection.json`, `install/external-release-lock.json`, `docs/INSTALACAO_VPS.md`.
 
 **Conclusão:** lançar PRECHECK; não declarar Ferrari 100% funcional nem instalação de 56 ferramentas enquanto não existirem evidências na VPS.
+
+## Resultado da execução de verificação
+
+- CI Ubuntu 24.04: [#41534293244](https://github.com/martaxi-boss/skill-universal/actions/runs/41534293244) — **PASS**.
+- PRECHECK via GitHub Actions: [#41534293085](https://github.com/martaxi-boss/skill-universal/actions/runs/41534293085) — **BLOCKED, `MOTOR_SSH_*` secrets absent**. O SSH e qualquer operação na VPS foram ignorados, não houve instalação.
+- Ações necessárias: configurar os secrets no repositório independente e voltar a executar PRECHECK, depois DEPLOY e INSTALL_HEADLESS consoante prova real. Nunca afirmar 56/56 certificadas sem teste.

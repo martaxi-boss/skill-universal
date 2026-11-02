@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Estado da entrega real — 02/11/2026
+
+**CI Ubuntu 24.04: PASS (#41534293244).** **PRECHECK da VPS: bloqueado (#41534293085)** pela ausência de `MOTOR_SSH_*` no GitHub Actions; sem ligação SSH nem instalação. Ver `BOOTSTRAP.md` e `docs/AUDITORIA_ENTREGA_UBUNTU.md` para retomar.
+
 ## Entrega final para pré-diagnóstico da VPS (02/11/2026)
 
 **Não foi comprovada compatibilidade operacional de todas as 56 ferramentas na VPS; não instalar tudo.** O primeiro passo é um **PRECHECK por GitHub Actions, só de leitura**, sem APT nem escrita na VPS. O instalador de pacotes headless exclui Node.js/npm do Ubuntu (versão potencialmente incompatível com REA), serviços Prometheus/Valkey (evitar alterar serviços de outros projetos), recusa pacotes obrigatórios ausentes e testa resolução de dependências APT antes de instalar.
