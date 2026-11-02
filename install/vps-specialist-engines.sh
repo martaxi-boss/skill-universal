@@ -56,8 +56,20 @@ printf 'public class FerrariSmoke { public static int answer() { return 42; } }\
 "$JDK/bin/javac" --release 11 "$WORK/source/FerrariSmoke.java"
 "$JDK/bin/jar" cf "$WORK/ferrari-smoke.jar" -C "$WORK/source" FerrariSmoke.class
 "$JADX/bin/jadx" -d "$WORK/jadx-out" "$WORK/ferrari-smoke.jar"
-test -f "$WORK/jadx-out/sources/FerrariSmoke.java"
-grep -q 'FerrariSmoke' "$WORK/jadx-out/sources/FerrariSmoke.java"
+JAVA_SOURCE="$(find "$WORK/jadx-out" -type f -name '*FerrariSmoke*.java' -print -quit)"
+if [[ -z "$JAVA_SOURCE" ]]; then
+  # Some JADX releases lay out decompiled JARs differently; retry class directly.
+  mkdir -p "$WORK/jadx-single"
+  "$JADX/bin/jadx" -d "$WORK/jadx-single" "$WORK/source/FerrariSmoke.class"
+  JAVA_SOURCE="$(find "$WORK/jadx-single" -type f -name '*FerrariSmoke*.java' -print -quit)"
+fi
+if [[ -z "$JAVA_SOURCE" || ! -f "$JAVA_SOURCE" ]]; then
+  echo 'FERRARI_JADX_NO_EXPECTED_JAVA_SOURCE' >&2
+  find "$WORK/jadx-out" "$WORK/jadx-single" -maxdepth 5 -type f -print >&2
+  exit 4
+fi
+grep -q 'FerrariSmoke' "$JAVA_SOURCE"
+printf 'FERRARI_JADX_JAVA_OUTPUT=%s\n' "${JAVA_SOURCE#$WORK/}"
 echo 'FERRARI_JADX_FUNCTIONAL=PASS'
 if [[ ! -x "$GHIDRA/support/analyzeHeadless" ]]; then
   download 'https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip' \
