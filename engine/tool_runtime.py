@@ -104,6 +104,22 @@ def route(request,source=None):
     candidates.sort(key=lambda x:(-x["score"],x["action"]))
     return {"request":request,"input":source,"suggestions":candidates,"executed":False}
 
+def auto(request,source,folder=None,execute=False):
+    """Resolve a user request to a single installed adapter; run only if unambiguous."""
+    proposal=route(request,source)
+    options=proposal["suggestions"]
+    if not options:
+        return {**proposal,"selected":None,"status":"no_matching_installed_adapter"}
+    best=options[0]
+    if len(options)>1 and options[1]["score"]==best["score"]:
+        return {**proposal,"selected":None,"status":"ambiguous","note":"No automatic execution when alternatives tie"}
+    if not execute:
+        return {**proposal,"selected":best,"status":"preview"}
+    if not folder:
+        raise ValueError("Output directory required to execute")
+    outcome=invoke(best["action"],source,folder)
+    return {**proposal,"selected":best,"status":"completed","executed":True,"result":outcome}
+
 def invoke(action,source,folder):
     x=specs().get(action)
     if not x:raise ValueError("Unknown executable action")
@@ -144,6 +160,8 @@ def main(argv=None):
     sub.add_parser("inventory")
     sub.add_parser("actions")
     r=sub.add_parser("route");r.add_argument("request");r.add_argument("--input")
+    a=sub.add_parser("auto");a.add_argument("request");a.add_argument("--input",required=True)
+    a.add_argument("--output");a.add_argument("--execute",action="store_true")
     i=sub.add_parser("invoke");i.add_argument("--action",required=True)
     i.add_argument("--input",required=True);i.add_argument("--output",required=True)
     args=ap.parse_args(argv)
@@ -152,6 +170,7 @@ def main(argv=None):
         response=[{"action":x["id"],"tool":x["tool"],"available":bool(executable(x["tool"],x["binary"]))}
                   for x in specs().values()]
     elif args.cmd=="route":response=route(args.request,args.input)
+    elif args.cmd=="auto":response=auto(args.request,args.input,args.output,args.execute)
     else:response=invoke(args.action,args.input,args.output)
     print(json.dumps(response,ensure_ascii=False,indent=2))
 if __name__=="__main__":
