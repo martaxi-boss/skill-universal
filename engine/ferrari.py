@@ -179,6 +179,10 @@ def alternatives(product):
         "coverage":entry["coverage"],"alternatives":candidates,
         "notice":"Legal free alternatives, not a cracked original or guaranteed file compatibility."}
 
+def discover(query, minimum_stars=100, limit=15):
+    from engine.github_discovery import discover as upstream_discover
+    return upstream_discover(query, minimum_stars=minimum_stars, limit=limit)
+
 def packages(profile="maximum",include_gui=True):
     cats={"core":{"dev","automation"},"web":{"dev","web"},"reverse":{"dev","reverse"},
           "creative":{"creative","media"},"docs":{"docs"},"media":{"media","creative"},
@@ -289,6 +293,7 @@ def main(argv=None):
     ls=sub.add_parser("list");ls.add_argument("--category")
     pl=sub.add_parser("plan");pl.add_argument("request")
     al=sub.add_parser("alternatives");al.add_argument("product")
+    ds=sub.add_parser("discover");ds.add_argument("query");ds.add_argument("--min-stars",type=int,default=100);ds.add_argument("--limit",type=int,default=15)
     pk=sub.add_parser("packages")
     pk.add_argument("--profile",default="maximum");pk.add_argument("--headless",action="store_true")
     pk.add_argument("--plain",action="store_true")
@@ -303,6 +308,7 @@ def main(argv=None):
     elif a.cmd=="list": result=inventory(a.category)
     elif a.cmd=="plan": result=plan(a.request)
     elif a.cmd=="alternatives": result=alternatives(a.product)
+    elif a.cmd=="discover": result=discover(a.query,a.min_stars,a.limit)
     elif a.cmd=="packages":
         result=packages(a.profile,not a.headless)
         if a.plain:

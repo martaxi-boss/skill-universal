@@ -68,5 +68,16 @@ def ferrari_run(operation: str, output: str, input_file: str = "", title: str = 
     """Run one supported typed Ubuntu operation; never shell commands from prompts."""
     return json.dumps(ferrari_engine.run(operation, output, input_file or None, title, layout), ensure_ascii=False)
 
+
+@mcp.tool()
+def ferrari_alternatives(product: str) -> str:
+    """Find legitimate Ubuntu software alternatives for commercial products."""
+    return json.dumps(ferrari_engine.alternatives(product), ensure_ascii=False)
+
+@mcp.tool()
+def ferrari_discover(query: str, minimum_stars: int = 100, limit: int = 15) -> str:
+    """Search free licensed GitHub upstream metadata, with no installation or code execution."""
+    return json.dumps(ferrari_engine.discover(query, minimum_stars, limit), ensure_ascii=False)
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
