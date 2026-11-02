@@ -79,7 +79,11 @@ def present(p):
         return False
     if p["id"]=="ghidra":
         home=os.getenv("GHIDRA_INSTALL_DIR")
-        return bool(shutil.which(exe) or (home and (Path(home)/"support/analyzeHeadless").is_file()))
+        local=Path.home()/".local/share/motor-ferrari/tools/ghidra-12.2/support/analyzeHeadless"
+        return bool(shutil.which(exe) or (home and (Path(home)/"support/analyzeHeadless").is_file()) or local.is_file())
+    if p["id"]=="jadx":
+        local=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
+        return bool(shutil.which(exe) or local.is_file())
     if p["id"] in {"rea","ruflo"}:
         local=ROOT/".runtime"/"npm"/p["id"]/"node_modules"/".bin"/p["id"]
         return bool(shutil.which(p["id"]) or local.is_file())
@@ -274,6 +278,10 @@ def _output(folder,name):
 
 def _exe(name):
     p=shutil.which(name)
+    if not p and name=="jadx":
+        candidate=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
+        if candidate.is_file() and os.access(candidate,os.X_OK):
+            p=str(candidate)
     if not p:
         raise RuntimeError("Missing Ubuntu executor: "+name)
     return p
