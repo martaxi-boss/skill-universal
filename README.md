@@ -1,3 +1,19 @@
+# Motor Ferrari — Skill Universal Ubuntu
+
+**Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
+
+## Estado operacional em 02/11/2026
+
+- Catálogo GitHub novo: **50 projetos curados** com metadados de estrelas e upstream; catálogo original: **69 entradas**, com sobreposição.
+- Motor Ferrari: diagnóstico, roteamento e **sete operações tipadas** (site HTML, cartaz SVG, PDF para texto, redimensionar imagem, thumbnail vídeo, descompilar APK com JADX e strings binárias).
+- Integração MCP independente: ferramentas ferrari_doctor, ferrari_catalog, ferrari_plan e ferrari_run.
+- Instalador APT Ubuntu 24.04+ por perfis e modo máximo: simulação por defeito; --apply explícito para instalar pacotes compatíveis encontrados.
+- **Não há instalação confirmada na VPS**, nem certificação de Ghidra/REA/Ruflo/ComfyUI nem ligação remota ponta a ponta. A execução GitHub Actions certifica apenas o que foi testado na runner Ubuntu.
+
+Consultar [arquitetura e comandos Ferrari](docs/FERRARI.md) e [Skill única](skill/motor-universal-linux/SKILL.md). Ferramentas Adobe pirateadas não são incluídas; existem alternativas gratuitas profissionais.
+
+---
+
 # Motor Universal Linux — projeto independente (protótipo v0.1)
 
 Motor e Skill portáteis para tarefas de desenvolvimento, criação web, criativos, inspeção de aplicações e outras operações numa instalação Linux. **Não reutiliza nem altera** Project Leader, REA FINAL, Ruflo ou qualquer outro projeto do utilizador.
