@@ -11,7 +11,7 @@ while (($#)); do
 done
 case "$PROFILE" in rea|ruflo|all) ;; *) echo "Expected rea, ruflo, all" >&2; exit 2;; esac
 PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-RUNTIME="$PROJECT_ROOT/.runtime/npm"
+RUNTIME="${FERRARI_NPM_RUNTIME:-$HOME/.local/share/motor-ferrari/.runtime/npm}"
 VERSION_REA=6.8.0
 VERSION_RUFLO=3.71.0
 printf 'Independent runtime: %s\n' "$RUNTIME"
@@ -32,12 +32,22 @@ if ((APPLY==0)); then
 fi
 mkdir -p "$RUNTIME"
 if [[ "$PROFILE" = rea || "$PROFILE" = all ]]; then
+  if [[ -x "$RUNTIME/rea/node_modules/.bin/rea" ]] && \
+     [[ "$(node -p "try { require('$RUNTIME/rea/node_modules/rea-agents/package.json').version } catch(e) { 'missing' }")" == "$VERSION_REA" ]]; then
+    echo "FERRARI_REA_REUSE=EXACT_PINNED_VERSION"
+  else
   npm install --prefix "$RUNTIME/rea" --no-audit --no-fund --save-exact "rea-agents@$VERSION_REA"
+  fi
   "$RUNTIME/rea/node_modules/.bin/rea" --help >/dev/null
   echo 'REA CLI smoke: PASS (help only; analysis engine/provider NOT certified)'
 fi
 if [[ "$PROFILE" = ruflo || "$PROFILE" = all ]]; then
+  if [[ -x "$RUNTIME/ruflo/node_modules/.bin/ruflo" ]] && \
+     [[ "$(node -p "try { require('$RUNTIME/ruflo/node_modules/ruflo/package.json').version } catch(e) { 'missing' }")" == "$VERSION_RUFLO" ]]; then
+    echo "FERRARI_RUFLO_REUSE=EXACT_PINNED_VERSION"
+  else
   npm install --prefix "$RUNTIME/ruflo" --no-audit --no-fund --save-exact "ruflo@$VERSION_RUFLO"
+  fi
   "$RUNTIME/ruflo/node_modules/.bin/ruflo" --help >/dev/null
   echo 'Ruflo CLI smoke: PASS (help only; swarm/model provider NOT certified)'
 fi

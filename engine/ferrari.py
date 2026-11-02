@@ -85,8 +85,9 @@ def present(p):
         local=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
         return bool(shutil.which(exe) or local.is_file())
     if p["id"] in {"rea","ruflo"}:
-        local=ROOT/".runtime"/"npm"/p["id"]/"node_modules"/".bin"/p["id"]
-        return bool(shutil.which(p["id"]) or local.is_file())
+        local=Path.home()/".local/share/motor-ferrari/.runtime/npm"/p["id"]/"node_modules"/".bin"/p["id"]
+        legacy=ROOT/".runtime"/"npm"/p["id"]/"node_modules"/".bin"/p["id"]
+        return bool(shutil.which(p["id"]) or local.is_file() or legacy.is_file())
     return shutil.which(exe) is not None
 
 def inventory(category=None):

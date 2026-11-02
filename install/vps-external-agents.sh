@@ -41,8 +41,8 @@ printf 'FERRARI_ISOLATED_NODE=%s\n' "$(node --version)"
 mkdir -p "$NPM_CONFIG_CACHE"
 cd "$SCRIPT_ROOT"
 bash install/install-agent-engines.sh --profile all --apply
-REA="$SCRIPT_ROOT/.runtime/npm/rea/node_modules/.bin/rea"
-RUFLO="$SCRIPT_ROOT/.runtime/npm/ruflo/node_modules/.bin/ruflo"
+REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"
+RUFLO="$ROOT/.runtime/npm/ruflo/node_modules/.bin/ruflo"
 test -x "$REA" && test -x "$RUFLO"
 "$REA" --help >/dev/null
 "$RUFLO" --help >/dev/null
