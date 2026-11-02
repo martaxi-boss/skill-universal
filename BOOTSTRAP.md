@@ -5,6 +5,10 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
+## Nova fase — motor de catálogo operacional (implementação)
+
+O código acrescentou `engine/tool_runtime.py` e `engine/tool_actions.json`: **12 adaptadores de execução tipada** para diversas áreas, com `tools`, `actions`, `route`, `invoke` e passos `operation=tool` no orquestrador. O estado real de cada programa é verificado na VPS no momento do pedido; apenas os programas com adaptador têm ações executáveis. O catálogo de 56 candidatos **não** equivale a 56 executores instalados ou certificados. Até haver execução GitHub Actions na VPS, isto é implementação no GitHub e não prova de execução real. A ponte SSH existente mantém-se transporte; não modificar outros projetos.
+
 ## Fecho da fase CAD/3D/Office + limpeza — 2026-11-02
 
 - **Entrega real na VPS:** GitHub Actions [#41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347) **SUCCESS**.
