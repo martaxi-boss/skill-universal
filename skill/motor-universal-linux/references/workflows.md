@@ -1,29 +1,24 @@
-# Guia de execução da Skill
+# Fluxos e graus de comprovação do Ferrari
 
-## ChatGPT
+O ZIP contém instruções e não credenciais. **A ligação remota foi certificada para tarefas suportadas**, pelas execuções [#41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [#41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999). Usar `references/github-bridge.md` para chamadas do ChatGPT à VPS.
 
-Uma Skill local contém instruções, não credenciais. Para utilizar o motor na VPS deve existir um conector com ferramentas motor_* ou outro canal autenticado, capaz de transportar ficheiros e resultados. O presente ZIP não configura essa ligação. Sem ela, executar somente o que o ChatGPT permite nativamente e documentar o limite.
+## Estados
 
-## Codex e clientes MCP
+1. Catálogo: programa descoberto.
+2. Ubuntu: instalação candidata compatível.
+3. Binário: realmente detetado na VPS.
+4. Adaptador: operação invocável pelo Ferrari.
+5. Certificação: teste funcional PASS com ficheiro válido.
+6. Remoto: chamada GitHub→VPS→ZIP confirmada para a tarefa.
 
-No checkout isolado do motor, iniciar `python3 -m integrations.mcp_server` num Python virtualenv que tenha o SDK MCP. Fazer a ligação ao cliente por `stdio` segundo as suas instruções oficiais. Os programas do sistema não devem ser instalados no checkout de outros projetos.
-
-## Diferenças entre níveis
-
-1. Catalogado: a ferramenta está na lista, nada mais.
-2. Instalável: dependências e repositórios confirmados naquele host.
-3. Instalado: existe um binário detectável.
-4. Funcional: passou um teste real com dados conhecidos.
-5. Disponível ao cliente: a ponte e autenticação foram testadas de ponta a ponta.
-
-Não usar 'pronto a 100%' se o nível 5 estiver por certificar. Nunca usar ferramentas pagas como substituição automática.
-
-## Critérios de escolha
-
-Compatibilidade Linux/arquitetura; licenciamento livre/gratuito; disponibilidade real; adequação ao formato; qualidade; requisitos de CPU/RAM/disco; privacidade de ficheiros; evidência de testes. O custo de uma chamada de API deve ser verificado no momento, não presumido com base em documentação antiga.
+Certificar observa se funciona; não é requisito para um binário aparecer no catálogo e ser descoberto. Uma certificação antiga não comprova versões novas.
 
 ## Exemplos
 
-- 'Faz um site profissional de um restaurante' -> `motor_plan` -> template web local, ou criar aplicação completa com ferramenta real se disponível -> ficheiros e testes.
-- 'Cria um criativo para um produto' -> procurar geração de imagem do anfitrião; sem esse executor, criar SVG/composição e esclarecer a diferença.
-- 'Analisa este APK' -> ficheiro real -> identificação + hash -> REA/JADX/Apktool se realmente instalados e configurados -> relatório fundamentado.
+- Cartaz: `kind=operation`, `operation=svg-poster` → SVG verdadeiro (PASS).
+- Markdown → Word: `kind=auto`, `request=Converter markdown para docx`, ficheiro `.md` codificado em base64 → Pandoc → DOCX (PASS).
+- Inventário: `kind=inventory` → JSON sobre as ferramentas detetadas no momento, não lista de certificados.
+- Loja web: `operation=web-template`, `layout=store` → template estático, não pagamentos reais.
+- BIM ou tarefa complexa: confirmar dependências e adaptadores; sem prova real não declarar concluído.
+
+O protocolo remoto atual não transporta automaticamente um DAG arbitrário; esse recurso requer uma extensão própria no Ferrari.

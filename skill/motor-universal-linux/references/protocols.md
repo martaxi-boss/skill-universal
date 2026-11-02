@@ -28,11 +28,10 @@ Cada linha descreve candidatos: **não implica instalação**. Consultar
 2. Consultar \`ferrari_doctor\`, \`ferrari_plan\` e seleção Ubuntu.
 3. Se o pedido exige várias ferramentas, construir plano DAG tipado,
    validar e pré-visualizar no orquestrador Ferrari.
-4. Selecionar executores já certificados, preferindo opções locais
-   e realmente gratuitas. Se faltam, consultar a auditoria do GitHub.
+4. Descobrir executores instalados e adaptadores disponíveis; testes PASS ajudam a avaliar fiabilidade, sem impedir descoberta de programas não certificados.
 5. Nunca executar um script de Skills de terceiros só por estar numa
    coleção popular. Inspecionar dependências, licenças e efeitos.
-6. Só enviar plano de execução com autorização e ligação real à VPS.
+6. Utilizar `references/github-bridge.md` para os pedidos remotos certificados; o protocolo não aceita livremente qualquer DAG.
 7. Confirmar saídas com testes objetivos e indicar o executor utilizado.
 
 ## Padrões assimiláveis de coleções públicas
@@ -56,5 +55,5 @@ nenhum ficheiro de terceiro foi copiado neste módulo.
   execução Ubuntu, serial/paralelo, logs e propagação de falhas.
 - **Por certificar**: Prefect autoalojado, agendamento, retries,
   recuperação de trabalho após reinício, monitorização contínua,
-  GPUs e modelos, ligação remota ponta a ponta.
-- **Nunca prometer 100%** sem casos reais em cada domínio da VPS.
+  GPUs e modelos, envio remoto direto de DAGs arbitrários.
+- **Ligação remota certificada:** cartaz SVG e Markdown→DOCX, com ZIP e relatório.\n- **Nunca prometer 100%** sem casos reais em cada domínio da VPS.

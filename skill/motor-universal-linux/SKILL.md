@@ -5,9 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
-## Estado certificado na VPS
+## Situação comprovada em 02/11/2026
 
-A execução GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664) terminou SUCCESS com 59 testes na VPS, 12 adaptadores disponíveis e execução automática Markdown→DOCX via Pandoc. Inventário real de 45 programas nos catálogos combinados: NÃO interpretar como 45 dos 56 candidatos nem como 45 ações. A ponte Skill→VPS e o funcionamento real profundo de REA/Ruflo permanecem por demonstrar.
+**Motor Ferrari ativo na VPS:** release \`1ff6e472b5ea4eab95785be224155f400c51aeaa\`, [entrega #41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719), **68 testes PASS**. **Ligação de pedidos ChatGPT/GitHub → VPS → ZIP:** [SVG #41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [Markdown→DOCX #41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999), ambas SUCCESS com artefactos reais. 56 candidatos Ubuntu selecionados, 10 operações base e 12 ações tipadas; 45 programas detetados nos **catálogos combinados**, não 45/56 nem 45 ações. REA/Ruflo profundos e BIM profissional permanecem por integrar.
+
+A Skill dirige-se ao motor por conector GitHub autenticado. O ZIP da Skill não cria credenciais nem instala automaticamente uma integração no ChatGPT.
 
 ## Bootstrap permanente do projeto
 
@@ -35,6 +37,8 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 
 ## Ligação Skill → GitHub Actions → VPS (pedido remoto)
 
+**Referência operativa:** ler primeiro `references/github-bridge.md` para formatos JSON exatos, limites atuais, estados e recolha do ZIP. O protocolo já foi testado nas execuções acima; não o confundir com suporte de todas as tarefas possíveis.
+
 A ligação operacional da Skill usa o conector GitHub autenticado e a ponte **exclusiva Ferrari** `.github/workflows/ferrari-skill-request.yml` de `martaxi-boss/VPS`. Não alterar a ponte SSH já existente nem outros projetos. O GitHub Actions apenas transporta o pedido e recolhe o ZIP; `engine.skill_job` do Ferrari valida, escolhe ferramentas e executa na VPS. A prova end-to-end deve ser verificada no ID real da execução antes de declarar que está operacional.
 
 1. Confirmar ligação GitHub com permissão de escrita em `martaxi-boss/VPS` e leitura em `martaxi-boss/skill-universal`. Não presumir que a Skill, por si, cria uma sessão SSH.
@@ -47,9 +51,9 @@ A ligação operacional da Skill usa o conector GitHub autenticado e a ponte **e
 
 Usar **o coordenador independente do Motor Ferrari**, nunca o coordenador do ChatGPT/Codex ou de projetos antigos. Para tarefas com vários passos:
 
-1. Preparar o plano JSON `{"version":1,"steps":[...]}` com `id`, `operation`, `depends_on`, `input_from`, `title` e `layout` quando aplicável. Cada operação tem de estar implementada em `engine.ferrari.OPS`.
+1. Preparar o plano JSON `{"version":1,"steps":[...]}` com `id`, `operation`, `depends_on`, `input_from`, `title` e `layout` quando aplicável. Cada operação base tem de estar implementada em `engine.ferrari.OPS`; passos `operation=tool` exigem `tool` e `action` do manifesto. **O atual protocolo remoto Skill→GitHub só aceita `kind=operation|invoke|auto|inventory`**, e não um DAG arbitrário. Não prometer envio remoto de um plano DAG sem integrar antes essa capacidade no motor.
 2. Validar com `engine.orchestrator.validate_workflow` e apresentar a simulação: `python3 -m engine.orchestrator --plan examples/ferrari-workflow.json --workspace /caminho/trabalho`. Sem `--execute` o comando não escreve ficheiros.
-3. Executar mediante autorização usando `--execute --max-parallel 2` ou a ferramenta MCP `ferrari_orchestrate` com `execute=true`. A execução depende da ponte autenticada e da instalação real no Ubuntu.
+3. Executar mediante autorização usando `--execute --max-parallel 2` ou a ferramenta MCP `ferrari_orchestrate` com `execute=true`. O orquestrador é real na VPS, mas **a Skill ainda não envia planos DAG arbitrários diretamente**: somente os tipos de pedido remoto existentes.
 4. O motor gere dependências, paralelismo e resultados de cada etapa, devolvendo `report.json` e os artefactos. **Não afirmar recuperação após reinício ou retries automáticos**: ainda não foram implementados.
 5. Prefect (Apache-2.0) é candidato para persistência e agendamento local, Ruflo (MIT) para coordenação de agentes especializados, LangGraph (MIT) para estados agentivos. Todos são módulos **opcionais**, apenas se verdadeiramente instalados e certificados. Nenhum substitui o núcleo Ferrari.
 
@@ -67,7 +71,7 @@ Engenharia reversa legítima de compatibilidade é possível, mas não transform
 
 Comandos opcionais do motor: `python3 -m engine.ferrari discover 'linux open source CAD' --min-stars 100`, `python3 -m engine.ferrari alternatives 'Adobe Creative Cloud'`.  Nenhuma procura instala binários ou concede acesso à VPS.
 
-Documentação e critérios de certificação: docs/FERRARI.md no repositório do motor e references/workflows.md neste pacote Skill.
+Documentação e critérios de certificação: docs/FERRARI.md no repositório do motor, `references/workflows.md` e `references/github-bridge.md` neste pacote Skill.
 
 ## Política de qualidade e implantação
 

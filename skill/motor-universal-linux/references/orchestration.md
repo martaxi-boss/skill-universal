@@ -18,7 +18,7 @@ nem tratar Markdown como uma ferramenta Ubuntu.
 ## Fluxo do Motor Ferrari
 
 1. Analisar ordem do utilizador com a IA à escolha.
-2. Consultar ferrari_doctor e ferrari_plan no motor.
+2. Consultar inventário e plano Ferrari. Via ChatGPT, usar `kind=inventory` na ponte GitHub, não presumir SSH direto.
 3. Verificar as ferramentas na seleção Ubuntu aprovada.
 4. Transformar o pedido num JSON versionado:
    {"version":1,"steps":[{"id":"web","operation":"web-template",
@@ -33,9 +33,7 @@ nem tratar Markdown como uma ferramenta Ubuntu.
 
 ## Limites reais da primeira implementação
 
-O coordenador já suporta dependências, paralelismo 1–4, operações tipadas,
-validadores e logs. Não fornece automaticamente um daemon persistente,
-retries, checkpoint reexecutável, UI, GPU, contas cloud ou acesso à VPS.
+O coordenador suporta dependências, paralelismo 1–4, operações tipadas,\nvalidadores e logs. A ponte GitHub→VPS está certificada para operações\nremotas suportadas, mas **não recebe atualmente DAGs arbitrários**. Não\nfornece um daemon persistente, retries, checkpoint reexecutável, UI,\nGPU nem contas cloud.
 Essas capacidades exigem testes e integração adicionais, de preferência
 com Prefect autoalojado quando justificado.
 
