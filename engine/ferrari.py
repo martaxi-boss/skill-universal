@@ -371,6 +371,8 @@ def main(argv=None):
     sub.add_parser("tools")
     sub.add_parser("actions")
     rr=sub.add_parser("route");rr.add_argument("request");rr.add_argument("--input")
+    au=sub.add_parser("auto");au.add_argument("request");au.add_argument("--input",required=True)
+    au.add_argument("--output");au.add_argument("--execute",action="store_true")
     iv=sub.add_parser("invoke");iv.add_argument("--action",required=True)
     iv.add_argument("--input",required=True);iv.add_argument("--output",required=True)
     al=sub.add_parser("alternatives");al.add_argument("product")
@@ -388,7 +390,7 @@ def main(argv=None):
     if a.cmd=="doctor": result=doctor()
     elif a.cmd=="list": result=inventory(a.category) if a.include_discovery else [p for p in ubuntu_selection() if not a.category or p["category"]==a.category]
     elif a.cmd=="plan": result=plan(a.request)
-    elif a.cmd in {"tools","actions","route","invoke"}:
+    elif a.cmd in {"tools","actions","route","auto","invoke"}:
         from engine import tool_runtime
         if a.cmd=="tools":result=tool_runtime.inventory()
         elif a.cmd=="actions":
@@ -396,6 +398,7 @@ def main(argv=None):
                      "available":bool(tool_runtime.executable(x["tool"],x["binary"]))}
                     for x in tool_runtime.specs().values()]
         elif a.cmd=="route":result=tool_runtime.route(a.request,a.input)
+        elif a.cmd=="auto":result=tool_runtime.auto(a.request,a.input,a.output,a.execute)
         else:result=tool_runtime.invoke(a.action,a.input,a.output)
     elif a.cmd=="alternatives": result=alternatives(a.product)
     elif a.cmd=="discover": result=discover(a.query,a.min_stars,a.limit)
