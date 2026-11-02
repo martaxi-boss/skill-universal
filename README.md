@@ -1,0 +1,91 @@
+# Motor Universal Linux — projeto independente (protótipo v0.1)
+
+Motor e Skill portáteis para tarefas de desenvolvimento, criação web, criativos, inspeção de aplicações e outras operações numa instalação Linux. **Não reutiliza nem altera** Project Leader, REA FINAL, Ruflo ou qualquer outro projeto do utilizador.
+
+## Arquitetura
+
+```text
+ChatGPT / Codex / outros agentes
+         |
+     Uma Skill (mesmo contrato de instruções)
+         |
+     Ferramenta nativa ou MCP com ligação autenticada
+         |
+     Motor Universal Linux (CLI / MCP na VPS)
+         |
+     Descoberta automática + catálogo + seleção + execução + relatório
+         |
+     Ferramentas instaladas, REA próprio, modelos/fornecedores disponíveis
+```
+
+- **VPS**: motor independente instalado sob uma pasta exclusiva; executa trabalho, não depende de outro repositório. Pode ser invocado pela CLI; o servidor MCP é adaptador opcional, não ativado por defeito.
+- **ChatGPT**: a Skill não dá, por si só, acesso SSH à VPS. Precisa de uma ligação autorizada, por exemplo um servidor MCP remoto ou uma ação explícita via GitHub Actions no repositório novo.
+- **Codex/Claude/editores**: podem usar a CLI ou o mesmo MCP se o ambiente disponibilizar execução/autenticação. As respetivas interfaces não são idênticas.
+- **Sem IA local obrigatória**: a aplicação usa o modelo do agente anfitrião; fornecedores externos gratuitos são opcionais, exigem contas e podem ter quotas. Criativos SVG e sites HTML são gerados no motor sem GPU; criação de imagens fotorealistas não é garantida numa VPS sem GPU ou API.
+
+## O que este pacote já implementa
+
+- Catálogo de ferramentas e fornecedores gratuitos com verificação de presença no host.
+- Identificação de perfis Linux (arquitetura, capacidade, comandos).
+- Planeamento de tarefas em português/inglês com seleção de capacidade, ferramentas preferidas e alternativas.
+- Execução comprovável de três rotas locais: website HTML responsivo, criativo SVG editável e inspeção estática não-invasiva de ficheiros/APKs.
+- Ponte MCP opcional para plataformas com cliente compatível.
+- Instalador Ubuntu em modo simulação por defeito, com perfis e verificação `apt-cache` antes de instalar.
+- Suite de testes para encaminhamento, geração de artefactos e isolamento de projetos.
+
+Este é um **protótipo funcional e um plano de instalação**, não uma instalação na VPS. A implantação completa (REA upstream autónomo, Ghidra, JADX, motores de media, modelos e integrações remotas) exige executar o instalador no Ubuntu e testar cada componente real. Um programa listado não significa que já esteja instalado ou seja compatível com a VPS concreta.
+
+## Testes sem alterar o sistema
+
+```bash
+cd motor-universal-linux
+python3 -m unittest discover -s tests -v
+python3 -m engine.cli doctor
+python3 -m engine.cli providers
+python3 -m engine.cli catalog
+python3 -m engine.cli plan 'criar um site profissional para barbearia'
+python3 -m engine.cli run 'criar um site para barbearia' --title 'Barbearia' --output /tmp/universal-demo
+python3 -m engine.cli run 'criar criativo para campanha' --title 'Promoção de Outono' --output /tmp/universal-demo
+```
+
+## Instalação numa Ubuntu 24.04 isolada
+
+```bash
+bash install/install-ubuntu.sh --profile maximum                 # preview, não instala
+sudo bash install/install-ubuntu.sh --profile core --apply      # instala só pacote base
+sudo bash install/install-ubuntu.sh --profile creative --apply  # instalação de pacotes criativos disponíveis
+sudo bash install/install-ubuntu.sh --profile reverse --apply   # análise estática disponível via APT
+sudo bash install/install-ubuntu.sh --profile maximum --apply   # todos os perfis APT compatíveis
+```
+
+O instalador não apaga nem atualiza outros projetos. Depende de repositórios Ubuntu configurados e de internet. Dependências externas fora do APT são catalogadas para instalação verificada individualmente. O REA oficial requer Node.js compatível, e o motor só pode marcar REA como disponível **depois** de a instalação independente ser comprovada.
+
+## Uso em Codex ou outro agente local
+
+Copiar `skill/motor-universal-linux/SKILL.md` para a pasta de Skills suportada pelo respetivo anfitrião e disponibilizar a CLI `python3 -m engine.cli` dentro do checkout do novo projeto. O ficheiro `integrations/AGENTS.md` fornece compatibilidade no contexto Codex. Usar sempre um checkout independente.
+
+## Uso em ChatGPT
+
+Importar `skill.zip` na área de Skills/Plugins suportada e configurar uma ligação real ao motor (MCP ou ferramenta autenticada) antes de pedir execução na VPS. A Skill orienta o uso da ligação e não promete execução remota sem ela. O Skill ZIP é um artefacto independente do ZIP completo do projeto.
+
+## Licenças e fornecedores
+
+Este protótipo usa apenas código original e não agrega binários nem pesos de terceiros. As ferramentas são inventariadas com os seus upstreams e instaladas separadamente sob as suas licenças. O código deste protótipo é MIT (ver `LICENSE`). Fornecedores com tier gratuito não garantem utilização ilimitada nem estabilidade de preços.
+
+## Segurança e limites operacionais
+
+Sem instalação automática ao receber um pedido; `--apply` é explícito. Sem execução de comandos arbitrários a partir de prompts, SSH implícito, exposição pública de serviços, modificações de projetos antigos ou apagamentos. Entradas de ficheiros são tratadas como dados, não executadas. A engenharia reversa de software exige autorização adequada; este protótipo faz apenas inspeção estática e não neutraliza mecanismos de proteção.
+
+## GitHub Actions independente (modelo incluído)
+
+O workflow `.github/workflows/deploy-vps.yml` usa apenas os quatro secrets `MOTOR_SSH_HOST`, `MOTOR_SSH_USER`, `MOTOR_SSH_PRIVATE_KEY`, `MOTOR_SSH_KNOWN_HOSTS` (e `MOTOR_SSH_PORT` opcional). Requer um repositório GitHub **novo** e autorização `workflow_dispatch` com `DEPLOY`. Copia o motor para `$HOME/.local/share/motor-universal-linux`, corre testes/doctor e não instala pacotes do sistema. Confirmação do host SSH via known_hosts é obrigatória. Sem configurar estes secrets não existe ligação funcional à VPS. Não criar workflows em projetos anteriores.
+
+## REA e Ruflo no mesmo projeto, mas com instalações independentes
+
+O script `install/install-agent-engines.sh` instala opcionalmente `rea-agents@6.8.0` e `ruflo@3.71.0` em duas pastas separadas dentro da nova instalação; não liga nem altera projetos antigos. É **pré-visualização por defeito**, requer Node.js compatível (22.19+, 24.11+ ou 26+) e `--apply` explícito. O teste `--help` confirma apenas que as CLIs arrancam, não certifica os motores internos, Ghidra, os fornecedores, o Codex nem ChatGPT.
+
+```bash
+bash install/install-agent-engines.sh --profile all       # ver o que se instalaria
+bash install/install-agent-engines.sh --profile all --apply
+python3 -m engine.cli doctor
+```
