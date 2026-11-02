@@ -1,0 +1,9 @@
+{
+  "status": "completed_local_task",
+  "route": "creative",
+  "selected_tool": "svg",
+  "files": [
+    "/mnt/data/motor-universal-linux/examples/creative/poster.svg"
+  ],
+  "scope": "Prototipo local; nenhum motor externo foi invocado."
+}

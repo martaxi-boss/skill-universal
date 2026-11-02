@@ -1,0 +1,517 @@
+{
+  "schema": 1,
+  "platform": "Ubuntu 24.04 LTS; packages subject to apt-cache verification",
+  "tools": [
+    {
+      "id": "git",
+      "bin": "git",
+      "category": "dev",
+      "apt": "git",
+      "cost": "open-source"
+    },
+    {
+      "id": "python",
+      "bin": "python3",
+      "category": "dev",
+      "apt": "python3",
+      "cost": "open-source"
+    },
+    {
+      "id": "pip",
+      "bin": "pip3",
+      "category": "dev",
+      "apt": "python3-pip",
+      "cost": "open-source"
+    },
+    {
+      "id": "venv",
+      "bin": "python3",
+      "category": "dev",
+      "apt": "python3-venv",
+      "cost": "open-source"
+    },
+    {
+      "id": "node",
+      "bin": "node",
+      "category": "dev",
+      "apt": null,
+      "cost": "open-source",
+      "note": "REA necessita Node.js 22.19+/24.11+/26+; verificar runtime exato."
+    },
+    {
+      "id": "npm",
+      "bin": "npm",
+      "category": "dev",
+      "apt": null,
+      "cost": "open-source"
+    },
+    {
+      "id": "go",
+      "bin": "go",
+      "category": "dev",
+      "apt": "golang-go",
+      "cost": "open-source"
+    },
+    {
+      "id": "rust",
+      "bin": "rustc",
+      "category": "dev",
+      "apt": "rustc",
+      "cost": "open-source"
+    },
+    {
+      "id": "cargo",
+      "bin": "cargo",
+      "category": "dev",
+      "apt": "cargo",
+      "cost": "open-source"
+    },
+    {
+      "id": "gcc",
+      "bin": "gcc",
+      "category": "dev",
+      "apt": "build-essential",
+      "cost": "open-source"
+    },
+    {
+      "id": "clang",
+      "bin": "clang",
+      "category": "dev",
+      "apt": "clang",
+      "cost": "open-source"
+    },
+    {
+      "id": "cmake",
+      "bin": "cmake",
+      "category": "dev",
+      "apt": "cmake",
+      "cost": "open-source"
+    },
+    {
+      "id": "make",
+      "bin": "make",
+      "category": "dev",
+      "apt": "make",
+      "cost": "open-source"
+    },
+    {
+      "id": "sqlite",
+      "bin": "sqlite3",
+      "category": "data",
+      "apt": "sqlite3",
+      "cost": "open-source"
+    },
+    {
+      "id": "postgres-client",
+      "bin": "psql",
+      "category": "data",
+      "apt": "postgresql-client",
+      "cost": "open-source"
+    },
+    {
+      "id": "redis-client",
+      "bin": "redis-cli",
+      "category": "data",
+      "apt": "redis-tools",
+      "cost": "open-source"
+    },
+    {
+      "id": "jq",
+      "bin": "jq",
+      "category": "dev",
+      "apt": "jq",
+      "cost": "open-source"
+    },
+    {
+      "id": "ripgrep",
+      "bin": "rg",
+      "category": "dev",
+      "apt": "ripgrep",
+      "cost": "open-source"
+    },
+    {
+      "id": "fd",
+      "bin": "fdfind",
+      "category": "dev",
+      "apt": "fd-find",
+      "cost": "open-source"
+    },
+    {
+      "id": "curl",
+      "bin": "curl",
+      "category": "dev",
+      "apt": "curl",
+      "cost": "open-source"
+    },
+    {
+      "id": "wget",
+      "bin": "wget",
+      "category": "dev",
+      "apt": "wget",
+      "cost": "open-source"
+    },
+    {
+      "id": "unzip",
+      "bin": "unzip",
+      "category": "dev",
+      "apt": "unzip",
+      "cost": "open-source"
+    },
+    {
+      "id": "zip",
+      "bin": "zip",
+      "category": "dev",
+      "apt": "zip",
+      "cost": "open-source"
+    },
+    {
+      "id": "docker",
+      "bin": "docker",
+      "category": "dev",
+      "apt": null,
+      "cost": "open-source",
+      "note": "Instalar apenas por procedimento oficial e autorização de privilégios."
+    },
+    {
+      "id": "podman",
+      "bin": "podman",
+      "category": "dev",
+      "apt": "podman",
+      "cost": "open-source"
+    },
+    {
+      "id": "java",
+      "bin": "java",
+      "category": "reverse",
+      "apt": "openjdk-21-jdk-headless",
+      "cost": "open-source"
+    },
+    {
+      "id": "REA",
+      "bin": "rea",
+      "category": "reverse",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/morluto/rea",
+      "note": "Instalação separada em ambiente Node compatível; fornecedores externos opcionais."
+    },
+    {
+      "id": "apktool",
+      "bin": "apktool",
+      "category": "reverse",
+      "apt": "apktool",
+      "cost": "open-source"
+    },
+    {
+      "id": "jadx",
+      "bin": "jadx",
+      "category": "reverse",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/skylot/jadx",
+      "note": "Instalar release oficial compatível após verificação."
+    },
+    {
+      "id": "ghidra",
+      "bin": "ghidraRun",
+      "category": "reverse",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/NationalSecurityAgency/ghidra",
+      "note": "Distribuição oficial; Java e requisitos variam por release."
+    },
+    {
+      "id": "binwalk",
+      "bin": "binwalk",
+      "category": "reverse",
+      "apt": "binwalk",
+      "cost": "open-source"
+    },
+    {
+      "id": "unblob",
+      "bin": "unblob",
+      "category": "reverse",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/onekey-sec/unblob"
+    },
+    {
+      "id": "radare2",
+      "bin": "r2",
+      "category": "reverse",
+      "apt": "radare2",
+      "cost": "open-source"
+    },
+    {
+      "id": "gdb",
+      "bin": "gdb",
+      "category": "reverse",
+      "apt": "gdb",
+      "cost": "open-source"
+    },
+    {
+      "id": "readelf",
+      "bin": "readelf",
+      "category": "reverse",
+      "apt": "binutils",
+      "cost": "open-source"
+    },
+    {
+      "id": "objdump",
+      "bin": "objdump",
+      "category": "reverse",
+      "apt": "binutils",
+      "cost": "open-source"
+    },
+    {
+      "id": "strings",
+      "bin": "strings",
+      "category": "reverse",
+      "apt": "binutils",
+      "cost": "open-source"
+    },
+    {
+      "id": "strace",
+      "bin": "strace",
+      "category": "reverse",
+      "apt": "strace",
+      "cost": "open-source"
+    },
+    {
+      "id": "file",
+      "bin": "file",
+      "category": "reverse",
+      "apt": "file",
+      "cost": "open-source"
+    },
+    {
+      "id": "yara",
+      "bin": "yara",
+      "category": "reverse",
+      "apt": "yara",
+      "cost": "open-source"
+    },
+    {
+      "id": "adb",
+      "bin": "adb",
+      "category": "mobile",
+      "apt": "adb",
+      "cost": "open-source"
+    },
+    {
+      "id": "aapt",
+      "bin": "aapt",
+      "category": "mobile",
+      "apt": "aapt",
+      "cost": "open-source"
+    },
+    {
+      "id": "apksigner",
+      "bin": "apksigner",
+      "category": "mobile",
+      "apt": "apksigner",
+      "cost": "open-source"
+    },
+    {
+      "id": "zipalign",
+      "bin": "zipalign",
+      "category": "mobile",
+      "apt": "zipalign",
+      "cost": "open-source"
+    },
+    {
+      "id": "ffmpeg",
+      "bin": "ffmpeg",
+      "category": "media",
+      "apt": "ffmpeg",
+      "cost": "open-source"
+    },
+    {
+      "id": "imagemagick",
+      "bin": "convert",
+      "category": "media",
+      "apt": "imagemagick",
+      "cost": "open-source"
+    },
+    {
+      "id": "inkscape",
+      "bin": "inkscape",
+      "category": "media",
+      "apt": "inkscape",
+      "cost": "open-source"
+    },
+    {
+      "id": "gimp",
+      "bin": "gimp",
+      "category": "media",
+      "apt": "gimp",
+      "cost": "open-source",
+      "note": "GUI, pode exigir ambiente gráfico."
+    },
+    {
+      "id": "blender",
+      "bin": "blender",
+      "category": "media",
+      "apt": "blender",
+      "cost": "open-source",
+      "note": "Processamento 3D pesado."
+    },
+    {
+      "id": "sox",
+      "bin": "sox",
+      "category": "media",
+      "apt": "sox",
+      "cost": "open-source"
+    },
+    {
+      "id": "espeak",
+      "bin": "espeak-ng",
+      "category": "media",
+      "apt": "espeak-ng",
+      "cost": "open-source"
+    },
+    {
+      "id": "piper",
+      "bin": "piper",
+      "category": "media",
+      "apt": null,
+      "cost": "open-source",
+      "note": "Exige voz/modelo próprio e validação de licenças."
+    },
+    {
+      "id": "comfyui",
+      "bin": null,
+      "category": "media",
+      "apt": null,
+      "cost": "open-source",
+      "note": "Só opcional; geração pesada em CPU e pesos externos necessários."
+    },
+    {
+      "id": "pandoc",
+      "bin": "pandoc",
+      "category": "docs",
+      "apt": "pandoc",
+      "cost": "open-source"
+    },
+    {
+      "id": "libreoffice",
+      "bin": "libreoffice",
+      "category": "docs",
+      "apt": "libreoffice",
+      "cost": "open-source",
+      "note": "GUI ou modo headless."
+    },
+    {
+      "id": "pdftotext",
+      "bin": "pdftotext",
+      "category": "docs",
+      "apt": "poppler-utils",
+      "cost": "open-source"
+    },
+    {
+      "id": "tesseract",
+      "bin": "tesseract",
+      "category": "docs",
+      "apt": "tesseract-ocr",
+      "cost": "open-source"
+    },
+    {
+      "id": "exiftool",
+      "bin": "exiftool",
+      "category": "media",
+      "apt": "libimage-exiftool-perl",
+      "cost": "open-source"
+    },
+    {
+      "id": "graphviz",
+      "bin": "dot",
+      "category": "docs",
+      "apt": "graphviz",
+      "cost": "open-source"
+    },
+    {
+      "id": "svg",
+      "bin": null,
+      "category": "media",
+      "apt": null,
+      "cost": "built-in",
+      "note": "Geração SVG com Python padrão, disponível se o motor funcionar."
+    },
+    {
+      "id": "html-templates",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "built-in",
+      "note": "Template HTML/CSS responsivo incluído neste projeto."
+    },
+    {
+      "id": "vite",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/vitejs/vite",
+      "note": "Instalar numa pasta de projeto com Node compatível."
+    },
+    {
+      "id": "astro",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/withastro/astro"
+    },
+    {
+      "id": "nextjs",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/vercel/next.js"
+    },
+    {
+      "id": "tailwindcss",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/tailwindlabs/tailwindcss"
+    },
+    {
+      "id": "daisyui",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/saadeghi/daisyui"
+    },
+    {
+      "id": "shadcn-ui",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/shadcn-ui/ui",
+      "note": "Componentes/copiar código, não um motor universal de layouts."
+    },
+    {
+      "id": "playwright",
+      "bin": null,
+      "category": "web",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/microsoft/playwright",
+      "note": "Browsers e dependências adicionais necessários."
+    },
+    {
+      "id": "ruflo",
+      "bin": "ruflo",
+      "category": "dev",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/ruvnet/ruflo",
+      "note": "Orquestracao multiagentes opcional. Nao executar init sobre projetos existentes. Requer Node 20+ e credenciais de modelo/anfitriao."
+    }
+  ]
+}

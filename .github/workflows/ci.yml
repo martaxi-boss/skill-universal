@@ -1,0 +1,18 @@
+name: Motor Universal independent tests
+on:
+  push:
+  pull_request:
+jobs:
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test motor
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate installer syntax
+        run: bash -n install/install-ubuntu.sh
+      - name: Preview tool inventory
+        run: python3 -m engine.cli doctor

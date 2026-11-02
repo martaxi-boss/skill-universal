@@ -1,0 +1,115 @@
+[
+  {
+    "id": "host-model",
+    "category": [
+      "code",
+      "web",
+      "media",
+      "analysis"
+    ],
+    "kind": "host",
+    "cost": "user-plan",
+    "env": null,
+    "note": "Modelo do ChatGPT/Codex/cliente já autenticado, não é gratuito por definição e não fica instalado na VPS.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "openrouter-free",
+    "category": [
+      "code",
+      "analysis",
+      "text"
+    ],
+    "kind": "cloud",
+    "cost": "free-tier",
+    "env": "OPENROUTER_API_KEY",
+    "url": "https://openrouter.ai/collections/free-models",
+    "note": "Modelos :free; limites de pedidos e disponibilidade. Não escolher modelos pagos sem consentimento.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "gemini-free",
+    "category": [
+      "code",
+      "analysis",
+      "text"
+    ],
+    "kind": "cloud",
+    "cost": "free-tier",
+    "env": "GEMINI_API_KEY",
+    "url": "https://ai.google.dev/gemini-api/docs/pricing",
+    "note": "Só modelos suportados na camada gratuita; condições e uso de dados variam.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "groq-free",
+    "category": [
+      "text",
+      "analysis",
+      "speech"
+    ],
+    "kind": "cloud",
+    "cost": "free-tier",
+    "env": "GROQ_API_KEY",
+    "url": "https://console.groq.com/docs/rate-limits",
+    "note": "Quotas, modelo e região dependem da conta; verificar antes de cada execução.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "cloudflare-workers-ai",
+    "category": [
+      "text",
+      "analysis",
+      "media"
+    ],
+    "kind": "cloud",
+    "cost": "free-tier",
+    "env": "CLOUDFLARE_API_TOKEN",
+    "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "note": "Conta/limites e modelos disponíveis variáveis.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "huggingface-inference",
+    "category": [
+      "text",
+      "media"
+    ],
+    "kind": "cloud",
+    "cost": "free-tier-conditional",
+    "env": "HF_TOKEN",
+    "url": "https://huggingface.co/docs/inference-providers/pricing",
+    "note": "Acesso gratuito/creditos podem variar; verificar modelo e conta.",
+    "configured": false,
+    "availability_verified": false
+  },
+  {
+    "id": "imagemagick-local",
+    "category": [
+      "media"
+    ],
+    "kind": "local",
+    "cost": "open-source",
+    "binary": "convert",
+    "note": "Edição e composição; não gera fotografia a partir de prompt.",
+    "configured": true,
+    "availability_verified": true
+  },
+  {
+    "id": "svg-local",
+    "category": [
+      "media"
+    ],
+    "kind": "local",
+    "cost": "built-in",
+    "binary": null,
+    "note": "Criativos SVG locais sem chamadas pagas; não é geração fotorealista.",
+    "configured": true,
+    "availability_verified": true
+  }
+]

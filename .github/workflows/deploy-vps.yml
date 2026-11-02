@@ -1,0 +1,39 @@
+name: Deploy independent universal motor to VPS
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_confirm:
+        description: 'Type DEPLOY to copy this project to its own directory (no system packages)'
+        required: true
+        type: string
+jobs:
+  deploy:
+    if: ${{ inputs.deploy_confirm == 'DEPLOY' }}
+    runs-on: ubuntu-24.04
+    environment: vps-motor-universal
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure isolated SSH session
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.MOTOR_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.MOTOR_SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/motor-ssh"
+          chmod 700 "$RUNNER_TEMP/motor-ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/motor-ssh/key"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/motor-ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/motor-ssh/key" "$RUNNER_TEMP/motor-ssh/known_hosts"
+      - name: Copy motor into a separate VPS path and run doctor
+        env:
+          MOTOR_SSH_HOST: ${{ secrets.MOTOR_SSH_HOST }}
+          MOTOR_SSH_USER: ${{ secrets.MOTOR_SSH_USER }}
+          MOTOR_SSH_PORT: ${{ secrets.MOTOR_SSH_PORT }}
+        run: |
+          set -eu
+          PORT="${MOTOR_SSH_PORT:-22}"
+          test -n "$MOTOR_SSH_HOST" && test -n "$MOTOR_SSH_USER"
+          OPTS=(-i "$RUNNER_TEMP/motor-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/motor-ssh/known_hosts")
+          tar --exclude=.git --exclude=examples --exclude=__pycache__ -czf "$RUNNER_TEMP/motor-package.tar.gz" .
+          ssh "${OPTS[@]}" -p "$PORT" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}" 'mkdir -p "$HOME/.local/share/motor-universal-linux"'
+          scp "${OPTS[@]}" -P "$PORT" "$RUNNER_TEMP/motor-package.tar.gz" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}:.local/share/motor-universal-linux/package.tar.gz"
+          ssh "${OPTS[@]}" -p "$PORT" "${MOTOR_SSH_USER}@${MOTOR_SSH_HOST}" 'cd "$HOME/.local/share/motor-universal-linux" && tar -xzf package.tar.gz && rm package.tar.gz && python3 -m unittest discover -s tests -v && python3 -m engine.cli doctor'
