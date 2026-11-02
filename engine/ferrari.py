@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = ROOT / "engine" / "ferrari_registry.json"
 ROUTES = {
  "reverse": ("apk","dex","descompil","decompil","engenharia reversa","firmware","binario","executavel"),
- "web": ("website","site","landing","loja","frontend","html","layout","pagina"),
+ "web": ("website","web","site","landing","loja","frontend","html","layout","pagina"),
  "creative": ("criativo","imagem","foto","fotografia","logo","banner","poster","cartaz","design"),
  "docs": ("pdf","documento","docx","excel","ocr","relatorio"),
  "media": ("video","audio","transcri","legend","filme"),
@@ -116,6 +116,7 @@ def plan(request):
         "docs": {"docs", "productivity"},
         "data": {"data", "diagrams"},
         "web": {"web", "design", "diagrams"},
+        "diagrams": {"diagrams", "design"},
         "cad": {"cad", "geo"},
         "audio": {"audio", "media"},
         "game": {"game", "animation", "creative"},
