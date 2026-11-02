@@ -86,9 +86,13 @@ if [[ ! -x "$GHIDRA/support/analyzeHeadless" ]]; then
   mv "$found" "$GHIDRA"
 fi
 echo 'FERRARI_GHIDRA_INSTALLED_ARCHIVE=PASS'
-mkdir -p "$WORK/ghidra-projects" "$SOURCE/smoke/specialists"
+# Ghidra's project locator rejects hidden dot-prefixed components like ~/.local.
+# Only its disposable *project* folder uses a non-hidden /tmp path.
+GHIDRA_PROJECT_ROOT="$(mktemp -d /tmp/ferrari-ghidra-XXXXXXXX)"
+trap 'rm -rf -- "$WORK" "$GHIDRA_PROJECT_ROOT"' EXIT
+mkdir -p "$SOURCE/smoke/specialists"
 echo 'FERRARI_GHIDRA_HEADLESS_ANALYSIS=START'
-if ! "$GHIDRA/support/analyzeHeadless" "$WORK/ghidra-projects" FerrariSmoke \
+if ! "$GHIDRA/support/analyzeHeadless" "$GHIDRA_PROJECT_ROOT" FerrariSmoke \
   -import /usr/bin/true -analysisTimeoutPerFile 60 -deleteProject \
   > "$SOURCE/smoke/specialists/ghidra-headless.log" 2>&1; then
   echo 'FERRARI_GHIDRA_HEADLESS_FAILED_LOG_FOLLOWS' >&2
