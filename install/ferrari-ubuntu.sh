@@ -27,10 +27,10 @@ MISSING=()
 SKIPPED=()
 for pkg in "${REQUESTED[@]}"; do
   [[ -n "$pkg" ]] || continue
-  # Node 18 from Ubuntu APT can break REA's Node 22.23.4+ requirement.
+  # Do not replace the system Node/Java runtimes used by unrelated projects.
   # Daemon packages may start/affect unrelated services on this VPS.
   case "$pkg" in
-    nodejs|npm|prometheus|valkey-server)
+    nodejs|npm|prometheus|valkey-server|openjdk-21-jdk-headless)
       SKIPPED+=("$pkg")
       continue
       ;;
