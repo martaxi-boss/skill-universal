@@ -19,6 +19,7 @@ jobs:
           bash -n install/vps-preflight.sh
           bash -n install/install-agent-engines.sh
           bash -n install/vps-delivery.sh
+          bash -n install/vps-external-agents.sh
       - name: Inspect Ferrari registry and routing
         run: |
           python3 -m engine.ferrari doctor
