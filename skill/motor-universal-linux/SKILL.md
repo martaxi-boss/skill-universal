@@ -1,6 +1,6 @@
 ---
 name: motor-universal-linux
-description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usar em tarefas de websites e layouts, programação, engenharia reversa autorizada, imagens, criativos, vídeo, áudio, documentos, dados e automação; a IA anfitriã apenas interpreta e organiza, e as ferramentas são as do motor Linux.
+description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usar em tarefas de websites e layouts, programação, engenharia reversa autorizada, imagens, criativos, vídeo, áudio, documentos, dados, automação e orquestração profissional de fluxos Ubuntu; a IA anfitriã apenas interpreta e organiza, e as ferramentas são as do motor Linux.
 ---
 
 # Motor Ferrari — Skill Universal
@@ -18,6 +18,22 @@ A inteligência artificial (ChatGPT, Codex, Cloud, ou outra) apenas interpreta e
 6. Se faltar ferramenta livre ou fornecedor, consultar `ferrari_alternatives` para um produto comercial conhecido e `ferrari_discover` para procurar alternativas licenciadas no GitHub. Avaliar licença, Linux/Ubuntu, arquitetura, dependências, RAM, GPU, manutenção e risco antes de instalar; NUNCA executar o código de um repositório encontrado apenas porque tem muitas estrelas. Implementar e testar o adaptador neste projeto; dizer o que falta.
 8. Em websites, escolher automaticamente o layout adequado: landing, store (loja), portfolio (portefólio) ou dashboard (painel). O comando Ferrari aceita --layout com estes valores. São templates estáticos sem backend, pagamentos ou autenticação reais.
 9. Devolver ficheiros, testes, evidência do executor real e lacunas. Não declarar 100% com base em catálogo ou simulação.
+
+## Orquestrador profissional (obrigatório para tarefas compostas)
+
+Usar **o coordenador independente do Motor Ferrari**, nunca o coordenador do ChatGPT/Codex ou de projetos antigos. Para tarefas com vários passos:
+
+1. Preparar o plano JSON `{"version":1,"steps":[...]}` com `id`, `operation`, `depends_on`, `input_from`, `title` e `layout` quando aplicável. Cada operação tem de estar implementada em `engine.ferrari.OPS`.
+2. Validar com `engine.orchestrator.validate_workflow` e apresentar a simulação: `python3 -m engine.orchestrator --plan examples/ferrari-workflow.json --workspace /caminho/trabalho`. Sem `--execute` o comando não escreve ficheiros.
+3. Executar mediante autorização usando `--execute --max-parallel 2` ou a ferramenta MCP `ferrari_orchestrate` com `execute=true`. A execução depende da ponte autenticada e da instalação real no Ubuntu.
+4. O motor gere dependências, paralelismo e resultados de cada etapa, devolvendo `report.json` e os artefactos. **Não afirmar recuperação após reinício ou retries automáticos**: ainda não foram implementados.
+5. Prefect (Apache-2.0) é candidato para persistência e agendamento local, Ruflo (MIT) para coordenação de agentes especializados, LangGraph (MIT) para estados agentivos. Todos são módulos **opcionais**, apenas se verdadeiramente instalados e certificados. Nenhum substitui o núcleo Ferrari.
+
+## Coleções GitHub de Skills
+
+Usar uma **Skill única** com referências internas, não instalar em série Skills de outros autores. A auditoria `engine/skillpacks_audit.json` verifica coleções como Superpowers (MIT), wshobson/agents (MIT), Vercel Skills (MIT), Agent Skills (Apache-2.0), Anthropic Skills (licença por pasta) e OpenAI Skills (descontinuado). Selecionar metodologias reutilizáveis, atribuir origens e nunca importar automaticamente scripts, hooks, prompts de fornecedor pago ou módulos com licenças proprietárias.
+
+Consultar `references/orchestration.md` para escolher fluxos, integrar conhecimento sem múltiplas Skills e executar o coordenador. A documentação completa está em `docs/ORQUESTRADOR_SKILLS_GITHUB.md`.
 
 ## Domínios
 

@@ -79,5 +79,14 @@ def ferrari_discover(query: str, minimum_stars: int = 100, limit: int = 15) -> s
     """Search free licensed GitHub upstream metadata, with no installation or code execution."""
     return json.dumps(ferrari_engine.discover(query, minimum_stars, limit), ensure_ascii=False)
 
+@mcp.tool()
+def ferrari_orchestrate(plan_json: str, workspace: str,
+                       execute: bool = False, max_parallel: int = 2) -> str:
+    """Validate or execute a bounded Ubuntu workflow with Ferrari tools only."""
+    from engine.orchestrator import orchestrate
+    plan_data = json.loads(plan_json)
+    return json.dumps(orchestrate(plan_data, workspace, execute, max_parallel),
+                      ensure_ascii=False)
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
