@@ -47,7 +47,7 @@ def registry():
         for source in json.loads(expansion.read_text(encoding="utf-8"))["projects"]:
             extra = dict(source)
             extra["binary"] = None
-            extra["apt"] = None  # APT candidates are NOT certified Ubuntu package names.
+            extra["apt"] = source.get("package_candidate") if source.get("install_method") == "apt" and source.get("license_status") == "github_declared" else None  # Runtime apt-cache must verify Ubuntu candidate.
             extra["gui"] = source.get("resources") == "gui"
             extra["requires_gpu"] = source.get("resources") == "gpu"
             extra["stars_snapshot"] = int(source["stars_snapshot"])
