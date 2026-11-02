@@ -1,3 +1,7 @@
+# Última prova: catálogo operacional na VPS
+
+Execução GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664) SUCCESS. 59 testes PASS, 12 ações instaladas, 45 programas detetados nos catálogos combinados. O comando `auto` selecionou e executou Pandoc a partir de pedido em linguagem natural para DOCX real. Ferramentas de catálogo sem adaptador não são automaticamente executáveis. Consultar BOOTSTRAP canónico no repositório para estado e limitações.
+
 # Atualização: catálogo operacional multidomínio do Ferrari
 
 O catálogo tem 56 candidatos Ubuntu. Em separado, `engine/tool_runtime.py` deteta a presença efetiva dos executáveis na VPS e consulta `engine/tool_actions.json`, que contém 12 ações tipadas nas áreas documentos, diagramas, multimédia, imagens, dados, identificação de ficheiros e engenharia reversa. Os comandos Ferrari são `tools`, `actions`, `route` e `invoke`. A seleção não é certificação: só declarar PASS depois de testes reais no Ubuntu, com outputs. REA/Ruflo não são o centro do Ferrari e a sua integração profunda continua pendente.

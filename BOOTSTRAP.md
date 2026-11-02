@@ -5,6 +5,10 @@
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
+## Última prova real — Motor Ferrari universal (02/11/2026)
+
+**GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664): SUCCESS.** Release `1b7ee15508d5780c3dbf22205ec625c2679348c5` ativa; **59 testes na VPS PASS**; 12 ações tipadas disponíveis em 45 programas detetados nos catálogos combinados (não 45/56). **Pedido natural → seleção automática → Pandoc → DOCX real: PASS**. Graphviz/JQ/file e fluxo multiexecutor PASS. Consultar [certificação universal](docs/CERTIFICACAO_UNIVERSAL_20261102.md). Mantêm-se pendentes a integração profunda REA/Ruflo, os restantes programas sem adaptador e a ligação direta Skill → VPS.
+
 ## Certificação real do catálogo operacional — 02/11/2026
 
 **Execução GitHub Actions VPS [#41544817563](https://github.com/martaxi-boss/VPS/actions/runs/41544817563): SUCCESS.** Release `14c72563b654593f4d54f4977fe6fc83cfc4c87a` passou **57 testes** na VPS, inventário dinâmico e seleção de ferramentas PASS, 12 ações externas disponíveis, **45 programas detetados no catálogo combinado** (56 candidatos + ferramentas auxiliares; não são 45/56). O Ferrari executou Graphviz, Pandoc, jq e file, com resultados reais e fluxo orquestrado de 3 ferramentas. A nova operação `auto` acrescentada depois deste teste só será dada como certificada quando for provada numa execução posterior.

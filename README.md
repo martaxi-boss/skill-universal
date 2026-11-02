@@ -4,6 +4,10 @@
 
 **Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
 
+## Novo: ferramentas externas com descoberta e execução automáticas — 02/11/2026
+
+**GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664): SUCCESS.** 59 testes PASS; 12 adaptadores executáveis, 45 programas detetados nos catálogos combinados, seleção automática de Pandoc para pedido Markdown→DOCX, Graphviz SVG, jq JSON e orquestração real em três ferramentas. Novos comandos: `python3 -m engine.ferrari tools`, `actions`, `route`, `auto` e `invoke`. [Relatório de certificação](docs/CERTIFICACAO_UNIVERSAL_20261102.md). A Skill ainda não tem ligação direta certificada à VPS.
+
 ## Resultado mais recente: VPS limpa e Ferrari CAD/3D confirmado — 02/11/2026
 
 **GitHub Actions VPS [#41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347): SUCCESS.** Release ativa `d7708a825797cc40b8726b32cbe00673929f3e4c`; 49 testes na VPS PASS, OpenSCAD STL, Blender BLEND/GLB/PNG, Office DOCX/PDF, Ghidra/JADX teste funcional. A limpeza Ferrari-only removeu 8 releases antigas e libertou **6,82 GiB**, ficando **20,42 GiB livres**, sem alterar outras pastas. A plataforma ainda necessita de integração Skill → VPS, adaptação REA/Ruflo profunda e expansão dos restantes domínios.

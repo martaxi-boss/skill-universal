@@ -5,6 +5,10 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## Estado certificado na VPS
+
+A execução GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664) terminou SUCCESS com 59 testes na VPS, 12 adaptadores disponíveis e execução automática Markdown→DOCX via Pandoc. Inventário real de 45 programas nos catálogos combinados: NÃO interpretar como 45 dos 56 candidatos nem como 45 ações. A ponte Skill→VPS e o funcionamento real profundo de REA/Ruflo permanecem por demonstrar.
+
 ## Bootstrap permanente do projeto
 
 **Ler primeiro** o ficheiro canónico `BOOTSTRAP.md` deste repositório; se estiver a utilizar apenas o ZIP da Skill, ler `references/bootstrap.md`. Esta decisão prevalece sobre ideias vagas de expansão: **uma só Skill, um só Motor Ferrari isolado em Ubuntu, um orquestrador próprio e ferramentas instaladas/testadas antes de serem anunciadas como disponíveis**. O objetivo é cobrir todas as áreas possíveis progressivamente, incluindo **projetos de construção, plantas 2D, arquitetura, BIM/IFC e modelação 3D**, mas hoje **não está tudo implementado**. Nunca confundir os 56 candidatos Ubuntu com ferramentas certificadas na VPS.
