@@ -22,8 +22,8 @@ if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
 fi
 NODE_VER="$(node -p 'process.versions.node')"
 printf 'Detected Node.js: %s\n' "$NODE_VER"
-if ! node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a===22&&b>=19||a===24&&b>=11||a>=26?0:1)'; then
-  echo 'REA requires Node >=22.19 / >=24.11 / >=26. No packages will be installed.' >&2
+if ! node -e 'const [a,b,c]=process.versions.node.split(".").map(Number);const ok=(a===22&&(b>23||(b===23&&c>=4)))||(a===24&&(b>22||(b===22&&c>=1)))||(a===26&&(b>12||(b===12&&c>=1)))||a>26;process.exit(ok?0:1)'; then
+  echo 'REA upstream package requires Node ^22.23.4 || ^24.22.1 || >=26.12.1. No packages will be installed.' >&2
   exit 2
 fi
 if ((APPLY==0)); then
