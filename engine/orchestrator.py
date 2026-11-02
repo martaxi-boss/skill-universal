@@ -53,7 +53,7 @@ def validate_workflow(spec: dict) -> list[dict]:
             raise ValueError("input_from must be listed in depends_on")
         if inp and source_step:
             raise ValueError("Use either input or input_from, not both")
-        if op not in {"web-template", "svg-poster"} and not (inp or source_step):
+        if op not in {"web-template", "svg-poster", "blender-house"} and not (inp or source_step):
             raise ValueError("Operation " + op + " needs input or input_from")
         if op in {"web-template", "svg-poster"} and (inp or source_step):
             raise ValueError("Generator " + op + " does not accept input")

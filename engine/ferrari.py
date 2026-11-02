@@ -37,7 +37,7 @@ ROUTES.update({
  "productivity": ("notas", "gestao de projeto", "produtividade", "documentacao"),
 })
 LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
-OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings")
+OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf")
 
 def registry():
     """Merge checked GitHub repositories without claiming installation or license validation."""
@@ -300,7 +300,7 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         raise ValueError("Unsupported operation: no arbitrary shell")
     if system()["distro"] != "ubuntu":
         raise RuntimeError("Ferrari execution is supported only on Ubuntu")
-    p=_input(source) if op not in {"web-template","svg-poster"} else None
+    p=_input(source) if op not in {"web-template","svg-poster","blender-house"} else None
     if op=="web-template":
         dest=_output(output,"site/index.html")
         if layout not in LAYOUTS:
@@ -342,6 +342,15 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         exe=_exe("jadx")
         _call([exe,"-d",str(dest),str(p)],timeout=600)
         artifacts=[dest]
+    elif op in {"cad-stl","blender-house","office-pdf"}:
+        from engine import cad_tools
+        folder=Path(output).resolve()
+        if op=="cad-stl":
+            exe,artifacts=cad_tools.scad_to_stl(p,folder)
+        elif op=="blender-house":
+            exe,artifacts=cad_tools.blender_house(folder,title=title)
+        else:
+            exe,artifacts=cad_tools.office_pdf(p,folder)
     else:
         dest=_output(output,"strings.txt")
         exe=_exe("strings")

@@ -625,7 +625,7 @@
       "installation_tier": "desktop_candidate",
       "selection_status": "gui_apt_candidate_found_on_ubuntu2404_runner",
       "installation_candidate": "openscad",
-      "license": "verify",
+      "license": "GPL-2.0-or-later",
       "evidence": [
         {
           "kind": "upstream_linux_install_or_candidate",
@@ -634,13 +634,17 @@
         {
           "kind": "ubuntu2404_apt_cache_candidate",
           "url": "https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172"
+        },
+        {
+          "kind": "official_project_license",
+          "url": "https://github.com/openscad/openscad/blob/master/resources/html/AboutDialog.html"
         }
       ],
       "runtime_note": "Ubuntu host binary and all dependencies require smoke test; no installed-state claim",
       "installed_on_vps": false,
       "certified_on_vps": false,
       "selected_for_auto_install": false,
-      "license_review_required": true,
+      "license_review_required": false,
       "eligible_for_ubuntu_preflight": false
     },
     {
@@ -1401,6 +1405,7 @@
     "curated": 56,
     "apt_candidates": 34,
     "upstream_linux": 22,
-    "pending_gui": 0
+    "pending_gui": 0,
+    "license_checked_this_release": "openscad GPL-2.0-or-later from upstream AboutDialog"
   }
 }
