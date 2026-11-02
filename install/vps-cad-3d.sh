@@ -35,6 +35,11 @@ difference() {
 SCAD
 python3 -m engine.ferrari run --operation cad-stl --input "$OUT/ferrari-sample.scad" --output "$OUT/cad"
 python3 -m engine.ferrari run --operation blender-house --title 'Casa conceptual Ferrari' --output "$OUT/blender"
+printf '# Ferrari document smoke\n\nUbuntu 24.04 office export passed.\n' > "$OUT/document.md"
+pandoc "$OUT/document.md" -o "$OUT/document.docx"
+python3 -m engine.ferrari run --operation office-pdf --input "$OUT/document.docx" --output "$OUT/office"
+test -s "$OUT/office/document.pdf"
+echo 'FERRARI_OFFICE_DOCX_TO_PDF=PASS'
 test -s "$OUT/cad/solid.stl"
 test -s "$OUT/blender/house.blend"
 test -s "$OUT/blender/house.glb"
