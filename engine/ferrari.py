@@ -147,6 +147,38 @@ def plan(request):
             "catalogued_total": len(registry()),
             "notice": "Candidates only, not Ubuntu-installed or certified. No executor launched."}
 
+def alternatives(product):
+    """Locate independent, licensed Ubuntu alternatives to paid products.
+
+    Reverse engineering can enable compatible formats/protocols, but does
+    not grant the vendor's proprietary binaries, accounts or license rights.
+    """
+    if not product.strip():
+        raise ValueError("Product name required")
+    data=json.loads((ROOT/"engine"/"commercial_alternatives.json").read_text(encoding="utf-8"))
+    query=normalize(product)
+    matched=[]
+    for entry in data["entries"]:
+        for alias in entry.get("aliases",[]):
+            needle=normalize(alias)
+            if needle in query or query == needle:
+                matched.append((len(needle),entry))
+    if not matched:
+        return {"product":product,"match":None,"alternatives":[],
+                "notice":"No verified equivalent mapped; inspect free licensed upstreams."}
+    entry=max(matched,key=lambda x:x[0])[1]
+    known={p["id"]:p for p in inventory()}
+    candidates=[]
+    for name in entry["tools"]:
+        p=known.get(name)
+        candidates.append({"id":name,"repository":p["repository"] if p else None,
+            "binary_found":p["binary_found"] if p else False,
+            "license_review_required":p.get("license_status")=="review_required" if p else True,
+            "ubuntu_certified":False})
+    return {"product":product,"match":entry["product"],"domain":entry["domain"],
+        "coverage":entry["coverage"],"alternatives":candidates,
+        "notice":"Legal free alternatives, not a cracked original or guaranteed file compatibility."}
+
 def packages(profile="maximum",include_gui=True):
     cats={"core":{"dev","automation"},"web":{"dev","web"},"reverse":{"dev","reverse"},
           "creative":{"creative","media"},"docs":{"docs"},"media":{"media","creative"},
@@ -256,6 +288,7 @@ def main(argv=None):
     sub.add_parser("doctor")
     ls=sub.add_parser("list");ls.add_argument("--category")
     pl=sub.add_parser("plan");pl.add_argument("request")
+    al=sub.add_parser("alternatives");al.add_argument("product")
     pk=sub.add_parser("packages")
     pk.add_argument("--profile",default="maximum");pk.add_argument("--headless",action="store_true")
     pk.add_argument("--plain",action="store_true")
@@ -269,6 +302,7 @@ def main(argv=None):
     if a.cmd=="doctor": result=doctor()
     elif a.cmd=="list": result=inventory(a.category)
     elif a.cmd=="plan": result=plan(a.request)
+    elif a.cmd=="alternatives": result=alternatives(a.product)
     elif a.cmd=="packages":
         result=packages(a.profile,not a.headless)
         if a.plain:
