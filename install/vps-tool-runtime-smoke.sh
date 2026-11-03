@@ -315,7 +315,10 @@ for name,marker in (("krita/krita-export.jpg","KRITA_JPEG"),
     f=p/("phase2-"+name)
     assert f.is_file() and f.stat().st_size>256,f
     assert f.read_bytes()[:3]==b"\xff\xd8\xff",f
-    print("FERRARI_"+marker+"_REAL=PASS")
+    if marker=="KRITA_JPEG":
+        print("FERRARI_KRITA_JPEG_REAL=PASS")
+    else:
+        print("FERRARI_DARKTABLE_JPEG_REAL=PASS")
 epub=p/"phase2-calibre/calibre-book.epub"
 assert zipfile.is_zipfile(epub),epub
 with zipfile.ZipFile(epub) as z:
