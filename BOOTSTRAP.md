@@ -1,5 +1,17 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+## Fase 07 - 03/11/2026: Skill envia DAG diretamente ao orquestrador Ferrari
+
+- **Código:** [PR #14](https://github.com/martaxi-boss/skill-universal/pull/14) integrada por squash no commit `143ee613dc365e80804a579edc5faef37d38a372`. Integrado **no mesmo** `engine.skill_job` o pedido `kind=plan`, delegando para `engine.orchestrator` existente; sem Skill, coordenador, servidor ou ponte adicional.
+- **CI real:** [GitHub Actions #41619456511](https://github.com/martaxi-boss/skill-universal/actions/runs/41619456511) **SUCCESS, 105/105 testes PASS**, incluindo 6 testes novos de cadeia de etapas, ZIP de artefactos, `$input` e falha de executor. Gerado artefacto `ferrari-skill-installable` com o pacote da **mesma Skill**.
+- **Ponte Ferrari inalterada em funcionamento:** no repositório `martaxi-boss/VPS`, a alteração [`ed2fa685`](https://github.com/martaxi-boss/VPS/commit/ed2fa685e2e0a2aa1c58df96273d3e013772fd31) substituiu **apenas 3 referências exatas da release** em `.github/workflows/ferrari-independent-vps-delivery.yml`; [`5f825f84`](https://github.com/martaxi-boss/VPS/commit/5f825f848055c9b8b2b9ea5fc3720688a69e8724) substituiu **apenas uma referência exata** em `.github/workflows/ferrari-skill-request.yml`. Nenhuma alteração ao SSH, lógica da ponte, Supervisor ou projetos externos.
+- **Pendente de prova operacional na VPS:** a alteração ao workflow Ferrari de entrega em `VPS/main` foi enviada, mas o conector GitHub disponível neste ChatGPT **não lista runs de push** por SHA (ferramenta filtra eventos PR). Não foi obtido ainda o ID do deploy nem confirmação de `FERRARI_DEPLOY_TRANSPORT=PASS`, release ativa ou relatório de higienização. **Não declarar deployment bem-sucedido** apenas com commit ou CI de PR.
+- **Próxima prova:** confirmar a execução de deploy no GitHub Actions; quando PASS, criar um único pedido `kind=plan` com `web-template` seguido de `binary-strings` via `depends_on`/`input_from`, verificar o `report.json` e os artefactos devolvidos, registar run ID real; concluir limpeza apenas no âmbito Ferrari e manter uma release anterior de rollback. A instalação da versão empacotada na interface ChatGPT não está confirmada.
+- **OCR anterior:** o pedido `78a92882` continua por certificar remotamente, sem duplicação automática, e não deve ser confundido com a nova funcionalidade de planos.
+
+---
+
+
 ## Fase em curso - 03/11/2026: OCR Tesseract pela Skill
 
 - Pedido unico enviado pela ponte Ferrari existente em `martaxi-boss/VPS`: commit [`78a92882`](https://github.com/martaxi-boss/VPS/commit/78a92882c10ebcde7b20db065b617b60708ceb71), ficheiro `ferrari-requests/job-20261103-ocr-70e12df0b.json`, `kind=invoke`, acao `tesseract-ocr` e imagem sintetica `ferrari-test.png` sem dados privados.
