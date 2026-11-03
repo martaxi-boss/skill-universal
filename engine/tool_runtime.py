@@ -8,6 +8,7 @@ import argparse
 from datetime import datetime, timezone
 import json
 import importlib.util
+import os
 from pathlib import Path
 from engine import runtime_discovery
 import re
@@ -206,8 +207,26 @@ def invoke(action,source,folder,query=None):
     outdir.mkdir(parents=True,exist_ok=True)
     replacements={"{input}":str(inp),"{output}":str(target),"{query}":query}
     args=[exe]+[replacements.get(v,v) for v in x["args"]]
+    run_options={}
+    if x["tool"]=="rea":
+        # The REA CLI, Node, Apktool and REA state belong to Ferrari alone.
+        # No global REA command, package root or legacy project's providers.
+        node=HOME/"runtimes/node-22.23.4/bin/node"
+        apktool=ISOLATED["apktool"]
+        if not node.is_file() or node.is_symlink():
+            raise RuntimeError("Ferrari private Node 22.23.4 missing")
+        if not apktool.is_file() or apktool.is_symlink():
+            raise RuntimeError("Ferrari private Apktool missing")
+        env=os.environ.copy()
+        env["PATH"]=str(node.parent)+os.pathsep+env.get("PATH","")
+        env["REA_APKTOOL_COMMAND"]=str(apktool)
+        env["JAVA_HOME"]=str(HOME/"runtimes/jdk-25.0.5_8")
+        env["XDG_CACHE_HOME"]=str(HOME/".runtime/rea-cache")
+        env["XDG_CONFIG_HOME"]=str(HOME/".runtime/rea-config")
+        env["XDG_DATA_HOME"]=str(HOME/".runtime/rea-data")
+        run_options["env"]=env
     try:
-        p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False)
+        p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:

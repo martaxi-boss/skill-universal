@@ -584,6 +584,52 @@
         "{output}",
         "{input}"
       ]
+    },
+    {
+      "id": "rea-elf-notes",
+      "tool": "rea",
+      "binary": "rea",
+      "category": "reverse",
+      "keywords": [
+        "rea elf",
+        "notas elf",
+        "gnu build id",
+        "inspecionar elf rea",
+        "elf notes"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "rea-elf-notes.json",
+      "args": [
+        "inspect-elf-notes",
+        "{input}",
+        "--json"
+      ]
+    },
+    {
+      "id": "rea-android-resources",
+      "tool": "rea",
+      "binary": "rea",
+      "category": "reverse",
+      "keywords": [
+        "rea android",
+        "rea recursos apk",
+        "analisar recursos android",
+        "rea apk",
+        "analisar manifesto rea"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "rea-android-resources.json",
+      "args": [
+        "decode-android-resources",
+        "{input}",
+        "--json"
+      ]
     }
   ]
 }

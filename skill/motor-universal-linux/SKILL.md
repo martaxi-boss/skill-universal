@@ -5,6 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## REA Ferrari — análise funcional (fase de certificação)
+
+O Ferrari **continua a ter o seu REA privado**, `rea-agents@6.8.0` em `~/.local/share/motor-ferrari/.runtime/npm/rea` — não o REA legado de Engenharia Reversa. Esta fase integra no mesmo manifesto duas ações reais, sem outro motor ou Skill: `rea-elf-notes` (binário ELF → JSON de notas e identidade) e `rea-android-resources` (APK → JSON de manifesto/recursos, através do Apktool privado 3.0.3). O `engine.tool_runtime` executa o REA com Node 22.23.4 do Ferrari, `REA_APKTOOL_COMMAND` apontado para a instalação Ferrari e diretórios XDG próprios. Ações validáveis por `kind=invoke` ou `kind=plan` no Ferrari, após certificação. **Esta fase está em desenvolvimento: não anunciar análise REA certificada até CI, VPS e pedido remoto PASS com relatórios verificados.** Não apagar nem modificar o REA antigo.
+
+
 ## Dois projetos REA distintos — Ferrari não reutiliza o legado
 
 O Ferrari universal **mantém o seu próprio REA opcional** (`rea-agents@6.8.0`), com dependências npm, CLI e dados de execução em `~/.local/share/motor-ferrari/.runtime/npm/rea`. O Node.js do Ferrari está isolado em `~/.local/share/motor-ferrari/runtimes/node-22.23.4`. A deteção e a execução do REA são restritas à árvore Ferrari: não se utiliza o REA do outro projeto da VPS, nem instalações npm globais. **O REA antigo fica inalterado, para eliminação posterior numa fase separada.** Até agora o REA Ferrari passou apenas verificações da CLI; a sua capacidade profunda ainda não foi certificada. **Isolamento comprovado**: [PR #18](https://github.com/martaxi-boss/skill-universal/pull/18), [deploy #41648436393](https://github.com/martaxi-boss/VPS/actions/runs/41648436393) com `FERRARI_REA_PRIVATE_RUNTIME=PASS`, `FERRARI_REA_CLI=PASS_HELP_ONLY` e `FERRARI_EXTERNAL_REA_DEPENDENCY=NONE`; inventário remoto [#41648941118](https://github.com/martaxi-boss/VPS/actions/runs/41648941118) confirma `rea.status=installed_unintegrated` e pacote `rea-agents` sob `ferrari_npm`.

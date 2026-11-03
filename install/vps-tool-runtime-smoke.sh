@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==23
-assert x["callable_actions"]>=23
+assert x["registered_actions"]==25
+assert x["callable_actions"]>=25
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -96,6 +96,32 @@ grep -q 'com.ferrari.smoke' "$WORK/apktool-decode/apktool-decoded/AndroidManifes
 grep -q 'Ferrari APK Smoke' "$WORK/apktool-decode/apktool-decoded/res/values/strings.xml"
 grep -q 'Ferrari APK Smoke' "$WORK/apktool-decode/apktool-decoded/smali/com/ferrari/Smoke.smali"
 echo 'FERRARI_APKTOOL_REAL=PASS'
+
+# Exercise REA 6.8.0 from Ferrari's private npm tree, never from global PATH
+# or the legacy Engineering Reversa project. These are real REA analyses.
+python3 -m engine.ferrari invoke --action rea-elf-notes \
+  --input /usr/bin/true --output "$WORK/rea-elf" > "$WORK/rea-elf-run.json"
+python3 -m engine.ferrari invoke --action rea-android-resources \
+  --input "$WORK/ferrari-sample.apk" --output "$WORK/rea-apk" > "$WORK/rea-apk-run.json"
+python3 - "$WORK" <<'REA_CHECK'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1])
+elf=json.loads((p/"rea-elf/rea-elf-notes.json").read_text())
+apk=json.loads((p/"rea-apk/rea-android-resources.json").read_text())
+assert isinstance(elf,dict) and isinstance(apk,dict)
+assert elf.get("ok") is not False and apk.get("ok") is not False
+elf_text=json.dumps(elf,ensure_ascii=False)
+apk_text=json.dumps(apk,ensure_ascii=False)
+assert "sha256" in elf_text.lower() and ("table" in elf_text.lower() or "notes" in elf_text.lower())
+assert "com.ferrari.smoke" in apk_text or "Ferrari APK Smoke" in apk_text, apk_text[:1000]
+for fn in ("rea-elf-run.json","rea-apk-run.json"):
+    outcome=json.loads((p/fn).read_text())
+    assert outcome["confirmed"] and "/motor-ferrari/" in outcome["executor"]
+print("FERRARI_PRIVATE_REA_ELF_REAL=PASS")
+print("FERRARI_PRIVATE_REA_ANDROID_REAL=PASS")
+REA_CHECK
+
 
 printf 'digraph Ferrari { Chat -> Motor -> Ubuntu; }\n' > "$WORK/demo.dot"
 printf '# Ferrari\n\nOperacao Ubuntu com ferramenta externa real.\n' > "$WORK/demo.md"
