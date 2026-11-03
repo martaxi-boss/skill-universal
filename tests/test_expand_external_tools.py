@@ -45,7 +45,7 @@ class ExternalProgramsTests(unittest.TestCase):
         from engine import tool_runtime
         self.assertEqual(tool_runtime.BINARIES["openshot"],"openshot-qt")
         self.assertEqual(tool_runtime.BINARIES["synfig"],"synfigstudio")
-        self.assertEqual(tool_runtime.BINARIES["godot"],"godot3")
+        self.assertEqual(tool_runtime.BINARIES["godot"],"godot")
 
     def test_valkey_is_detected_only_inside_private_ferrari_tree(self):
         import tempfile
