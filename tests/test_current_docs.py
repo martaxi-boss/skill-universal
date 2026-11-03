@@ -9,8 +9,10 @@ class CurrentFerrariDocsTests(unittest.TestCase):
     def test_bootstrap_is_an_operational_snapshot_not_a_chronology(self):
         text = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
         self.assertIn("Fotografia atual com provas", text)
-        self.assertIn("41671631900", text)
+        self.assertIn("41716562469", text)
         self.assertIn("41672372249", text)
+        self.assertIn("41717389118", text)
+        self.assertIn("41718385142", text)
         self.assertIn("Apktool", text)
         self.assertIn("3.0.3", text)
         self.assertIn("REA antigo", text)
@@ -42,7 +44,8 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         for text in (sk, portable):
             self.assertIn("rea-agents@6.8.0", text)
             self.assertIn("3.0.3", text)
-            self.assertIn("41708388146", text)
+            self.assertIn("41716562469", text)
+            self.assertIn("rea-mcp", text)
             self.assertIn("55/56", text)
             self.assertNotIn("REA antigo como fallback", text)
         self.assertIn("references/github-bridge.md", sk)
