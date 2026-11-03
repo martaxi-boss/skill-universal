@@ -47,6 +47,8 @@ bash install/vps-expand-services-gui.sh
 
 # Second requested group: Ferrari-only npm/Python external tools and Ubuntu candidates.
 bash install/vps-expand-external.sh
+# Final two heavy packages, CPU-only and isolated; no services started.
+bash install/vps-expand-heavy.sh
 
 # Execute real local operations, not just binary --help probes.
 python3 -m unittest discover -s tests -v
