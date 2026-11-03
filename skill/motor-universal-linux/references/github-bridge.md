@@ -46,6 +46,16 @@ Para um plano que recebe um unico ficheiro, usar o `input` base64 de topo e `"in
 
 O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium Ferrari operacional devolve `browser-check.json` com testes de teclado opt-in, `browser-screenshot.png` e `browser-mobile.png`). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. A release atualmente instalada na VPS ainda nao suporta DAG remoto. O novo `kind=plan` desta fase deve ser usado apenas depois de testes CI, entrega na VPS e teste fim-a-fim confirmados.
 
+## Apktool — manifesto, recursos e Smali (após certificação)
+
+Um `kind=invoke` do Ferrari, com ação `apktool-decode-resources`, aceita um APK no mesmo envelope base64:
+
+```json
+{"version":1,"id":"apktool-demo-20261103-01","kind":"invoke","action":"apktool-decode-resources","input":{"name":"amostra.apk","content_base64":"CONTEUDO_APK_BASE64"}}
+```
+
+O Ferrari utiliza o programa Apktool já instalado na VPS e devolve os ficheiros produzidos dentro da pasta `apktool-decoded/` no mesmo `response.zip`, incluindo `AndroidManifest.xml`, `apktool.yml`, `res/` e `smali/` quando presentes na entrada. A função só será dada como certificada depois dos testes e de uma execução real na VPS. Os repositórios são públicos; não publicar APKs privados ou com dados pessoais neste transporte.
+
 ## Certificação web mais recente — 03/11/2026
 
 - [Ferrari VPS #41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120): SUCCESS, **99 testes PASS**, `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`; Vite, Chromium, mobile, HTML spotcheck e IFC mantiveram PASS.
