@@ -130,6 +130,9 @@ async function main() {
       await page.keyboard.press("Enter");
       const afterEnter = Number(await button.getAttribute("data-ferrari-activations") || "0");
       interactions.button_enter = afterEnter === before + 1 ? "passed" : "finding";
+      // The app can intentionally move focus on Enter (e.g. reset -> search).
+      // Test Space independently by refocusing the SAME opt-in button.
+      await button.focus();
       await page.keyboard.press("Space");
       const afterSpace = Number(await button.getAttribute("data-ferrari-activations") || "0");
       interactions.button_space = afterSpace === afterEnter + 1 ? "passed" : "finding";
