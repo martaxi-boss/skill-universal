@@ -315,6 +315,27 @@ if ! python3 -m engine.ferrari invoke --action krita-image-png \
   phase2_failed=1
 fi
 if ((phase2_failed)); then
+  # Preserve trustworthy evidence from successful commands even when the
+  # remaining GUI-based application fails on an Ubuntu server without X.
+  python3 - "$WORK" <<'PY_PHASE2_PARTIAL'
+import sys,zipfile
+from pathlib import Path
+root=Path(sys.argv[1])
+epub=root/"calibre-epub/calibre-book.epub"
+try:
+    with zipfile.ZipFile(epub) as z:
+        assert z.read("mimetype")==b"application/epub+zip"
+    print("FERRARI_CALIBRE_MD_EPUB_REAL=PASS")
+except (OSError,KeyError,AssertionError,zipfile.BadZipFile):
+    print("FERRARI_CALIBRE_MD_EPUB_REAL=NOT_CERTIFIED")
+tiff=root/"darktable-tiff/darktable-export.tif"
+try:
+    assert tiff.stat().st_size>100
+    with tiff.open("rb") as f: assert f.read(4) in (b"II*\x00",b"MM\x00*")
+    print("FERRARI_DARKTABLE_JPEG_TIFF_REAL=PASS")
+except (OSError,AssertionError):
+    print("FERRARI_DARKTABLE_JPEG_TIFF_REAL=NOT_CERTIFIED")
+PY_PHASE2_PARTIAL
   echo 'FERRARI_PHASE2_APPLICATIONS_NOT_CERTIFIED' >&2
   exit 7
 fi

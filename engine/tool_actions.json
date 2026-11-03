@@ -785,6 +785,8 @@
       "mode": "file",
       "artifact": "krita-export.png",
       "args": [
+        "-platform",
+        "offscreen",
         "{input}",
         "--export",
         "--export-filename",

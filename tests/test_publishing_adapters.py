@@ -23,6 +23,8 @@ class PublishingAdapterTests(unittest.TestCase):
                 self.assertIn(ext,action["extensions"])
                 self.assertEqual(action["artifact"],out)
                 self.assertEqual(action["mode"],"file")
+                if tool=="krita":
+                    self.assertEqual(action["args"][:2],["-platform","offscreen"])
                 self.assertIn("{input}",action["args"])
                 self.assertIn("{output}",action["args"])
 
