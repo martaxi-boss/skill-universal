@@ -12,7 +12,7 @@ class HygieneScope(unittest.TestCase):
         self.assertIn("active=pointer.resolve(strict=True)",s)
         self.assertIn("shutil.rmtree(p)",s)
         self.assertIn("outside_ferrari_touched",s)
-        self.assertIn('fallback_sha="13c4399257cd19496f378ad3f15cd1ebe877977b"',s)
+        self.assertIn('fallback_sha="0196f37a7610d1f95cd3371652308b7e2244f019"',s)
         self.assertNotIn("apt-get",s)
         self.assertNotIn("/root",s)
 if __name__=="__main__":
