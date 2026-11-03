@@ -1,6 +1,20 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: Vite testado no Chromium real + higienização
+## Certificação mais recente — 03/11/2026: mobile responsivo e diagnóstico de acessibilidade
+
+**Release atual Ferrari:** `0196f37a7610d1f95cd3371652308b7e2244f019`. [PR #8](https://github.com/martaxi-boss/skill-universal/pull/8) integrada. [CI da PR #41561833247](https://github.com/martaxi-boss/skill-universal/actions/runs/41561833247) SUCCESS, 99 testes PASS. [Entrega VPS #41561998389](https://github.com/martaxi-boss/VPS/actions/runs/41561998389) SUCCESS, **99 testes PASS na VPS**; `FERRARI_VITE_RESPONSIVE_REAL=PASS`, `FERRARI_BROWSER_A11Y_SPOTCHECK_REAL=PASS`, `FERRARI_VITE_BROWSER_REAL=PASS` e IFC geometria PASS.
+
+**Skill ponta a ponta:** [pedido #41562205411](https://github.com/martaxi-boss/VPS/actions/runs/41562205411) SUCCESS com `FERRARI_SKILL_JOB_STATUS=completed` e `FERRARI_SKILL_END_TO_END=PASS`; ZIP aberto e verificado com site Vite compilado, duas capturas e JSON. Desktop 1280×720 (PNG 62 964 bytes); viewport CSS móvel 390×844 (PNG 56 548 bytes); a grelha passou de duas colunas para uma, sem overflow horizontal (0 px). JavaScript ativo, zero erros de consola e página, zero pedidos externos. Meta viewport presente, HTML `lang=pt`, três headings; zero imagens sem alt, botões/links sem nome e campos sem label no exemplo.
+
+**Sem camadas:** a mesma operação `vite-build` passou a emitir `browser-mobile.png` e dados `mobile` em `browser-check.json`, sem novas ferramentas, operações, Skills ou serviços. Avisos básicos de acessibilidade são informativos; **não** equivalem a certificação WCAG, emulação Android nem testes de um sistema completo.
+
+**Higienização real:** após PASS, a rotina Ferrari existente removeu `aefd8bb156f95e47c5a90b2a5d96db8d26f94283`, preservando `0196f37a...` ativa e `13c439925...` como fallback. Libertou **2 486 272 bytes (~2,37 MiB)**; **21,32 GiB** livres no fim. `outside_ferrari_touched=false`: SSH, Supervisor e outros projetos intocados.
+
+**Inventário real estável:** 56 candidatos Ubuntu, **23/56 detetados**, 49 ferramentas nos catálogos combinados, **12 operações base** e **21 ações externas**. Relatório com evidências e limites: [docs/CERTIFICACAO_MOBILE_SPOTCHECK_20261103.md](docs/CERTIFICACAO_MOBILE_SPOTCHECK_20261103.md). **Próxima fase separada:** interação por teclado no mesmo navegador se necessária; não criar camadas nem instalar programas sem necessidade.
+
+---
+
+## Histórico — 03/11/2026: Vite testado no Chromium real + higienização
 
 **Release ativa Ferrari:** `13c4399257cd19496f378ad3f15cd1ebe877977b`. [Deploy real VPS #41560720430](https://github.com/martaxi-boss/VPS/actions/runs/41560720430) SUCCESS, **99 testes PASS na VPS** e `FERRARI_VITE_BROWSER_REAL=PASS` (manteve `FERRARI_IFC_GEOMETRY_REAL=PASS`). [Pedido real pela Skill #41560954411](https://github.com/martaxi-boss/VPS/actions/runs/41560954411) SUCCESS com `FERRARI_SKILL_END_TO_END=PASS`; ZIP inspecionado com `dist/index.html`, JavaScript, CSS, `browser-check.json` e **`browser-screenshot.png` de 15 875 bytes**. Browser: Chromium headless shell `156.0.8078.4`, Playwright `1.64.1`, Node `22.23.4` e Vite `8.3.5` isolados no Ferrari; JavaScript executado (`demo_js_ready=yes`), `dom_ready=complete`, zero erros de consola/página e zero pedidos externos.
 
