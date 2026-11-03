@@ -67,11 +67,11 @@ jobs:
           SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
           SHA="$GITHUB_SHA"
           tar --exclude=.git --exclude=__pycache__ --exclude=.runtime -czf "$RUNNER_TEMP/source.tar.gz" .
-          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" "mkdir -p \"\$HOME/.local/share/motor-ferrari/releases/$SHA\""
-          scp "${SSH_ARGS[@]}" -P "${PORT:-22}" "$RUNNER_TEMP/source.tar.gz" "$USERNAME@$HOST:.local/share/motor-ferrari/releases/$SHA/source.tar.gz"
+          ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" "mkdir -p \"/srv/projects/skill-universal/releases/$SHA\""
+          scp "${SSH_ARGS[@]}" -P "${PORT:-22}" "$RUNNER_TEMP/source.tar.gz" "$USERNAME@$HOST:/srv/projects/skill-universal/releases/$SHA/source.tar.gz"
           ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" "bash -s -- '$SHA'" <<'REMOTE'
           set -euo pipefail
-          PROJECT="$HOME/.local/share/motor-ferrari"
+          PROJECT="/srv/projects/skill-universal"
           RELEASE="$PROJECT/releases/$1"
           cd "$RELEASE"
           tar -xzf source.tar.gz
@@ -97,7 +97,7 @@ jobs:
           SSH_ARGS=(-i "$RUNNER_TEMP/ferrari-ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ferrari-ssh/known_hosts")
           ssh "${SSH_ARGS[@]}" -p "${PORT:-22}" "$USERNAME@$HOST" 'bash -s' <<'REMOTE'
           set -euo pipefail
-          cd "$HOME/.local/share/motor-ferrari/current"
+          cd "/srv/projects/skill-universal/current"
           if [ "$(id -u)" -eq 0 ]; then
             bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
           else
