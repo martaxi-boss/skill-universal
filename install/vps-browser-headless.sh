@@ -31,11 +31,10 @@ if ! "$NODE" -e 'const p=require(process.argv[1]);process.exit(p.version===proce
     --no-progress --loglevel=error "playwright@$VERSION"
 fi
 "$NODE" -e 'const p=require(process.argv[1]);if(p.version!==process.argv[2])process.exit(2)' "$PKG/package.json" "$VERSION"
-BROWSER_BIN="$("$NODE" -e 'const {chromium}=require(process.argv[1]);process.stdout.write(chromium.executablePath())' "$PKG")"
-case "$BROWSER_BIN" in
-  "$PLAYWRIGHT_BROWSERS_PATH"/*) ;;
-  *) echo 'FERRARI_BROWSER_PATH_OUTSIDE_OWN_ROOT' >&2; exit 5 ;;
-esac
+# Playwright 1.64.1 pins Chromium headless-shell revision 1248.
+# chromium.executablePath() points to the *full* browser and is not valid
+# after --only-shell; verify the downloaded headless shell itself.
+BROWSER_BIN="$PLAYWRIGHT_BROWSERS_PATH/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell"
 if [[ ! -x "$BROWSER_BIN" ]]; then
   PATH="$NODE_ROOT/bin:$PATH" "$NODE" "$PKG/cli.js" install chromium --only-shell
 fi
