@@ -6,7 +6,16 @@
 
 Uma Skill Universal Ferrari → conector GitHub autenticado → workflow **apenas Ferrari** em `martaxi-boss/VPS` → SSH existente → Motor Ferrari independente na VPS Ubuntu → relatório/ficheiros ZIP. A IA interpreta e orienta, o motor executa. REA e Ruflo são ferramentas opcionais, não coordenadores. Não alterar o SSH, Supervisor ou outros projetos.
 
-## Testes complementares de projeto — 03/11/2026
+## Certificação Lowcost pós-correção — 03/11/2026
+
+- [PR #186](https://github.com/martaxi-boss/lowcost-europa/pull/186) integrada (`0a1707e534d127ebd1f0f3f3cf6542ffaa5431b1`): staging browser no workflow existente fixado em `ubuntu-24.04`, evitando incompatibilidade Playwright 1.56.1 com `ubuntu-latest`=26.04.
+- **Staging real da main** [#41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458): SUCCESS, artefacto ZIP e `result.json` verificados, **15 PASS, 0 erros e 0 avisos**, 14 screenshots desktop/mobile, sem overflow horizontal. 7 páginas desktop + 7 mobile emulado + HTTP (robots, ficheiro JS e acesso anónimo ao painel).
+- **Django/PostgreSQL da main** [#41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466): SUCCESS, **709 testes PASS**; [auditoria #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS. Testes usam CI do projeto, **não** o motor `vite-build` Ferrari. Nem base de produção nem outros projetos foram alterados.
+- Histórico do erro e provas em [relatório consolidado](https://github.com/martaxi-boss/skill-universal/blob/main/docs/CERTIFICACAO_DJANGO_POSTGRES_STAGING_20261103.md).
+
+---
+
+## Histórico anterior à correção — testes complementares de 03/11/2026
 
 - **Django/PostgreSQL real em CI próprio da Lowcost**: [#41068103444, repetição 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41068103444) SUCCESS, **709/709 testes PASS** no commit de `main` `388860c6...`. `check`, `check --deploy`, migrações, Ruff e JavaScript PASS. PostgreSQL 16 temporário, não produção. **Estes não são testes do motor Ferrari**.
 - **Staging browser não certificado agora**: [#40664538172, repetição 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/40664538172) FAIL antes de carregar páginas; runner `ubuntu-latest` disponibilizou Ubuntu 26.04 e Playwright `1.56.1` não suporta instalar Chromium. O PASS histórico `checks=13 errors=0` foi em **28/10/2026** com Ubuntu 24.04, não substitui validação atual. Solução proposta, ainda não aplicada: fixar `runs-on: ubuntu-24.04` no workflow de staging do projeto e executar a versão atual.
