@@ -158,7 +158,11 @@ def vite_build(source: Path, output_dir: Path):
               str(screenshot), str(browser_report)], timeout=100, env=env)
         result = json.loads(browser_report.read_text(encoding="utf-8"))
         mobile = result.get("mobile") or {}
+        interactions = result.get("interactions") or {}
         if (result.get("status") != "passed"
+                or interactions.get("status") not in {"clear", "findings"}
+                or not isinstance(interactions.get("focusable_count"), int)
+                or not isinstance(interactions.get("findings"), list)
                 or not screenshot.is_file() or screenshot.stat().st_size < 100
                 or not mobile_screenshot.is_file() or mobile_screenshot.stat().st_size < 100
                 or mobile.get("viewport") != {"width": 390, "height": 844}
