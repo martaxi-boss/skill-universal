@@ -10,12 +10,21 @@ WORK="$(mktemp -d "$ROOT/.runtime/pro-smoke.XXXXXXXX")"
 trap 'rm -rf -- "$WORK"' EXIT
 
 "$ROOT/.runtime/venvs/bim/bin/python" - "$WORK/model.ifc" <<'PY'
-import ifcopenshell
-import ifcopenshell.guid
+import ifcopenshell.api.project
+import ifcopenshell.api.root
+import ifcopenshell.api.unit
+import ifcopenshell.api.context
+import ifcopenshell.api.geometry
 import sys
-model=ifcopenshell.file(schema="IFC4")
-model.createIfcProject(GlobalId=ifcopenshell.guid.new(),Name="Ferrari BIM smoke")
-model.createIfcWall(GlobalId=ifcopenshell.guid.new(),Name="Ferrari wall")
+model=ifcopenshell.api.project.create_file()
+ifcopenshell.api.root.create_entity(model,ifc_class="IfcProject",name="Ferrari BIM smoke")
+ifcopenshell.api.unit.assign_unit(model)
+context=ifcopenshell.api.context.add_context(model,context_type="Model")
+body=ifcopenshell.api.context.add_context(model,context_type="Model",context_identifier="Body",target_view="MODEL_VIEW",parent=context)
+wall=ifcopenshell.api.root.create_entity(model,ifc_class="IfcWall",name="Ferrari wall")
+ifcopenshell.api.geometry.edit_object_placement(model,product=wall)
+representation=ifcopenshell.api.geometry.add_wall_representation(model,context=body,length=5,height=3,thickness=0.2)
+ifcopenshell.api.geometry.assign_representation(model,product=wall,representation=representation)
 model.write(sys.argv[1])
 PY
 
@@ -41,7 +50,13 @@ assert ifc["schema"]=="IFC4",ifc
 assert ifc["entities_by_type"]["IfcProject"]==1,ifc
 assert ifc["entities_by_type"]["IfcWall"]==1,ifc
 assert len(ifc["input_sha256"])==64,ifc
+assert ifc["geometry"]["counts"]["mesh_measured"]==1,ifc
+shape=next(x for x in ifc["geometry"]["elements"] if x["type"]=="IfcWall")
+assert shape["status"]=="mesh_measured" and shape["triangle_count"]>0,shape
+assert all(abs(actual-target)<0.005 for actual,target in zip(shape["world_bounds"]["size_m"],(5.0,0.2,3.0))),shape
+assert ifc["geometry"]["units"]=="metres",ifc
 print("FERRARI_IFC_SEMANTIC_REAL=PASS")
+print("FERRARI_IFC_GEOMETRY_REAL=PASS")
 build=json.loads((p/"web-result/vite-build.json").read_text())
 assert build["builder"]=="Vite" and build["version"]=="8.3.5",build
 assert (p/"web-result/dist/index.html").is_file(),build
