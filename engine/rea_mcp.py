@@ -16,6 +16,7 @@ import tempfile
 import time
 
 ROOT = Path.home() / ".local/share/motor-ferrari"
+PROJECT_ROOT = Path("/srv/projects/skill-universal")
 MAX_FRAME_BYTES = 64 * 1024 * 1024
 METHODS = frozenset(("tools/list", "tools/call"))
 
@@ -58,7 +59,7 @@ def _resources(root: Path):
     # point to the physical, independent GitHub-repository directory.
     # Never accept arbitrary symlinks or pointers to another REA installation.
     if root.is_symlink():
-        canonical = Path("/srv/projects/skill-universal")
+        canonical = PROJECT_ROOT
         allowed_alias = Path.home() / ".local/share/motor-ferrari"
         if (root != allowed_alias or not canonical.is_dir() or
                 canonical.is_symlink() or root.resolve(strict=True) != canonical):
