@@ -42,9 +42,10 @@ class ApktoolIsolationTests(unittest.TestCase):
             cli.symlink_to(Path("../rea-agents/bin/cli.js"))
             other=root/"legacy-REA-cli"
             other.write_text("other project")
-            with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
-                with patch("engine.tool_runtime.shutil.which",return_value=str(other)):
-                    self.assertEqual(tool_runtime.executable("rea","rea"),str(cli))
+            with patch.object(tool_runtime,"HOME",home):
+                with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
+                    with patch("engine.tool_runtime.shutil.which",return_value=str(other)):
+                        self.assertEqual(tool_runtime.executable("rea","rea"),str(cli))
             with patch.object(ferrari.Path,"home",return_value=root):
                 self.assertTrue(ferrari.present({"id":"rea","binary":"rea"}))
             presence=runtime_discovery.npm_presence("rea",home=home,system_roots=(root/"global",))
@@ -53,8 +54,9 @@ class ApktoolIsolationTests(unittest.TestCase):
             # A symlink into the other REA's folder does not count as owned.
             cli.unlink()
             cli.symlink_to(other)
-            with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
-                self.assertIsNone(tool_runtime.executable("rea","rea"))
+            with patch.object(tool_runtime,"HOME",home):
+                with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
+                    self.assertIsNone(tool_runtime.executable("rea","rea"))
             with patch.object(ferrari.Path,"home",return_value=root):
                 self.assertFalse(ferrari.present({"id":"rea","binary":"rea"}))
 
