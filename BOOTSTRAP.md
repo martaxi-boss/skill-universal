@@ -1,5 +1,17 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+## Certificação mais recente — 03/11/2026: Python, npm, contentores
+
+**Estado atual certificado:** Motor Ferrari `1b3e232969c89801e8a0680d8ea751a536a53ce5` instalado na VPS Ubuntu, [entrega #41554557002](https://github.com/martaxi-boss/VPS/actions/runs/41554557002) SUCCESS com **79 testes PASS na VPS**. O [pedido real pela Skill #41554751046](https://github.com/martaxi-boss/VPS/actions/runs/41554751046) terminou `FERRARI_SKILL_END_TO_END=PASS` e devolveu `inventory.json` dentro de ZIP. CI do motor [#41554507978](https://github.com/martaxi-boss/skill-universal/actions/runs/41554507978) SUCCESS. A PR #1 foi integrada.
+
+**Inventário medido:** 56 candidatos Ubuntu, 21 ações externas definidas e disponíveis, 21/56 candidatos detetados; 46 ferramentas detetadas nos catálogos combinados. O novo relatório reconhece OpenCV como módulo Python `cv2`, encontra o manifesto npm isolado do Ruflo e informa que Docker e Podman **não** foram encontrados. FreeCAD, IfcOpenShell, Next.js, Vite e Playwright ainda não estão detetados. A expansão desta fase aperfeiçoou **descoberta**, não instalou novos executores por esse motivo nem certificou BIM/IFC.
+
+**Isolamento:** atualização dos SHA de versão apenas nos dois workflows Ferrari do repositório VPS; instruções SSH e outros projetos inalterados. A única Skill Ferrari existente continua utilizável com o mesmo contrato de pedidos.
+
+**Próxima prioridade:** testar e integrar IFC profissional com IfcOpenShell isolado, de acordo com disponibilidade Ubuntu/Python e licença; desenvolver testes/build web com Node.js já instalado; só considerar FreeCAD headless, Vite/Playwright e contentores quando um caso concreto exigir. Não instalar indiscriminadamente GUIs, serviços ou modelos. Ver [certificação desta fase](docs/CERTIFICACAO_ECOSISTEMAS_20261103.md) e [detalhes da descoberta](docs/DESCOBERTA_ECOSISTEMAS_20261103.md).
+
+---
+
 **Documento canónico de continuidade do projeto.**
 **Atualizado:** 2026-11-02. **Repositório exclusivo:** `martaxi-boss/skill-universal`.
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
