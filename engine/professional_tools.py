@@ -149,17 +149,24 @@ def vite_build(source: Path, output_dir: Path):
     browser_artifacts = []
     if browser_available():
         screenshot = output_dir / "browser-screenshot.png"
+        mobile_screenshot = output_dir / "browser-mobile.png"
         browser_report = output_dir / "browser-check.json"
-        if any(p.exists() or p.is_symlink() for p in (screenshot, browser_report)):
+        if any(p.exists() or p.is_symlink() for p in (screenshot, mobile_screenshot, browser_report)):
             raise FileExistsError("Refusing overwrite of Ferrari browser artifacts")
         env["PLAYWRIGHT_BROWSERS_PATH"] = str(BROWSER_CACHE)
         _run([str(NODE), str(ROOT / "engine/browser_check.js"), str(dist),
               str(screenshot), str(browser_report)], timeout=100, env=env)
         result = json.loads(browser_report.read_text(encoding="utf-8"))
-        if result.get("status") != "passed" or not screenshot.is_file() or screenshot.stat().st_size < 100:
-            raise RuntimeError("Ferrari browser evidence is missing or incomplete")
+        mobile = result.get("mobile") or {}
+        if (result.get("status") != "passed"
+                or not screenshot.is_file() or screenshot.stat().st_size < 100
+                or not mobile_screenshot.is_file() or mobile_screenshot.stat().st_size < 100
+                or mobile.get("viewport") != {"width": 390, "height": 844}
+                or "horizontal_overflow_px" not in mobile
+                or mobile.get("spotcheck_status") not in {"clear", "findings"}):
+            raise RuntimeError("Ferrari browser/mobile evidence is missing or incomplete")
         browser_status = "passed"
-        browser_artifacts = [screenshot, browser_report]
+        browser_artifacts = [screenshot, browser_report, mobile_screenshot]
     pkg = json.loads((VITE.parent.parent / "package.json").read_text(encoding="utf-8"))
     report.write_text(json.dumps({
         "builder": "Vite", "version": pkg.get("version"),
