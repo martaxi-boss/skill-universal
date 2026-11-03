@@ -86,8 +86,12 @@ def executable(tool,binary=None):
         if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
             return None
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
-    if tool in {"apktool","prometheus","valkey"}:
-        # Service programs belong only to Ferrari, never legacy/global services.
+    if tool=="valkey":
+        # Ubuntu provides valkey-server via symlinks in its tools package.
+        # Resolve only links staying within the Ferrari-owned service tree.
+        private=HOME/"tools/ferrari-services/valkey-server"
+        return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(private.resolve()) else None
+    if tool in {"apktool","prometheus"}:
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
