@@ -50,6 +50,9 @@ then
       --loglevel=error "vite@$VITE_VERSION"
 fi
 test -f "$VITE_ROOT/node_modules/vite/bin/vite.js"
-test "$("$NODE_ROOT/bin/node" "$VITE_ROOT/node_modules/vite/bin/vite.js" --version)" = "$VITE_VERSION"
+VITE_OUTPUT="$("$NODE_ROOT/bin/node" "$VITE_ROOT/node_modules/vite/bin/vite.js" --version)"
+[[ "$VITE_OUTPUT" == *"$VITE_VERSION"* ]] || {
+  echo "FERRARI_VITE_VERSION_MISMATCH=$VITE_OUTPUT" >&2; exit 5;
+}
 echo "FERRARI_ISOLATED_VITE=$VITE_VERSION"
 echo 'FERRARI_PRO_TOOLS_INSTALL=PASS_NO_GLOBAL_CHANGES'
