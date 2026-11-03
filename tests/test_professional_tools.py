@@ -80,11 +80,69 @@ class FerrariProfessionalTests(unittest.TestCase):
                 (out/"assets/app.js").write_text("console.log(1)")
             with patch.object(professional_tools,"vite_available",return_value=True):
                 with patch.object(professional_tools,"VITE",vite_dir/"bin/vite.js"):
-                    with patch.object(professional_tools,"_run",side_effect=build):
-                        _, outputs=professional_tools.vite_build(source,root/"out")
+                    with patch.object(professional_tools,"browser_available",return_value=False):
+                        with patch.object(professional_tools,"_run",side_effect=build):
+                            _, outputs=professional_tools.vite_build(source,root/"out")
             self.assertEqual(len(outputs),2)
             report=json.loads((root/"out/vite-build.json").read_text())
             self.assertIn("assets/app.js",report["built_files"])
+
+    def test_browser_isolated_runtime_detection(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            cache=root/"browsers"
+            binary=cache/"chromium_headless_shell-1567/chrome-headless-shell-linux64/chrome-headless-shell"
+            binary.parent.mkdir(parents=True)
+            binary.write_bytes(b"own Ferrari binary marker")
+            package=root/"node_modules/playwright/cli.js"
+            package.parent.mkdir(parents=True)
+            package.write_text("// Playwright Ferrari marker")
+            node=root/"node"
+            node.write_text("# Ferrari node")
+            with patch.object(professional_tools,"NODE",node):
+                with patch.object(professional_tools,"PLAYWRIGHT",package.parent):
+                    with patch.object(professional_tools,"BROWSER_CACHE",cache):
+                        self.assertTrue(professional_tools.browser_available())
+                        binary.unlink()
+                        self.assertFalse(professional_tools.browser_available())
+
+    def test_vite_build_browser_evidence_without_new_operation(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            source=root/"site.zip"
+            _zip(source,{"index.html":"<h1 id='app'>Ferrari</h1>","src/main.js":"console.log('ferrari')"})
+            fake=root/"vite"
+            (fake/"bin").mkdir(parents=True)
+            (fake/"package.json").write_text('{"version":"8.3.5"}')
+            def execute(args, **kwargs):
+                if "--outDir" in args:
+                    dist=Path(args[args.index("--outDir")+1])
+                    dist.mkdir(parents=True)
+                    (dist/"index.html").write_text("<h1>Ferrari</h1>")
+                else:
+                    self.assertTrue(str(args[1]).endswith("engine/browser_check.js"))
+                    Path(args[-2]).write_bytes(b"PNG" * 70)
+                    Path(args[-1]).write_text(json.dumps({"status":"passed","browser_version":"test"}))
+            with patch.object(professional_tools,"vite_available",return_value=True):
+                with patch.object(professional_tools,"browser_available",return_value=True):
+                    with patch.object(professional_tools,"VITE",fake/"bin/vite.js"):
+                        with patch.object(professional_tools,"_run",side_effect=execute) as run:
+                            _, result=professional_tools.vite_build(source,root/"out")
+            self.assertEqual(run.call_count,2)
+            self.assertEqual(len(result),4)
+            self.assertEqual(json.loads((root/"out/vite-build.json").read_text())["browser_test"]["status"],"passed")
+
+    def test_browser_script_blocks_external_network_without_http_server(self):
+        source=(professional_tools.ROOT/"engine/browser_check.js").read_text()
+        self.assertIn('context.route("**/*"',source)
+        self.assertIn('ferrari.invalid',source)
+        self.assertIn('data.blocked_external.push',source)
+        self.assertNotIn('spawn(',source)
+        installer=(professional_tools.ROOT/"install/vps-browser-headless.sh").read_text()
+        self.assertIn("--only-shell",installer)
+        self.assertIn("--ignore-scripts",installer)
+        self.assertNotIn("sudo ",installer)
+        self.assertNotIn("apt-get",installer)
 
     def test_inventory_tracks_base_capabilities_not_fake_manifest_actions(self):
         bim={"scope":"ferrari_venv","location":"/tmp/ifcopenshell","verification":"files_present_not_import_tested"}
