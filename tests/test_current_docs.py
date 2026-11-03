@@ -44,7 +44,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
             self.assertIn("3.0.3", text)
             self.assertIn("41671631900", text)
             self.assertIn("55/56", text)
-            self.assertNotIn("REA antigo da VPS é", text.replace("outro projeto", "é"))
+            self.assertNotIn("REA antigo como fallback", text)
         self.assertIn("references/github-bridge.md", sk)
         self.assertIn("references/bootstrap.md", sk)
 
