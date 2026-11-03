@@ -37,7 +37,7 @@ ROUTES.update({
  "productivity": ("notas", "gestao de projeto", "produtividade", "documentacao"),
 })
 LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
-OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf")
+OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf","ifc-summary","vite-build")
 
 def registry():
     """Merge checked GitHub repositories without claiming installation or license validation."""
@@ -343,6 +343,13 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         exe=_exe("jadx")
         _call([exe,"-d",str(dest),str(p)],timeout=600)
         artifacts=[dest]
+    elif op in {"ifc-summary","vite-build"}:
+        from engine import professional_tools
+        folder=Path(output).resolve()
+        if op=="ifc-summary":
+            exe,artifacts=professional_tools.ifc_summary(p,folder)
+        else:
+            exe,artifacts=professional_tools.vite_build(p,folder)
     elif op in {"cad-stl","blender-house","office-pdf"}:
         from engine import cad_tools
         folder=Path(output).resolve()
