@@ -1,41 +1,15 @@
-# Orquestrador e coleções de Skills públicas
+# Orquestrador do Motor Ferrari
 
-Esta é uma **referência da única Skill Universal**, não uma Skill adicional.
+Esta referência pertence à **única Skill Universal**, não é uma Skill nem um coordenador adicional.
 
-## O que foi filtrado
+A IA interpreta o pedido; o Ferrari escolhe entre operações base e adaptadores realmente instalados. engine/orchestrator.py valida planos tipados com dependências (DAG), série/paralelo, propagação de falhas, relatório e artefactos. Não executa shell arbitrário vindo de texto livre.
 
-Consultar engine/skillpacks_audit.json e docs/ORQUESTRADOR_SKILLS_GITHUB.md
-no repositório skill-universal. Padrões úteis:
-- Agent Skills: metadados mínimos + carregamento progressivo;
-- Superpowers: clarificar objetivos, planear, testar e rever;
-- wshobson/agents: padrões de especialistas sem depender do host;
-- Vercel Skills: inventário público, mas não instalar Skills individuais;
-- Prefect: opção livre para workflows duráveis depois de instalado e testado.
+## Execução suportada
 
-Não copiar source-available proprietários, não importar hooks das IAs
-nem tratar Markdown como uma ferramenta Ubuntu.
+- Via CLI Ferrari, construir um plano JSON validado e executar no ambiente autorizado com python3 -m engine.orchestrator --plan plano.json --workspace pasta --execute --max-parallel 2.
+- Via Skill do ChatGPT, usar kind=plan no **mesmo** workflow ferrari-skill-request.yml e engine.skill_job. [Teste remoto do plano #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416) concluiu com ZIP.
+- Usar kind=inventory para descobrir binários reais, kind=invoke para adaptadores e kind=operation para operações base. Não equiparar detecção a certificação.
 
-## Fluxo do Motor Ferrari
+O motor não tem certificação de persistência após reinício, checkpoint/reprise, agendamento automático ou execução de todos os fornecedores REA. Prefect e Ruflo são opcionais; nenhum substitui o orquestrador próprio. ComfyUI CPU não tem modelos validados; sem GPU confirmada, não prometer inferência.
 
-1. Analisar ordem do utilizador com a IA à escolha.
-2. Consultar inventário e plano Ferrari. Via ChatGPT, usar `kind=inventory` na ponte GitHub, não presumir SSH direto.
-3. Verificar as ferramentas na seleção Ubuntu aprovada.
-4. Transformar o pedido num JSON versionado:
-   {"version":1,"steps":[{"id":"web","operation":"web-template",
-   "layout":"store","title":"A Minha Loja"}]}
-5. Validar o DAG em engine.orchestrator.validate_workflow().
-6. Visualizar primeiro sem efeitos, depois executar mediante autorização
-   através do próprio motor: python3 -m engine.orchestrator --plan ...
-   --workspace ... --execute.
-7. Entregar artefactos, relatório de sucesso/falha e executor efetivo.
-8. Se uma capacidade não existir, não alegar execução. Integrar um novo
-   adaptador Linux legítimo, testá-lo e então expor ao orquestrador.
-
-## Limites reais da primeira implementação
-
-O coordenador suporta dependências, paralelismo 1–4, operações tipadas,\nvalidadores e logs. A ponte GitHub→VPS está certificada para operações\nremotas simples. A fonte desta fase integra `kind=plan` no **mesmo**\n`engine.skill_job`, chamando o orquestrador existente, mas a VPS ativa\nainda nao o recebe ate passar CI e instalacao real. Não\nfornece um daemon persistente, retries, checkpoint reexecutável, UI,\nGPU nem contas cloud.
-Essas capacidades exigem testes e integração adicionais, de preferência
-com Prefect autoalojado quando justificado.
-
-Ruflo/Skilled subagent harnesses são opcionais. O coordenador e as
-ferramentas pertencem sempre ao Ferrari, sem reaproveitar Project Leader.
+Coleções públicas de Skills servem como referência de procedimentos e licenças, não como binários instalados. Consultar engine/skillpacks_audit.json e docs/ORQUESTRADOR_SKILLS_GITHUB.md antes de qualquer reutilização.
