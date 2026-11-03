@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Isolated official Node + REA/Ruflo for Ferrari only. Does not modify system runtimes.
+# Isolated Node and optional Ruflo for Ferrari only; never install or invoke REA.
 set -Eeuo pipefail
 umask 077
 if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" ]]; then
@@ -40,13 +40,11 @@ test "$(node --version)" = "v$NODE_VER" || exit 3
 printf 'FERRARI_ISOLATED_NODE=%s\n' "$(node --version)"
 mkdir -p "$NPM_CONFIG_CACHE"
 cd "$SCRIPT_ROOT"
-bash install/install-agent-engines.sh --profile all --apply
-REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"
+bash install/install-agent-engines.sh --profile ruflo --apply
 RUFLO="$ROOT/.runtime/npm/ruflo/node_modules/.bin/ruflo"
-test -x "$REA" && test -x "$RUFLO"
-"$REA" --help >/dev/null
+test -x "$RUFLO"
 "$RUFLO" --help >/dev/null
-echo "FERRARI_REA_CLI=PASS_HELP_ONLY"
 echo "FERRARI_RUFLO_CLI=PASS_HELP_ONLY"
-echo "FERRARI_AGENT_ENGINES_INSTALLED=YES_UNCERTIFIED_FUNCTIONAL"
+echo "FERRARI_RUFLO_INSTALLED=YES_HELP_ONLY"
+echo "FERRARI_REA_DEPENDENCY=NONE"
 python3 -m engine.ferrari doctor
