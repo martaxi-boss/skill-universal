@@ -13,18 +13,19 @@ Ler [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/m
 
 ## Estado de referência — 03/11/2026
 
-- Release VPS: 6c93a392dfe9a02d7ccfef9d47317c9685976484. [Deploy #41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) SUCCESS, 139 testes PASS.
+- Release VPS: 39267ce692edb8f40bf9621dba29a2f9642528b7. [Deploy #41708388146](https://github.com/martaxi-boss/VPS/actions/runs/41708388146) SUCCESS, 149 testes PASS, fornecedores REA Ghidra/JADX privados PASS.
 - [Pedido inventário #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249) FERRARI_SKILL_END_TO_END=PASS, ZIP confirmado: 81 programas detetados em catálogos, 55/56 selecionados Ubuntu, 25 ações externas. São deteções, não 81 operações certificadas.
-- O REA original do Ferrari, rea-agents@6.8.0, reside em /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea. Node 22.23.4, Java 25.0.5, Ghidra 12.2, JADX 1.5.6 e Apktool **3.0.3** são privados do Ferrari. ELF e recursos Android passaram em [#41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) e ELF via Skill em [#41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184).
+- O REA original do Ferrari, rea-agents@6.8.0, reside em /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea. Node 22.23.4, Java 25.0.5, Ghidra 12.2 (programa independente), Ghidra 12.1.4 (fornecedor REA), JADX 1.5.6 (CLI), JADX headless MCP 0.7.1 (fornecedor REA) e Apktool **3.0.3** são privados do Ferrari. ELF e recursos Android passaram em [#41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) e ELF via Skill em [#41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184).
 - 15 aplicações gráficas instaladas por APT não equivalem a controlo interativo. ComfyUI CPU não tem modelos e inferência certificada; Penpot não está a correr, falta Docker. Outros programas detetados podem continuar installed_unintegrated.
-- **Não desinstalar o projeto REA antigo:** ainda faltam auditoria de dependências globais, teste sem acesso ao legado e plano de recuperação. Nunca remover a pasta REA privada do Ferrari.
+- [Comparação MCP #41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353): 229 nomes de ferramentas em ambos os REAs, zero em falta, PASS. [Teste profundo #41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556): análise ELF com Ghidra e classe Android com JADX headless MCP, PASS.
+- **Não desinstalar o REA antigo ainda:** a paridade dos nomes não é certificação das 229 funções nem substitui a prova da Skill única, workflows antigos e plano de recuperação. Nunca remover a pasta REA privada do Ferrari.
 
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
 2. Usar o conector GitHub autenticado para ler martaxi-boss/skill-universal e, se houver autorização de escrita, criar um pedido na main de martaxi-boss/VPS. Não presumir SSH local.
 3. Ler references/github-bridge.md **antes de qualquer pedido à VPS**. Criar um único JSON novo por chamada em ferrari-requests/job-<identificador-unico>.json; nunca alterar ou reciclar um pedido anterior. Sem segredos ou dados privados no repo público.
-4. Tipos: kind=inventory devolve inventário; kind=operation executa uma operação base; kind=invoke uma ação em engine/tool_actions.json; kind=auto seleciona um adaptador; kind=plan envia etapas validadas pelo orquestrador já existente. Não aceitar texto livre como shell.
+4. Tipos: kind=inventory devolve inventário; kind=operation executa uma operação base; kind=invoke uma ação em engine/tool_actions.json; kind=auto seleciona um adaptador; kind=plan envia etapas validadas pelo orquestrador já existente; kind=rea-mcp permite chamar o servidor MCP original privado do Ferrari pelo nome das ferramentas, usando tools/list ou tools/call e, se necessário, a referência $input ao ficheiro de entrada. **Só utilizar após certificação de release e fluxo real da Skill.** Não aceitar texto livre como shell.
 5. Verificar commit, run GitHub Actions correspondente, FERRARI_SKILL_JOB_STATUS=completed, FERRARI_SKILL_END_TO_END=PASS, response.zip, report.json e artefactos reais. Se falhar, comunicar erro e não inventar resultados.
 6. Para capacidade ausente, avaliar licenças, Ubuntu, CPU/RAM/SSD, versões, dependências e interfaces; integrar **no Ferrari existente** e testar, sem Skill/ponte/camada nova.
 
