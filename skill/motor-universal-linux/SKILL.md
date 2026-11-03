@@ -5,7 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
-## Situação comprovada em 03/11/2026
+## Atualização de certificação externa — 03/11/2026
+
+O teste real de staging da Lowcost Europa, **feito pelo workflow do próprio projeto** e não pelo motor Ferrari, passou depois de corrigir apenas `runs-on: ubuntu-24.04` na [PR #186](https://github.com/martaxi-boss/lowcost-europa/pull/186). [Staging pós-merge #41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458): ZIP/JSON verificados, **15 checks PASS, 0 errors, 0 warnings**, 14 PNG desktop/mobile; [Django/PostgreSQL #41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466): **709 testes PASS**, [audit #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS. Fonte: [BOOTSTRAP](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Não confundir prova de staging/CI com operação `vite-build` do Ferrari nem com certificação da produção. Ferrari VPS e ponte SSH inalterados.
+
+## Histórico — situação comprovada do Ferrari em 03/11/2026
 
 **Ferrari VPS:** versão ativa `ec4dc5045a034e3fbbbcfe3477e1641e80714262`. [Instalação real #41601238265](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) SUCCESS com **99 testes PASS**, browser Chromium, teclado, mobile e IFC. Um caso fora do exemplo inicial usou o **JS e CSS originais do catálogo do projeto Lowcost Europa** (`martaxi-boss/lowcost-europa`, main `388860c6...`) sem alterar esse repositório. [Pedido pela Skill #41601466546](https://github.com/martaxi-boss/VPS/actions/runs/41601466546) SUCCESS; ZIP validado com relatório `status=completed`, 17 verificações reais de frontend PASS, capturas desktop/móvel, zero erros e pedidos externos. `Tab`, `Shift+Tab`, botão real «Limpar filtros» por Enter e Space PASS, `interactions.findings=[]`. Os 17 checks são sobre dados de teste estáticos, não sobre uma execução Django/produção.
 
