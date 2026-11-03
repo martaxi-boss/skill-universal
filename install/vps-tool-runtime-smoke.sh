@@ -104,3 +104,6 @@ print("FERRARI_UNIVERSAL_ROUTING=PASS")
 print("FERRARI_UNIVERSAL_REAL_MULTI_PROGRAM_EXECUTION=PASS")
 print("FERRARI_UNIVERSAL_ORCHESTRATOR=PASS")
 PY
+
+# CAD/BIM and development web: isolated packages and real sample outputs.
+bash install/vps-bim-web-smoke.sh

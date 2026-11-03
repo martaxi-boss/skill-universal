@@ -33,6 +33,7 @@ PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 BASE_OPERATIONS={"jadx":["apk-decompile"],"blender":["blender-house"],
                  "openscad":["cad-stl"],"libreoffice":["office-pdf"],
                  "imagemagick":["image-resize"],"ffmpeg":["video-thumbnail"],
+                 "ifcopenshell":["ifc-summary"],"vite":["vite-build"],
                  "pdftotext":["pdf-text"],"strings":["binary-strings"]}
 
 def python_module_location(tool):
@@ -96,7 +97,10 @@ def inventory():
         if not path and callable_ops:
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
-        base_ops=BASE_OPERATIONS.get(tool,[]) if path else []
+        from engine import professional_tools
+        available=(professional_tools.bim_available() if tool=="ifcopenshell" else
+                   professional_tools.vite_available() if tool=="vite" else bool(path))
+        base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None)
         present=bool(path or evidence)
         state=("callable" if callable_ops or base_ops else
