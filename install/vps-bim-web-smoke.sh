@@ -5,6 +5,7 @@ umask 077
 cd "$(dirname "$0")/.."
 ROOT="$HOME/.local/share/motor-ferrari"
 bash install/vps-bim-web.sh
+bash install/vps-browser-headless.sh
 mkdir -p "$ROOT/.runtime"
 WORK="$(mktemp -d "$ROOT/.runtime/pro-smoke.XXXXXXXX")"
 trap 'rm -rf -- "$WORK"' EXIT
@@ -63,6 +64,16 @@ assert (p/"web-result/dist/index.html").is_file(),build
 assert any(x.endswith(".js") for x in build["built_files"]),build
 assert any(x.endswith(".css") for x in build["built_files"]),build
 print("FERRARI_VITE_BUILD_REAL=PASS")
+browser=json.loads((p/"web-result/browser-check.json").read_text())
+assert browser["status"]=="passed",browser
+assert browser["demo_js_ready"]=="yes",browser
+assert browser["dom_ready"]=="complete",browser
+assert any(name.endswith(".js") for name in browser["served_assets"]),browser
+assert any(name.endswith(".css") for name in browser["served_assets"]),browser
+assert not browser["blocked_external"] and not browser["page_errors"] and not browser["console_errors"],browser
+assert (p/"web-result/browser-screenshot.png").stat().st_size>200,browser
+assert build["browser_test"]["status"]=="passed",build
+print("FERRARI_VITE_BROWSER_REAL=PASS")
 inv=json.loads((p/"inventory.json").read_text())
 assert inv["registered_actions"]==21
 for name,expected in (("ifcopenshell","ifc-summary"),("vite","vite-build")):

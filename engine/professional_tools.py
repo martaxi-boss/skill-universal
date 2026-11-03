@@ -19,6 +19,8 @@ HOME = Path.home() / ".local/share/motor-ferrari"
 BIM_PYTHON = HOME / ".runtime/venvs/bim/bin/python"
 NODE = HOME / "runtimes/node-22.23.4/bin/node"
 VITE = HOME / ".runtime/npm/vite/node_modules/vite/bin/vite.js"
+PLAYWRIGHT = HOME / ".runtime/npm/playwright/node_modules/playwright"
+BROWSER_CACHE = HOME / ".runtime/browsers"
 ALLOWED_EXT = {
     ".html", ".css", ".js", ".mjs", ".ts", ".tsx", ".jsx",
     ".svg", ".png", ".jpg", ".jpeg", ".webp", ".ico", ".json",
@@ -33,6 +35,14 @@ def bim_available() -> bool:
 
 def vite_available() -> bool:
     return NODE.is_file() and VITE.is_file() and (VITE.parent.parent / "package.json").is_file()
+
+
+def browser_available() -> bool:
+    """Only the Ferrari-owned Playwright package and headless shell."""
+    return (NODE.is_file() and (PLAYWRIGHT / "cli.js").is_file()
+            and BROWSER_CACHE.is_dir()
+            and any(p.is_file() and not p.is_symlink() for p in
+                    BROWSER_CACHE.glob("chromium_headless_shell-*/chrome-headless-shell-linux64/chrome-headless-shell")))
 
 
 def _run(args: list[str], *, timeout: int, cwd: Path | None = None, env=None):
@@ -135,10 +145,27 @@ def vite_build(source: Path, output_dir: Path):
     files = sorted(p.relative_to(dist).as_posix() for p in dist.rglob("*") if p.is_file())
     if "index.html" not in files or not files:
         raise RuntimeError("Vite did not produce index.html")
+    browser_status = "not_installed"
+    browser_artifacts = []
+    if browser_available():
+        screenshot = output_dir / "browser-screenshot.png"
+        browser_report = output_dir / "browser-check.json"
+        if any(p.exists() or p.is_symlink() for p in (screenshot, browser_report)):
+            raise FileExistsError("Refusing overwrite of Ferrari browser artifacts")
+        env["PLAYWRIGHT_BROWSERS_PATH"] = str(BROWSER_CACHE)
+        _run([str(NODE), str(ROOT / "engine/browser_check.js"), str(dist),
+              str(screenshot), str(browser_report)], timeout=100, env=env)
+        result = json.loads(browser_report.read_text(encoding="utf-8"))
+        if result.get("status") != "passed" or not screenshot.is_file() or screenshot.stat().st_size < 100:
+            raise RuntimeError("Ferrari browser evidence is missing or incomplete")
+        browser_status = "passed"
+        browser_artifacts = [screenshot, browser_report]
     pkg = json.loads((VITE.parent.parent / "package.json").read_text(encoding="utf-8"))
     report.write_text(json.dumps({
         "builder": "Vite", "version": pkg.get("version"),
         "source_files": inputs, "built_files": files,
+        "browser_test": {"status": browser_status,
+                         "engine": "isolated Playwright Chromium headless shell" if browser_status == "passed" else None},
         "scope": "static frontend build of a restricted project ZIP; no npm scripts or user configs",
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return str(NODE) + ":vite", [dist, report]
+    return str(NODE) + ":vite", [dist, report] + browser_artifacts
