@@ -5,9 +5,9 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
-## REA Ferrari — análise funcional (fase de certificação)
+## REA Ferrari — análise funcional certificada em 03/11/2026
 
-O Ferrari **continua a ter o seu REA privado**, `rea-agents@6.8.0` em `~/.local/share/motor-ferrari/.runtime/npm/rea` — não o REA legado de Engenharia Reversa. Esta fase integra no mesmo manifesto duas ações reais, sem outro motor ou Skill: `rea-elf-notes` (binário ELF → JSON de notas e identidade) e `rea-android-resources` (APK → JSON de manifesto/recursos, através do Apktool privado 3.0.3). O `engine.tool_runtime` executa o REA com Node 22.23.4 do Ferrari, `REA_APKTOOL_COMMAND` apontado para a instalação Ferrari e diretórios XDG próprios. Ações validáveis por `kind=invoke` ou `kind=plan` no Ferrari, após certificação. **Esta fase está em desenvolvimento: não anunciar análise REA certificada até CI, VPS e pedido remoto PASS com relatórios verificados.** Não apagar nem modificar o REA antigo.
+O Ferrari **continua a ter o seu REA privado**, `rea-agents@6.8.0` em `~/.local/share/motor-ferrari/.runtime/npm/rea` — não o REA legado de Engenharia Reversa. Esta fase integra no mesmo manifesto duas ações reais, sem outro motor ou Skill: `rea-elf-notes` (binário ELF → JSON de notas e identidade) e `rea-android-resources` (APK → JSON de manifesto/recursos, através do Apktool privado 3.0.3). O `engine.tool_runtime` executa o REA com Node 22.23.4 do Ferrari, `REA_APKTOOL_COMMAND` apontado para a instalação Ferrari e diretórios XDG próprios. Ações validáveis por `kind=invoke` ou `kind=plan` no Ferrari, após certificação. **Provas reais:** CI [#41654078264](https://github.com/martaxi-boss/skill-universal/actions/runs/41654078264) **120 testes PASS**; VPS [#41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939), `FERRARI_PRIVATE_REA_ELF_REAL=PASS`, `FERRARI_PRIVATE_REA_ANDROID_REAL=PASS`; [Skill #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) **PASS**, ZIP com `rea-elf-notes.json` e GNU build ID exato confirmado. Isto certifica **duas ações específicas**, não todo o catálogo MCP do REA. Não apagar nem modificar o REA antigo.
 
 
 ## Dois projetos REA distintos — Ferrari não reutiliza o legado
