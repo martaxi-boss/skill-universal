@@ -140,6 +140,8 @@ class FerrariProfessionalTests(unittest.TestCase):
         self.assertNotIn('spawn(',source)
         installer=(professional_tools.ROOT/"install/vps-browser-headless.sh").read_text()
         self.assertIn("--only-shell",installer)
+        self.assertIn("chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell",installer)
+        self.assertNotIn("chromium.executablePath()",installer.split("BROWSER_BIN=")[1])
         self.assertIn("--ignore-scripts",installer)
         self.assertNotIn("sudo ",installer)
         self.assertNotIn("apt-get",installer)
