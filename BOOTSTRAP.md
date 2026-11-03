@@ -12,19 +12,21 @@ O motor decide a ferramenta e executa as operações; a IA orienta. O Ferrari te
 
 ## 2. Fotografia atual com provas
 
+**Última certificação real:** [deploy #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469) com 164 testes PASS; relatórios [CERTIFICACAO_REA_MCP_FERRARI_SKILL_20261103.md](docs/CERTIFICACAO_REA_MCP_FERRARI_SKILL_20261103.md). O REA antigo **continua a receber pedidos pela sua branch própria** e não está autorizado a ser apagado. As linhas de inventário anteriores são históricas quando contradizem estas provas mais recentes.
+
 **Higiene física Ferrari comprovada, sem remoção de dependências:** [inventário VPS #41700386577](https://github.com/martaxi-boss/VPS/actions/runs/41700386577) mediu o Ferrari em 13 312 897 024 bytes, dos quais 10 453 159 936 bytes em .runtime. A cache npm privada continha 984 383 488 bytes. [Higiene real #41701443735](https://github.com/martaxi-boss/VPS/actions/runs/41701443735) removeu **apenas** .runtime/npm-cache/_cacache, libertando **984 383 488 bytes (~939 MiB)** e deixando **14 984 884 224 bytes (~13,95 GiB) livres**. FERRARI_PRIVATE_NPM_CACHE_HYGIENE=PASS, FERRARI_CACHE_POSTCHECK=PASS e FERRARI_OTHER_SERVICES_UNCHANGED=PASS. REA, Ruflo, Ghidra, Java, Node, Apktool, venvs e serviços de outros projetos foram preservados. O workflow único de limpeza foi retirado do repositório VPS após PASS; mantém-se o workflow normal de inventário somente de leitura. A cache poderá voltar a crescer se forem instalados novos pacotes npm. **A auditoria de duplicações e o desinstalador do REA antigo NÃO estão certificados.**
 
 | Âmbito | Estado demonstrado |
 |---|---|
-| Release Ferrari na VPS | 6c93a392dfe9a02d7ccfef9d47317c9685976484 |
-| Instalação e testes | [VPS run #41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900): SUCCESS; 139 testes PASS; FERRARI_DEPLOY_TRANSPORT=PASS |
+| Release Ferrari na VPS | **c5b07ed225299ad80aa2d46c28441d17f281f695**, raíz física /srv/projects/skill-universal |
+| Instalação e testes | [VPS #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469): SUCCESS, **164 testes PASS**, fornecedores Ghidra/JADX, Valkey privado e higiene PASS |
 | Inventário via Skill | [VPS run #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): status=completed, FERRARI_SKILL_END_TO_END=PASS; ZIP com inventário |
 | Ferramentas | 81 programas detetados nos catálogos combinados; 55/56 candidatos Ubuntu detetados; 25 ações externas tipadas e 12 operações base |
 | Grupos expandidos | 15 aplicações gráficas Ubuntu instaladas; Prometheus e Valkey privados instalados; 14/16 do lote externo instalados |
-| REA próprio Ferrari | rea-agents 6.8.0 via npm próprio: CLI disponível e duas ações reais certificadas (ELF e recursos Android) |
+| REA próprio Ferrari | rea-agents@6.8.0 original privado; **229 nomes MCP** anunciados; tools/list e tools/call reais via Skill com ZIP PASS [#41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [#41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) |
 | Apktool | Versão oficial 3.0.3 privada, Java 25.0.5 próprio, construção e descodificação de APK sintético PASS |
-| Ghidra/JADX | Ghidra 12.2 em modo headless PASS; JADX 1.5.6 com saída Java PASS |
-| Disco livre | ~13,95 GiB após higiene #41701443735; ~9,79 GiB era uma fotografia anterior (#41671631900) |
+| Ghidra/JADX | Ghidra 12.2 e JADX 1.5.6 próprios; fornecedores privados **Ghidra 12.1.4 + JADX headless MCP 0.7.1**, teste profundo [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556) PASS |
+| Disco livre | **15,36 GiB** no deploy #41716562469; não é uma garantia de espaço permanente |
 | Higiene executada no run | FERRARI_ONLY_HYGIENE=PASS; outside_ferrari_touched=false; preservação da release ativa e rollback |
 
 **Leitura obrigatória:** 81 deteções não são 81 ações, 55/56 não significa 55 testes funcionais e uma instalação não equivale a uma tarefa executável pela Skill. As contagens são a fotografia dos runs citados; confirmar de novo após qualquer alteração.
@@ -33,11 +35,11 @@ As provas do REA e Apktool estão também em [run #41654437939](https://github.c
 
 ## 3. Diretórios e isolamento — não apagar
 
-- Diretório principal a preservar: /home/ubuntu/.local/share/motor-ferrari/.
+- Diretório **físico** do Ferrari: **/srv/projects/skill-universal/**. O caminho histórico /home/ubuntu/.local/share/motor-ferrari é um **link exclusivo** para essa pasta, comprovado em [#41714658308](https://github.com/martaxi-boss/VPS/actions/runs/41714658308). Preservar ambos enquanto existirem consumidores do alias.
 - REA oficial privado Ferrari: /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/; CLI em node_modules/.bin/rea.
 - Node privado: /home/ubuntu/.local/share/motor-ferrari/runtimes/node-22.23.4/.
 - Java privado: /home/ubuntu/.local/share/motor-ferrari/runtimes/jdk-25.0.5_8/.
-- Ghidra/JADX: /home/ubuntu/.local/share/motor-ferrari/tools/ghidra-12.2/ e tools/jadx-1.5.6/.
+- Ghidra/JADX: tools/ghidra-12.2 e tools/jadx-1.5.6 (programas); tools/rea-providers/ghidra-12.1.4 e tools/rea-providers/jadx-headless-mcp-0.7.1-all.jar (fornecedores privados do REA).
 - Apktool privado: /home/ubuntu/.local/share/motor-ferrari/tools/apktool-3.0.3/; cache em .runtime/apktool-frameworks/.
 - Manter também .runtime/venvs/, .runtime/npm/, .runtime/browsers/, tools/, releases/ e o apontador current.
 
@@ -53,14 +55,14 @@ O REA antigo de Engenharia Reversa continua intocado. **NÃO autorizar a sua rem
 - FreeCAD AppImage 1.1.4: instalado, sem teste gráfico completo.
 - Next.js, Tailwind, Bootstrap, shadcn, DuckDB, Polars, Streamlit, Gradio, Faster-Whisper, Prefect, Docling, Typst e Godot: instalação detetada; muitos permanecem sem ação tipada comprovada.
 - Ruflo 3.71.0 é opcional, com CLI --help PASS, não swarm ou fornecedor de modelos certificado.
-- Engenharia reversa: duas ações do REA estão integradas, mas nem todo o catálogo MCP e os fornecedores profundos foram testados.
+- Engenharia reversa: **MCP original disponível via kind=rea-mcp** na Skill Ferrari, 229 nomes conhecidos e duas chamadas tools/call reais certificadas (ELF notes e Apktool). Os dois fornecedores Ghidra/JADX têm testes profundos PASS; **nem as 229 operações nem todos os seus casos foram certificados individualmente**.
 
 Nenhuma área deve ser anunciada como completamente operacional apenas por constar de inventário ou manifesto.
 
 ## 5. Pendências reais, pela ordem adequada
 
 1. **Higienização e proveniência:** medido o uso Ferrari por diretório e limpa a cache npm de downloads (PASS). **Pendente:** auditoria de propriedade e segurança de bibliotecas repetidas entre ComfyUI/Docling, outros ambientes Python e pacotes APT globais, Java, Node, binários, configurações, processos e serviços. Não apagar dependências ativas nem o REA antigo.
-2. **REA e fornecedores:** auditar dependências efetivas do pacote npm, disponibilidade de fornecedores Linux e integração REA→Ghidra/Apktool/JADX quando aplicável; testar funções essenciais com ficheiros reais. Não declarar equivalência integral com o REA antigo com base em duas ações.
+2. **REA e fornecedores:** REA original privado, Ghidra/JADX e Apktool agora têm testes reais PASS; catalogo de 229 nomes comparado. **Pendente:** testar as capacidades realmente utilizadas via Skill Ferrari e verificar fornecedores opcionais, sem declarar todas as 229 ferramentas funcionais.
 3. **Isolamento:** testar Ferrari com os caminhos/serviços do REA antigo inacessíveis num ambiente controlado, sem tocar no projeto antigo; exigir testes Skill→GitHub→VPS→ZIP PASS.
 4. **Capacidades pendentes:** adaptar programas já instalados por necessidade comprovada; preferir linha de comandos/headless antes de adicionar interface gráfica virtual ou Docker pesado. Penpot é opcional até haver recursos e caso de uso concreto.
 5. **Entrega:** confirmar a versão realmente instalada da única Skill no cliente, CI, release VPS, artefactos e documentação alinhados.
@@ -81,7 +83,7 @@ O âmbito universal completo ainda está **NÃO IMPLEMENTADA** como certificaç�
 
 ## 7. Histórico e relatórios
 
-**Auditoria global da VPS / autorização REA (03/11/2026):** [Relatório com provas](docs/AUDITORIA_GLOBAL_VPS_DUPLICADOS_REA_20261103.md). A limpeza adicional de caches em [#41704431188](https://github.com/martaxi-boss/VPS/actions/runs/41704431188) libertou **239 403 008 bytes** sem afetar serviços, somados aos **984 383 488 bytes** da cache Ferrari — total **1 223 786 496 bytes (~1,14 GiB)**. Encontrada duplicação exata de `libtorch_cpu.so` entre ComfyUI e Docling (440 280 512 bytes cada), **preservada** para manter instalações independentes. O diagnóstico [#41705351869](https://github.com/martaxi-boss/VPS/actions/runs/41705351869) apresenta `healthy=false` no REA privado (Ghidra-version e JADX não reconhecidos). O catálogo MCP completo não foi comparado com êxito. **REA antigo: NO-GO para remoção neste momento; ainda há workflows ativos.** Higienização global de todas as instalações e verificação de todas as dependências **permanecem parciais**, não as marcar verde.
+**Auditoria global da VPS / autorização REA (03/11/2026):** [Relatório com provas](docs/AUDITORIA_GLOBAL_VPS_DUPLICADOS_REA_20261103.md). A limpeza adicional de caches em [#41704431188](https://github.com/martaxi-boss/VPS/actions/runs/41704431188) libertou **239 403 008 bytes** sem afetar serviços, somados aos **984 383 488 bytes** da cache Ferrari — total **1 223 786 496 bytes (~1,14 GiB)**. Encontrada duplicação exata de `libtorch_cpu.so` entre ComfyUI e Docling (440 280 512 bytes cada), **preservada** para manter instalações independentes. O diagnóstico anterior [#41705351869](https://github.com/martaxi-boss/VPS/actions/runs/41705351869) foi **corrigido**: Ghidra/JADX PASS no deploy [#41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469). A comparação MCP [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353) comprovou **229/229 nomes iguais** e os pedidos Skill→MCP [#41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [#41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) executaram ferramentas reais. **REA antigo: NO-GO para remoção neste momento; ainda há workflows ativos.** Higienização global de todas as instalações e verificação de todas as dependências **permanecem parciais**, não as marcar verde.
 
 Relatório de higiene física e duplicações: [docs/HIGIENIZACAO_FISICA_FERRARI_VPS_20261103.md](docs/HIGIENIZACAO_FISICA_FERRARI_VPS_20261103.md). Teste real da Skill REA ELF **após** a limpeza [#41701860486](https://github.com/martaxi-boss/VPS/actions/runs/41701860486) — completed, ZIP, executor privado e artefacto confirmados.
 
