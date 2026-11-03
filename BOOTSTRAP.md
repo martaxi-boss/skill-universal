@@ -1,5 +1,15 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+## Fase em curso - 03/11/2026: OCR Tesseract pela Skill
+
+- Pedido unico enviado pela ponte Ferrari existente em `martaxi-boss/VPS`: commit [`78a92882`](https://github.com/martaxi-boss/VPS/commit/78a92882c10ebcde7b20db065b617b60708ceb71), ficheiro `ferrari-requests/job-20261103-ocr-70e12df0b.json`, `kind=invoke`, acao `tesseract-ocr` e imagem sintetica `ferrari-test.png` sem dados privados.
+- VPS: o deploy certificado [`#41601238265`](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) regista Tesseract `5.3.4-1build5` instalado em `/usr/bin/tesseract`. Isto prova instalacao, **nao** o resultado do pedido de OCR.
+- Entrada validada separadamente em teste **local**: imagem PNG 490x96 (1 bit); Tesseract reconheceu `FERRARI OCR 2026`. Esta verificacao local nao substitui a execucao na VPS.
+- **PENDENTE**: encontrar o `GitHub Actions run_id` do push do commit acima, examinar logs e `ferrari-skill-result-<run_id>`, confirmar `report.json` com `status=completed` e texto real em `artifacts/recognized.txt`. O conector disponivel devolve apenas runs associados a PR quando se pesquisa pelo commit, pelo que lista vazia **nao** prova que o push falhou ou passou. Nao declarar certificacao remota sem o resultado.
+- Rota: **nao repetir automaticamente o pedido, nao criar Skill/camada/ponte, nao alterar SSH nem outros projetos**. Apos comprovar a resposta, registar PASS/FAIL com ID e executar higienizacao somente no ambito Ferrari, preservando a release certificada e rollback.
+
+---
+
 ## Certificação final de staging — 03/11/2026: Lowcost Europa (PR #186)
 
 **Bloqueio resolvido em GitHub Actions, sem alterar o website nem o motor Ferrari.** [PR #186 da Lowcost](https://github.com/martaxi-boss/lowcost-europa/pull/186) integrada na `main`, commit `0a1707e534d127ebd1f0f3f3cf6542ffaa5431b1`. Única alteração funcional: no workflow de QA existente, fixou-se `runs-on: ubuntu-24.04` (antes `ubuntu-latest`, que no dia 03/11 usou Ubuntu 26.04, incompatível com Playwright 1.56.1). Mantiveram-se a versão Playwright e o script de browser, acrescentando apenas triggers CI para alterações do próprio workflow ou do script.
