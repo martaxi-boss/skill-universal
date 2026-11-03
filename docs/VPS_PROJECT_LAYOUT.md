@@ -9,7 +9,7 @@
 
 Estrutura e responsabilidades:
 - `releases/` — codigo das versoes instaladas;
-- `current` — symlink relativo para `releases/5dfd2fc4da0869230b8fe7f838ea0f95a33b9afe` (nao depende do caminho antigo);
+- `current` — apontador da release ativa dentro da pasta `releases/`; na auditoria final de 03-11-2026 20:57 UTC resolveu para `releases/c5b07ed225299ad80aa2d46c28441d17f281f695`. A release ativa pode mudar em novos deployments.
 - `.runtime/venvs/` — Python e dependencias privadas dos fornecedores Ferrari;
 - `.runtime/npm/` — pacotes Node e ferramentas privadas;
 - `.runtime/browsers/` — motores de browser isolados;
@@ -30,3 +30,10 @@ O antigo `/home/ubuntu/.local/share/motor-ferrari` passou a ser apenas uma **lig
 A cache npm do Ferrari ja tinha sido higienizada numa etapa anterior, documentada em `docs/HIGIENIZACAO_FISICA_FERRARI_VPS_20261103.md`. Nao apagar ferramentas, venvs, releases ativas ou fornecedores por terem pacotes repetidos: isolamento de projetos implica dependencias privadas separadas.
 
 Esta pagina e um mapa de estado real e nao substitui os procedimentos de instalacao existentes.
+
+
+## Verificacao posterior
+
+A auditoria conjunta [VPS Actions #41717303575](https://github.com/martaxi-boss/VPS/actions/runs/41717303575) confirmou a pasta canonica, sem symlink no proprio diretorio, com tamanho fisico de 13 652 721 664 bytes apos alteracoes/deployments posteriores. O caminho antigo continuou somente como ligacao de compatibilidade. A revisao indicada acima e fotografia de 20:57 UTC, nao uma garantia de que permanecera ativa.
+
+A instalacao manual `install/vps-delivery.sh` e `.github/workflows/deploy-vps.yml` passaram a criar releases em `/srv/projects/skill-universal`; os testes de contrato foram atualizados para exigir a nova pasta e rejeitar a antiga. **CI SUCCESS:** [#41717025814](https://github.com/martaxi-boss/skill-universal/actions/runs/41717025814). O workflow central legado de transporte Ferrari, em outro repositorio, continua a conter referencias historicas; o link antigo foi preservado. Nenhuma nova instalacao completa foi executada por este ajuste do workflow manual.
