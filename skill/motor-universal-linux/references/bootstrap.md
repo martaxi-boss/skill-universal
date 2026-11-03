@@ -6,24 +6,24 @@
 
 ChatGPT/Codex interpreta → uma Skill Universal → GitHub autenticado (martaxi-boss/VPS) → workflow exclusivo → SSH existente → Ferrari Ubuntu → ZIP e relatório. O motor seleciona as ferramentas; REA e Ruflo são componentes opcionais, não coordenadores. Não alterar ligação SSH, Supervisor ou projetos de terceiros.
 
-A instalação a preservar é /home/ubuntu/.local/share/motor-ferrari/. O REA oficial do Ferrari é rea-agents@6.8.0 instalado em .runtime/npm/rea, com Node 22.23.4 privado. Tem ainda Java 25.0.5 privado, Ghidra 12.2 e JADX 1.5.6 independentes, Ghidra 12.1.4 e JADX headless MCP 0.7.1 compatíveis com o REA original, e Apktool 3.0.3 privado. **O REA antigo da VPS é outro projeto**; não o remover até provar independência funcional, proveniência e rollback.
+A instalação física a preservar é **/srv/projects/skill-universal/**, com o alias histórico /home/ubuntu/.local/share/motor-ferrari/ apontando exclusivamente para esse projeto [#41714658308](https://github.com/martaxi-boss/VPS/actions/runs/41714658308). O REA oficial do Ferrari é rea-agents@6.8.0 instalado em .runtime/npm/rea, com Node 22.23.4 privado. Tem ainda Java 25.0.5 privado, Ghidra 12.2 e JADX 1.5.6 independentes, Ghidra 12.1.4 e JADX headless MCP 0.7.1 compatíveis com o REA original, e Apktool 3.0.3 privado. **O REA antigo da VPS é outro projeto**; ainda recebe pedidos pela branch `rea/one-skill-bridge-20261023` e não deve ser removido antes de migrar os consumidores, verificar usos e preparar rollback.
 
 ## Evidência recente (03/11/2026 UTC)
 
-- [Ferrari VPS #41708388146](https://github.com/martaxi-boss/VPS/actions/runs/41708388146): 149 testes PASS, fornecedores privados REA (Ghidra/JADX) e higiene Ferrari-only PASS; release 39267ce692edb8f40bf9621dba29a2f9642528b7.
+- [Ferrari VPS #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469): **164 testes PASS**, fornecedores privados REA (Ghidra/JADX), Valkey, higiene Ferrari-only e isolamento PASS; release **c5b07ed225299ad80aa2d46c28441d17f281f695**.
 - [Skill inventário #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): ZIP com inventário, status completed, 81 programas detetados nos catálogos; 55/56 candidatos Ubuntu encontrados; 25 ações externas e 12 operações base.
 - [REA Ferrari #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939): ELF e Android com o REA próprio PASS, Apktool 3.0.3 PASS; [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) ponta a ponta PASS.
 - [DAG remoto #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416): plano com etapas e ZIP confirmado.
 - Aplicações gráficas APT 15/15 instaladas, sem utilização interativa certificada; Prometheus/Valkey em runtime privado; ComfyUI CPU sem modelos ou inferência comprovada; Penpot apenas preparado, sem Docker.
 
-- [REA comparação MCP #41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353): 229 nomes em ambos os REAs, zero em falta. [REA profundo #41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556): Ghidra ELF e JADX classe Android PASS.
+- [REA comparação MCP #41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353): 229 nomes em ambos os REAs, zero em falta. [REA profundo #41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556): Ghidra ELF e JADX classe Android PASS. [Skill MCP catálogo #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747) e ferramentas [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118), [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160): todos com ZIP e dados reais PASS.
 
 **Programas detetados não são automaticamente testados ou disponíveis pela Skill.** Não declarar 81 ações nem equivalência com o catálogo completo do REA original. CAD, BIM, CONSTRUÇÃO e 3D são domínios progressivos: há casos reais certificados, mas não projetos profissionais completos de qualquer formato.
 
 ## Continuar a trabalhar
 
 1. Ler o BOOTSTRAP GitHub e os novos runs da VPS antes de afirmar o estado.
-2. Para operações remotas ler references/github-bridge.md; criar um único JSON novo kind=inventory, operation, invoke, auto, plan ou rea-mcp (este último apenas após certificação na VPS e fluxo Skill); conferir run, response.zip, report.json e artefactos.
+2. Para operações remotas ler references/github-bridge.md; criar um único JSON novo kind=inventory, operation, invoke, auto, plan ou rea-mcp (catálogo e duas funções MCP reais já certificados via Skill; outras funções precisam de testes por caso); conferir run, response.zip, report.json e artefactos.
 3. Auditar proveniência Java/Node/Python, pacotes do sistema, binários e serviços, bem como dependências REA e fornecedores, antes de qualquer remoção.
 4. Testar Ferrari com recursos do REA antigo inacessíveis sem mexer no legado; certificar Skill→VPS→ZIP e documentar caminhos, backups e recuperação.
 5. Integrar ferramentas faltantes só após um caso concreto e teste Ubuntu. Manter uma Skill, sem camadas novas.
