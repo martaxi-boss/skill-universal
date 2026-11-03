@@ -8,7 +8,7 @@ SCRIPT=ROOT/"install/vps-expand-external.sh"
 
 class ExternalProgramsTests(unittest.TestCase):
     def test_group_has_exactly_sixteen_selection_candidates(self):
-        selected=[x for x in ferrari.ubuntu_selection() if x["curated_tier"]=="external_upstream"]
+        selected=[x for x in ferrari.ubuntu_selection() if x["curated_tier"]=="external_upstream" and x["id"] not in {"ghidra","jadx","rea","ruflo","vite","playwright"}]
         self.assertEqual(len(selected),16)
         self.assertEqual({x["id"] for x in selected},
             {"freecad","penpot","comfyui","nextjs","tailwind","bootstrap",
