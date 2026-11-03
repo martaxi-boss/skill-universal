@@ -335,9 +335,20 @@ def invoke(action,source,folder,query=None):
             env[field]=str(directory)
         if x["tool"]=="calibre":
             env["CALIBRE_CONFIG_DIRECTORY"]=env["XDG_CONFIG_HOME"]
-        if x["tool"] in {"calibre","krita"}:
-            # Both Calibre ebook-convert and Krita load Qt even in CLI mode.
+        if x["tool"]=="calibre":
             env["QT_QPA_PLATFORM"]="offscreen"
+        if x["tool"]=="krita":
+            # Krita ignores Qt offscreen and requires a display. The Ubuntu
+            # VPS already has Xvfb; run an ephemeral display for this job.
+            xvfb=shutil.which("xvfb-run")
+            server=shutil.which("Xvfb")
+            if not xvfb or not server:
+                raise RuntimeError("Krita requires an existing Xvfb virtual display")
+            tmp=home/"tmp"
+            tmp.mkdir(parents=True,exist_ok=True)
+            env["TMPDIR"]=str(tmp)
+            env["QT_QPA_PLATFORM"]="xcb"
+            args=[xvfb,"-a",exe]+args[1:]
         run_options["env"]=env
     if x["tool"]=="gimp":
         # Ferrari already verified GIMP 2.10 console's headless Script-Fu.
