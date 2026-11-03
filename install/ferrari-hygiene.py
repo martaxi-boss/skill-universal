@@ -15,8 +15,17 @@ import sys
 
 HEX40=re.compile(r"[0-9a-f]{40}\Z")
 
+PROJECT_ROOT=Path("/srv/projects/skill-universal")
+
 def clean(apply=False):
     root=Path.home()/".local"/"share"/"motor-ferrari"
+    # The Ferrari-only alias is permitted only when it points at the
+    # dedicated physical GitHub project directory under /srv/projects.
+    if root.is_symlink():
+        if (not PROJECT_ROOT.is_dir() or PROJECT_ROOT.is_symlink() or
+                root.resolve(strict=True)!=PROJECT_ROOT):
+            raise RuntimeError("Ferrari project alias is outside its isolated directory")
+        root=PROJECT_ROOT
     release_root=root/"releases"
     pointer=root/"current"
     if root.is_symlink() or release_root.is_symlink():

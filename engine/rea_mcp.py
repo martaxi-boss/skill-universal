@@ -16,6 +16,7 @@ import tempfile
 import time
 
 ROOT = Path.home() / ".local/share/motor-ferrari"
+PROJECT_ROOT = Path("/srv/projects/skill-universal")
 MAX_FRAME_BYTES = 64 * 1024 * 1024
 METHODS = frozenset(("tools/list", "tools/call"))
 
@@ -54,7 +55,16 @@ def _resources(root: Path):
     jadx = root / "tools/rea-providers/jadx-headless-mcp-0.7.1-all.jar"
     apktool = root / "tools/apktool-3.0.3/bin/apktool"
     modules = root / ".runtime/npm/rea/node_modules"
-    if not root.is_dir() or root.is_symlink() or not modules.is_dir() or modules.is_symlink():
+    # Ubuntu VPS project migration: a single historical Ferrari alias may
+    # point to the physical, independent GitHub-repository directory.
+    # Never accept arbitrary symlinks or pointers to another REA installation.
+    if root.is_symlink():
+        canonical = PROJECT_ROOT
+        allowed_alias = Path.home() / ".local/share/motor-ferrari"
+        if (root != allowed_alias or not canonical.is_dir() or
+                canonical.is_symlink() or root.resolve(strict=True) != canonical):
+            raise RuntimeError("Ferrari private project alias is not trusted")
+    if not root.is_dir() or not modules.is_dir() or modules.is_symlink():
         raise RuntimeError("Ferrari private installation is missing")
     if (not cli.is_file() or not cli.resolve().is_relative_to(modules.resolve())):
         raise RuntimeError("Ferrari original REA CLI not private")
