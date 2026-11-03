@@ -1,6 +1,18 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: mobile responsivo e diagnóstico de acessibilidade
+## Certificação mais recente — 03/11/2026: Fase 6, teclado e controlos reais
+
+**Ferrari ativo na VPS Ubuntu:** release `9277a56b9b57c87b8b4e3dfbba08f4536add3625`. [PR #9](https://github.com/martaxi-boss/skill-universal/pull/9) integrada; [CI #41598406165](https://github.com/martaxi-boss/skill-universal/actions/runs/41598406165) e [CI PR #41598460475](https://github.com/martaxi-boss/skill-universal/actions/runs/41598460475) SUCCESS. **[Deploy VPS #41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120)** SUCCESS, **99 testes PASS na VPS**, marcadores `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium real, viewport responsivo, spotcheck HTML e geometria IFC todos PASS.
+
+**Prova por pedido real da Skill:** [#41598946695](https://github.com/martaxi-boss/VPS/actions/runs/41598946695) SUCCESS, `FERRARI_SKILL_END_TO_END=PASS`; ZIP aberto, relatório `status=completed` e ficheiros reais conferidos. Chromium 156.0.8078.4 executou `Tab`, `Shift+Tab`, botão `Enter` e `Espaço`, âncora `Enter` e formulário `Enter` — **6 verificações PASS** em 4 controlos focáveis. O contador visual indicou 2 ativações e o formulário mostrou «Recebido: Ferrari fase 6». Capturas PNG desktop **51 916 bytes** e móvel **52 507 bytes**; zero overflow a 390 px, erros JS ou pedidos externos.
+
+**Implementação mínima, sem nova operação:** a verificação de foco é observacional. **Somente** controlos marcados `data-ferrari-test` são acionados por teclado; sites sem marcadores devolvem `not_requested` para esses controlos e não se afirma que todos os botões de um projeto funcionam. Mantidas uma única Skill, as 12 operações base e 21 ações externas tipadas. Inventário: 56 candidatos Ubuntu; **23/56 detetados**; 49 programas em catálogos combinados. Nenhuma instalação extra, camada nova, serviço, nova ponte ou alteração de SSH.
+
+**Higienização real Ferrari:** após testes PASS, removida a release obsoleta `13c4399257cd19496f378ad3f15cd1ebe877977b`, preservadas a ativa `9277a56b9...` e a anterior certificada `0196f37a...` para recuperação. Espaço libertado: **2 519 040 bytes (~2,40 MiB)**; **21,32 GiB** livres; `outside_ferrari_touched=false`. Certificação detalhada: [docs/CERTIFICACAO_INTERACOES_TECLADO_20261103.md](docs/CERTIFICACAO_INTERACOES_TECLADO_20261103.md). **Próxima fase:** testar um fluxo específico de um projeto web concreto, sem instalar indiscriminadamente aplicações nem criar camadas.
+
+---
+
+## Histórico — 03/11/2026: mobile responsivo e diagnóstico de acessibilidade
 
 **Release atual Ferrari:** `0196f37a7610d1f95cd3371652308b7e2244f019`. [PR #8](https://github.com/martaxi-boss/skill-universal/pull/8) integrada. [CI da PR #41561833247](https://github.com/martaxi-boss/skill-universal/actions/runs/41561833247) SUCCESS, 99 testes PASS. [Entrega VPS #41561998389](https://github.com/martaxi-boss/VPS/actions/runs/41561998389) SUCCESS, **99 testes PASS na VPS**; `FERRARI_VITE_RESPONSIVE_REAL=PASS`, `FERRARI_BROWSER_A11Y_SPOTCHECK_REAL=PASS`, `FERRARI_VITE_BROWSER_REAL=PASS` e IFC geometria PASS.
 
