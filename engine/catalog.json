@@ -512,6 +512,15 @@
       "cost": "open-source",
       "source": "https://github.com/ruvnet/ruflo",
       "note": "Orquestracao multiagentes opcional. Nao executar init sobre projetos existentes. Requer Node 20+ e credenciais de modelo/anfitriao."
+    },
+    {
+      "id": "ifcopenshell",
+      "bin": null,
+      "category": "cad",
+      "apt": null,
+      "cost": "open-source",
+      "source": "https://github.com/IfcOpenShell/IfcOpenShell",
+      "note": "Ferrari-only Python venv; semantic IFC inventory via isolated IfcOpenShell (LGPL-3.0-or-later). Not a geometric/structural validation."
     }
   ]
 }
