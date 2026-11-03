@@ -9,13 +9,14 @@ GHIDRA="$ROOT/tools/rea-providers/ghidra-12.1.4"
 JAR="$ROOT/tools/rea-providers/jadx-headless-mcp-0.7.1-all.jar"
 NODE="$ROOT/runtimes/node-22.23.4"
 test "$(id -u)" -ne 0
-for p in "$REA" "$APKTOOL" "$JDK/bin/java" "$NODE/bin/node" "$GHIDRA/support/analyzeHeadless" "$JAR"; do
+test -f "$REA"
+case "$(realpath -e "$REA")" in
+  "$ROOT/.runtime/npm/rea/node_modules/"*) ;;
+  *) echo 'FERRARI_REA_PRIVATE_EXECUTOR_EXTERNAL' >&2; exit 2 ;;
+esac
+for p in "$APKTOOL" "$JDK/bin/java" "$NODE/bin/node" "$GHIDRA/support/analyzeHeadless" "$JAR"; do
   test -f "$p" && test ! -L "$p" || {
-    if [[ "$p" == "$REA" ]]; then
-      test -f "$p" && test "$(realpath "$p")" == "$ROOT/.runtime/npm/rea/node_modules/rea-agents/bin/cli.js" || exit 2
-    else
-      echo 'FERRARI_REA_PRIVATE_EXECUTOR_MISSING' >&2; exit 2
-    fi
+    echo 'FERRARI_REA_PRIVATE_EXECUTOR_MISSING' >&2; exit 2;
   }
 done
 WORK="$(mktemp -d "$ROOT/.runtime/rea-functional.XXXXXXXX")"
