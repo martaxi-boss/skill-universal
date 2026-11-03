@@ -22,6 +22,8 @@ jobs:
           bash -n install/vps-external-agents.sh
           bash -n install/vps-specialist-engines.sh
           bash -n install/vps-cad-3d.sh
+          bash -n install/vps-bim-web.sh
+          bash -n install/vps-bim-web-smoke.sh
       - name: Inspect Ferrari registry and routing
         run: |
           python3 -m engine.ferrari doctor
