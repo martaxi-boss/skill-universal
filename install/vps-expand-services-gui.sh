@@ -16,7 +16,7 @@ GUI=(gimp krita kdenlive scribus darktable librecad qgis audacity obs-studio
      lmms solvespace synfigstudio openshot-qt calibre inkscape)
 SERVICES=(prometheus valkey-server)
 candidate() {
-  apt-cache policy "$1" 2>/dev/null | awk '/Candidate:/ {print $2; exit}'
+  apt-cache policy "$1" 2>/dev/null | awk '$1=="Candidate:" {v=$2} END {print v}'
 }
 record() {
   printf '%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "${4:-}" >> "$TSV"
