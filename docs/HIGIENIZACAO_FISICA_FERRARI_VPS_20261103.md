@@ -57,6 +57,17 @@ Os grupos estão aninhados: **não somar linhas filhas às linhas pai**, pois is
 
 Existem árvores externas ao Ferrari que ocupam espaço, mas **não foram modificadas nem declaradas lixo**: /home/ubuntu/rea-final-runtime (4 430 053 376 bytes), /home/ubuntu/.local/share/rea-chatgpt-trial (2 529 660 928 bytes) e /opt/android-sdk (14 708 350 976 bytes). É preciso atribuir cada árvore ao respetivo projeto e confirmar processos/utilizadores antes de decidir qualquer remoção.
 
+## Regeneracao e segunda limpeza da cache npm em 2026-11-03
+
+A cache de downloads npm voltou a crescer durante instalacoes/testes posteriores, apesar da limpeza inicial. Foi feita uma segunda limpeza **somente dentro do Ferrari**, ja fisicamente em `/srv/projects/skill-universal`, com a release ativa `c5b07ed225299ad80aa2d46c28441d17f281f695`.
+
+- [Auditoria sem remocao #41722218452](https://github.com/martaxi-boss/VPS/actions/runs/41722218452): 326 848 512 bytes na cache `.runtime/npm-cache/_cacache`, REA/Apktool/Node/Java/Ruflo privados confirmados.
+- [Aplicacao #41722397677](https://github.com/martaxi-boss/VPS/actions/runs/41722397677): script `install/ferrari-cache-hygiene.py --apply` executado via REA como utilizador `ubuntu`, codigo interno zero e settlement quiesced.
+- **Espaco livre recuperado nesta limpeza: 326 848 512 bytes**. Espaco livre final medido nesta execucao: 16 888 692 736 bytes.
+- As dependencias instaladas, venvs, releases e restantes projetos foram preservados.
+
+Esta segunda limpeza e um novo evento apos regeneracao da cache; ao analisar a ocupacao atual do disco, nao somar resultados historicos como se nunca tivesse havido crescimento de cache entre execucoes.
+
 ## Estado e próxima ação
 
 - **PASS:** inventário de tamanhos Ferrari; remoção segura da cache npm privada; proteção dos executores Ferrari; teste REA real após limpeza.
