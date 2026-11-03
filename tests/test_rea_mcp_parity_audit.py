@@ -12,7 +12,7 @@ class ReaMcpParityAudit(unittest.TestCase):
         self.assertIn('"notifications/initialized"', src)
         self.assertNotIn('"tools/call"', src)
         self.assertNotIn("shutil.rmtree", src)
-        self.assertNotIn("subprocess.run(["rm"", src)
+        self.assertNotIn('subprocess.run(["rm"', src)
         self.assertIn("rea-final-runtime/bin/rea-mcp", src)
         self.assertIn(".runtime/npm/rea/node_modules/.bin/rea", src)
         self.assertIn("rea-providers/ghidra-12.1.4", src)
