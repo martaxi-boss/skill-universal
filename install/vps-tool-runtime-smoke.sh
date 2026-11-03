@@ -55,7 +55,7 @@ cat > "$WORK/ferrari-apk-src/smali/com/ferrari/Smoke.smali" <<'APKS'
 .end method
 APKS
 cat > "$WORK/ferrari-apk-src/apktool.yml" <<'APKY'
-version: 2.9.3
+version: 2.7.0
 apkFileName: ferrari-sample.apk
 isFrameworkApk: false
 usesFramework:
