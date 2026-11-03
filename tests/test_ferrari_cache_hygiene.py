@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import os
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = spec_from_file_location("ferrari_cache_hygiene", ROOT / "install/ferrari-cache-hygiene.py")
@@ -74,6 +75,37 @@ class FerrariCacheHygieneTests(unittest.TestCase):
                 hygiene.audit(ferrari, apply=True)
             self.assertTrue((cache / "download-blob").exists())
             self.assertEqual((outside / "file").read_text(), "preserve")
+
+    def test_project_migration_alias_is_safe_for_private_cache_audit(self):
+        with TemporaryDirectory() as tmp:
+            base=Path(tmp)
+            physical,cache=fixture(base)
+            home=base/"home/ubuntu"
+            alias=home/".local/share/motor-ferrari"
+            alias.parent.mkdir(parents=True)
+            alias.symlink_to(physical,target_is_directory=True)
+            with patch.object(Path,"home",return_value=home), \
+                 patch.object(hygiene,"PROJECT_ROOT",physical):
+                result=hygiene.audit(alias)
+            self.assertEqual(result["status"],"PASS")
+            self.assertFalse(result["cache_removed"])
+            self.assertTrue(cache.is_dir())
+
+    def test_project_migration_rejects_foreign_alias(self):
+        with TemporaryDirectory() as tmp:
+            base=Path(tmp)
+            foreign,cache=fixture(base)
+            expected=base/"srv/projects/skill-universal"
+            expected.mkdir(parents=True)
+            home=base/"home/ubuntu"
+            alias=home/".local/share/motor-ferrari"
+            alias.parent.mkdir(parents=True)
+            alias.symlink_to(foreign,target_is_directory=True)
+            with patch.object(Path,"home",return_value=home), \
+                 patch.object(hygiene,"PROJECT_ROOT",expected):
+                with self.assertRaisesRegex(RuntimeError,"outside isolated project"):
+                    hygiene.audit(alias,apply=True)
+            self.assertTrue(cache.is_dir())
 
     def test_refuse_external_rea_cli(self):
         with TemporaryDirectory() as tmp:
