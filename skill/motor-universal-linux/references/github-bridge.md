@@ -36,7 +36,16 @@ Escolha automática de adaptador conforme o pedido:
 {"version":1,"id":"auto-20261102-0011","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
 ```
 
-O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`; algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
+O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
+
+## Provas mais recentes: 03/11/2026
+
+- **Motor VPS:** [#41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS, 87 testes PASS, IfcOpenShell e Vite testados com ficheiros reais.
+- **Skill IFC:** [#41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002) SUCCESS, `ifc-report.json` inspecionado (IFC4, 1 projecto e 1 parede).
+- **Skill Vite:** [#41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) SUCCESS, `dist/index.html`, CSS e JavaScript verificados.
+- **Skill inventário:** [#41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593) SUCCESS, 22/56 selecionados detetados; 48 em catálogos combinados. Ações externas: 21; operações base: 12.
+
+**As duas operações novas usam o mesmo pedido existente `kind=operation`.** Exemplos de campos: `{"kind":"operation","operation":"ifc-summary","input":{"name":"modelo.ifc","content_base64":"..."}}` e `{"kind":"operation","operation":"vite-build","input":{"name":"site.zip","content_base64":"..."}}`; incluem também `version=1` e `id` único. A origem deve ser não confidencial. Não aceitar ZIP com scripts de instalação, configurações Vite do utilizador ou caminhos fora de `index.html`, `src/` e `public/`.
 
 ## Provas e visibilidade
 
