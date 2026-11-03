@@ -8,6 +8,16 @@ test "$ID" = ubuntu && test "$VERSION_ID" = 24.04 && test "$(uname -m)" = x86_64
 test "$(id -u)" -ne 0
 cd "$(dirname "$0")/.."
 ROOT="$HOME/.local/share/motor-ferrari"
+# When Ferrari's historical location is a symlink, verify the exact
+# independent GitHub project before checking the resolved Valkey binary.
+if [[ -L "$ROOT" ]]; then
+  [[ "$(realpath -e "$ROOT")" == "/srv/projects/skill-universal" ]] &&
+    [[ -d "/srv/projects/skill-universal" ]] &&
+    [[ ! -L "/srv/projects/skill-universal" ]] || {
+      echo 'FERRARI_PROJECT_ALIAS_INVALID' >&2; exit 6;
+    }
+  ROOT="/srv/projects/skill-universal"
+fi
 REPORT="$ROOT/.runtime/expansion-33"
 mkdir -p "$REPORT" "$ROOT/tools"
 TSV="$REPORT/services-gui.tsv"
