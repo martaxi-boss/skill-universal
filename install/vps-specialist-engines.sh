@@ -106,3 +106,5 @@ echo "FERRARI_SPECIALISTS_JDK=$("$JDK/bin/java" --version | sed -n '1p')"
 echo 'FERRARI_JADX_GHIDRA_INSTALLED=YES'
 # Ferrari-private Apktool uses the independent JDK 25 above.
 bash install/vps-apktool-isolated.sh
+# Compatible native REA providers are installed inside Ferrari; never use the old REA.
+bash install/vps-rea-providers.sh
