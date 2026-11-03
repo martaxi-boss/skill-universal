@@ -27,6 +27,41 @@ class ExternalProgramsTests(unittest.TestCase):
                           "systemctl start","docker run","rm -rf /root/rea"):
             self.assertNotIn(forbidden,src)
 
+    def test_owned_extended_venv_is_discovered(self):
+        import tempfile
+        from unittest.mock import patch
+        from engine import runtime_discovery
+        with tempfile.TemporaryDirectory() as d:
+            home=Path(d)
+            private=home/".runtime/venvs/extended/duckdb/lib/python3.12/site-packages/duckdb"
+            private.mkdir(parents=True)
+            (private/"__init__.py").write_text("own Ferrari duckdb")
+            with patch("engine.runtime_discovery.importlib.util.find_spec",return_value=None):
+                result=runtime_discovery.python_presence("duckdb",home=home)
+            self.assertEqual(result["scope"],"ferrari_venv")
+            self.assertIn("extended/duckdb",result["location"])
+
+    def test_valkey_is_detected_only_inside_private_ferrari_tree(self):
+        import tempfile
+        from unittest.mock import patch
+        from engine import tool_runtime
+        with tempfile.TemporaryDirectory() as d:
+            base=Path(d)
+            root=base/"tools/ferrari-services/valkey-server"
+            (root/"usr/bin").mkdir(parents=True)
+            private=root/"usr/bin/valkey-server"
+            private.write_text("Ferrari service executable")
+            with patch.object(tool_runtime,"HOME",base):
+                with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
+                    self.assertEqual(tool_runtime.executable("valkey","valkey-server"),str(private))
+            other=base/"external-valkey"
+            other.write_text("legacy tool")
+            private.unlink()
+            private.symlink_to(other)
+            with patch.object(tool_runtime,"HOME",base):
+                with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
+                    self.assertIsNone(tool_runtime.executable("valkey","valkey-server"))
+
     def test_each_candidate_has_individual_install_record(self):
         src=SCRIPT.read_text()
         for pkg in ("nextjs","tailwind","bootstrap","shadcn","duckdb","polars",
