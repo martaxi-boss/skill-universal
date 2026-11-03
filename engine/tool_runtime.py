@@ -321,6 +321,20 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
+    if x["tool"] in {"krita","darktable","calibre"}:
+        # Keep GUI-tool caches/config isolated to the Ferrari job output.
+        # No user/global Scribus/Krita/Darktable profiles are modified.
+        env=os.environ.copy()
+        config_root=outdir/".ferrari-app-state"
+        for key,part in (("XDG_CONFIG_HOME","config"),
+                         ("XDG_CACHE_HOME","cache"),
+                         ("XDG_DATA_HOME","data")):
+            folder=config_root/part
+            folder.mkdir(parents=True,exist_ok=True)
+            env[key]=str(folder)
+        if x["tool"]=="krita":
+            env["QT_QPA_PLATFORM"]="offscreen"
+        run_options["env"]=env
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
