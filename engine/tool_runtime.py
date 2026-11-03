@@ -321,7 +321,7 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
-    if x["tool"] in {"calibre","darktable","krita"}:
+    if x["tool"] in {"calibre","darktable","krita","gimp"}:
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
         # in Ubuntu's shared user profile or another project's directory.
@@ -339,6 +339,22 @@ def invoke(action,source,folder,query=None):
             # Both Calibre ebook-convert and Krita load Qt even in CLI mode.
             env["QT_QPA_PLATFORM"]="offscreen"
         run_options["env"]=env
+    if x["tool"]=="gimp":
+        # Ferrari already verified GIMP 2.10 console's headless Script-Fu.
+        # Only the trusted file paths from this invocation enter Scheme.
+        def _scheme_path(path):
+            return '"' + str(path).replace("\\","\\\\").replace('"','\\"').replace("\n","\\n") + '"'
+        source=_scheme_path(inp)
+        output=_scheme_path(target)
+        expression=(
+            '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE '
+            + source + ' ' + source + '))) '
+            '(drawable (car (gimp-image-get-active-drawable image)))) '
+            '(gimp-xcf-save RUN-NONINTERACTIVE image drawable '
+            + output + ' ' + output + ') '
+            '(gimp-image-delete image))'
+        )
+        args=[exe,"-i","-n","-s","-b",expression,"-b","(gimp-quit 0)"]
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:

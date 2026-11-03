@@ -790,6 +790,26 @@
         "--export-filename",
         "{output}"
       ]
+    },
+    {
+      "id": "gimp-png-xcf",
+      "tool": "gimp",
+      "binary": "gimp-console-2.10",
+      "category": "creative",
+      "keywords": [
+        "gimp png xcf",
+        "converter imagem xcf",
+        "gimp formato editavel"
+      ],
+      "extensions": [
+        ".png"
+      ],
+      "mode": "file",
+      "artifact": "gimp-editable.xcf",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }
