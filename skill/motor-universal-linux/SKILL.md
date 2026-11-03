@@ -5,9 +5,9 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
-## Integração Apktool — desenvolvimento (pendente de certificação real)
+## Integração Apktool — certificada na VPS em 03/11/2026
 
-O Ferrari já disponibiliza a operação `apk-decompile` com JADX. A ação externa `apktool-decode-resources` acrescenta, **no mesmo Ferrari**, descodificação de manifesto, recursos e Smali de ficheiros `.apk`. É declarada no manifesto `engine/tool_actions.json` como saída do tipo `directory`, que o mecanismo atual da Skill inclui automaticamente no ZIP de resposta. Um pedido remoto usa `kind=invoke`, `action=apktool-decode-resources` e `input` base64 de um APK autorizado para teste. **Não declarar operacional até CI, deploy na VPS e ZIP real com conteúdo verificado.** Nenhuma Skill, coordenador ou ponte adicional.
+O Ferrari já disponibiliza a operação `apk-decompile` com JADX. A ação `apktool-decode-resources` utiliza o **Apktool 2.7.0 já instalado**, no mesmo manifesto e motor, para descodificar manifesto, recursos e Smali de ficheiros `.apk`. O mecanismo atual da Skill suporta o resultado do tipo `directory` no ZIP. **CI #41630397156: 111/111 PASS; deploy VPS #41630731184: `FERRARI_APKTOOL_REAL=PASS`, `FERRARI_DEPLOY_TRANSPORT=PASS`; inventário remoto #41631048154: `apktool.status=callable`, `FERRARI_SKILL_END_TO_END=PASS`.** Para testar descodificação remota, usar `kind=invoke`, `action=apktool-decode-resources` e um APK de teste em `input` base64. O teste remoto por `kind=invoke` para Apktool não foi ainda certificado; a descodificação real foi certificada pelo *smoke* da VPS. Nenhuma Skill, coordenador ou ponte adicional.
 
 
 ## Ligacao OCRmyPDF proposta — 03/11/2026 (certificacao ainda em curso)
