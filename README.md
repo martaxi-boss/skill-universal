@@ -6,6 +6,7 @@
 
 ## Instalação real e provas
 
+- **Higiene real da VPS:** [inventário detalhado #41700386577](https://github.com/martaxi-boss/VPS/actions/runs/41700386577) e [limpeza #41701443735](https://github.com/martaxi-boss/VPS/actions/runs/41701443735) PASS. Removida **apenas a cache de downloads npm privada do Ferrari**, com **984 383 488 bytes (~939 MiB)** libertados e ~13,95 GiB livres depois. REA/Ruflo/Apktool e serviços de outros projetos preservados. O workflow temporário de limpeza foi retirado após execução; **dependências Python duplicadas ainda não foram removidas nem declaradas seguras para eliminar**.
 - [VPS #41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900): SUCCESS, **139 testes PASS**, FERRARI_DEPLOY_TRANSPORT=PASS e FERRARI_ONLY_HYGIENE=PASS. Release instalada: 6c93a392dfe9a02d7ccfef9d47317c9685976484.
 - [Skill inventário #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): FERRARI_SKILL_END_TO_END=PASS, relatório e ZIP; 81 programas detetados em catálogos combinados, 55 dos 56 candidatos Ubuntu detetados, 25 ações externas.
 - [REA próprio + Apktool #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939): análise ELF e recursos Android, Apktool 3.0.3 privado; [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) confirmou pedido e ZIP reais.
