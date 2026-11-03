@@ -36,9 +36,18 @@ Escolha automática de adaptador conforme o pedido:
 {"version":1,"id":"auto-20261102-0011","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
 ```
 
-O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
+O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium isolado operacional devolve também `browser-check.json` e screenshot PNG). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
 
-## Provas mais recentes: 03/11/2026
+## Certificação web mais recente — 03/11/2026
+
+- [VPS #41560720430](https://github.com/martaxi-boss/VPS/actions/runs/41560720430): SUCCESS, **99 testes PASS**, Chromium headless 156.0.8078.4, Playwright 1.64.1, `FERRARI_VITE_BROWSER_REAL=PASS`.
+- [Skill Vite + browser #41560954411](https://github.com/martaxi-boss/VPS/actions/runs/41560954411): SUCCESS, `FERRARI_SKILL_END_TO_END=PASS`, ZIP verificado com HTML, JS, CSS, `browser-check.json` e `browser-screenshot.png` (PNG de 15 875 bytes); JS executado e zero erros.
+- Inventário: **23/56** selecionados detetados, 49 programas combinados, **12 operações base** e 21 ações externas. A mesma operação `vite-build` executa o teste web adicional; sem outra Skill.
+- Falha inicial [#41560226160](https://github.com/martaxi-boss/VPS/actions/runs/41560226160) corrigida na PR #7: usar o executável headless, não o Chromium completo. A higienização excluiu apenas antigas releases do Ferrari.
+
+Para verificar um site pela Skill, utilizar exatamente o mesmo envelope `kind=operation`, `operation=vite-build` e um `input` ZIP limitado a `index.html`, `src/` e `public/`. Não são aceites scripts de instalação, Vite configs externas nem backend arbitrário. O ZIP de resposta inclui `artifacts/browser-check.json` e `artifacts/browser-screenshot.png` somente quando o navegador esteve operacional.
+
+## Histórico — início de 03/11/2026
 
 - **Motor VPS:** [#41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS, 87 testes PASS, IfcOpenShell e Vite testados com ficheiros reais.
 - **Skill IFC:** [#41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002) SUCCESS, `ifc-report.json` inspecionado (IFC4, 1 projecto e 1 parede).
