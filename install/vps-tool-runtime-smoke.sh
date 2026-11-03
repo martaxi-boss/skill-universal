@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==25
-assert x["callable_actions"]>=25
+assert x["registered_actions"]==29
+assert x["callable_actions"]>=29
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -227,3 +227,59 @@ PY
 
 # CAD/BIM and development web: isolated packages and real sample outputs.
 bash install/vps-bim-web-smoke.sh
+
+# Phase 1: real, synthetic data/typography/vector work through the
+# existing typed Ferrari dispatcher, never through a global Python library.
+cat > "$WORK/phase1.csv" <<'CSV'
+country,orders,revenue
+Portugal,7,142.50
+Espanha,3,75.25
+Franca,5,110.00
+CSV
+cat > "$WORK/phase1.svg" <<'SVG'
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="160">
+ <rect width="320" height="160" fill="#ebf8ff"/>
+ <circle cx="60" cy="80" r="40" fill="#1877ab"/>
+ <text x="128" y="92" font-size="27" fill="#16324c">Ferrari</text>
+</svg>
+SVG
+cat > "$WORK/phase1.typ" <<'TYPST'
+#set page(width: 12cm, height: 8cm)
+#set text(size: 16pt)
+= Motor Ferrari
+Fase 1: Typst para PDF.
+TYPST
+python3 -m engine.ferrari invoke --action duckdb-csv-profile \
+  --input "$WORK/phase1.csv" --output "$WORK/duckdb-csv" \
+  > "$WORK/phase1-duckdb-action.json"
+python3 -m engine.ferrari invoke --action polars-csv-profile \
+  --input "$WORK/phase1.csv" --output "$WORK/polars-csv" \
+  > "$WORK/phase1-polars-action.json"
+python3 -m engine.ferrari invoke --action inkscape-svg-png \
+  --input "$WORK/phase1.svg" --output "$WORK/inkscape-png" \
+  > "$WORK/phase1-inkscape-action.json"
+python3 -m engine.ferrari invoke --action typst-compile-pdf \
+  --input "$WORK/phase1.typ" --output "$WORK/typst-pdf" \
+  > "$WORK/phase1-typst-action.json"
+python3 - "$WORK" <<'PY_PHASE1'
+import json,sys
+from pathlib import Path
+root=Path(sys.argv[1])
+for tool in ("duckdb","polars"):
+    path=root/(tool+"-csv")/(tool+"-profile.json")
+    doc=json.loads(path.read_text())
+    assert doc["status"]=="completed",doc
+    assert doc["executor"]==tool,doc
+    assert doc["rows"]==3,doc
+    assert [c["name"] for c in doc["columns"]]==["country","orders","revenue"],doc
+    assert len(doc["sample"])==3 and doc["sample"][0]["country"]=="Portugal",doc
+    assert doc.get("library_version"),doc
+    print("FERRARI_"+tool.upper()+"_CSV_REAL=PASS")
+png=root/"inkscape-png/inkscape.png"
+assert png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n") and png.stat().st_size>100,png
+print("FERRARI_INKSCAPE_SVG_PNG_REAL=PASS")
+pdf=root/"typst-pdf/typst-document.pdf"
+assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size>100,pdf
+print("FERRARI_TYPST_PDF_REAL=PASS")
+print("FERRARI_DATA_DESIGN_FOUR_PROGRAMS_REAL=PASS")
+PY_PHASE1
