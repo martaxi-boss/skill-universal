@@ -41,6 +41,10 @@ echo 'FERRARI_APT_STAGE=BEGIN'
 sudo -n bash install/ferrari-ubuntu.sh --profile maximum --headless --apply
 echo 'FERRARI_APT_STAGE=COMPLETED'
 
+# Explicitly requested Ferrari expansion: 15 Ubuntu GUI applications and
+# Ferrari-private Prometheus/Valkey binaries. No server is started here.
+bash install/vps-expand-services-gui.sh
+
 # Execute real local operations, not just binary --help probes.
 python3 -m unittest discover -s tests -v
 python3 -m engine.ferrari run --operation web-template --title "Ferrari Ubuntu VPS real" --output "$RELEASE/smoke/site"
