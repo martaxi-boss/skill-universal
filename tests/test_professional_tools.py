@@ -125,6 +125,10 @@ class FerrariProfessionalTests(unittest.TestCase):
                     Path(args[-2]).with_name("browser-mobile.png").write_bytes(b"PNG" * 80)
                     Path(args[-1]).write_text(json.dumps({
                         "status":"passed","browser_version":"test",
+                        "interactions":{"status":"clear","focusable_count":4,"findings":[],
+                                        "tab_forward":"passed","shift_tab_back":"passed",
+                                        "button_enter":"passed","button_space":"passed",
+                                        "link_enter":"passed","form_enter":"passed"},
                         "mobile":{"viewport":{"width":390,"height":844},
                                   "horizontal_overflow_px":0,
                                   "spotcheck_status":"clear","findings":[]}
@@ -137,7 +141,10 @@ class FerrariProfessionalTests(unittest.TestCase):
             self.assertEqual(run.call_count,2)
             self.assertEqual(len(result),5)
             self.assertGreater((root/"out/browser-mobile.png").stat().st_size,100)
-            self.assertEqual(json.loads((root/"out/browser-check.json").read_text())["mobile"]["viewport"]["width"],390)
+            result_json=json.loads((root/"out/browser-check.json").read_text())
+            self.assertEqual(result_json["interactions"]["button_space"],"passed")
+            self.assertEqual(result_json["interactions"]["form_enter"],"passed")
+            self.assertEqual(result_json["mobile"]["viewport"]["width"],390)
             self.assertEqual(json.loads((root/"out/vite-build.json").read_text())["browser_test"]["status"],"passed")
 
     def test_browser_script_blocks_external_network_without_http_server(self):
@@ -150,6 +157,14 @@ class FerrariProfessionalTests(unittest.TestCase):
         self.assertIn('horizontal_overflow_px',source)
         self.assertIn('images_missing_alt',source)
         self.assertIn('fields_missing_label',source)
+        self.assertIn('page.keyboard.press("Tab")',source)
+        self.assertIn('page.keyboard.press("Shift+Tab")',source)
+        self.assertIn('page.keyboard.press("Enter")',source)
+        self.assertIn('page.keyboard.press("Space")',source)
+        self.assertIn('data-ferrari-test="button"',source)
+        self.assertIn('data-ferrari-test="form"',source)
+        self.assertIn('data-ferrari-test="link"',source)
+        self.assertIn('opt-in data-ferrari-test controls only',source)
         self.assertIn('not actual mobile-device emulation',source)
         self.assertNotIn('spawn(',source)
         installer=(professional_tools.ROOT/"install/vps-browser-headless.sh").read_text()
