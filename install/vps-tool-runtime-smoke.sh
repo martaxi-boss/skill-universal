@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==29
-assert x["callable_actions"]>=29
+assert x["registered_actions"]==31
+assert x["callable_actions"]>=31
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
