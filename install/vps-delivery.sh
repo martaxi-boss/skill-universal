@@ -7,7 +7,7 @@ if [[ $# -ne 1 || ! "$1" =~ ^[0-9a-f]{40}$ ]]; then
   echo 'FERRARI_INVALID_RELEASE_SHA' >&2; exit 2
 fi
 SHA="$1"
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 RELEASE="$ROOT/releases/$SHA"
 test -d "$RELEASE" && test -f "$RELEASE/source.tar.gz" || {
   echo 'FERRARI_RELEASE_PACKAGE_MISSING' >&2; exit 2;
