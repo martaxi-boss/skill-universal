@@ -12,6 +12,8 @@ O motor decide a ferramenta e executa as operações; a IA orienta. O Ferrari te
 
 ## 2. Fotografia atual com provas
 
+**Higiene física Ferrari comprovada, sem remoção de dependências:** [inventário VPS #41700386577](https://github.com/martaxi-boss/VPS/actions/runs/41700386577) mediu o Ferrari em 13 312 897 024 bytes, dos quais 10 453 159 936 bytes em .runtime. A cache npm privada continha 984 383 488 bytes. [Higiene real #41701443735](https://github.com/martaxi-boss/VPS/actions/runs/41701443735) removeu **apenas** .runtime/npm-cache/_cacache, libertando **984 383 488 bytes (~939 MiB)** e deixando **14 984 884 224 bytes (~13,95 GiB) livres**. FERRARI_PRIVATE_NPM_CACHE_HYGIENE=PASS, FERRARI_CACHE_POSTCHECK=PASS e FERRARI_OTHER_SERVICES_UNCHANGED=PASS. REA, Ruflo, Ghidra, Java, Node, Apktool, venvs e serviços de outros projetos foram preservados. O workflow único de limpeza foi retirado do repositório VPS após PASS; mantém-se o workflow normal de inventário somente de leitura. A cache poderá voltar a crescer se forem instalados novos pacotes npm. **A auditoria de duplicações e o desinstalador do REA antigo NÃO estão certificados.**
+
 | Âmbito | Estado demonstrado |
 |---|---|
 | Release Ferrari na VPS | 6c93a392dfe9a02d7ccfef9d47317c9685976484 |
@@ -22,7 +24,7 @@ O motor decide a ferramenta e executa as operações; a IA orienta. O Ferrari te
 | REA próprio Ferrari | rea-agents 6.8.0 via npm próprio: CLI disponível e duas ações reais certificadas (ELF e recursos Android) |
 | Apktool | Versão oficial 3.0.3 privada, Java 25.0.5 próprio, construção e descodificação de APK sintético PASS |
 | Ghidra/JADX | Ghidra 12.2 em modo headless PASS; JADX 1.5.6 com saída Java PASS |
-| Disco livre | Cerca de 9,79 GiB no run #41671631900, não uma medição atual permanente |
+| Disco livre | ~13,95 GiB após higiene #41701443735; ~9,79 GiB era uma fotografia anterior (#41671631900) |
 | Higiene executada no run | FERRARI_ONLY_HYGIENE=PASS; outside_ferrari_touched=false; preservação da release ativa e rollback |
 
 **Leitura obrigatória:** 81 deteções não são 81 ações, 55/56 não significa 55 testes funcionais e uma instalação não equivale a uma tarefa executável pela Skill. As contagens são a fotografia dos runs citados; confirmar de novo após qualquer alteração.
@@ -57,7 +59,7 @@ Nenhuma área deve ser anunciada como completamente operacional apenas por const
 
 ## 5. Pendências reais, pela ordem adequada
 
-1. **Higienização e proveniência:** medir espaço por diretório; mapear programas APT globais, Python/venvs, npm, Java, Node, binários, configurações, processos e serviços. Separar o que pertence ao Ferrari, ao REA antigo e ao sistema. Não eliminar às cegas.
+1. **Higienização e proveniência:** medido o uso Ferrari por diretório e limpa a cache npm de downloads (PASS). **Pendente:** auditoria de propriedade e segurança de bibliotecas repetidas entre ComfyUI/Docling, outros ambientes Python e pacotes APT globais, Java, Node, binários, configurações, processos e serviços. Não apagar dependências ativas nem o REA antigo.
 2. **REA e fornecedores:** auditar dependências efetivas do pacote npm, disponibilidade de fornecedores Linux e integração REA→Ghidra/Apktool/JADX quando aplicável; testar funções essenciais com ficheiros reais. Não declarar equivalência integral com o REA antigo com base em duas ações.
 3. **Isolamento:** testar Ferrari com os caminhos/serviços do REA antigo inacessíveis num ambiente controlado, sem tocar no projeto antigo; exigir testes Skill→GitHub→VPS→ZIP PASS.
 4. **Capacidades pendentes:** adaptar programas já instalados por necessidade comprovada; preferir linha de comandos/headless antes de adicionar interface gráfica virtual ou Docker pesado. Penpot é opcional até haver recursos e caso de uso concreto.
