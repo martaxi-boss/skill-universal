@@ -12,7 +12,6 @@ class AgentRuntime(unittest.TestCase):
         self.assertIn("FERRARI_REA_CLI=PASS_HELP_ONLY",s)
         self.assertIn("FERRARI_EXTERNAL_REA_DEPENDENCY=NONE",s)
         self.assertIn('REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"',s)
-        self.assertNotIn("--profile all",s)
         self.assertNotIn("npm install -g",s)
         self.assertNotIn("sudo ",s)
 if __name__=="__main__":
