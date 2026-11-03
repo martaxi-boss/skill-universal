@@ -44,6 +44,16 @@ bash install/install-agent-engines.sh --profile all --apply
 REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"
 RUFLO="$ROOT/.runtime/npm/ruflo/node_modules/.bin/ruflo"
 test -x "$REA" && test -x "$RUFLO"
+# Distinguish the Ferrari-owned REA from the separate REA project on this VPS.
+for path in "$ROOT" "$ROOT/.runtime" "$ROOT/.runtime/npm" "$ROOT/.runtime/npm/rea" "$ROOT/.runtime/npm/rea/node_modules"; do
+  test -d "$path" && test ! -L "$path" || { echo 'FERRARI_REA_ROOT_NOT_PRIVATE' >&2; exit 6; }
+done
+REAL_REA="$(realpath -e "$REA")"
+case "$REAL_REA" in
+  "$ROOT/.runtime/npm/rea/node_modules/"*) ;;
+  *) echo 'FERRARI_REA_EXTERNAL_CLI_FORBIDDEN' >&2; exit 6 ;;
+esac
+echo 'FERRARI_REA_PRIVATE_RUNTIME=PASS'
 "$REA" --help >/dev/null
 "$RUFLO" --help >/dev/null
 echo "FERRARI_REA_CLI=PASS_HELP_ONLY"
