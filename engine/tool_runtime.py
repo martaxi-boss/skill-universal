@@ -27,6 +27,9 @@ BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "openshot":"openshot-qt","synfig":"synfigstudio"}
 ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "prometheus":HOME/"tools/ferrari-services/prometheus/usr/bin/prometheus",
+          "typst":HOME/"tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
+          "godot":HOME/"tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64",
+          "freecad":HOME/"tools/freecad-1.1.4/archive.AppImage",
           "valkey":HOME/"tools/ferrari-services/valkey-server/usr/bin/valkey-server",
           "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
@@ -92,7 +95,7 @@ def executable(tool,binary=None):
         # Resolve only links staying within the Ferrari-owned service tree.
         private=HOME/"tools/ferrari-services/valkey-server"
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(private.resolve()) else None
-    if tool in {"apktool","prometheus"}:
+    if tool in {"apktool","prometheus","typst","godot","freecad"}:
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
