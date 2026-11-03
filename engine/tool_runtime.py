@@ -321,6 +321,23 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
+    if x["tool"] in {"calibre","darktable","krita"}:
+        # Installed GUI applications provide dedicated command-line export.
+        # Keep per-run caches/preferences inside this Ferrari job, never
+        # in Ubuntu's shared user profile or another project's directory.
+        env=os.environ.copy()
+        home=outdir/".ferrari-application-state"
+        for field,part in (("XDG_CACHE_HOME","cache"),
+                           ("XDG_CONFIG_HOME","config"),
+                           ("XDG_DATA_HOME","data")):
+            directory=home/part
+            directory.mkdir(parents=True,exist_ok=True)
+            env[field]=str(directory)
+        if x["tool"]=="calibre":
+            env["CALIBRE_CONFIG_DIRECTORY"]=env["XDG_CONFIG_HOME"]
+        if x["tool"]=="krita":
+            env["QT_QPA_PLATFORM"]="offscreen"
+        run_options["env"]=env
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
