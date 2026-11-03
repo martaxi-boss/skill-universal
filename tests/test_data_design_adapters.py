@@ -154,6 +154,19 @@ class FerrariDataDesignAdapters(unittest.TestCase):
                     self.assertEqual(proposal["selected"]["action"], expected)
             self.assertFalse(tool_runtime.route("duckdb csv", "/tmp/input.txt")["suggestions"])
 
+    def test_vps_smoke_calls_each_real_installed_adapter(self):
+        smoke=(Path(__file__).resolve().parents[1] /
+               "install/vps-tool-runtime-smoke.sh").read_text()
+        self.assertIn('assert x["registered_actions"]==29', smoke)
+        self.assertIn('assert x["callable_actions"]>=29', smoke)
+        for action in ("duckdb-csv-profile", "polars-csv-profile",
+                       "inkscape-svg-png", "typst-compile-pdf"):
+            self.assertIn("--action " + action, smoke)
+        for proof in ("FERRARI_DUCKDB_CSV_REAL=PASS", "FERRARI_POLARS_CSV_REAL=PASS",
+                      "FERRARI_INKSCAPE_SVG_PNG_REAL=PASS", "FERRARI_TYPST_PDF_REAL=PASS"):
+            self.assertIn(proof, smoke)
+        self.assertNotIn("rea-final-runtime", smoke)
+
     def test_missing_library_fails_without_disabling_other_tools(self):
         with TemporaryDirectory() as folder:
             src = Path(folder) / "data.csv"
