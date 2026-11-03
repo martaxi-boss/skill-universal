@@ -78,6 +78,22 @@ class ExternalProgramsTests(unittest.TestCase):
         self.assertNotIn("gradio typst",source)
         self.assertIn("GUI_UNTESTED",source)
 
+    def test_skill_inventory_includes_owned_expansion_report(self):
+        import json,tempfile
+        from unittest.mock import patch
+        from engine import tool_runtime
+        with tempfile.TemporaryDirectory() as d:
+            home=Path(d)
+            report=home/".runtime/expansion-33/services-gui.json"
+            report.parent.mkdir(parents=True)
+            report.write_text(json.dumps({"project":"motor-ferrari","items":[
+                {"group":"service","id":"prometheus","status":"INSTALLED_PRIVATE"}
+            ],"installed":1,"pending":[]}))
+            with patch.object(tool_runtime,"HOME",home):
+                result=tool_runtime.inventory()
+        self.assertEqual(result["expansion"]["services_gui"]["installed"],1)
+        self.assertEqual(result["expansion"]["services_gui"]["items"][0]["id"],"prometheus")
+
     def test_each_candidate_has_individual_install_record(self):
         src=SCRIPT.read_text()
         for pkg in ("nextjs","tailwind","bootstrap","shadcn","duckdb","polars",
