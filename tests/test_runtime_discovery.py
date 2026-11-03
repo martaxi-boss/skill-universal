@@ -79,7 +79,11 @@ class RuntimeDiscoveryTests(unittest.TestCase):
         }
         with patch.object(tool_runtime.runtime_discovery,"discover",return_value=ecosystems):
             with patch.object(tool_runtime,"executable",return_value=None):
-                report=tool_runtime.inventory()
+                # A synthetic manifest-only test must not inherit the real
+                # Ferrari Vite/IFC executors installed on the VPS.
+                with patch("engine.professional_tools.vite_available",return_value=False):
+                    with patch("engine.professional_tools.bim_available",return_value=False):
+                        report=tool_runtime.inventory()
         vite=next(p for p in report["programs"] if p["id"]=="vite")
         self.assertTrue(vite["installed"])
         self.assertEqual(vite["detection"],"npm_package")
