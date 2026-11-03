@@ -75,7 +75,11 @@ def system():
 
 def present(p):
     if p["id"]=="rea":
-        return False  # The obsolete separate REA is not a Ferrari executor.
+        # Only the Ferrari-owned rea-agents npm tree; never reuse the legacy REA.
+        private=Path.home()/".local/share/motor-ferrari/.runtime/npm/rea"
+        modules=private/"node_modules"
+        cli=modules/".bin/rea"
+        return private.is_dir() and not private.is_symlink() and modules.is_dir() and not modules.is_symlink() and cli.is_file() and cli.resolve().is_relative_to(modules.resolve())
     if p["id"]=="apktool":
         local=Path.home()/".local/share/motor-ferrari/tools/apktool-3.0.3/bin/apktool"
         return local.is_file() and not local.is_symlink()
@@ -89,10 +93,9 @@ def present(p):
     if p["id"]=="jadx":
         local=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
         return bool(shutil.which(exe) or local.is_file())
-    if p["id"] in {"rea","ruflo"}:
-        local=Path.home()/".local/share/motor-ferrari/.runtime/npm"/p["id"]/"node_modules"/".bin"/p["id"]
-        legacy=ROOT/".runtime"/"npm"/p["id"]/"node_modules"/".bin"/p["id"]
-        return bool(shutil.which(p["id"]) or local.is_file() or legacy.is_file())
+    if p["id"]=="ruflo":
+        local=Path.home()/".local/share/motor-ferrari/.runtime/npm/ruflo/node_modules/.bin/ruflo"
+        return local.is_file()
     return shutil.which(exe) is not None
 
 def inventory(category=None):
@@ -166,7 +169,7 @@ def plan(request):
     categories = set()
     for route in active:
         categories.update(cats.get(route, {route}))
-    selected = [p for p in ubuntu_selection() if p["category"] in categories and p["id"]!="rea"]
+    selected = [p for p in ubuntu_selection() if p["category"] in categories]
     # Real executors first; otherwise prefer simpler/free-license-reviewed tools,
     # then GitHub popularity as one of several secondary signals.
     selected.sort(key=lambda p: (
