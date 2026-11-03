@@ -68,6 +68,16 @@ class ExternalProgramsTests(unittest.TestCase):
                 with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
                     self.assertIsNone(tool_runtime.executable("valkey","valkey-server"))
 
+    def test_official_current_linux_binaries_are_pinned(self):
+        source=SCRIPT.read_text()
+        self.assertIn("typst-x86_64-unknown-linux-musl.tar.xz",source)
+        self.assertIn("Godot_v4.7.2-stable_linux.x86_64.zip",source)
+        self.assertIn("FreeCAD_1.1.4-Linux-x86_64-py311.AppImage",source)
+        self.assertIn("sha256sum -c -",source)
+        self.assertNotIn("godot3",source)
+        self.assertNotIn("gradio typst",source)
+        self.assertIn("GUI_UNTESTED",source)
+
     def test_each_candidate_has_individual_install_record(self):
         src=SCRIPT.read_text()
         for pkg in ("nextjs","tailwind","bootstrap","shadcn","duckdb","polars",
