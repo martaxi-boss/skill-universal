@@ -90,6 +90,9 @@ def executable(tool,binary=None):
         if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
             return None
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
+    if tool=="comfyui":
+        # No executable from PATH: only Ferrari-owned CPU source is valid.
+        return None
     if tool=="valkey":
         # Ubuntu provides valkey-server via symlinks in its tools package.
         # Resolve only links staying within the Ferrari-owned service tree.
@@ -100,6 +103,34 @@ def executable(tool,binary=None):
     if pinned and pinned.is_file():
         return str(pinned)
     return shutil.which(binary or BINARIES.get(tool) or tool) if (binary or BINARIES.get(tool,tool)) else None
+
+def ferrari_source_presence(tool):
+    """Recognize a Ferrari-owned CPU source installation, not a PATH copy."""
+    if tool!="comfyui":
+        return None
+    src=HOME/"tools/comfyui-v0.43.0"
+    venv=HOME/".runtime/venvs/extended/comfyui"
+    py=venv/"bin/python"
+    report=HOME/".runtime/expansion-33/heavy.json"
+    if not (src.is_dir() and not src.is_symlink() and
+            venv.is_dir() and not venv.is_symlink() and
+            (src/"main.py").is_file() and py.is_file() and
+            report.is_file() and not report.is_symlink() and report.stat().st_size<=32768):
+        return None
+    if not src.resolve().is_relative_to(HOME.resolve()) or not venv.resolve().is_relative_to(HOME.resolve()):
+        return None
+    try:
+        data=json.loads(report.read_text(encoding="utf-8"))
+    except (OSError,ValueError,UnicodeError):
+        return None
+    if data.get("project")!="motor-ferrari" or not any(
+        isinstance(x,dict) and x.get("id")=="comfyui" and
+        x.get("status")=="INSTALLED_CPU_NO_MODELS"
+        for x in data.get("items",[]) if isinstance(x,dict)
+    ):
+        return None
+    return {"scope":"ferrari_cpu_source","location":str(src),
+            "version":"v0.43.0","model_inference_tested":False}
 
 def inventory():
     selected=json.loads((ROOT/"engine/ubuntu_selection.json").read_text())["tools"]
@@ -116,6 +147,7 @@ def inventory():
         module_evidence=python.get(tool) if not path else None
         npm_evidence=npm.get(tool) if not path and not module_evidence else None
         container_evidence=containers.get(tool) if not path and not module_evidence and not npm_evidence else None
+        source_evidence=ferrari_source_presence(tool) if not path else None
         callable_ops=[x["id"] for x in defined.values() if x["tool"]==tool and executable(tool,x["binary"])]
         if not path and callable_ops:
             first=defined[callable_ops[0]]
@@ -124,12 +156,13 @@ def inventory():
         available=(professional_tools.bim_available() if tool=="ifcopenshell" else
                    professional_tools.vite_available() if tool=="vite" else bool(path))
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
-        evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None)
+        evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
         present=bool(path or evidence)
         state=("callable" if callable_ops or base_ops else
                "installed_unintegrated" if present else "not_detected")
         detection=("executable" if path else "python_module" if module_evidence else
-                   "npm_package" if npm_evidence else "ferrari_container" if container_evidence else None)
+                   "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
+                   "ferrari_cpu_source" if source_evidence else None)
         return {"id":tool,"category":entry["category"],"source":source,"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,

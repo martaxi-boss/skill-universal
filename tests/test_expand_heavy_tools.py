@@ -43,6 +43,37 @@ class HeavyToolsTests(unittest.TestCase):
             self.assertEqual(len(result["expansion"]["heavy"]["items"]),2)
             self.assertEqual(result["expansion"]["heavy"]["items"][1]["status"],"PREPARED_NEEDS_DOCKER")
 
+    def test_comfyui_source_is_detected_only_when_cpu_smoke_passed(self):
+        with tempfile.TemporaryDirectory() as d:
+            home=Path(d)
+            root=home/"tools/comfyui-v0.43.0"
+            root.mkdir(parents=True)
+            (root/"main.py").write_text("# Ferrari-owned ComfyUI source")
+            venv=home/".runtime/venvs/extended/comfyui/bin"
+            venv.mkdir(parents=True)
+            (venv/"python").write_text("# venv")
+            report=home/".runtime/expansion-33/heavy.json"
+            report.parent.mkdir(parents=True)
+            report.write_text(json.dumps({"project":"motor-ferrari","items":[
+                {"id":"comfyui","status":"PENDING_CPU_TORCH"}]}))
+            with patch.object(tool_runtime,"HOME",home):
+                self.assertIsNone(tool_runtime.ferrari_source_presence("comfyui"))
+                report.write_text(json.dumps({"project":"motor-ferrari","items":[
+                    {"id":"comfyui","status":"INSTALLED_CPU_NO_MODELS"}]}))
+                with patch("engine.tool_runtime.shutil.which",return_value="/old-rea/comfyui"):
+                    self.assertIsNone(tool_runtime.executable("comfyui","comfyui"))
+                result=tool_runtime.inventory()
+                found=next(x for x in result["programs"] if x["id"]=="comfyui")
+                self.assertTrue(found["installed"])
+                self.assertEqual(found["status"],"installed_unintegrated")
+                self.assertEqual(found["detection"],"ferrari_cpu_source")
+                self.assertEqual(found["path"],str(root))
+                self.assertFalse(found["ecosystem_evidence"]["model_inference_tested"])
+            # The old REA must not count as a private ComfyUI runtime.
+            (root/"main.py").unlink()
+            with patch.object(tool_runtime,"HOME",home):
+                self.assertIsNone(tool_runtime.ferrari_source_presence("comfyui"))
+
     def test_called_in_ferrari_installer_only(self):
         src=(ROOT/"install/vps-delivery.sh").read_text()
         self.assertEqual(src.count("bash install/vps-expand-heavy.sh"),1)
