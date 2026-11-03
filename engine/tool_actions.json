@@ -720,6 +720,80 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "krita-png-jpeg",
+      "tool": "krita",
+      "binary": "krita",
+      "category": "creative",
+      "keywords": [
+        "krita png para jpeg",
+        "exportar imagem krita",
+        "krita jpg"
+      ],
+      "extensions": [
+        ".png"
+      ],
+      "mode": "file",
+      "artifact": "krita-export.jpg",
+      "args": [
+        "{input}",
+        "--export",
+        "--export-filename",
+        "{output}"
+      ]
+    },
+    {
+      "id": "darktable-photo-jpeg",
+      "tool": "darktable",
+      "binary": "darktable-cli",
+      "category": "creative",
+      "keywords": [
+        "darktable fotografia",
+        "processar imagem darktable",
+        "darktable jpeg"
+      ],
+      "extensions": [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".tif",
+        ".tiff",
+        ".dng",
+        ".nef",
+        ".cr2"
+      ],
+      "mode": "file",
+      "artifact": "darktable-export.jpg",
+      "args": [
+        "{input}",
+        "{output}",
+        "--width",
+        "960",
+        "--height",
+        "960"
+      ]
+    },
+    {
+      "id": "calibre-text-epub",
+      "tool": "calibre",
+      "binary": "ebook-convert",
+      "category": "docs",
+      "keywords": [
+        "calibre epub",
+        "texto para epub",
+        "ebook calibre",
+        "criar ebook"
+      ],
+      "extensions": [
+        ".txt"
+      ],
+      "mode": "file",
+      "artifact": "calibre-book.epub",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }
