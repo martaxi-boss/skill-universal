@@ -42,7 +42,7 @@ Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" n
 
 ## REA original MCP através da mesma Skill Ferrari
 
-Quando o commit que contém `kind=rea-mcp` estiver instalado na VPS e certificado pela Skill, um pedido pode encaminhar `tools/list` e `tools/call` diretamente para o REA privado do Ferrari, sem o projeto REA antigo ou outra Skill. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
+A release Ferrari **c5b07ed225299ad80aa2d46c28441d17f281f695** já está instalada na VPS e certificada pela Skill para pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
 
 Exemplo de inventário do REA original:
 
@@ -53,18 +53,18 @@ Exemplo de inventário do REA original:
 Exemplo de chamada de uma ferramenta **após consultar o nome e contrato em tools/list** (usar apenas para ficheiros do próprio utilizador, sem segredos no repositório público):
 
 ```json
-{"version":1,"id":"ferrari-rea-elf-20261103-002","kind":"rea-mcp","input":{"name":"sample.elf","content_base64":"f0VMRg=="},"mcp_requests":[{"method":"tools/call","params":{"name":"inspect_elf_notes","arguments":{"path":"$input"}}}]}
+{"version":1,"id":"ferrari-rea-apktool-20261103-002","kind":"rea-mcp","mcp_requests":[{"method":"tools/call","params":{"name":"inspect_apktool_client","arguments":{}}}]}
 ```
 
-O nome de ferramenta/argumentos acima é **ilustrativo**: confirmar primeiro o contrato MCP concreto. `$input` resolve para o ficheiro carregado no workspace privado do Ferrari, nunca para um caminho fornecido na ponte. O REA executa com Node, Ghidra 12.1.4, JDK25, JADX headless MCP 0.7.1 e Apktool 3.0.3 privados.
+O exemplo `inspect_apktool_client` foi **executado realmente** em [#41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160). Para ferramentas com entrada binária, incluir `input` com ficheiro **completo** codificado em base64, e usar `$input` no argumento de caminho que o schema da ferramenta pedir; o Ferrari resolve essa referência para a sua pasta privada. Não enviar um prefixo ELF incompleto como exemplo de ficheiro real. O REA executa com Node, Ghidra 12.1.4, JDK25, JADX headless MCP 0.7.1 e Apktool 3.0.3 privados.
 
-O facto de o catálogo dos dois REAs conter 229 nomes iguais foi certificado em [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353); a execução profunda isolada de Ghidra e JADX passou em [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556). **A chamada por kind=rea-mcp requer ainda certificação real ponta a ponta da versão instalada.** Não tratar a paridade de nomes como execução de todas as operações.
+O catálogo dos dois REAs contém **229 nomes iguais**, certificado em [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353); a execução profunda de Ghidra e JADX passou em [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556). **A chamada por kind=rea-mcp já foi certificada ponta a ponta para `tools/list`, `inspect_elf_notes` e `inspect_apktool_client`.** Isso não prova todas as 229 operações, nem permite apagar o REA antigo enquanto o seu workflow recebe pedidos.
 
 ## Engenharia reversa do Ferrari
 
 - REA: CLI oficial rea-agents@6.8.0 em /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/node_modules/.bin/rea; duas ações tipadas reais, rea-elf-notes e rea-android-resources. [VPS #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) PASS e [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) PASS.
 - Apktool oficial 3.0.3 privado Ferrari; ação apktool-decode-resources com ficheiro .apk produz diretório com manifesto, recursos e Smali quando presentes. Teste funcional na VPS [#41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) PASS; **a invocação remota de um APK específico pela Skill ainda não está certificada**.
-- Não usar o REA antigo ou programas globais como substitutos do REA/Apktool privados; a auditoria dos fornecedores completos do REA permanece pendente.
+- Não usar o REA antigo ou programas globais como substitutos do REA/Apktool privados; os fornecedores essenciais Ghidra e JADX têm testes PASS, mas fornecedores opcionais e 229 operações não têm cobertura integral.
 
 ## Verificações web e privacidade
 
