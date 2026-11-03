@@ -5,6 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## Ligacao OCRmyPDF proposta — 03/11/2026 (certificacao ainda em curso)
+
+O programa `ocrmypdf` ja estava instalado na VPS Ubuntu, mas o inventario da Skill [#41622654033](https://github.com/martaxi-boss/VPS/actions/runs/41622654033) detetou-o como `installed_unintegrated`. Esta alteracao **nao instala outro programa**: acrescenta a acao `ocrmypdf-searchable-pdf` ao manifesto do mesmo Ferrari para converter **PDFs digitalizados** em PDFs pesquisaveis. A entrada remota e um PDF nao confidencial com `kind=invoke`, `action=ocrmypdf-searchable-pdf` e `input` em base64. A acao deve ser anunciada como funcional apenas depois de CI, deploy e teste real da VPS com texto extraido do PDF resultante. Nao cria Skill adicional nem altera SSH ou Supervisor.
+
+
 ## Atualização de certificação externa — 03/11/2026
 
 O teste real de staging da Lowcost Europa, **feito pelo workflow do próprio projeto** e não pelo motor Ferrari, passou depois de corrigir apenas `runs-on: ubuntu-24.04` na [PR #186](https://github.com/martaxi-boss/lowcost-europa/pull/186). [Staging pós-merge #41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458): ZIP/JSON verificados, **15 checks PASS, 0 errors, 0 warnings**, 14 PNG desktop/mobile; [Django/PostgreSQL #41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466): **709 testes PASS**, [audit #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS. Fonte: [BOOTSTRAP](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Não confundir prova de staging/CI com operação `vite-build` do Ferrari nem com certificação da produção. Ferrari VPS e ponte SSH inalterados.

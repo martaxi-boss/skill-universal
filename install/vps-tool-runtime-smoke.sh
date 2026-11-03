@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==21
-assert x["callable_actions"]>=19
+assert x["registered_actions"]==22
+assert x["callable_actions"]>=22
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -52,6 +52,30 @@ python3 -m engine.ferrari invoke --action vips-image-inspect --input "$WORK/imag
 python3 -m engine.ferrari invoke --action imagemagick-webp --input "$WORK/image.png" --output "$WORK/webp"
 python3 -m engine.ferrari run --operation office-pdf --input "$WORK/office/document.docx" --output "$WORK/pdf"
 python3 -m engine.ferrari invoke --action pdftotext-layout --input "$WORK/pdf/document.pdf" --output "$WORK/pdftext"
+
+# Existing local OCRmyPDF becomes a callable Ferrari action. The source is a
+# deliberately IMAGE-ONLY PDF; Tesseract must create real searchable text.
+convert -size 950x150 xc:white -font DejaVu-Sans -fill black -pointsize 58 \
+  -gravity center -annotate +0+0 'FERRARI OCR 2026' "$WORK/ocr-scan.png"
+printf '![](ocr-scan.png)\n' > "$WORK/ocr-scan.md"
+pandoc --resource-path="$WORK" -f markdown -t docx \
+  "$WORK/ocr-scan.md" -o "$WORK/ocr-scan.docx"
+python3 -m engine.ferrari run --operation office-pdf \
+  --input "$WORK/ocr-scan.docx" --output "$WORK/ocr-source-pdf"
+scan_pdf="$(find "$WORK/ocr-source-pdf" -type f -name '*.pdf' -print -quit)"
+test -n "$scan_pdf" && test -s "$scan_pdf"
+pdftotext "$scan_pdf" "$WORK/before-ocr.txt"
+if grep -qi 'FERRARI' "$WORK/before-ocr.txt"; then
+  echo 'FERRARI_OCR_INPUT_NOT_IMAGE_ONLY' >&2; exit 5
+fi
+python3 -m engine.ferrari invoke --action ocrmypdf-searchable-pdf \
+  --input "$scan_pdf" --output "$WORK/ocr-result"
+test -s "$WORK/ocr-result/searchable.pdf"
+pdftotext "$WORK/ocr-result/searchable.pdf" "$WORK/after-ocr.txt"
+grep -qi 'FERRARI' "$WORK/after-ocr.txt"
+grep -q '2026' "$WORK/after-ocr.txt"
+echo 'FERRARI_OCRMYPDF_REAL=PASS'
+
 
 python3 - "$WORK/capture.pcap" <<'PY'
 import struct,sys

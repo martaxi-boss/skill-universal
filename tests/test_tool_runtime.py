@@ -6,16 +6,16 @@ from unittest.mock import patch
 from engine import tool_runtime, orchestrator
 
 class ToolRuntimeTests(unittest.TestCase):
-    def test_56_selected_and_21_action_specs(self):
+    def test_56_selected_and_22_action_specs(self):
         x=tool_runtime.inventory()
         self.assertEqual(x["selected"],56)
-        self.assertEqual(x["registered_actions"],21)
+        self.assertEqual(x["registered_actions"],22)
         self.assertEqual(len(x["programs"]),len(set(p["id"] for p in x["programs"])))
         self.assertTrue(any(p["id"]=="rea" for p in x["programs"]))
         self.assertTrue(any(p["id"]=="blender" for p in x["programs"]))
     def test_manifest_is_typed(self):
         x=tool_runtime.specs()
-        self.assertEqual(len(x),21)
+        self.assertEqual(len(x),22)
         self.assertTrue(all("{input}" in s["args"] for s in x.values()))
         self.assertTrue(all(s["mode"] in {"stdout","file"} for s in x.values()))
     def test_missing_binary_blocks_before_output_created(self):
@@ -78,6 +78,40 @@ class ToolRuntimeTests(unittest.TestCase):
         with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
             self.assertEqual(tool_runtime.python_module_location("opencv"),"/usr/lib/cv2.so")
         self.assertIsNone(tool_runtime.python_module_location("not-a-python-package"))
+
+    def test_existing_ocrmypdf_adapter_uses_pdf_and_no_shell(self):
+        import subprocess
+        spec=tool_runtime.specs()["ocrmypdf-searchable-pdf"]
+        self.assertEqual(spec["tool"],"ocrmypdf")
+        self.assertEqual(spec["extensions"],[".pdf"])
+        self.assertEqual(spec["mode"],"file")
+        self.assertEqual(spec["artifact"],"searchable.pdf")
+        with tempfile.TemporaryDirectory() as d:
+            source=Path(d)/"scan.pdf"
+            source.write_bytes(b"%PDF-1.4\\n")
+            output=Path(d)/"converted"
+            def record(args,**kwargs):
+                self.assertFalse(kwargs.get("shell",False))
+                self.assertEqual(args[0],"/usr/bin/ocrmypdf")
+                self.assertIn(str(source),args)
+                self.assertIn(str(output/"searchable.pdf"),args)
+                (output/"searchable.pdf").write_bytes(b"%PDF-1.4\\noutput")
+                return subprocess.CompletedProcess(args,0,b"",b"")
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/ocrmypdf"):
+                with patch.object(tool_runtime.subprocess,"run",side_effect=record):
+                    result=tool_runtime.invoke("ocrmypdf-searchable-pdf",str(source),str(output))
+            self.assertTrue(result["confirmed"])
+            self.assertEqual(result["tool"],"ocrmypdf")
+
+    def test_ocrmypdf_route_filters_pdf_and_detects_missing_executable(self):
+        with patch.object(tool_runtime,"executable",
+                          side_effect=lambda tool,binary=None: "/usr/bin/ocrmypdf" if tool=="ocrmypdf" else None):
+            found=tool_runtime.route("Criar pdf pesquisavel com ocrmypdf","/tmp/scan.pdf")
+            self.assertEqual(found["suggestions"][0]["action"],"ocrmypdf-searchable-pdf")
+            not_pdf=tool_runtime.route("Criar pdf pesquisavel com ocrmypdf","/tmp/scan.png")
+            self.assertEqual(not_pdf["suggestions"],[])
+        with patch.object(tool_runtime,"executable",return_value=None):
+            self.assertEqual(tool_runtime.route("ocrmypdf","/tmp/scan.pdf")["suggestions"],[])
 
     def test_base_operations_are_registered_separately(self):
         with patch.object(tool_runtime,"executable",return_value="/usr/bin/fake"):
