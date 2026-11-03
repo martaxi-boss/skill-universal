@@ -321,7 +321,7 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
-    if x["tool"] in {"krita","darktable","calibre"}:
+    if x["tool"] in {"krita","darktable","calibre","gimp"}:
         # Keep GUI-tool caches/config isolated to the Ferrari job output.
         # No user/global Scribus/Krita/Darktable profiles are modified.
         env=os.environ.copy()
@@ -335,6 +335,22 @@ def invoke(action,source,folder,query=None):
         if x["tool"]=="krita":
             env["QT_QPA_PLATFORM"]="offscreen"
         run_options["env"]=env
+    if x["tool"]=="gimp":
+        # GIMP 2.10 was verified headless with private Ferrari REA process
+        # capture. Build Script-Fu from bounded file paths, not user scripts.
+        def _scheme_path(path):
+            return '"' + str(path).replace("\\","\\\\").replace('"','\\"').replace("\n","\\n") + '"'
+        source=_scheme_path(inp)
+        output=_scheme_path(target)
+        expression=(
+            '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE '
+            + source + ' ' + source + '))) '
+            '(drawable (car (gimp-image-get-active-drawable image)))) '
+            '(gimp-xcf-save RUN-NONINTERACTIVE image drawable '
+            + output + ' ' + output + ') '
+            '(gimp-image-delete image))'
+        )
+        args=[exe,"-i","-n","-s","-b",expression,"-b","(gimp-quit 0)"]
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
