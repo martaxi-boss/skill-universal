@@ -10,7 +10,7 @@ SCRIPT=ROOT/"install/vps-expand-services-gui.sh"
 class ExpansionTests(unittest.TestCase):
     def test_there_are_15_missing_gui_and_two_headless_candidates(self):
         selected=ferrari.ubuntu_selection()
-        gui={x["id"] for x in selected if x["installation_tier"]=="desktop_candidate"}
+        gui={x["id"] for x in selected if x["curated_tier"]=="desktop_candidate"}
         self.assertEqual(len(gui),17)
         self.assertEqual(gui-{"blender","openscad"},
                          {"gimp","krita","kdenlive","scribus","darktable","librecad",
