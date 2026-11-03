@@ -90,6 +90,18 @@ def executable(tool,binary=None):
         if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
             return None
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
+    if tool in {"duckdb","polars"}:
+        # Only use the Ferrari venv belonging to this exact tool.
+        # venv/bin/python may be a normal interpreter symlink created by venv.
+        venv=HOME/".runtime/venvs/extended"/tool
+        py=venv/"bin/python"
+        site=venv/"lib/python3.12/site-packages"/tool
+        if (venv.is_dir() and not venv.is_symlink() and
+                venv.resolve().is_relative_to(HOME.resolve()) and
+                (venv/"pyvenv.cfg").is_file() and py.is_file() and
+                site.is_dir() and not site.is_symlink()):
+            return str(py)
+        return None
     if tool=="comfyui":
         # No executable from PATH: only Ferrari-owned CPU source is valid.
         return None
@@ -300,6 +312,15 @@ def invoke(action,source,folder,query=None):
         env["XDG_CONFIG_HOME"]=str(HOME/".runtime/rea-config")
         env["XDG_DATA_HOME"]=str(HOME/".runtime/rea-data")
         run_options["env"]=env
+    if x["tool"] in {"duckdb","polars"}:
+        # -m engine.data_profiles is an existing Ferrari module run inside
+        # its own Python environment, never another project's packages.
+        env=os.environ.copy()
+        env.pop("PYTHONPATH",None)
+        env.pop("PYTHONHOME",None)
+        env["PYTHONNOUSERSITE"]="1"
+        run_options["env"]=env
+        run_options["cwd"]=str(ROOT)
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
