@@ -16,7 +16,11 @@
 3. **Execução MCP real de `inspect_elf_notes`:** [#41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118), `tools/call` num ELF64 sintético de 320 bytes enviado pela Skill. `report.json.status=completed`, `isError` ausente, `structuredContent` válido, SHA-256 `379cd93d02f961ce6e2d9952fb6b2ae3a6ac8d0945e3068181d5379592fa9c67`, GNU build-id exato `112233445566778899aabbccddeeff0011223344`.
 4. **Execução MCP real de `inspect_apktool_client`:** [#41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160), `tools/call`, ZIP e relatório `completed`. Resultado structuredContent reconhece fornecedor `apktool`, versão `3.0.3`, caminho privado `.../motor-ferrari/tools/apktool-3.0.3/bin/apktool`.
 
-**As quatro provas são independentes de invocação do REA FINAL**. A Skill usa a ponte GitHub existente (workflow `ferrari-skill-request.yml`), sem novo coordenador, nova Skill ou SSH próprio.
+5. **Captura de processo, função efetivamente chamada pelo projeto antigo:** [#41718385142](https://github.com/martaxi-boss/VPS/actions/runs/41718385142), `tools/call capture_process_scenario` sobre `/usr/bin/printf` (teste sintético), retorno real `exit.code=0`, saída `Ferrari-REA-MCP-process-check`, PTY `node-pty`, limpeza temporária PASS. O REA FINAL possui essa mesma ferramenta no seu último pedido observado; **não executámos na Ferrari os comandos concretos desse pedido antigo**.
+
+**Migração de pedidos MCP sem ponte adicional:** a branch antiga `rea/one-skill-bridge-20261023` recebe JSON com `{request_id,mcp_requests}`; a Skill Ferrari única recebe `{version:1,id,kind:"rea-mcp",mcp_requests}`. As mensagens `tools/list` e `tools/call` podem conservar método, nome e argumentos desde que cumpram o contrato atual e os caminhos de entrada sejam reencaminhados para o workspace privado Ferrari com `$input`. A ferramenta `capture_process_scenario` já passou um cenário benigno. **Não modificar ou redirecionar automaticamente os pedidos antigos enquanto ainda forem usados.**
+
+**As cinco provas são independentes de invocação do REA FINAL**. A Skill usa a ponte GitHub existente (workflow `ferrari-skill-request.yml`), sem novo coordenador, nova Skill ou SSH próprio.
 
 ## Higienização e duplicações
 
