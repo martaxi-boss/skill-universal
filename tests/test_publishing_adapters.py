@@ -74,6 +74,7 @@ class PublishingAdapterTests(unittest.TestCase):
                 self.assertIn(str(out/"calibre-book.epub"),args)
                 self.assertEqual(kwargs["env"]["CALIBRE_CONFIG_DIRECTORY"],
                                  kwargs["env"]["XDG_CONFIG_HOME"])
+                self.assertEqual(kwargs["env"]["QT_QPA_PLATFORM"],"offscreen")
                 (out/"calibre-book.epub").write_bytes(b"PK\x03\x04"+b"\x00"*80)
                 return subprocess.CompletedProcess(args,0,b"",b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/ebook-convert"):

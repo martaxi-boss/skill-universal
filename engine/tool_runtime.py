@@ -335,7 +335,8 @@ def invoke(action,source,folder,query=None):
             env[field]=str(directory)
         if x["tool"]=="calibre":
             env["CALIBRE_CONFIG_DIRECTORY"]=env["XDG_CONFIG_HOME"]
-        if x["tool"]=="krita":
+        if x["tool"] in {"calibre","krita"}:
+            # Both Calibre ebook-convert and Krita load Qt even in CLI mode.
             env["QT_QPA_PLATFORM"]="offscreen"
         run_options["env"]=env
     try:

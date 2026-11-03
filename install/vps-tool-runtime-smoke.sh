@@ -293,15 +293,31 @@ printf '# Ferrari\n\nPublicacao de teste independente.\n' > "$WORK/phase2-book.m
 convert -size 160x100 xc:lightblue -fill navy -draw 'rectangle 16,16 110,80' \
   "$WORK/phase2-photo.jpg"
 
-python3 -m engine.ferrari invoke --action calibre-md-epub \
+# Diagnose all three real applications even if one is unavailable.
+# Fail the deployment after collecting errors; never claim a partial PASS.
+phase2_failed=0
+if ! python3 -m engine.ferrari invoke --action calibre-md-epub \
   --input "$WORK/phase2-book.md" --output "$WORK/calibre-epub" \
-  > "$WORK/phase2-calibre-action.json"
-python3 -m engine.ferrari invoke --action darktable-jpeg-tiff \
+  > "$WORK/phase2-calibre-action.json"; then
+  echo 'FERRARI_PHASE2_CALIBRE_EXECUTION=FAIL' >&2
+  phase2_failed=1
+fi
+if ! python3 -m engine.ferrari invoke --action darktable-jpeg-tiff \
   --input "$WORK/phase2-photo.jpg" --output "$WORK/darktable-tiff" \
-  > "$WORK/phase2-darktable-action.json"
-python3 -m engine.ferrari invoke --action krita-image-png \
+  > "$WORK/phase2-darktable-action.json"; then
+  echo 'FERRARI_PHASE2_DARKTABLE_EXECUTION=FAIL' >&2
+  phase2_failed=1
+fi
+if ! python3 -m engine.ferrari invoke --action krita-image-png \
   --input "$WORK/phase2-photo.jpg" --output "$WORK/krita-png" \
-  > "$WORK/phase2-krita-action.json"
+  > "$WORK/phase2-krita-action.json"; then
+  echo 'FERRARI_PHASE2_KRITA_EXECUTION=FAIL' >&2
+  phase2_failed=1
+fi
+if ((phase2_failed)); then
+  echo 'FERRARI_PHASE2_APPLICATIONS_NOT_CERTIFIED' >&2
+  exit 7
+fi
 
 python3 - "$WORK" <<'PY_PHASE2'
 import json,sys,zipfile
