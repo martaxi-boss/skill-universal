@@ -150,7 +150,7 @@ def inventory():
     # inventory. These are verified package states, not execution certificates.
     expansion={}
     reports_dir=HOME/".runtime/expansion-33"
-    for group,filename in (("services_gui","services-gui.json"),("external","external.json")):
+    for group,filename in (("services_gui","services-gui.json"),("external","external.json"),("heavy","heavy.json")):
         report=reports_dir/filename
         if report.is_file() and not report.is_symlink() and report.stat().st_size<=131072:
             try:
