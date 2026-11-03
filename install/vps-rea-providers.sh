@@ -38,7 +38,7 @@ if [[ ! -f "$JAR" ]]; then
 fi
 test ! -L "$JAR"
 echo "$JAR_SHA  $JAR" | sha256sum -c -
-unzip -tq "$JAR" >/dev/null
+"$JDK/bin/jar" tf "$JAR" > "$WORK/jadx-contents.txt"\ngrep -qE "[.]class$" "$WORK/jadx-contents.txt"
 echo 'FERRARI_REA_JADX_BRIDGE_PIN=PASS'
 
 if [[ ! -x "$GHIDRA/support/analyzeHeadless" ]]; then
