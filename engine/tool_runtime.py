@@ -26,6 +26,7 @@ BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
 ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
+          "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
           "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo"}
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
@@ -73,11 +74,9 @@ def specs():
     return result
 
 def executable(tool,binary=None):
-    # Ferrari replaces REA; its executors must never depend on that project.
-    if tool=="rea":
-        return None
+    # Ferraris REA is a Ferrari-owned npm installation, never a PATH/system REA.
     pinned=ISOLATED.get(tool)
-    if tool=="apktool":
+    if tool in {"rea","apktool"}:
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
