@@ -46,7 +46,7 @@ def profile(library: str, source: Path) -> dict:
             relation = connection.read_csv(str(source))
             columns = [{"name": name, "type": str(dtype)}
                        for name, dtype in zip(relation.columns, relation.types)]
-            total_rows = int(relation.aggregate("count(*)").fetchone()[0])
+            total_rows = int(relation.aggregate("count(*)").fetchall()[0][0])
             sample_rows = relation.limit(5).fetchall()
             sample = [dict(zip(relation.columns, row)) for row in sample_rows]
         finally:
