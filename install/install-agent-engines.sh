@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Optional isolated npm engines for Ubuntu/Linux. Preview first; --apply is explicit.
 set -euo pipefail
-PROFILE=all; APPLY=0
+PROFILE=ruflo; APPLY=0
 while (($#)); do
   case "$1" in
     --profile) PROFILE="${2:?missing value}"; shift 2;;
