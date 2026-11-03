@@ -88,7 +88,8 @@ done
 # SHA-256 values are from each upstream GitHub release asset.
 install_binary() {
   local id="$1" version="$2" url="$3" expected="$4" suffix="$5" verify="$6"
-  local dest="$ROOT/tools/$id-$version" file="$dest/archive.$suffix"
+  local dest="$ROOT/tools/$id-$version"
+  local file="$dest/archive.$suffix"
   if ! enough_disk; then record "$id" PENDING_DISK; return; fi
   mkdir -p "$dest"
   if [[ ! -s "$file" ]]; then

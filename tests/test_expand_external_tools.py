@@ -68,6 +68,12 @@ class ExternalProgramsTests(unittest.TestCase):
                 with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
                     self.assertIsNone(tool_runtime.executable("valkey","valkey-server"))
 
+    def test_binary_archive_path_is_initialized_after_directory(self):
+        source=SCRIPT.read_text()
+        self.assertIn('local dest="$ROOT/tools/$id-$version"',source)
+        self.assertIn('local file="$dest/archive.$suffix"',source)
+        self.assertNotIn('local dest="$ROOT/tools/$id-$version" file=',source)
+
     def test_official_current_linux_binaries_are_pinned(self):
         source=SCRIPT.read_text()
         self.assertIn("typst-x86_64-unknown-linux-musl.tar.xz",source)
