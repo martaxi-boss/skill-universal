@@ -190,9 +190,11 @@ def browser_discovery(home=FERRARI_HOME):
         for folder in islice(root.iterdir(), 40):
             if not _is_dir(folder):
                 continue
-            for relative in ("chrome-linux/headless_shell", "chrome-linux64/chrome",
-                             "chrome-linux/headless_shell", "chrome-linux/headless_shell",
-                             "chrome-linux/headless_shell"):
+            if not re.fullmatch(r"(chromium|chromium_headless_shell|firefox)-[0-9]+", folder.name):
+                continue
+            for relative in ("chrome-linux/headless_shell", "chrome-linux/chrome",
+                             "chrome-linux64/chrome",
+                             "chrome-headless-shell-linux64/chrome-headless-shell"):
                 # Do not traverse outside the Ferrari browser cache.
                 candidate = folder / relative
                 if candidate.is_file() and not candidate.is_symlink():
