@@ -1,6 +1,20 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: Fase 6, teclado e controlos reais
+## Certificação mais recente — 03/11/2026: Lowcost Europa, código frontend real
+
+**Ferrari ativo na VPS:** release `ec4dc5045a034e3fbbbcfe3477e1641e80714262`, [PR #10](https://github.com/martaxi-boss/skill-universal/pull/10) integrada. [Deploy real VPS #41601238265](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) **SUCCESS, 99 testes PASS**, com `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium e vista móvel PASS.
+
+**Teste novo com código real, sem escrever na Lowcost:** fonte [martaxi-boss/lowcost-europa](https://github.com/martaxi-boss/lowcost-europa), commit `388860c6a167686a378b89f4282304bce89c25de`; usados o **JavaScript `catalog-explorer.js` e CSS `storefront.css` originais** e a cópia dos controlos HTML, com cinco ofertas fictícias num fixture estático. O Chromium real testou **17/17 comportamentos PASS**: pesquisa com acentos, filtros de equipamento/preço, ordenação de moedas, comparar até três, não aceitar quarta, limpar filtros/comparação. Zero erros JS, consola ou pedidos externos; captura desktop 1280×720 **868 570 bytes** e móvel CSS 390×844 **572 046 bytes**, zero overflow, spotcheck HTML sem avisos.
+
+**Incidente corrigido com prova:** [primeiro pedido da Skill #41600631713](https://github.com/martaxi-boss/VPS/actions/runs/41600631713) obteve 17 PASS mas `button_space=finding`: o botão verdadeiro «Limpar filtros» move foco para a pesquisa após Enter; Ferrari testava Space no campo errado. Foi corrigido apenas `engine/browser_check.js` para refocar o botão entre as duas provas independentes. **[Repetição exata da Skill #41601466546](https://github.com/martaxi-boss/VPS/actions/runs/41601466546) SUCCESS**, `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_END_TO_END=PASS`, ZIP conferido: `Tab`, `Shift+Tab`, Enter e Space PASS, **`interactions.findings=[]`**. Links/formulários no fixture não testados (`not_requested`). Estes resultados não provam funcionamento Django/PostgreSQL, staging, produção, compras, integrações nem aplicação completa.
+
+**Higienização Ferrari PASS:** removida só a release antiga `0196f37a...`, preservadas a ativa `ec4dc5045...` e a anterior certificada `9277a56b9...`. Espaço libertado **2 539 520 bytes (~2,42 MiB)**; **21,31 GiB livres**; `outside_ferrari_touched=false`. Nenhum outro projeto foi modificado, nem SSH, Supervisor, nova Skill, operação, camada, coordenador ou novo programa instalado. Catálogos estáveis: 56 candidatos Ubuntu, 23 detetados, 49 combinados; 12 operações base e 21 ações externas. [Relatório e evidências detalhados](docs/TESTE_REAL_LOWCOST_EUROPA_20261103.md).
+
+**Próximo passo:** quando for necessário validar a aplicação Lowcost completa, usar os workflows de CI/Django/PostgreSQL e o browser QA de staging que já existem no próprio projeto; não confundir esta prova estática com backend ou produção.
+
+---
+
+## Histórico — 03/11/2026: Fase 6, teclado e controlos reais
 
 **Ferrari ativo na VPS Ubuntu:** release `9277a56b9b57c87b8b4e3dfbba08f4536add3625`. [PR #9](https://github.com/martaxi-boss/skill-universal/pull/9) integrada; [CI #41598406165](https://github.com/martaxi-boss/skill-universal/actions/runs/41598406165) e [CI PR #41598460475](https://github.com/martaxi-boss/skill-universal/actions/runs/41598460475) SUCCESS. **[Deploy VPS #41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120)** SUCCESS, **99 testes PASS na VPS**, marcadores `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium real, viewport responsivo, spotcheck HTML e geometria IFC todos PASS.
 
