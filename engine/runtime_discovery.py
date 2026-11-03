@@ -23,7 +23,7 @@ PYTHON_MODULES = {
     "ifcopenshell": "ifcopenshell", "bpy": "bpy",
 }
 NPM_PACKAGES = {
-    "rea": ("rea",), "ruflo": ("ruflo",),
+    "ruflo": ("ruflo",),
     "nextjs": ("next",), "vite": ("vite",),
     "tailwind": ("tailwindcss",), "bootstrap": ("bootstrap",),
     "playwright": ("playwright", "@playwright/test"),
