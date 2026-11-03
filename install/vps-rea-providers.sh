@@ -5,6 +5,16 @@ set -Eeuo pipefail
 . /etc/os-release
 test "$ID" = ubuntu && test "$VERSION_ID" = 24.04 && test "$(uname -m)" = x86_64
 ROOT="$HOME/.local/share/motor-ferrari"
+# Historical Ferrari path may be a symlink after physical project migration.
+# Accept only the exact independent Ferrari repository directory.
+if [[ -L "$ROOT" ]]; then
+  [[ "$(realpath -e "$ROOT")" == "/srv/projects/skill-universal" ]] &&
+    [[ -d "/srv/projects/skill-universal" ]] &&
+    [[ ! -L "/srv/projects/skill-universal" ]] || {
+      echo 'FERRARI_PROJECT_ALIAS_INVALID' >&2; exit 6;
+    }
+  ROOT="/srv/projects/skill-universal"
+fi
 TOOLS="$ROOT/tools"
 REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"
 NODE="$ROOT/runtimes/node-22.23.4/bin/node"
