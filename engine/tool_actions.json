@@ -531,6 +531,35 @@
         "-z",
         "io,stat,0"
       ]
+    },
+    {
+      "id": "ocrmypdf-searchable-pdf",
+      "tool": "ocrmypdf",
+      "binary": "ocrmypdf",
+      "category": "docs",
+      "keywords": [
+        "pdf pesquisavel",
+        "ocr pdf",
+        "digitalizar pdf",
+        "ocrmypdf",
+        "texto pesquisavel"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "file",
+      "artifact": "searchable.pdf",
+      "args": [
+        "--skip-text",
+        "--output-type",
+        "pdf",
+        "--optimize",
+        "0",
+        "--jobs",
+        "1",
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }
