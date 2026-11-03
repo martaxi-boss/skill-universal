@@ -1,5 +1,17 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+## Certificação mais recente — 03/11/2026: IFC e Vite funcionais
+
+**Release ativa na VPS:** `29e016885f01c78941c37e4a147e207a1fc62f05`. [Instalação real #41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS, **87 testes PASS na VPS** e marcadores `FERRARI_IFC_SEMANTIC_REAL=PASS`, `FERRARI_VITE_BUILD_REAL=PASS`. PR [#2](https://github.com/martaxi-boss/skill-universal/pull/2) integrada. IfcOpenShell `0.9.0.post1` no virtualenv independente do Ferrari, Vite `8.3.5` no npm próprio e Node `22.23.4` isolado. Nenhum SSH, Supervisor, programa global ou outro projeto alterado.
+
+**Ponta a ponta da Skill com ficheiros reais:** [IFC #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002) SUCCESS — `ifc-report.json` confirmou IFC4, `IfcProject=1`, `IfcWall=1`; [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) SUCCESS — `dist/index.html` e CSS/JS gerados. Em ambos, `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_END_TO_END=PASS` e ZIP verificado. [Inventário Skill #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593) SUCCESS.
+
+**Inventário atual medido:** 56 selecionados Ubuntu, **22/56 detetados**, 34 não detetados, **48 programas detetados nos catálogos combinados**; 12 operações base do Ferrari, 21 ações externas tipadas (sem alterar o seu catálogo). As novas operações são `ifc-summary` e `vite-build`. IfcOpenShell é entrada auxiliar, e Vite é o novo selecionado encontrado; não contar IfcOpenShell como 23.º da shortlist. **Limites:** inventário semântico IFC não substitui validação geométrica/estrutural/IDS; build Vite certificou projeto web estático pequeno, não Next.js, backend nem browser Playwright. FreeCAD e Playwright continuam não detetados.
+
+**Referência desta fase:** [docs/CERTIFICACAO_IFC_VITE_20261103.md](docs/CERTIFICACAO_IFC_VITE_20261103.md). **A única Skill Ferrari continua válida** pelo mesmo protocolo `kind=operation` e o mesmo transporte. Não criar uma nova Skill nem instalar indiscriminadamente aplicações gráficas, serviços ou contentores.
+
+---
+
 ## Certificação mais recente — 03/11/2026: Python, npm, contentores
 
 **Estado atual certificado:** Motor Ferrari `1b3e232969c89801e8a0680d8ea751a536a53ce5` instalado na VPS Ubuntu, [entrega #41554557002](https://github.com/martaxi-boss/VPS/actions/runs/41554557002) SUCCESS com **79 testes PASS na VPS**. O [pedido real pela Skill #41554751046](https://github.com/martaxi-boss/VPS/actions/runs/41554751046) terminou `FERRARI_SKILL_END_TO_END=PASS` e devolveu `inventory.json` dentro de ZIP. CI do motor [#41554507978](https://github.com/martaxi-boss/skill-universal/actions/runs/41554507978) SUCCESS. A PR #1 foi integrada.
@@ -13,7 +25,7 @@
 ---
 
 **Documento canónico de continuidade do projeto.**
-**Atualizado:** 2026-11-02. **Repositório exclusivo:** `martaxi-boss/skill-universal`.
+**Atualizado:** 2026-11-03. **Repositório exclusivo:** `martaxi-boss/skill-universal`.
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
 **Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
 
