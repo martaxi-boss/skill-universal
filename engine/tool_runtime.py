@@ -23,7 +23,7 @@ HOME=Path.home()/".local/share/motor-ferrari"
 BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
           "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
-          "valkey":"valkey-server","ansible":"ansible","godot":"godot3",
+          "valkey":"valkey-server","ansible":"ansible","godot":"godot",
           "openshot":"openshot-qt","synfig":"synfigstudio"}
 ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "prometheus":HOME/"tools/ferrari-services/prometheus/usr/bin/prometheus",
