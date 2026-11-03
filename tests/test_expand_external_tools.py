@@ -75,6 +75,11 @@ class ExternalProgramsTests(unittest.TestCase):
         self.assertIn('cat > "$out/bin/valkey-server"',script)
         self.assertIn('export LD_LIBRARY_PATH=',script)
         self.assertIn("FERRARI_VALKEY_EXTERNAL_BINARY_FORBIDDEN",script)
+        self.assertIn("FERRARI_PROJECT_ALIAS_INVALID",script)
+        self.assertIn('ROOT="/srv/projects/skill-universal"',script)
+        self.assertIn('[[ ! -L "/srv/projects/skill-universal" ]]',script)
+        self.assertLess(script.index('ROOT="/srv/projects/skill-universal"'),
+                        script.index('REPORT="$ROOT/.runtime/expansion-33"'))
         self.assertNotIn("sudo -n apt-get install -y liblzf1",script)
 
     def test_binary_archive_path_is_initialized_after_directory(self):
