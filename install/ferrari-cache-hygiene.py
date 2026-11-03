@@ -13,6 +13,7 @@ import subprocess
 import sys
 
 RELEASE = re.compile(r"^[0-9a-f]{40}$")
+PROJECT_ROOT = Path("/srv/projects/skill-universal")
 
 
 def _checked_directory(p: Path, allow_missing: bool = False) -> bool:
@@ -93,6 +94,13 @@ def _allocated_size(directory: Path) -> int:
 
 def audit(root: Path, apply: bool = False) -> dict:
     root = Path(root)
+    if root.is_symlink():
+        alias = Path.home() / ".local/share/motor-ferrari"
+        if (root != alias or not PROJECT_ROOT.is_dir() or
+                PROJECT_ROOT.is_symlink() or
+                root.resolve(strict=True) != PROJECT_ROOT):
+            raise RuntimeError("Ferrari cache root alias is outside isolated project")
+        root = PROJECT_ROOT
     release = _runtime_state(root)
     cache = root / ".runtime/npm-cache/_cacache"
     present = _no_cache_symlinks(cache)
