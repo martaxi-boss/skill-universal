@@ -52,8 +52,7 @@ class FerrariDataDesignAdapters(unittest.TestCase):
             def aggregate(self, expr):
                 if expr != "count(*)":
                     raise AssertionError("Unexpected query")
-                return self
-            def fetchone(self): return (2,)
+                return SimpleNamespace(fetchall=lambda: [(2,)])
             def limit(self, n):
                 if n != 5: raise AssertionError("Bad sample size")
                 return self
