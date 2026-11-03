@@ -274,7 +274,10 @@ for tool in ("duckdb","polars"):
     assert [c["name"] for c in doc["columns"]]==["country","orders","revenue"],doc
     assert len(doc["sample"])==3 and doc["sample"][0]["country"]=="Portugal",doc
     assert doc.get("library_version"),doc
-    print("FERRARI_"+tool.upper()+"_CSV_REAL=PASS")
+    if tool=="duckdb":
+        print("FERRARI_DUCKDB_CSV_REAL=PASS")
+    else:
+        print("FERRARI_POLARS_CSV_REAL=PASS")
 png=root/"inkscape-png/inkscape.png"
 assert png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n") and png.stat().st_size>100,png
 print("FERRARI_INKSCAPE_SVG_PNG_REAL=PASS")
