@@ -122,14 +122,22 @@ class FerrariProfessionalTests(unittest.TestCase):
                 else:
                     self.assertTrue(str(args[1]).endswith("engine/browser_check.js"))
                     Path(args[-2]).write_bytes(b"PNG" * 70)
-                    Path(args[-1]).write_text(json.dumps({"status":"passed","browser_version":"test"}))
+                    Path(args[-2]).with_name("browser-mobile.png").write_bytes(b"PNG" * 80)
+                    Path(args[-1]).write_text(json.dumps({
+                        "status":"passed","browser_version":"test",
+                        "mobile":{"viewport":{"width":390,"height":844},
+                                  "horizontal_overflow_px":0,
+                                  "spotcheck_status":"clear","findings":[]}
+                    }))
             with patch.object(professional_tools,"vite_available",return_value=True):
                 with patch.object(professional_tools,"browser_available",return_value=True):
                     with patch.object(professional_tools,"VITE",fake/"bin/vite.js"):
                         with patch.object(professional_tools,"_run",side_effect=execute) as run:
                             _, result=professional_tools.vite_build(source,root/"out")
             self.assertEqual(run.call_count,2)
-            self.assertEqual(len(result),4)
+            self.assertEqual(len(result),5)
+            self.assertGreater((root/"out/browser-mobile.png").stat().st_size,100)
+            self.assertEqual(json.loads((root/"out/browser-check.json").read_text())["mobile"]["viewport"]["width"],390)
             self.assertEqual(json.loads((root/"out/vite-build.json").read_text())["browser_test"]["status"],"passed")
 
     def test_browser_script_blocks_external_network_without_http_server(self):
@@ -137,6 +145,12 @@ class FerrariProfessionalTests(unittest.TestCase):
         self.assertIn('context.route("**/*"',source)
         self.assertIn('ferrari.invalid',source)
         self.assertIn('data.blocked_external.push',source)
+        self.assertIn('page.setViewportSize({width: 390, height: 844})',source)
+        self.assertIn('"browser-mobile.png"',source)
+        self.assertIn('horizontal_overflow_px',source)
+        self.assertIn('images_missing_alt',source)
+        self.assertIn('fields_missing_label',source)
+        self.assertIn('not actual mobile-device emulation',source)
         self.assertNotIn('spawn(',source)
         installer=(professional_tools.ROOT/"install/vps-browser-headless.sh").read_text()
         self.assertIn("--only-shell",installer)

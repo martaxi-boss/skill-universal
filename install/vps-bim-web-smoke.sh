@@ -35,7 +35,7 @@ python3 - "$WORK/project.zip" <<'PY'
 import sys
 from zipfile import ZipFile,ZIP_DEFLATED
 with ZipFile(sys.argv[1],"w",ZIP_DEFLATED) as z:
-    z.writestr("index.html", '<!doctype html><html><head><meta charset="utf-8"></head><body><h1 id="app">Ferrari Vite</h1><script type="module" src="/src/main.js"></script></body></html>')
+    z.writestr("index.html", '<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1 id="app">Ferrari Vite</h1><script type="module" src="/src/main.js"></script></body></html>')
     z.writestr("src/main.js", 'import "./style.css"; document.querySelector("#app").dataset.ready="yes";')
     z.writestr("src/style.css", '#app { color: rebeccapurple; }')
 PY
@@ -74,6 +74,18 @@ assert not browser["blocked_external"] and not browser["page_errors"] and not br
 assert (p/"web-result/browser-screenshot.png").stat().st_size>200,browser
 assert build["browser_test"]["status"]=="passed",build
 print("FERRARI_VITE_BROWSER_REAL=PASS")
+mobile=browser["mobile"]
+assert mobile["viewport"]=={"width":390,"height":844},mobile
+assert mobile["horizontal_overflow_px"]==0,mobile
+assert mobile["viewport_meta_present"] is True,mobile
+assert mobile["html_lang"]=="pt",mobile
+assert mobile["headings_found"]>=1,mobile
+assert mobile["demo_js_ready"]=="yes",mobile
+assert mobile["spotcheck_status"]=="clear",mobile
+assert mobile["findings"]==[],mobile
+assert (p/"web-result/browser-mobile.png").stat().st_size>200,mobile
+print("FERRARI_VITE_RESPONSIVE_REAL=PASS")
+print("FERRARI_BROWSER_A11Y_SPOTCHECK_REAL=PASS")
 inv=json.loads((p/"inventory.json").read_text())
 assert inv["registered_actions"]==21
 for name,expected in (("ifcopenshell","ifc-summary"),("vite","vite-build")):

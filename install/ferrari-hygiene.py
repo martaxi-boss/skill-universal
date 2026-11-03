@@ -43,7 +43,7 @@ def clean(apply=False):
         all_dirs.append(item)
     # Keep active plus the latest 93-test VPS-certified fallback (run 41558189146).
     # The former 2026-11-02 fallback is obsolete; never delete this verified backup.
-    fallback_sha="aefd8bb156f95e47c5a90b2a5d96db8d26f94283"
+    fallback_sha="13c4399257cd19496f378ad3f15cd1ebe877977b"
     fallback=release_root/fallback_sha
     keep={active.name}
     if fallback in all_dirs:

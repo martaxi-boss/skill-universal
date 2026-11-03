@@ -85,9 +85,66 @@ async function main() {
     await page.screenshot({path: screenshot, fullPage: true, timeout: 15000});
     if (fs.statSync(screenshot).size < 100) throw new Error("Empty screenshot");
     data.screenshot_bytes = fs.statSync(screenshot).size;
+
+    // Responsive CSS viewport check, using the SAME browser and page.
+    // This does not claim Android device emulation or WCAG certification.
+    await page.setViewportSize({width: 390, height: 844});
+    const mobile = await page.evaluate(() => {
+      const elements = selector => [...document.querySelectorAll(selector)];
+      const named = el => Boolean(
+        (el.getAttribute("aria-label") || "").trim() ||
+        (el.getAttribute("aria-labelledby") || "").trim() ||
+        (el.textContent || "").trim() ||
+        (el.getAttribute("title") || "").trim() ||
+        (el.querySelector("img[alt]")?.getAttribute("alt") || "").trim()
+      );
+      const hasLabel = el => Boolean(
+        (el.getAttribute("aria-label") || "").trim() ||
+        (el.getAttribute("aria-labelledby") || "").trim() ||
+        el.labels?.length || el.closest("label")
+      );
+      const width = Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0);
+      return {
+        viewport_meta_present: Boolean(document.querySelector('meta[name="viewport"]')),
+        horizontal_overflow_px: Math.max(0, width - document.documentElement.clientWidth),
+        html_lang: document.documentElement.getAttribute("lang") || "",
+        headings_found: elements("h1,h2,h3,h4,h5,h6").length,
+        images_missing_alt: elements("img:not([alt])").length,
+        buttons_missing_name: elements("button,[role=button]").filter(el => !named(el)).length,
+        links_missing_name: elements("a[href]").filter(el => !named(el)).length,
+        fields_missing_label: elements("input:not([type=hidden]),select,textarea").filter(el => !hasLabel(el)).length,
+      };
+    });
+    mobile.viewport = {width: 390, height: 844};
+    mobile.mode = "CSS viewport resize; not actual mobile-device emulation";
+    mobile.demo_js_ready = await page.locator("#app").count() ?
+      await page.locator("#app").getAttribute("data-ready") : null;
+    mobile.findings = [];
+    if (!mobile.viewport_meta_present) mobile.findings.push("No viewport meta tag");
+    if (!mobile.html_lang.trim()) mobile.findings.push("Missing HTML lang");
+    if (mobile.horizontal_overflow_px > 0) mobile.findings.push("Horizontal overflow at 390px viewport");
+    for (const [field, label] of [
+      ["images_missing_alt", "Images missing alt attribute"],
+      ["buttons_missing_name", "Buttons missing accessible name"],
+      ["links_missing_name", "Links missing accessible name"],
+      ["fields_missing_label", "Form fields missing label"],
+    ]) {
+      if (mobile[field]) mobile.findings.push(label + ": " + mobile[field]);
+    }
+    const mobileScreenshot = path.join(path.dirname(screenshot), "browser-mobile.png");
+    await page.screenshot({path: mobileScreenshot, fullPage: true, timeout: 15000});
+    if (fs.statSync(mobileScreenshot).size < 100) throw new Error("Empty mobile screenshot");
+    mobile.screenshot_bytes = fs.statSync(mobileScreenshot).size;
+    mobile.spotcheck_status = mobile.findings.length ? "findings" : "clear";
+    data.mobile = mobile;
+
+    // Diagnostics are reported even when a page has usability findings;
+    // passing here means the browser executed, not that WCAG was certified.
     data.status = data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
     fs.writeFileSync(reportPath, JSON.stringify(data, null, 2) + "\n", {mode: 0o600});
-    if (data.status !== "passed") throw new Error("Site attempted external network requests");
+    if (data.status !== "passed" || data.page_errors.length || data.console_errors.length) {
+      throw new Error("Browser test detected blocked requests or page errors");
+    }
     await context.close();
   } finally {
     if (browser) await browser.close();
