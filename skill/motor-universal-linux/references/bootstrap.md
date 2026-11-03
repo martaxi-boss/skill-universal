@@ -4,7 +4,7 @@
 
 ## Arquitetura estável
 
-Uma Skill Ferrari → conector GitHub autenticado → workflow exclusivo Ferrari em `martaxi-boss/VPS` → SSH existente → Motor Ferrari isolado na VPS Ubuntu → ZIP e relatório. A IA orienta; o motor e os executores fazem o trabalho. Não alterar ponte SSH, Supervisor ou outros projetos. REA e Ruflo são fornecedores opcionais, não o coordenador.
+Uma Skill Universal Ferrari → conector GitHub autenticado → workflow exclusivo Ferrari em `martaxi-boss/VPS` → SSH existente → Motor Ferrari isolado na VPS Ubuntu → ZIP e relatório. A IA orienta; o motor e os executores fazem o trabalho. Não alterar ponte SSH, Supervisor ou outros projetos. REA e Ruflo são fornecedores opcionais, não o coordenador.
 
 ## Estado comprovado em 03/11/2026
 
