@@ -6,7 +6,19 @@
 
 Uma Skill Universal Ferrari → conector GitHub autenticado → workflow **apenas Ferrari** em `martaxi-boss/VPS` → SSH existente → Motor Ferrari independente na VPS Ubuntu → relatório/ficheiros ZIP. A IA interpreta e orienta, o motor executa. REA e Ruflo são ferramentas opcionais, não coordenadores. Não alterar o SSH, Supervisor ou outros projetos.
 
-## Estado real certificado — 03/11/2026
+## Última prova real — 03/11/2026: Lowcost Europa
+
+- **Release VPS atual:** `ec4dc5045a034e3fbbbcfe3477e1641e80714262`; deploy [#41601238265](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) SUCCESS, **99 testes PASS**.
+- **Teste pela Skill:** [#41601466546](https://github.com/martaxi-boss/VPS/actions/runs/41601466546), SUCCESS; abriu-se ZIP com HTML/JS/CSS originais de catálogo Lowcost Europa (repo commit `388860c6...`) montados num fixture estático com 5 ofertas fictícias. **17 testes DOM PASS**, sem erros; tecla Tab/Shift+Tab, Enter/Space PASS e `interactions.findings=[]`. Desktop 1280×720, viewport móvel 390×844, overflow 0, zero pedidos externos.
+- **Defeito de teste Ferrari corrigido:** [PR #10](https://github.com/martaxi-boss/skill-universal/pull/10): repõe foco no botão antes de verificar Space, após Enter ter mudado foco intencionalmente. Teste inicial [#41600631713](https://github.com/martaxi-boss/VPS/actions/runs/41600631713) acusou aviso de Space que não era bug Lowcost.
+- **Higiene:** release atual e rollback `9277a56b9...` preservados, remoção exclusiva Ferrari da obsoleta `0196f37a...`; libertados **~2,42 MiB**, livres **21,31 GiB**, `outside_ferrari_touched=false`.
+- **Inventário inalterado:** 56 candidatos Ubuntu, 23/56 detetados, 49 programas em catálogo combinado, **12 operações base**, 21 ações externas. Ferramentas BIM/CAD existentes não foram afetadas.
+- **Limite:** aplicação Django/PostgreSQL, staging e produção ao vivo **não** testados. Foram usados ficheiros originais de frontend e HTML controlado, não pedidos externos, credenciais ou dados comerciais.
+- Referência pormenorizada: [certificação Lowcost Europa](https://github.com/martaxi-boss/skill-universal/blob/main/docs/TESTE_REAL_LOWCOST_EUROPA_20261103.md).
+
+---
+
+## Histórico — Fase 6 (03/11/2026)
 
 - **Release na VPS:** `9277a56b9b57c87b8b4e3dfbba08f4536add3625`.
 - **99 testes PASS na VPS:** [#41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120) SUCCESS. `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium, mobile, acessibilidade HTML pontual e geometria IFC PASS.
