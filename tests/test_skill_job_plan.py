@@ -42,6 +42,49 @@ class SkillPlanTests(unittest.TestCase):
                 self.assertIn("Ferrari Loja", b" ".join(response.read(x)
                     for x in names if x.endswith(".html")).decode("utf-8"))
 
+    def test_parallel_dag_outputs_are_zipped_when_workspace_uses_project_alias(self):
+        data = request([
+            {"id": "site", "operation": "web-template", "title": "Ferrari Root Alias"},
+            {"id": "cartaz", "operation": "svg-poster", "title": "Ferrari Root Alias"}
+        ], max_parallel=2)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            physical=root/"srv/projects/skill-universal/.runtime/skill-results"
+            physical.mkdir(parents=True)
+            alias=root/"home/ubuntu/.local/share/motor-ferrari/.runtime/skill-results"
+            alias.parent.mkdir(parents=True)
+            alias.symlink_to(physical,target_is_directory=True)
+            with patch.object(skill_job.orchestrator.ferrari, "system",
+                              return_value={"distro":"ubuntu"}):
+                response,code=skill_job.execute(data,alias/"job")
+            self.assertEqual(code,0,response)
+            self.assertEqual(response["status"],"completed")
+            self.assertNotIn("error",response)
+            self.assertTrue(all(x.startswith("artifacts/") for x in response["artifacts"]))
+            with zipfile.ZipFile(alias/"job/response.zip") as archive:
+                names=archive.namelist()
+                self.assertIn("report.json",names)
+                self.assertTrue(any(n.endswith(".html") for n in names),names)
+                self.assertTrue(any(n.endswith(".svg") for n in names),names)
+                manifest=json.loads(archive.read("report.json"))
+                self.assertEqual(manifest["artifacts"],response["artifacts"])
+
+    def test_report_cannot_claim_completed_when_output_outside_job(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            foreign=root/"other-project/secret.txt"
+            foreign.parent.mkdir()
+            foreign.write_text("sensitive")
+            fake={"result":{"status":"completed","failed":{},"completed":{}},
+                  "report_file":str(foreign)}
+            with patch.object(skill_job.orchestrator,"orchestrate",return_value=fake):
+                result,code=self._execute(request([
+                    {"id":"site","operation":"web-template"}]),directory)
+            self.assertEqual(code,2)
+            self.assertEqual(result["status"],"failed")
+            self.assertIn("outside",result.get("error",""))
+            self.assertTrue(foreign.is_file())
+
     def test_dependent_generators_without_new_coordinator(self):
         data = request([
             {"id": "site", "operation": "web-template", "title": "Ferrari Dependencia"},

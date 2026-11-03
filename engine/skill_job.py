@@ -174,10 +174,23 @@ def execute(data, outdir):
         files=sorted(set(files))
         if not files or any(not p.is_file() or p.is_symlink() for p in files):
             raise RuntimeError("No regular-file artifacts produced")
-        result["status"]="completed"
-        result["artifacts"]=[str(p.relative_to(target)) for p in files]
+        # Files returned by the parallel DAG runner can use the physical
+        # /srv/projects/skill-universal path while this job is entered via
+        # the Ferrari-only historical symlink. Compare canonical paths,
+        # retaining the original ZIP-relative archive layout.
+        canonical_target=target.resolve(strict=True)
+        canonical_artifacts=dest.resolve(strict=True)
+        relative_files=[]
+        for path in files:
+            resolved=path.resolve(strict=True)
+            if (not resolved.is_relative_to(canonical_target) or
+                    not resolved.is_relative_to(canonical_artifacts)):
+                raise RuntimeError("Ferrari artifact escapes this isolated job")
+            relative_files.append(str(resolved.relative_to(canonical_target)))
+        result["artifacts"]=relative_files
         result["executor"]=response.get("executor")
         result["operation"]=response.get("operation",response.get("action",kind))
+        result["status"]="completed"
     except Exception as exc:
         code=2
         result["error"]=str(exc)[:1200]
