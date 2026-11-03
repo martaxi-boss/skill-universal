@@ -36,7 +36,15 @@ Escolha automática de adaptador conforme o pedido:
 {"version":1,"id":"auto-20261102-0011","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
 ```
 
-O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium Ferrari operacional devolve `browser-check.json` com testes de teclado opt-in, `browser-screenshot.png` e `browser-mobile.png`). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
+Plano com etapas dependentes, usando o **orquestrador Ferrari que ja existe**, sem Skill nem ponte nova (disponivel somente quando a release com suporte `kind=plan` estiver implantada e certificada):
+
+```json
+{"version":1,"id":"plan-20261103-001","kind":"plan","max_parallel":2,"plan":{"version":1,"steps":[{"id":"site","operation":"web-template","layout":"store","title":"Montra Ferrari"},{"id":"analise","operation":"binary-strings","depends_on":["site"],"input_from":"site"}]}}
+```
+
+Para um plano que recebe um unico ficheiro, usar o `input` base64 de topo e `"input":"$input"` no passo correspondente; para consumir resultado de passo anterior usar `depends_on` e `input_from`. O Ferrari valida e executa o plano diretamente no motor, devolvendo artefactos de cada passo e relatorio do orquestrador no ZIP. **Nao passar caminhos absolutos/relativos da VPS no plano remoto.** Se um passo falhar o resultado nao pode ser declarado PASS. O CI isolado, por si, nao certifica a ligacao remota.
+
+O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium Ferrari operacional devolve `browser-check.json` com testes de teclado opt-in, `browser-screenshot.png` e `browser-mobile.png`). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. A release atualmente instalada na VPS ainda nao suporta DAG remoto. O novo `kind=plan` desta fase deve ser usado apenas depois de testes CI, entrega na VPS e teste fim-a-fim confirmados.
 
 ## Certificação web mais recente — 03/11/2026
 

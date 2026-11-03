@@ -33,7 +33,7 @@ nem tratar Markdown como uma ferramenta Ubuntu.
 
 ## Limites reais da primeira implementação
 
-O coordenador suporta dependências, paralelismo 1–4, operações tipadas,\nvalidadores e logs. A ponte GitHub→VPS está certificada para operações\nremotas suportadas, mas **não recebe atualmente DAGs arbitrários**. Não\nfornece um daemon persistente, retries, checkpoint reexecutável, UI,\nGPU nem contas cloud.
+O coordenador suporta dependências, paralelismo 1–4, operações tipadas,\nvalidadores e logs. A ponte GitHub→VPS está certificada para operações\nremotas simples. A fonte desta fase integra `kind=plan` no **mesmo**\n`engine.skill_job`, chamando o orquestrador existente, mas a VPS ativa\nainda nao o recebe ate passar CI e instalacao real. Não\nfornece um daemon persistente, retries, checkpoint reexecutável, UI,\nGPU nem contas cloud.
 Essas capacidades exigem testes e integração adicionais, de preferência
 com Prefect autoalojado quando justificado.
 

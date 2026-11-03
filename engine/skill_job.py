@@ -17,7 +17,7 @@ import traceback
 import uuid
 import zipfile
 
-from engine import ferrari, tool_runtime
+from engine import ferrari, tool_runtime, orchestrator
 
 MAX_REQUEST_BYTES = 2_800_000
 MAX_INPUT_BYTES = 2_000_000
@@ -27,13 +27,13 @@ INPUT_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\.[a-zA-Z0-9]{1,12}
 def validate_job(data):
     if not isinstance(data,dict) or data.get("version") != 1:
         raise ValueError("Expected a version 1 Ferrari job object")
-    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query"}:
+    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel"}:
         raise ValueError("Unknown Ferrari job fields")
     jid=data.get("id")
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
         raise ValueError("Invalid Ferrari job ID")
     kind=data.get("kind")
-    if kind not in {"inventory","operation","auto","invoke"}:
+    if kind not in {"inventory","operation","auto","invoke","plan"}:
         raise ValueError("Unsupported Ferrari job kind")
     inp=data.get("input")
     if kind in {"auto","invoke"} and not isinstance(inp,dict):
@@ -73,6 +73,27 @@ def validate_job(data):
         raise ValueError("Invalid title")
     if kind=="operation" and data.get("layout","landing") not in ferrari.LAYOUTS:
         raise ValueError("Invalid site layout")
+    if kind=="plan":
+        # The existing Ferrari orchestrator owns the DAG; the Skill only carries it.
+        if set(data)-{"version","id","kind","input","plan","max_parallel"}:
+            raise ValueError("Unrecognized Ferrari plan envelope fields")
+        plan=data.get("plan")
+        if not isinstance(plan,dict) or set(plan)!={"version","steps"}:
+            raise ValueError("Expected a versioned Ferrari orchestrator plan")
+        parallel=data.get("max_parallel",2)
+        if type(parallel) is not int or not 1<=parallel<=orchestrator.MAX_PARALLEL:
+            raise ValueError("Invalid Ferrari parallelism")
+        # Never interpret paths supplied in public GitHub JSON as VPS file paths.
+        if not isinstance(plan.get("steps"),list):
+            raise ValueError("Plan steps must be a list")
+        for step in plan["steps"]:
+            if isinstance(step,dict) and step.get("input") not in (None,"$input"):
+                raise ValueError("Plan input must be the uploaded file alias $input")
+            if isinstance(step,dict) and step.get("input")=="$input" and raw is None:
+                raise ValueError("The plan requests an uploaded input file")
+        orchestrator.validate_workflow(plan)
+    elif "plan" in data or "max_parallel" in data:
+        raise ValueError("Plan fields require kind=plan")
     return raw
 
 def execute(data, outdir):
@@ -105,6 +126,25 @@ def execute(data, outdir):
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
         elif kind=="invoke":
             response=tool_runtime.invoke(data["action"],str(src),str(dest),query=data.get("query"))
+        elif kind=="plan":
+            # Use the existing DAG runner; no changes to GitHub Actions or SSH.
+            steps=[]
+            for step in data["plan"]["steps"]:
+                prepared=dict(step)
+                if prepared.get("input")=="$input":
+                    prepared["input"]=str(src)
+                steps.append(prepared)
+            execution=orchestrator.orchestrate(
+                {"version":1,"steps":steps},str(dest),execute=True,
+                max_parallel=data.get("max_parallel",2))
+            report=execution["result"]
+            if report["status"]!="completed":
+                raise RuntimeError("Ferrari plan failed: "+json.dumps(report["failed"],ensure_ascii=False)[:700])
+            artifacts=[execution["report_file"]]
+            for stage in report["completed"].values():
+                artifacts.extend(stage.get("artifacts",[]))
+            response={"confirmed":True,"artifacts":artifacts,
+                      "executor":"ferrari-orchestrator","operation":"plan"}
         else:
             response=tool_runtime.auto(data["request"],str(src),str(dest),execute=True,query=data.get("query"))
             if response["status"]!="completed":
