@@ -96,6 +96,12 @@ for pkg in "${SERVICES[@]}"; do
     record service "$pkg" INSTALLED_PRIVATE "$ver"
   elif [[ -f "$exe" ]]; then
     record service "$pkg" EXTRACTED_NOT_FUNCTIONAL "$ver"
+    if [[ "$pkg" == valkey-server ]]; then
+      echo 'FERRARI_VALKEY_DIAGNOSTIC=BEGIN'
+      tail -n 10 "$REPORT/$pkg-version.txt" 2>/dev/null || true
+      ldd "$exe" 2>&1 | grep 'not found' || true
+      echo 'FERRARI_VALKEY_DIAGNOSTIC=END'
+    fi
   else
     record service "$pkg" DOWNLOAD_OR_LAYOUT_FAILED "$ver"
   fi
