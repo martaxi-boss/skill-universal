@@ -9,13 +9,12 @@ while (($#)); do
     *) echo "Unknown option: $1" >&2; exit 2;;
   esac
 done
-case "$PROFILE" in rea|ruflo|all) ;; *) echo "Expected rea, ruflo, all" >&2; exit 2;; esac
+case "$PROFILE" in ruflo) ;; *) echo "Ferrari can only install optional Ruflo; REA project is independent" >&2; exit 2;; esac
 PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 RUNTIME="${FERRARI_NPM_RUNTIME:-$HOME/.local/share/motor-ferrari/.runtime/npm}"
-VERSION_REA=6.8.0
 VERSION_RUFLO=3.71.0
 printf 'Independent runtime: %s\n' "$RUNTIME"
-printf 'REA target: rea-agents@%s\nRuflo target: ruflo@%s\n' "$VERSION_REA" "$VERSION_RUFLO"
+printf 'Ruflo target: ruflo@%s\n' "$VERSION_RUFLO"
 if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   echo 'Node.js/npm absent; install compatible Node.js before proceeding.' >&2
   exit 2
@@ -23,25 +22,15 @@ fi
 NODE_VER="$(node -p 'process.versions.node')"
 printf 'Detected Node.js: %s\n' "$NODE_VER"
 if ! node -e 'const [a,b,c]=process.versions.node.split(".").map(Number);const ok=(a===22&&(b>23||(b===23&&c>=4)))||(a===24&&(b>22||(b===22&&c>=1)))||(a===26&&(b>12||(b===12&&c>=1)))||a>26;process.exit(ok?0:1)'; then
-  echo 'REA upstream package requires Node ^22.23.4 || ^24.22.1 || >=26.12.1. No packages will be installed.' >&2
+  echo 'Optional Ruflo requires Ferrari pinned Node 22.23.4 or later compatible Node. No packages installed.' >&2
   exit 2
 fi
 if ((APPLY==0)); then
-  echo 'DRY RUN. Example to apply after reviewing: bash install/install-agent-engines.sh --profile all --apply'
+  echo 'DRY RUN. Apply with: bash install/install-agent-engines.sh --profile ruflo --apply'
   exit 0
 fi
 mkdir -p "$RUNTIME"
-if [[ "$PROFILE" = rea || "$PROFILE" = all ]]; then
-  if [[ -x "$RUNTIME/rea/node_modules/.bin/rea" ]] && \
-     [[ "$(node -p "try { require('$RUNTIME/rea/node_modules/rea-agents/package.json').version } catch(e) { 'missing' }")" == "$VERSION_REA" ]]; then
-    echo "FERRARI_REA_REUSE=EXACT_PINNED_VERSION"
-  else
-  npm install --prefix "$RUNTIME/rea" --no-audit --no-fund --save-exact "rea-agents@$VERSION_REA"
-  fi
-  "$RUNTIME/rea/node_modules/.bin/rea" --help >/dev/null
-  echo 'REA CLI smoke: PASS (help only; analysis engine/provider NOT certified)'
-fi
-if [[ "$PROFILE" = ruflo || "$PROFILE" = all ]]; then
+if [[ "$PROFILE" = ruflo ]]; then
   if [[ -x "$RUNTIME/ruflo/node_modules/.bin/ruflo" ]] && \
      [[ "$(node -p "try { require('$RUNTIME/ruflo/node_modules/ruflo/package.json').version } catch(e) { 'missing' }")" == "$VERSION_RUFLO" ]]; then
     echo "FERRARI_RUFLO_REUSE=EXACT_PINNED_VERSION"
