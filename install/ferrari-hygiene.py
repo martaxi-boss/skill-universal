@@ -41,9 +41,9 @@ def clean(apply=False):
         if not (item/"engine/ferrari.py").is_file():
             continue
         all_dirs.append(item)
-    # Keep active plus the last 99-test VPS-certified fallback (run 41561998389).
+    # Keep active plus the last 99-test VPS-certified fallback (run 41598711120).
     # The former 2026-11-02 fallback is obsolete; never delete this verified backup.
-    fallback_sha="0196f37a7610d1f95cd3371652308b7e2244f019"
+    fallback_sha="9277a56b9b57c87b8b4e3dfbba08f4536add3625"
     fallback=release_root/fallback_sha
     keep={active.name}
     if fallback in all_dirs:
