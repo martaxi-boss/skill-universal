@@ -160,6 +160,7 @@ class FerrariProfessionalTests(unittest.TestCase):
         self.assertIn('page.keyboard.press("Tab")',source)
         self.assertIn('page.keyboard.press("Shift+Tab")',source)
         self.assertIn('page.keyboard.press("Enter")',source)
+        self.assertIn('await button.focus();\n      await page.keyboard.press("Space")',source)
         self.assertIn('page.keyboard.press("Space")',source)
         self.assertIn('data-ferrari-test="button"',source)
         self.assertIn('data-ferrari-test="form"',source)
