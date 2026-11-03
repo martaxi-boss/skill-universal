@@ -45,6 +45,7 @@ python3 -m engine.ferrari tools > "$WORK/inventory.json"
 python3 - "$WORK" <<'PY'
 import json,sys
 from pathlib import Path
+from engine import tool_runtime
 p=Path(sys.argv[1])
 ifc=json.loads((p/"ifc-result/ifc-report.json").read_text())
 assert ifc["schema"]=="IFC4",ifc
@@ -97,7 +98,7 @@ assert (p/"web-result/browser-mobile.png").stat().st_size>200,mobile
 print("FERRARI_VITE_RESPONSIVE_REAL=PASS")
 print("FERRARI_BROWSER_A11Y_SPOTCHECK_REAL=PASS")
 inv=json.loads((p/"inventory.json").read_text())
-assert inv["registered_actions"]==21
+assert inv["registered_actions"]==len(tool_runtime.specs())
 for name,expected in (("ifcopenshell","ifc-summary"),("vite","vite-build")):
     entry=next(x for x in inv["programs"] if x["id"]==name)
     assert entry["installed"] and entry["status"]=="callable",entry
