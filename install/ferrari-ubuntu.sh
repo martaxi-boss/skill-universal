@@ -30,7 +30,7 @@ for pkg in "${REQUESTED[@]}"; do
   # Do not replace the system Node/Java runtimes used by unrelated projects.
   # Daemon packages may start/affect unrelated services on this VPS.
   case "$pkg" in
-    nodejs|npm|prometheus|valkey-server|openjdk-21-jdk-headless)
+    nodejs|npm|prometheus|valkey-server|openjdk-21-jdk-headless|apktool)
       SKIPPED+=("$pkg")
       continue
       ;;
