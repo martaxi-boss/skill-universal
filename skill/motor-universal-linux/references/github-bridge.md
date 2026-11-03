@@ -40,6 +40,26 @@ Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" n
 
 **A versão com kind=plan está demonstrada remotamente:** [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416). Para operações simples, ver [Skill #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249), inventário com ZIP PASS. Consultar engine/ferrari.py e engine/tool_actions.json para capacidades exatas, em vez de uma lista de ações antiga neste documento.
 
+## REA original MCP através da mesma Skill Ferrari
+
+Quando o commit que contém `kind=rea-mcp` estiver instalado na VPS e certificado pela Skill, um pedido pode encaminhar `tools/list` e `tools/call` diretamente para o REA privado do Ferrari, sem o projeto REA antigo ou outra Skill. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
+
+Exemplo de inventário do REA original:
+
+```json
+{"version":1,"id":"ferrari-rea-list-20261103-001","kind":"rea-mcp","mcp_requests":[{"method":"tools/list"}]}
+```
+
+Exemplo de chamada de uma ferramenta **após consultar o nome e contrato em tools/list** (usar apenas para ficheiros do próprio utilizador, sem segredos no repositório público):
+
+```json
+{"version":1,"id":"ferrari-rea-elf-20261103-002","kind":"rea-mcp","input":{"name":"sample.elf","content_base64":"f0VMRg=="},"mcp_requests":[{"method":"tools/call","params":{"name":"inspect_elf_notes","arguments":{"path":"$input"}}}]}
+```
+
+O nome de ferramenta/argumentos acima é **ilustrativo**: confirmar primeiro o contrato MCP concreto. `$input` resolve para o ficheiro carregado no workspace privado do Ferrari, nunca para um caminho fornecido na ponte. O REA executa com Node, Ghidra 12.1.4, JDK25, JADX headless MCP 0.7.1 e Apktool 3.0.3 privados.
+
+O facto de o catálogo dos dois REAs conter 229 nomes iguais foi certificado em [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353); a execução profunda isolada de Ghidra e JADX passou em [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556). **A chamada por kind=rea-mcp requer ainda certificação real ponta a ponta da versão instalada.** Não tratar a paridade de nomes como execução de todas as operações.
+
 ## Engenharia reversa do Ferrari
 
 - REA: CLI oficial rea-agents@6.8.0 em /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/node_modules/.bin/rea; duas ações tipadas reais, rea-elf-notes e rea-android-resources. [VPS #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) PASS e [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) PASS.
