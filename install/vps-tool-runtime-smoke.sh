@@ -27,7 +27,13 @@ print("FERRARI_SELECTION_MISSING_BY_TIER="+json.dumps(x["missing_by_tier"],sort_
 assert next(z for z in x["programs"] if z["id"]=="blender")["base_operations"]==["blender-house"]
 PY
 
-# Build a minimal, synthetic APK with the already installed Apktool, then
+APKTOOL="$ROOT/tools/apktool-3.0.3/bin/apktool"
+test -x "$APKTOOL"
+test "$("$APKTOOL" --version)" = "3.0.3"
+test -d "$ROOT/.runtime/apktool-frameworks"
+test ! -L "$APKTOOL"
+echo 'FERRARI_APKTOOL_PRIVATE_RUNTIME=PASS'
+# Build a minimal, synthetic APK with the Ferrari-private Apktool 3.0.3, then
 # decode it through Ferrari's existing typed tool dispatcher. No external app
 # or Android device and no access to other project repositories.
 mkdir -p "$WORK/ferrari-apk-src/res/values" "$WORK/ferrari-apk-src/smali/com/ferrari"
@@ -55,7 +61,7 @@ cat > "$WORK/ferrari-apk-src/smali/com/ferrari/Smoke.smali" <<'APKS'
 .end method
 APKS
 cat > "$WORK/ferrari-apk-src/apktool.yml" <<'APKY'
-version: 2.7.0
+version: 3.0.3
 apkFileName: ferrari-sample.apk
 isFrameworkApk: false
 usesFramework:
@@ -76,7 +82,7 @@ sparseResources: false
 unknownFiles: {}
 doNotCompress: []
 APKY
-if ! apktool b "$WORK/ferrari-apk-src" -o "$WORK/ferrari-sample.apk" > "$WORK/apktool-build.log" 2>&1; then
+if ! "$APKTOOL" b "$WORK/ferrari-apk-src" -o "$WORK/ferrari-sample.apk" > "$WORK/apktool-build.log" 2>&1; then
   echo 'FERRARI_APKTOOL_FIXTURE_BUILD_FAILED' >&2
   tail -n 60 "$WORK/apktool-build.log" >&2
   exit 5
