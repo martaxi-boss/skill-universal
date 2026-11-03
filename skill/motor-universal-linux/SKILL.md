@@ -7,11 +7,13 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 ## Situação comprovada em 03/11/2026
 
-**Motor Ferrari ativo na VPS:** release `29e016885f01c78941c37e4a147e207a1fc62f05`, [entrega #41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851), **87 testes PASS na VPS**. **Skill → GitHub → VPS → ZIP real:** [IFC #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002), [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) e [inventário #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593), todos SUCCESS com relatórios e ficheiros inspecionados.
+**Ferrari na VPS:** release `f7eb9dcbda78a80f127b8981d9361e853672cd62`, [execução #41558189146](https://github.com/martaxi-boss/VPS/actions/runs/41558189146), **93 testes PASS**, leitura semântica e geometria IFC real PASS, compilação Vite PASS. **Pedido real da Skill:** [#41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405), SUCCESS, `FERRARI_SKILL_END_TO_END=PASS`, relatório IFC4 aberto e verificado: uma parede de 5 × 0,2 × 3 metros, oito vértices e doze triângulos.
 
-**Inventário:** 56 candidatos Ubuntu pré-selecionados, **22/56 detetados**, 48 programas detetados nos catálogos combinados, **12 operações base** e **21 ações externas tipadas**. As operações novas `ifc-summary` (IfcOpenShell `0.9.0.post1`, relatório semântico IFC) e `vite-build` (Vite `8.3.5` e Node isolado, site estático compilado) foram executadas na VPS e pela Skill. Não confundir com validação estrutural, BIM completo ou aplicação web com backend/browser. FreeCAD e Playwright continuam não detetados; REA/Ruflo profundos continuam pendentes.
+**Inventário:** 56 candidatos Ubuntu, **22/56 detetados**, 48 ferramentas nos catálogos combinados, **12 operações base** e **21 ações externas tipadas**. `ifc-summary` foi ampliada na mesma operação, sem nova Skill nem motor intermediário: deteta geometria triangulada presente e caixas delimitadoras mundiais, representa explicitamente elementos sem geometria ou com erro. Não é certificação estrutural, geométrica completa, IFC IDS ou colisões. `vite-build` mantém o seu escopo de site estático, sem navegador Playwright nem backend.
 
-A Skill usa o conector GitHub autenticado; o ZIP não cria credenciais nem concede SSH. Consultar sempre o **BOOTSTRAP.md canónico** para o estado mais recente, sem inventar capacidades.
+**Higienização Ferrari:** o mesmo workflow removeu duas releases obsoletas, preservou a ativa e a anterior certificada `29e016885...`, libertou **1 829 462 016 bytes (~1,70 GiB)** e terminou com **21,61 GiB livres**, sem alterar outros projetos. Ver [BOOTSTRAP.md](../../BOOTSTRAP.md) e [relatório de certificação](../../docs/CERTIFICACAO_GEOMETRIA_IFC_HIGIENE_20261103.md) no repositório canónico.
+
+A Skill continua a usar o mesmo conector GitHub autenticado e os mesmos tipos de pedido. Um ZIP de Skill não cria credenciais nem acesso SSH. Os repositórios de transporte públicos não devem receber informações confidenciais.
 
 ## Bootstrap permanente do projeto
 
