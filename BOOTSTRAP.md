@@ -55,7 +55,7 @@ O REA antigo de Engenharia Reversa continua intocado. **NÃO autorizar a sua rem
 - FreeCAD AppImage 1.1.4: instalado, sem teste gráfico completo.
 - Next.js, Tailwind, Bootstrap, shadcn, DuckDB, Polars, Streamlit, Gradio, Faster-Whisper, Prefect, Docling, Typst e Godot: instalação detetada; muitos permanecem sem ação tipada comprovada.
 - Ruflo 3.71.0 é opcional, com CLI --help PASS, não swarm ou fornecedor de modelos certificado.
-- Engenharia reversa: **MCP original disponível via kind=rea-mcp** na Skill Ferrari, 229 nomes conhecidos e duas chamadas tools/call reais certificadas (ELF notes e Apktool). Os dois fornecedores Ghidra/JADX têm testes profundos PASS; **nem as 229 operações nem todos os seus casos foram certificados individualmente**.
+- Engenharia reversa: **MCP original disponível via kind=rea-mcp** na Skill Ferrari, 229 nomes conhecidos e três chamadas tools/call reais certificadas (ELF notes, Apktool e captura sintética de processo [#41718385142](https://github.com/martaxi-boss/VPS/actions/runs/41718385142)). Os dois fornecedores Ghidra/JADX têm testes profundos PASS; **nem as 229 operações nem todos os seus casos foram certificados individualmente**.
 
 Nenhuma área deve ser anunciada como completamente operacional apenas por constar de inventário ou manifesto.
 
