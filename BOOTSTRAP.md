@@ -81,4 +81,6 @@ O âmbito universal completo ainda está **NÃO IMPLEMENTADA** como certificaç�
 
 ## 7. Histórico e relatórios
 
+Relatório de higiene física e duplicações: [docs/HIGIENIZACAO_FISICA_FERRARI_VPS_20261103.md](docs/HIGIENIZACAO_FISICA_FERRARI_VPS_20261103.md). Teste real da Skill REA ELF **após** a limpeza [#41701860486](https://github.com/martaxi-boss/VPS/actions/runs/41701860486) — completed, ZIP, executor privado e artefacto confirmados.
+
 As fases anteriores a esta fotografia estão preservadas em [BOOTSTRAP no commit 77f20a96](https://github.com/martaxi-boss/skill-universal/blob/77f20a96a90e507d12cb2579e5c0554e96eed795/BOOTSTRAP.md) e nos relatórios de docs/. Esse histórico é evidência do que ocorreu então, **não é o estado atual**. Ver README.md para a apresentação operacional e skill/motor-universal-linux/ para a Skill única e respetivas referências.
