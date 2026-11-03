@@ -11,7 +11,7 @@ from engine import tool_runtime
 class PublishingAdapterTests(unittest.TestCase):
     def test_manifest_has_distinct_typed_inputs_and_results(self):
         specs=tool_runtime.specs()
-        self.assertEqual(len(specs),32)
+        self.assertEqual(len(specs),33)
         for key,tool,ext,out in (
             ("calibre-md-epub","calibre",".md","calibre-book.epub"),
             ("darktable-jpeg-tiff","darktable",".jpg","darktable-export.tif"),
