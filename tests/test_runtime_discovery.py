@@ -69,6 +69,41 @@ class RuntimeDiscoveryTests(unittest.TestCase):
         self.assertEqual(result["runtimes"]["docker"]["probe"],"unavailable")
         self.assertEqual(result["tools"],{})
 
+    def test_browser_probe_is_read_only_and_bounded_to_ferrari(self):
+        with tempfile.TemporaryDirectory() as d:
+            home=Path(d)
+            owned=home/".runtime/browsers/chromium_headless_shell-999"
+            (owned/"chrome-headless-shell-linux64").mkdir(parents=True)
+            browser=owned/"chrome-headless-shell-linux64/chrome-headless-shell"
+            browser.write_text("dummy browser marker")
+            other=home/"other-project/chromium-222/chrome-linux"
+            other.mkdir(parents=True)
+            (other/"chrome").write_text("must be ignored")
+            with patch("engine.runtime_discovery.shutil.which",
+                       side_effect=lambda name: "/usr/bin/chromium" if name=="chromium" else None):
+                result=runtime_discovery.browser_discovery(home=home)
+            self.assertEqual(result["system_browser_executables"]["chromium"]["path"],
+                             "/usr/bin/chromium")
+            self.assertEqual(len(result["ferrari_browser_cache"]),1)
+            self.assertEqual(result["ferrari_browser_cache"][0]["path"],str(browser))
+            self.assertNotIn("other-project",str(result))
+
+    def test_browser_probe_does_not_execute_or_install(self):
+        with tempfile.TemporaryDirectory() as d:
+            with patch("engine.runtime_discovery.shutil.which",return_value=None):
+                with patch("engine.runtime_discovery.subprocess.run") as invoke:
+                    result=runtime_discovery.browser_discovery(home=d)
+            self.assertFalse(result["system_browser_executables"])
+            self.assertEqual(result["ferrari_browser_cache"],[])
+            invoke.assert_not_called()
+
+    def test_browser_probe_is_reported_as_observation_not_action(self):
+        result=runtime_discovery.discover(home=Path("/nonexistent/ferrari-browser-test"),
+                                          system_npm_roots=())
+        self.assertIn("browsers",result)
+        self.assertIn("scope",result["browsers"])
+
+
     def test_inventory_distinguishes_detected_package_from_adapter(self):
         evidence={"scope":"ferrari_npm","package":"vite","location":"/tmp/ferrari/vite/package.json",
                   "verification":"manifest_present_not_executed"}
