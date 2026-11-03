@@ -25,6 +25,7 @@ jobs:
           bash -n install/vps-bim-web.sh
           bash -n install/vps-bim-web-smoke.sh
           bash -n install/vps-browser-headless.sh
+          node --check engine/browser_check.js
       - name: Inspect Ferrari registry and routing
         run: |
           python3 -m engine.ferrari doctor
