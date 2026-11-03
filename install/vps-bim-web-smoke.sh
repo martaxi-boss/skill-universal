@@ -35,8 +35,8 @@ python3 - "$WORK/project.zip" <<'PY'
 import sys
 from zipfile import ZipFile,ZIP_DEFLATED
 with ZipFile(sys.argv[1],"w",ZIP_DEFLATED) as z:
-    z.writestr("index.html", '<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1 id="app">Ferrari Vite</h1><script type="module" src="/src/main.js"></script></body></html>')
-    z.writestr("src/main.js", 'import "./style.css"; document.querySelector("#app").dataset.ready="yes";')
+    z.writestr("index.html", '<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1 id="app">Ferrari Vite</h1><nav><a href="#ferrari-section" data-ferrari-test="link">Ir para secção</a></nav><button type="button" data-ferrari-test="button" data-ferrari-activations="0">Ativar pelo teclado</button><form data-ferrari-test="form"><label for="ferrari-message">Mensagem</label><input id="ferrari-message" name="message"><button type="submit">Enviar</button></form><section id="ferrari-section"><h2>Destino acessível</h2></section><script type="module" src="/src/main.js"></script></body></html>')
+    z.writestr("src/main.js", 'import "./style.css"; document.querySelector("#app").dataset.ready="yes"; const b=document.querySelector(\'[data-ferrari-test="button"]\'); b.addEventListener("click",()=>{b.dataset.ferrariActivations=String(Number(b.dataset.ferrariActivations)+1)}); const form=document.querySelector(\'[data-ferrari-test="form"]\'); form.addEventListener("submit",e=>{e.preventDefault();form.dataset.ferrariSubmitted="yes"});')
     z.writestr("src/style.css", '#app { color: rebeccapurple; }')
 PY
 python3 -m engine.ferrari run --operation vite-build --input "$WORK/project.zip" --output "$WORK/web-result"
@@ -74,6 +74,16 @@ assert not browser["blocked_external"] and not browser["page_errors"] and not br
 assert (p/"web-result/browser-screenshot.png").stat().st_size>200,browser
 assert build["browser_test"]["status"]=="passed",build
 print("FERRARI_VITE_BROWSER_REAL=PASS")
+interactions=browser["interactions"]
+assert interactions["status"]=="clear",interactions
+assert interactions["findings"]==[],interactions
+assert interactions["focusable_count"]>=4,interactions
+assert interactions["tab_forward"]=="passed",interactions
+assert interactions["shift_tab_back"]=="passed",interactions
+print("FERRARI_BROWSER_KEYBOARD_REAL=PASS")
+for action in ("button_enter","button_space","link_enter","form_enter"):
+    assert interactions[action]=="passed",(action,interactions)
+print("FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS")
 mobile=browser["mobile"]
 assert mobile["viewport"]=={"width":390,"height":844},mobile
 assert mobile["horizontal_overflow_px"]==0,mobile
