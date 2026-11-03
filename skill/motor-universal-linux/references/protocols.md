@@ -1,59 +1,29 @@
-# Protocolos profissionais do Motor Ferrari
+# Protocolos por domínio do Motor Ferrari
 
-Este ficheiro complementa a **única Skill Universal**. Não invocar Skills
-externas nem inventar executores. O motor Ubuntu é a fonte de verdade.
+Esta referência complementa a **única Skill Universal**. Uma ferramenta Ubuntu é selecionada por capacidade, disponibilidade e teste; não por popularidade.
 
-## Escolha por tipo de tarefa
+| Domínio | Programas possíveis | Tipo de prova necessária |
+|---|---|---|
+| Websites e aplicações | Vite, Next.js, Playwright, Tailwind | Build, captura no navegador, frontend e backend testados separadamente |
+| Imagem e vetores | ImageMagick, libvips, GIMP, Krita, Inkscape | Ficheiro gerado, dimensões, exportação e inspeção |
+| Vídeo e áudio | FFmpeg, Kdenlive, OpenShot, Audacity, Faster-Whisper | Codec, duração, saída e requisitos GUI/modelo |
+| Documentos/PDF | Pandoc, LibreOffice, Tesseract, OCRmyPDF, Docling, Typst | PDF/DOCX real e leitura do conteúdo renderizado |
+| CONSTRUÇÃO, CAD, BIM/IFC e 3D | Blender, OpenSCAD, IfcOpenShell, FreeCAD, LibreCAD, QGIS | Abertura/exportação de modelos e validação de formato/limites estruturais |
+| Engenharia reversa autorizada | REA próprio Ferrari, Ghidra, JADX, Apktool 3.0.3, radare2, Binwalk | Executor, versões, proveniência, análise real e artefacto correspondente |
+| Dados e automação | DuckDB, Polars, Streamlit, Prefect, Ruflo opcional | Validação de dados e execução tipada real, sem confundir CLI --help com fluxo funcional |
+| IA local | ComfyUI CPU, outros só se houver recursos | Modelos presentes e inferência real certificada; não presumir GPU |
 
-| Domínio | Primeiro executor gratuito a avaliar | Alternativas | Teste obrigatório |
-|---|---|---|---|
-| Sites e aplicações | Next.js / Vite, conforme projeto | Astro, Bootstrap, Tailwind, Penpot | build, browser real com Playwright, acessibilidade, navegação |
-| Loja online | stack web+backend open-source | Saleor/Medusa sob análise, apenas se Ubuntu permitir | autenticação, encomendas e testes de integração antes de produção |
-| Design raster | GIMP / Krita | ImageMagick/libvips para lote | exportar PNG/JPEG, dimensões e verificação visual |
-| Design vetorial | Inkscape | SVG local / Penpot | SVG válido e export PDF/PNG |
-| 3D/animação | Blender headless / OpenSCAD | Synfig, OpenToonz (GUI) | abrir, renderizar, formatos, tempo e memória |
-| Engenharia reversa | REA independente + Ghidra | JADX, Apktool, Binwalk, radare2 | hash do alvo, resultado por ferramenta, relatório |
-| Documentos/PDF | LibreOffice headless, Pandoc | Docling, OCRmyPDF, Typst, Tesseract | layout renderizado e verificação de páginas |
-| Vídeo/áudio | FFmpeg/FFprobe | Kdenlive, Audacity, Whisper, Piper | duração, codecs, resolução e inspeção final |
-| Dados | DuckDB / Polars | Pandas, Streamlit, Gradio | validação de esquema e comparação com amostras |
-| CAD/cartografia | FreeCAD AppImage / QGIS | OpenSCAD, LibreCAD | export e reabertura do ficheiro |
-| Workflows | Ferrari DAG; Prefect opcional | LangGraph, Ruflo só se necessário | dependências, erros, estado e registo de artefactos |
+Instalação não garante que o programa possa ser controlado pelo Ferrari. O estado real está em BOOTSTRAP.md e nos outputs de engine/ferrari.py, engine/tool_runtime.py e engine/tool_actions.json.
 
-Cada linha descreve candidatos: **não implica instalação**. Consultar
-\`engine/ubuntu_selection.json\` para versões, licença e estado Ubuntu.
+## Roteamento
 
-## Roteamento pela Skill
+1. Compreender entrada, objetivo, formato e recursos Ubuntu.
+2. Consultar inventário Ferrari real (kind=inventory via Skill ou ferramenta local autorizada).
+3. Escolher operação base ou ação tipada; para trabalho composto escolher kind=plan ou engine.orchestrator.
+4. Confirmar que o executável, bibliotecas e fornecedores necessários estão instalados; se não estiverem, reportar e propor integração, nunca simular.
+5. Validar saída, executores efetivos, erros e relatório ZIP.
+6. Se faltar capacidade, analisar licenças de upstream, ferramentas headless, RAM, SSD, GPU e privacidade antes de instalar ou executar.
 
-1. Entender tarefa, entradas e o resultado que deverá ser entregue.
-2. Consultar \`ferrari_doctor\`, \`ferrari_plan\` e seleção Ubuntu.
-3. Se o pedido exige várias ferramentas, construir plano DAG tipado,
-   validar e pré-visualizar no orquestrador Ferrari.
-4. Descobrir executores instalados e adaptadores disponíveis; testes PASS ajudam a avaliar fiabilidade, sem impedir descoberta de programas não certificados.
-5. Nunca executar um script de Skills de terceiros só por estar numa
-   coleção popular. Inspecionar dependências, licenças e efeitos.
-6. Utilizar `references/github-bridge.md` para os pedidos remotos certificados; o protocolo não aceita livremente qualquer DAG.
-7. Confirmar saídas com testes objetivos e indicar o executor utilizado.
+**Não criar camadas adicionais, Skills paralelas, nem assumir que programas pagos estão disponíveis gratuitamente.** Não utilizar o outro projeto REA da VPS como fallback. Para REA Ferrari, conferir sempre o runtime privado de Node e Apktool.
 
-## Padrões assimiláveis de coleções públicas
-
-- **Agent Skills**: uma entrada \`SKILL.md\` e referências carregadas por
-  domínio, para reduzir o contexto do modelo.
-- **Superpowers**: definir resultado, decompor trabalho, testar e rever.
-- **wshobson/agents**: papéis especializados só como guias de análise;
-  sem exigir plugins/hook do host.
-- **Vercel Skills**: opcionalmente pesquisar novos procedimentos;
-  não instalar indiscriminadamente outras Skills.
-- **Anthropic Skills**: aceitar só exemplos sob licença adequada,
-  nunca importar Skills documentais apenas source-available.
-
-Estes são padrões originais Ferrari derivados da análise pública;
-nenhum ficheiro de terceiro foi copiado neste módulo.
-
-## Orquestração e níveis de fiabilidade
-
-- **Agora**: DAG de tarefas tipadas, pré-visualização sem efeitos,
-  execução Ubuntu, serial/paralelo, logs e propagação de falhas.
-- **Por certificar**: Prefect autoalojado, agendamento, retries,
-  recuperação de trabalho após reinício, monitorização contínua,
-  GPUs e modelos, envio remoto direto de DAGs arbitrários.
-- **Ligação remota certificada:** cartaz SVG e Markdown→DOCX, com ZIP e relatório.\n- **Nunca prometer 100%** sem casos reais em cada domínio da VPS.
+O plano remoto kind=plan já foi comprovado em [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416); a integração de capacidades específicas continua incremental e deve ser demonstrada por ferramentas reais na VPS.
