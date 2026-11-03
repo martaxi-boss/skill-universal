@@ -1,6 +1,18 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: Lowcost Europa, código frontend real
+## Verificação mais recente — 03/11/2026: Lowcost Django/PostgreSQL PASS; staging bloqueado por runner
+
+**Backend real do projeto Lowcost Europa, via o CI existente, sem modificar repositório:** [run #41068103444, tentativa 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41068103444) **SUCCESS** no commit atual `388860c6a167686a378b89f4282304bce89c25de`. Ambiente temporário PostgreSQL 16 no GitHub Actions, `Django check`, `check --deploy`, verificação de migrações, `Ruff` e testes de JS PASS; **709/709 testes Django PASS**, migrações aplicadas à base isolada. Isto não verifica a produção.
+
+**Staging não certificado nesta tentativa:** [run #40664538172, tentativa 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/40664538172), FAIL **antes do navegador**. O `ubuntu-latest` passou a Ubuntu 26.04; o Playwright `1.56.1` rejeitou instalar o Chromium (`does not support chromium on ubuntu26.04-x64`). Sem screenshots/JSON novos, não há evidência atual do site. A tentativa 1, em **28/10/2026** num runner Ubuntu 24.04, tinha `BROWSER_QA_RESULT=PASS checks=13 errors=0`; prova histórica apenas, feita com script anterior. A repetição também tentou uma limpeza histórica de branch já inexistente (HTTP 422), sem alteração da main.
+
+**Próxima correção mínima proposta, ainda não realizada:** em `martaxi-boss/lowcost-europa/.github/workflows/staging-browser-qa.yml`, fixar `runs-on: ubuntu-24.04` (ou atualizar Playwright após compatibilidade demonstrada) e lançar manualmente o workflow da main para testar desktop/móvel, fotografias, catálogo, navegação e respostas HTTP. O conector atual permite voltar a executar jobs mas não `workflow_dispatch`; o teste desta conversa não alterou esse workflow nem os dados e não garante que staging esteja a funcionar.
+
+**Ferrari inalterado:** release VPS `ec4dc5045a034e3fbbbcfe3477e1641e80714262` e fallback `9277a56b9b57c87b8b4e3dfbba08f4536add3625`. O teste Django foi executado pelo CI do projeto, não pelo `vite-build` do Ferrari. Mantêm-se as [17/17 verificações do JS/CSS real da Lowcost](docs/TESTE_REAL_LOWCOST_EUROPA_20261103.md) para frontend local, sem confundir com testes de backend ou staging. [Relatório e logs](docs/CERTIFICACAO_DJANGO_POSTGRES_STAGING_20261103.md).
+
+---
+
+## Histórico — 03/11/2026: Lowcost Europa, código frontend real
 
 **Ferrari ativo na VPS:** release `ec4dc5045a034e3fbbbcfe3477e1641e80714262`, [PR #10](https://github.com/martaxi-boss/skill-universal/pull/10) integrada. [Deploy real VPS #41601238265](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) **SUCCESS, 99 testes PASS**, com `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium e vista móvel PASS.
 
