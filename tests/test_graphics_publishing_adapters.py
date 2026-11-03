@@ -17,7 +17,7 @@ class FerrariGraphicsPublishingTests(unittest.TestCase):
             "darktable-photo-jpeg":("darktable","darktable-cli",".jpg","darktable-export.jpg"),
             "calibre-text-epub":("calibre","ebook-convert",".txt","calibre-book.epub"),
         }
-        self.assertEqual(len(specs),32)
+        self.assertEqual(len(specs),33)
         for action,(tool,binary,ext,output) in expected.items():
             with self.subTest(action=action):
                 x=specs[action]
@@ -100,14 +100,37 @@ class FerrariGraphicsPublishingTests(unittest.TestCase):
                     tool_runtime.invoke("calibre-text-epub",str(p),str(Path(d)/"out"))
             self.assertFalse((Path(d)/"out").exists())
 
+    def test_gimp_script_fu_is_noninteractive_with_escaped_file_paths(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            src=root/'picture"quoted.png'
+            src.write_bytes(b"\\x89PNG\\r\\n\\x1a\\n" + b"1"*24)
+            dest=root/"gimp-output"
+            def fake(args,**opts):
+                self.assertEqual(args[0],"/usr/bin/gimp-console-2.10")
+                self.assertEqual(args[1:4],["-i","-n","-s"])
+                self.assertFalse(opts.get("shell",False))
+                expression=args[5]
+                self.assertIn("gimp-file-load",expression)
+                self.assertIn("gimp-xcf-save",expression)
+                self.assertIn('picture\\\\"quoted.png',expression)
+                self.assertEqual(args[-1],"(gimp-quit 0)")
+                (dest/"gimp-editable.xcf").write_bytes(b"gimp xcf v011\\0"+"Ferrari".encode())
+                return subprocess.CompletedProcess(args,0,b"",b"")
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/gimp-console-2.10"):
+                with patch.object(tool_runtime.subprocess,"run",side_effect=fake):
+                    result=tool_runtime.invoke("gimp-png-xcf",str(src),str(dest))
+            self.assertTrue(result["confirmed"])
+            self.assertTrue((dest/"gimp-editable.xcf").read_bytes().startswith(b"gimp xcf "))
+
     def test_vps_smoke_must_prove_three_real_file_signatures(self):
         root=Path(__file__).resolve().parents[1]
         smoke=(root/"install/vps-tool-runtime-smoke.sh").read_text()
-        for action in ("krita-png-jpeg","darktable-photo-jpeg","calibre-text-epub"):
+        for action in ("krita-png-jpeg","darktable-photo-jpeg","calibre-text-epub","gimp-png-xcf"):
             self.assertIn("--action "+action,smoke)
         for marker in ("FERRARI_KRITA_JPEG_REAL=PASS",
                        "FERRARI_DARKTABLE_JPEG_REAL=PASS",
-                       "FERRARI_CALIBRE_EPUB_REAL=PASS"):
+                       "FERRARI_CALIBRE_EPUB_REAL=PASS","FERRARI_GIMP_XCF_REAL=PASS"):
             self.assertIn(marker,smoke)
 
 
