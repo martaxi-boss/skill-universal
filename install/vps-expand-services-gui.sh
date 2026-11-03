@@ -85,7 +85,39 @@ for pkg in "${SERVICES[@]}"; do
     fi
     rm -rf -- "$work"
   fi
+  if [[ "$pkg" == valkey-server ]]; then
+    # liblzf.so.1 is an Ubuntu runtime dependency of the Valkey binary.
+    # Extract it to Ferrari's tree instead of depending on the global
+    # libraries or anything previously installed by the legacy REA project.
+    lib="$out/usr/lib/x86_64-linux-gnu/liblzf.so.1"
+    if [[ ! -f "$lib" ]]; then
+      work="$(mktemp -d "$REPORT/.liblzf1.XXXXXXXX")"
+      if (cd "$work" && apt-get download liblzf1 > download.log 2>&1); then
+        deb="$(find "$work" -maxdepth 1 -name '*.deb' -type f -print -quit)"
+        if [[ -n "$deb" ]]; then dpkg-deb -x "$deb" "$out"; fi
+      fi
+      rm -rf -- "$work"
+    fi
+    if [[ -f "$lib" && -f "$out/usr/bin/valkey-server" ]]; then
+      # Reject an executable resolving outside the dedicated Ferrari tree.
+      server_real="$(realpath -e "$out/usr/bin/valkey-server")"
+      case "$server_real" in
+        "$out/"*) ;;
+        *) echo 'FERRARI_VALKEY_EXTERNAL_BINARY_FORBIDDEN' >&2; exit 5 ;;
+      esac
+      mkdir -p "$out/bin"
+      cat > "$out/bin/valkey-server" <<'VALKEY_LAUNCH'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+PRIVATE="$HOME/.local/share/motor-ferrari/tools/ferrari-services/valkey-server"
+export LD_LIBRARY_PATH="$PRIVATE/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$PRIVATE/usr/bin/valkey-server" "$@"
+VALKEY_LAUNCH
+      chmod 750 "$out/bin/valkey-server"
+    fi
+  fi
   exe="$out/usr/bin/$pkg"
+  if [[ "$pkg" == valkey-server && -x "$out/bin/valkey-server" ]]; then exe="$out/bin/valkey-server"; fi
   if [[ ! -f "$exe" ]]; then
     case "$pkg" in
       prometheus) exe="$out/usr/bin/prometheus" ;;
