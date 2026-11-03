@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import json
 import importlib.util
 from pathlib import Path
+from engine import runtime_discovery
 import re
 import shutil
 import subprocess
@@ -27,9 +28,7 @@ ISOLATED={"ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
           "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo"}
 # Python libraries have no command-line executable; detect them as modules instead.
-PYTHON_MODULES={"opencv":"cv2","duckdb":"duckdb","polars":"polars",
-                "streamlit":"streamlit","gradio":"gradio","prefect":"prefect",
-                "docling":"docling","faster-whisper":"faster_whisper"}
+PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
 BASE_OPERATIONS={"jadx":["apk-decompile"],"blender":["blender-house"],
                  "openscad":["cad-stl"],"libreoffice":["office-pdf"],
@@ -37,16 +36,10 @@ BASE_OPERATIONS={"jadx":["apk-decompile"],"blender":["blender-house"],
                  "pdftotext":["pdf-text"],"strings":["binary-strings"]}
 
 def python_module_location(tool):
+    """Compatible location helper, now including Ferrari-owned virtual environments."""
     name=PYTHON_MODULES.get(tool)
-    if not name:
-        return None
-    try:
-        found=importlib.util.find_spec(name)
-    except (ImportError,ValueError,AttributeError):
-        return None
-    if found is None:
-        return None
-    return str(found.origin or "python module:"+name)
+    evidence=runtime_discovery.python_presence(name) if name else None
+    return evidence["location"] if evidence else None
 
 def specs():
     doc=json.loads((ROOT/"engine/tool_actions.json").read_text(encoding="utf-8"))
@@ -88,21 +81,31 @@ def inventory():
     selected=json.loads((ROOT/"engine/ubuntu_selection.json").read_text())["tools"]
     helpers=json.loads((ROOT/"engine/catalog.json").read_text())["tools"]
     defined=specs()
+    ecosystems=runtime_discovery.discover()
+    python=ecosystems["python"]["tools"]
+    npm=ecosystems["npm"]["tools"]
+    containers=ecosystems["containers"]["tools"]
     def inspect(entry,source):
         tool=entry["id"]
         base_bin=entry.get("bin") or BINARIES.get(tool,tool)
         path=executable(tool,base_bin)
-        module=python_module_location(tool) if not path else None
+        module_evidence=python.get(tool) if not path else None
+        npm_evidence=npm.get(tool) if not path and not module_evidence else None
+        container_evidence=containers.get(tool) if not path and not module_evidence and not npm_evidence else None
         callable_ops=[x["id"] for x in defined.values() if x["tool"]==tool and executable(tool,x["binary"])]
         if not path and callable_ops:
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
         base_ops=BASE_OPERATIONS.get(tool,[]) if path else []
-        present=bool(path or module)
+        evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None)
+        present=bool(path or evidence)
         state=("callable" if callable_ops or base_ops else
                "installed_unintegrated" if present else "not_detected")
+        detection=("executable" if path else "python_module" if module_evidence else
+                   "npm_package" if npm_evidence else "ferrari_container" if container_evidence else None)
         return {"id":tool,"category":entry["category"],"source":source,"installed":present,
-                "path":path or module,"detection":"executable" if path else "python_module" if module else None,
+                "path":path or (evidence or {}).get("location"),"detection":detection,
+                "ecosystem_evidence":evidence,
                 "actions":callable_ops,"base_operations":base_ops,
                 "installation_tier":entry.get("installation_tier"),
                 "apt_candidate":entry.get("installation_candidate"),
@@ -122,8 +125,8 @@ def inventory():
             "selected_not_detected":len(absent),
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
-            "programs":records,
-            "note":"Executable or Python-module detection only; absence does not prove a package is uninstalled; base_operations are independent of typed manifest actions. No functional certification implied."}
+            "programs":records,"ecosystems":ecosystems,
+            "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
 def normalize(value):
     return "".join(x for x in unicodedata.normalize("NFKD",value.lower()) if not unicodedata.combining(x))
