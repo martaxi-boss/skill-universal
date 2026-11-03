@@ -1,20 +1,24 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Referência canónica:** [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Esta cópia é para os ambientes que apenas têm o ZIP da Skill.
+**Referência canónica e atualizada:** [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Esta cópia serve apenas para ambientes com ZIP da única Skill Ferrari.
 
-## Arquitetura
+## Arquitetura estável
 
-Uma Skill Universal Ferrari → conector GitHub autenticado → workflow exclusivo Ferrari em `martaxi-boss/VPS` → SSH existente → Motor Ferrari isolado na VPS Ubuntu → resultado ZIP e relatório no GitHub Actions. O ChatGPT interpreta e orienta; a escolha e execução de ferramentas pertence ao motor Ubuntu. Não alterar a ponte SSH existente, o Supervisor ou os outros projetos. REA e Ruflo são apenas componentes opcionais.
+Uma Skill Ferrari → conector GitHub autenticado → workflow exclusivo Ferrari em `martaxi-boss/VPS` → SSH existente → Motor Ferrari isolado na VPS Ubuntu → ZIP e relatório. A IA orienta; o motor e os executores fazem o trabalho. Não alterar ponte SSH, Supervisor ou outros projetos. REA e Ruflo são fornecedores opcionais, não o coordenador.
 
-## Provas reais de 02/11/2026
+## Estado comprovado em 03/11/2026
 
-- Ferrari na VPS: [deploy #41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719), SUCCESS, 68 testes PASS, release ativa `1ff6e472b5ea4eab95785be224155f400c51aeaa`.
-- Ponta a ponta: [SVG #41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [Markdown→DOCX #41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999), SUCCESS, ZIP e ficheiros reais.
-- Catálogo: 125 projetos investigados, 56 pré-selecionados Ubuntu, 45 programas detetados nos catálogos combinados (não 45 de 56), 10 operações base e 12 adaptadores tipados.
-- REA/Ruflo: instalação CLI verificada; execução profunda pendente. BIM/FreeCAD ainda não certificado. Workflow remoto atende tipos de pedido existentes; não um DAG arbitrário.
+- **Versão ativa:** `29e016885f01c78941c37e4a147e207a1fc62f05`.
+- **VPS:** [#41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS com **87 testes PASS** e dois testes funcionais novos PASS.
+- **Skill ponta a ponta:** [IFC #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002), [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) e [inventário #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593), SUCCESS. Os ZIPs, `report.json` e artefactos foram inspecionados.
+- **Inventário real:** 56 candidatos Ubuntu, **22/56 detetados**, 48 ferramentas detetadas no catálogo combinado, **12 operações base**, 21 ações tipadas externas. Ação disponível não implica certificação de todas as funções do programa.
+- **IfcOpenShell:** `0.9.0.post1` em venv isolado; `ifc-summary` aceita `.ifc` e devolve esquema, entidades, projeto e hash. Não faz validação estrutural, geométrica, IDS ou BIM completo.
+- **Vite:** `8.3.5` com Node `22.23.4` isolado; `vite-build` aceita ZIP estático permitido e devolve HTML/CSS/JS compilados. Sem backend, sem scripts npm do projeto, sem browser Playwright.
+- **Não detetados:** FreeCAD e Playwright; não fingir que estão instalados. REA/Ruflo profundos ainda pendentes.
+- **Isolamento:** nenhuma nova Skill, SSH, Supervisor, instalação global ou outro projeto alterado. As versões dos workflows próprios Ferrari apontam para a release ativa.
 
 ## Continuidade
 
-Ler `references/github-bridge.md` quando houver pedido para a VPS. Confirmar a ferramenta real e respetiva ação. Criar um ficheiro novo GitHub por pedido, acompanhar o SHA, identificar o run, confirmar `report.json` e ficheiros, devolvê-los ao utilizador. Para capacidades ainda não integradas, implementar adaptadores em `martaxi-boss/skill-universal`, testar no Ubuntu e registar no bootstrap. Não criar uma nova Skill para cada área.
+Ler `references/github-bridge.md` para os tipos de pedido remotos `kind=inventory|operation|auto|invoke`. Confirmar cada artefacto real e os estados dos logs. Se for necessário ampliar capacidades, implementar e testar dentro de `martaxi-boss/skill-universal`, mantendo uma só Skill.
 
-**Repositório de transporte público:** certificar a propriedade não oculta o conteúdo publicado. Não colocar segredos, dados pessoais ou documentos confidenciais num commit público.
+Os repositórios de transporte são públicos. Base64 não é encriptação: não publicar credenciais nem dados privados. Uma futura confirmação de propriedade não torna os commits privados.
