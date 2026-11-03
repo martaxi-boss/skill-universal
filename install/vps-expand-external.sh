@@ -60,6 +60,18 @@ for tool in duckdb polars streamlit gradio faster-whisper prefect docling; do
       record "$tool" FAILED_VENV; continue
     fi
   fi
+  # Docling's PyTorch is forced to the CPU wheel distribution: there is no
+  # NVIDIA GPU, and default CUDA packages would waste VPS storage.
+  if [[ "$tool" == docling ]]; then
+    if ! "$dir/bin/python" -c 'import torch; assert "+cpu" in torch.__version__' >/dev/null 2>&1; then
+      if ! "$dir/bin/python" -m pip install --only-binary=:all: --no-cache-dir \
+         --disable-pip-version-check --no-input --timeout 60 --retries 1 \
+         --index-url https://download.pytorch.org/whl/cpu torch > "$OUT/docling-cpu-torch.log" 2>&1; then
+        record "$tool" PENDING_CPU_TORCH
+        continue
+      fi
+    fi
+  fi
   if "$dir/bin/python" -m pip install --only-binary=:all: --no-cache-dir \
        --disable-pip-version-check --no-input --prefer-binary \
        --timeout 45 --retries 1 "$package" > "$OUT/$tool-install.log" 2>&1 &&
