@@ -74,6 +74,11 @@ def system():
             "gui":bool(os.getenv("DISPLAY") or os.getenv("WAYLAND_DISPLAY"))}
 
 def present(p):
+    if p["id"]=="rea":
+        return False  # The obsolete separate REA is not a Ferrari executor.
+    if p["id"]=="apktool":
+        local=Path.home()/".local/share/motor-ferrari/tools/apktool-3.0.3/bin/apktool"
+        return local.is_file() and not local.is_symlink()
     exe=p.get("binary")
     if not exe:
         return False
