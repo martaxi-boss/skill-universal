@@ -1,24 +1,24 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Referência canónica e atualizada:** [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Esta cópia serve apenas para ambientes com ZIP da única Skill Ferrari.
+**Fonte de verdade:** [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Esta cópia é para quando a **única Skill Universal Ferrari** é usada a partir de ZIP.
 
-## Arquitetura estável
+## Arquitetura
 
-Uma Skill Universal Ferrari → conector GitHub autenticado → workflow exclusivo Ferrari em `martaxi-boss/VPS` → SSH existente → Motor Ferrari isolado na VPS Ubuntu → ZIP e relatório. A IA orienta; o motor e os executores fazem o trabalho. Não alterar ponte SSH, Supervisor ou outros projetos. REA e Ruflo são fornecedores opcionais, não o coordenador.
+Uma Skill Universal Ferrari → conector GitHub autenticado → workflow **apenas Ferrari** em `martaxi-boss/VPS` → SSH existente → Motor Ferrari independente na VPS Ubuntu → relatório/ficheiros ZIP. A IA interpreta e orienta, o motor executa. REA e Ruflo são ferramentas opcionais, não coordenadores. Não alterar o SSH, Supervisor ou outros projetos.
 
-## Estado comprovado em 03/11/2026
+## Estado real certificado — 03/11/2026
 
-- **Versão ativa:** `f7eb9dcbda78a80f127b8981d9361e853672cd62`.
-- **VPS:** [#41558189146](https://github.com/martaxi-boss/VPS/actions/runs/41558189146) SUCCESS com **93 testes PASS** e geometria IFC real PASS.
-- **Skill ponta a ponta:** [geometria IFC #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405) SUCCESS; `report.json` e `ifc-report.json` inspecionados. Parede IFC4: 5 × 0,2 × 3 m, oito vértices e doze triângulos. Provas anteriores: [IFC semântico #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002), [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) e [inventário #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593).
-- **Inventário real:** 56 candidatos Ubuntu, **22/56 detetados**, 48 ferramentas detetadas no catálogo combinado, **12 operações base**, 21 ações tipadas externas. Ação disponível não implica certificação de todas as funções do programa.
-- **IfcOpenShell:** `0.9.0.post1` em venv isolado; `ifc-summary` mantém o mesmo contrato e acrescenta limites globais de malhas trianguladas para elementos com representação, além de identificar ausência de geometria e erros. Não faz validação estrutural, IDS, quantidades líquidas, colisões ou BIM completo.
-- **Vite:** `8.3.5` com Node `22.23.4` isolado; `vite-build` aceita ZIP estático permitido e devolve HTML/CSS/JS compilados. Sem backend, sem scripts npm do projeto, sem browser Playwright.
-- **Não detetados:** FreeCAD e Playwright; não fingir que estão instalados. REA/Ruflo profundos ainda pendentes.
-- **Higienização:** a rotina Ferrari existente removeu duas releases obsoletas, preservou a ativa e a versão anterior certificada `29e016885...`, libertou 1,70 GiB e reportou 21,61 GiB livres. Nenhuma nova Skill, SSH, Supervisor, instalação global ou outro projeto foi alterado.
+- **Release VPS:** `13c4399257cd19496f378ad3f15cd1ebe877977b`.
+- **99 testes reais PASS:** [GitHub Actions VPS #41560720430](https://github.com/martaxi-boss/VPS/actions/runs/41560720430). `FERRARI_VITE_BROWSER_REAL=PASS` e `FERRARI_IFC_GEOMETRY_REAL=PASS`.
+- **Skill ponta a ponta:** [#41560954411](https://github.com/martaxi-boss/VPS/actions/runs/41560954411) SUCCESS. A operação `vite-build` compilou, executou JavaScript/CSS num Chromium headless e devolveu `dist/index.html`, CSS, JS, `browser-check.json` e captura PNG válida. O relatório indicou `dom_ready=complete`, sem erros de consola, sem erros de página e sem ligações externas.
+- **Versões próprias Ferrari:** Vite `8.3.5`, Playwright `1.64.1`, Chromium headless `156.0.8078.4`, Node `22.23.4`.
+- **Inventário:** 56 candidatos Ubuntu, 23/56 detetados, 49 programas detetados nos catálogos combinados, **12 operações base** e 21 ações externas. Isto não certifica automaticamente todas as funções dos programas.
+- **CAD/BIM:** `ifc-summary` com IfcOpenShell já tinha sido certificado com geometria 5 × 0,2 × 3 m na [execução #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405). Não substitui engenharia estrutural, IDS ou análise de colisões.
+- **Higienização:** após os testes PASS foram removidas duas releases antigas, preservadas a ativa e a anterior aprovada `aefd8bb156...`. Libertados 4,76 MiB e reportados 21,32 GiB livres. Nenhum projeto externo alterado.
+- **Limites:** testes de site estático pequeno, não autenticação/backend/pagamentos, nem testes web de toda uma aplicação. FreeCAD não está detetado; não inventar certificação.
 
 ## Continuidade
 
-Ler `references/github-bridge.md` para os tipos de pedido remotos `kind=inventory|operation|auto|invoke`. Confirmar cada artefacto real e os estados dos logs. Se for necessário ampliar capacidades, implementar e testar dentro de `martaxi-boss/skill-universal`, mantendo uma só Skill.
+Usar `references/github-bridge.md` para enviar um JSON novo `kind=operation|invoke|auto|inventory`, confirmar o run e descarregar o ZIP. Para sites estáticos, a operação existente `vite-build` devolve também screenshot quando o navegador Ferrari está operacional. As alterações e adaptações são feitas **no Ferrari**, sem segunda Skill ou novas camadas.
 
-Os repositórios de transporte são públicos. Base64 não é encriptação: não publicar credenciais nem dados privados. Uma futura confirmação de propriedade não torna os commits privados.
+Os pedidos são enviados para um repositório público: base64 não é encriptação e não pode conter dados pessoais ou segredos.
