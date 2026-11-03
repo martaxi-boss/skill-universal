@@ -6,16 +6,16 @@ from unittest.mock import patch
 from engine import tool_runtime, orchestrator
 
 class ToolRuntimeTests(unittest.TestCase):
-    def test_56_selected_and_12_action_specs(self):
+    def test_56_selected_and_21_action_specs(self):
         x=tool_runtime.inventory()
         self.assertEqual(x["selected"],56)
-        self.assertEqual(x["registered_actions"],12)
+        self.assertEqual(x["registered_actions"],21)
         self.assertEqual(len(x["programs"]),len(set(p["id"] for p in x["programs"])))
         self.assertTrue(any(p["id"]=="rea" for p in x["programs"]))
         self.assertTrue(any(p["id"]=="blender" for p in x["programs"]))
     def test_manifest_is_typed(self):
         x=tool_runtime.specs()
-        self.assertEqual(len(x),12)
+        self.assertEqual(len(x),21)
         self.assertTrue(all("{input}" in s["args"] for s in x.values()))
         self.assertTrue(all(s["mode"] in {"stdout","file"} for s in x.values()))
     def test_missing_binary_blocks_before_output_created(self):
@@ -73,6 +73,35 @@ class ToolRuntimeTests(unittest.TestCase):
         for step in bad:
             with self.assertRaises(ValueError):
                 orchestrator.validate_workflow({"version":1,"steps":[step]})
+    def test_read_only_python_module_detection(self):
+        from importlib.machinery import ModuleSpec
+        with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
+            self.assertEqual(tool_runtime.python_module_location("opencv"),"/usr/lib/cv2.so")
+        self.assertIsNone(tool_runtime.python_module_location("not-a-python-package"))
+
+    def test_base_operations_are_registered_separately(self):
+        with patch.object(tool_runtime,"executable",return_value="/usr/bin/fake"):
+            inv=tool_runtime.inventory()
+        for tool,op in (("jadx","apk-decompile"),("blender","blender-house"),
+                        ("openscad","cad-stl"),("libreoffice","office-pdf")):
+            item=next(x for x in inv["programs"] if x["id"]==tool)
+            self.assertIn(op,item["base_operations"])
+            self.assertEqual(item["status"],"callable")
+
+    def test_parameterized_ripgrep_action(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/"ferrari.txt";p.write_text("Motor Ferrari integrado\nOutro programa\n")
+            with patch.object(tool_runtime,"executable",return_value="rg"):
+                with self.assertRaises(ValueError):
+                    tool_runtime.invoke("ripgrep-find-text",str(p),str(Path(d)/"missing-query"))
+            with patch.object(tool_runtime,"executable",return_value="rg"):
+                with patch.object(tool_runtime.subprocess,"run") as execute:
+                    execute.return_value.returncode=0
+                    execute.return_value.stdout=b"1:Motor Ferrari integrado\n"
+                    outcome=tool_runtime.invoke("ripgrep-find-text",str(p),str(Path(d)/"found"),query="Ferrari")
+            self.assertEqual(Path(outcome["artifacts"][0]).read_text(),"1:Motor Ferrari integrado\n")
+            self.assertIn("Ferrari",execute.call_args.args[0])
+
     def test_no_arbitrary_shell_execution(self):
         src=Path(tool_runtime.__file__).read_text()
         self.assertIn("shell=False",src)

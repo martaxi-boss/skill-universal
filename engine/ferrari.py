@@ -370,11 +370,11 @@ def main(argv=None):
     pl=sub.add_parser("plan");pl.add_argument("request")
     sub.add_parser("tools")
     sub.add_parser("actions")
-    rr=sub.add_parser("route");rr.add_argument("request");rr.add_argument("--input")
+    rr=sub.add_parser("route");rr.add_argument("request");rr.add_argument("--input");rr.add_argument("--query")
     au=sub.add_parser("auto");au.add_argument("request");au.add_argument("--input",required=True)
-    au.add_argument("--output");au.add_argument("--execute",action="store_true")
+    au.add_argument("--output");au.add_argument("--query");au.add_argument("--execute",action="store_true")
     iv=sub.add_parser("invoke");iv.add_argument("--action",required=True)
-    iv.add_argument("--input",required=True);iv.add_argument("--output",required=True)
+    iv.add_argument("--input",required=True);iv.add_argument("--output",required=True);iv.add_argument("--query")
     al=sub.add_parser("alternatives");al.add_argument("product")
     ds=sub.add_parser("discover");ds.add_argument("query");ds.add_argument("--min-stars",type=int,default=100);ds.add_argument("--limit",type=int,default=15)
     pk=sub.add_parser("packages")
@@ -397,9 +397,9 @@ def main(argv=None):
             result=[{"action":x["id"],"tool":x["tool"],
                      "available":bool(tool_runtime.executable(x["tool"],x["binary"]))}
                     for x in tool_runtime.specs().values()]
-        elif a.cmd=="route":result=tool_runtime.route(a.request,a.input)
-        elif a.cmd=="auto":result=tool_runtime.auto(a.request,a.input,a.output,a.execute)
-        else:result=tool_runtime.invoke(a.action,a.input,a.output)
+        elif a.cmd=="route":result=tool_runtime.route(a.request,a.input,a.query)
+        elif a.cmd=="auto":result=tool_runtime.auto(a.request,a.input,a.output,a.execute,a.query)
+        else:result=tool_runtime.invoke(a.action,a.input,a.output,a.query)
     elif a.cmd=="alternatives": result=alternatives(a.product)
     elif a.cmd=="discover": result=discover(a.query,a.min_stars,a.limit)
     elif a.cmd=="packages":

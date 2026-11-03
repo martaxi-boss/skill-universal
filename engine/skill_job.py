@@ -27,7 +27,7 @@ INPUT_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\.[a-zA-Z0-9]{1,12}
 def validate_job(data):
     if not isinstance(data,dict) or data.get("version") != 1:
         raise ValueError("Expected a version 1 Ferrari job object")
-    if set(data) - {"version","id","kind","operation","request","action","title","layout","input"}:
+    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query"}:
         raise ValueError("Unknown Ferrari job fields")
     jid=data.get("id")
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
@@ -59,6 +59,14 @@ def validate_job(data):
             raise ValueError("Ferrari operation is not implemented")
     if kind=="invoke" and data.get("action") not in tool_runtime.specs():
         raise ValueError("Ferrari tool action is not integrated")
+    query=data.get("query")
+    if query is not None:
+        if kind not in {"invoke","auto"} or not isinstance(query,str) or not 1<=len(query.strip())<=200 or "\x00" in query:
+            raise ValueError("Invalid query for Ferrari tool")
+    if kind=="invoke":
+        spec=tool_runtime.specs()[data["action"]]
+        if ("{query}" in spec["args"]) != (query is not None):
+            raise ValueError("Action query required or not supported")
     if kind=="auto" and (not isinstance(data.get("request"),str) or not data["request"].strip() or len(data["request"])>500):
         raise ValueError("Invalid natural-language task")
     if kind=="operation" and data.get("title") is not None and (not isinstance(data["title"],str) or len(data["title"])>120):
@@ -96,9 +104,9 @@ def execute(data, outdir):
             response=ferrari.run(data["operation"],str(dest),source=str(src) if src else None,
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
         elif kind=="invoke":
-            response=tool_runtime.invoke(data["action"],str(src),str(dest))
+            response=tool_runtime.invoke(data["action"],str(src),str(dest),query=data.get("query"))
         else:
-            response=tool_runtime.auto(data["request"],str(src),str(dest),execute=True)
+            response=tool_runtime.auto(data["request"],str(src),str(dest),execute=True,query=data.get("query"))
             if response["status"]!="completed":
                 raise RuntimeError("Ferrari could not select an executable action: "+response["status"])
             response=response["result"]

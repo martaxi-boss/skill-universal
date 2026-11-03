@@ -35,7 +35,7 @@ def validate_workflow(spec: dict) -> list[dict]:
             raise ValueError("Every step must be an object")
         allowed={"id", "operation", "depends_on", "input", "input_from", "title", "layout"}
         if item.get("operation")=="tool":
-            allowed.update({"tool","action"})
+            allowed.update({"tool","action","query"})
         unknown = set(item) - allowed
         if unknown:
             raise ValueError("Unrecognized step fields: " + ", ".join(sorted(unknown)))
@@ -44,13 +44,19 @@ def validate_workflow(spec: dict) -> list[dict]:
             raise ValueError("Invalid or duplicate step ID")
         if op not in ferrari.OPS and op!="tool":
             raise ValueError("Unsupported operation in " + name)
-        tool=action=None
+        tool=action=query=None
         if op=="tool":
             tool=item.get("tool")
             action=item.get("action")
             spec=tool_runtime.specs().get(action)
             if not spec or spec["tool"]!=tool:
                 raise ValueError("Unknown or mismatched tool action")
+            query=item.get("query")
+            needs_query="{query}" in spec["args"]
+            if needs_query and (not isinstance(query,str) or not 1<=len(query.strip())<=200):
+                raise ValueError("Tool action requires a text query")
+            if not needs_query and query is not None:
+                raise ValueError("Tool action does not support query")
         deps = item.get("depends_on", [])
         if not isinstance(deps, list) or any(not isinstance(v, str) for v in deps):
             raise ValueError("depends_on must be a list of IDs")
@@ -76,7 +82,7 @@ def validate_workflow(spec: dict) -> list[dict]:
         ids.add(name)
         steps.append({"id": name, "operation": op, "depends_on": list(deps),
                       "input": inp, "input_from": source_step, "title": title, "layout": layout,
-                      "tool":tool,"action":action})
+                      "tool":tool,"action":action,"query":query})
     for step in steps:
         if not set(step["depends_on"]).issubset(ids):
             raise ValueError("Unknown dependencies in " + step["id"])
@@ -132,7 +138,7 @@ def orchestrate(spec: dict, workspace: str, execute: bool = False, max_parallel:
                 raise ValueError("Dependency has no regular-file artifact: " + step["input_from"])
             input_file = artifacts[0]
         if step["operation"]=="tool":
-            return tool_runtime.invoke(step["action"],input_file,str(job/step["id"]))
+            return tool_runtime.invoke(step["action"],input_file,str(job/step["id"]),step["query"])
         return ferrari.run(step["operation"], str(job / step["id"]),
                            source=input_file, title=step["title"], layout=step["layout"])
 

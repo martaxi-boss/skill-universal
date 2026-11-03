@@ -46,6 +46,16 @@ class SkillJobTests(unittest.TestCase):
         ]:
             with self.assertRaises(ValueError):
                 skill_job.validate_job(data)
+    def test_remote_query_action_validation(self):
+        raw=base64.b64encode(b"Ferrari works\n").decode("ascii")
+        data=req("invoke",action="ripgrep-find-text",query="Ferrari",
+                 input={"name":"ferrari.txt","content_base64":raw})
+        self.assertEqual(skill_job.validate_job(data),b"Ferrari works\n")
+        with self.assertRaises(ValueError):
+            skill_job.validate_job({**data,"query":None})
+        with self.assertRaises(ValueError):
+            skill_job.validate_job({**data,"query":"-"*300})
+
     def test_reject_reuse_output(self):
         with tempfile.TemporaryDirectory() as d:
             path=Path(d)/"job"

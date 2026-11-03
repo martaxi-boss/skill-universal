@@ -304,6 +304,233 @@
         "iI",
         "{input}"
       ]
+    },
+    {
+      "id": "vips-image-thumbnail",
+      "tool": "libvips",
+      "binary": "vips",
+      "category": "creative",
+      "keywords": [
+        "miniatura vips",
+        "reduzir imagem",
+        "thumbnail vips"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff",
+        ".webp"
+      ],
+      "mode": "file",
+      "artifact": "thumbnail.png",
+      "args": [
+        "thumbnail",
+        "{input}",
+        "{output}",
+        "320"
+      ]
+    },
+    {
+      "id": "vips-image-inspect",
+      "tool": "libvips",
+      "binary": "vipsheader",
+      "category": "creative",
+      "keywords": [
+        "vipsheader",
+        "libvips",
+        "cabecalho imagem"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff",
+        ".webp"
+      ],
+      "mode": "stdout",
+      "artifact": "image-header.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "imagemagick-webp",
+      "tool": "imagemagick",
+      "binary": "convert",
+      "category": "creative",
+      "keywords": [
+        "imagem para webp",
+        "converter imagem webp",
+        "otimizar webp"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "file",
+      "artifact": "converted.webp",
+      "args": [
+        "{input}",
+        "-auto-orient",
+        "-resize",
+        "1280x1280>",
+        "{output}"
+      ]
+    },
+    {
+      "id": "pdftotext-layout",
+      "tool": "pdftotext",
+      "binary": "pdftotext",
+      "category": "docs",
+      "keywords": [
+        "texto pdf",
+        "extrair pdf",
+        "converter pdf texto"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "stdout",
+      "artifact": "extracted.txt",
+      "args": [
+        "-layout",
+        "{input}",
+        "-"
+      ]
+    },
+    {
+      "id": "objdump-file-header",
+      "tool": "objdump",
+      "binary": "objdump",
+      "category": "reverse",
+      "keywords": [
+        "objdump",
+        "formato binario",
+        "cabecalho executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "object-header.txt",
+      "args": [
+        "-f",
+        "{input}"
+      ]
+    },
+    {
+      "id": "strings-file-extract",
+      "tool": "strings",
+      "binary": "strings",
+      "category": "reverse",
+      "keywords": [
+        "strings binario",
+        "extrair strings",
+        "texto do executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "strings.txt",
+      "args": [
+        "-a",
+        "-n",
+        "6",
+        "{input}"
+      ]
+    },
+    {
+      "id": "ripgrep-find-text",
+      "tool": "ripgrep",
+      "binary": "rg",
+      "category": "dev",
+      "keywords": [
+        "procurar texto",
+        "pesquisar texto",
+        "encontrar expressao",
+        "ripgrep"
+      ],
+      "extensions": [
+        ".txt",
+        ".md",
+        ".markdown",
+        ".log",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".py",
+        ".js",
+        ".ts",
+        ".html",
+        ".xml",
+        ".csv",
+        ".ini"
+      ],
+      "mode": "stdout",
+      "artifact": "matches.txt",
+      "args": [
+        "--no-heading",
+        "--line-number",
+        "-F",
+        "--",
+        "{query}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "ansible-inventory-json",
+      "tool": "ansible",
+      "binary": "ansible-inventory",
+      "category": "automation",
+      "keywords": [
+        "inventario ansible",
+        "ansible inventario",
+        "inventario hosts"
+      ],
+      "extensions": [
+        ".ini",
+        ".yaml",
+        ".yml"
+      ],
+      "mode": "stdout",
+      "artifact": "hosts.json",
+      "args": [
+        "-i",
+        "{input}",
+        "--list"
+      ]
+    },
+    {
+      "id": "tshark-pcap-summary",
+      "tool": "wireshark",
+      "binary": "tshark",
+      "category": "reverse",
+      "keywords": [
+        "analisar pcap",
+        "resumo de captura",
+        "tshark",
+        "trafego pcap"
+      ],
+      "extensions": [
+        ".pcap",
+        ".pcapng"
+      ],
+      "mode": "stdout",
+      "artifact": "traffic-summary.txt",
+      "args": [
+        "-r",
+        "{input}",
+        "-q",
+        "-z",
+        "io,stat,0"
+      ]
     }
   ]
 }

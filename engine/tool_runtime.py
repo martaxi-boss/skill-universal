@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import importlib.util
 from pathlib import Path
 import re
 import shutil
@@ -25,6 +26,28 @@ ISOLATED={"ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
           "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
           "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo"}
+# Python libraries have no command-line executable; detect them as modules instead.
+PYTHON_MODULES={"opencv":"cv2","duckdb":"duckdb","polars":"polars",
+                "streamlit":"streamlit","gradio":"gradio","prefect":"prefect",
+                "docling":"docling","faster-whisper":"faster_whisper"}
+# Base Ferrari operations are independently implemented and tested, not manifest adapters.
+BASE_OPERATIONS={"jadx":["apk-decompile"],"blender":["blender-house"],
+                 "openscad":["cad-stl"],"libreoffice":["office-pdf"],
+                 "imagemagick":["image-resize"],"ffmpeg":["video-thumbnail"],
+                 "pdftotext":["pdf-text"],"strings":["binary-strings"]}
+
+def python_module_location(tool):
+    name=PYTHON_MODULES.get(tool)
+    if not name:
+        return None
+    try:
+        found=importlib.util.find_spec(name)
+    except (ImportError,ValueError,AttributeError):
+        return None
+    if found is None:
+        return None
+    return str(found.origin or "python module:"+name)
+
 def specs():
     doc=json.loads((ROOT/"engine/tool_actions.json").read_text(encoding="utf-8"))
     selected={x["id"] for x in json.loads((ROOT/"engine/ubuntu_selection.json").read_text())["tools"]}
@@ -48,7 +71,7 @@ def specs():
         for arg in x["args"]:
             if not isinstance(arg,str) or len(arg)>160:
                 raise ValueError("Invalid argument")
-            if any(token not in {"{input}","{output}"} for token in re.findall(r"\{[^{}]*\}",arg)):
+            if any(token not in {"{input}","{output}","{query}"} for token in re.findall(r"\{[^{}]*\}",arg)):
                 raise ValueError("Unsupported argument placeholder")
         if not x.get("extensions") or not x.get("keywords") or not x.get("category"):
             raise ValueError("Incomplete action metadata")
@@ -69,25 +92,43 @@ def inventory():
         tool=entry["id"]
         base_bin=entry.get("bin") or BINARIES.get(tool,tool)
         path=executable(tool,base_bin)
+        module=python_module_location(tool) if not path else None
         callable_ops=[x["id"] for x in defined.values() if x["tool"]==tool and executable(tool,x["binary"])]
         if not path and callable_ops:
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
-        return {"id":tool,"category":entry["category"],"source":source,"installed":bool(path),
-                "path":path,"actions":callable_ops,
-                "status":"callable" if callable_ops else "installed_unintegrated" if path else "not_detected"}
+        base_ops=BASE_OPERATIONS.get(tool,[]) if path else []
+        present=bool(path or module)
+        state=("callable" if callable_ops or base_ops else
+               "installed_unintegrated" if present else "not_detected")
+        return {"id":tool,"category":entry["category"],"source":source,"installed":present,
+                "path":path or module,"detection":"executable" if path else "python_module" if module else None,
+                "actions":callable_ops,"base_operations":base_ops,
+                "installation_tier":entry.get("installation_tier"),
+                "apt_candidate":entry.get("installation_candidate"),
+                "status":state}
     records=[inspect(x,"shortlist_56") for x in selected]
     used={x["id"] for x in selected}
     records.extend(inspect(x,"auxiliary_catalogue") for x in helpers if x["id"] not in used)
+    picked=records[:len(selected)]
+    absent=[p for p in picked if not p["installed"]]
+    missing_by_tier={}
+    for item in absent:
+        tier=item.get("installation_tier") or "unknown"
+        missing_by_tier[tier]=missing_by_tier.get(tier,0)+1
     return {"selected":len(selected),"registered_actions":len(defined),
             "installed":sum(x["installed"] for x in records),
+            "selected_detected":len(picked)-len(absent),
+            "selected_not_detected":len(absent),
+            "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
-            "programs":records,"note":"Detection is not a functional certification."}
+            "programs":records,
+            "note":"Executable or Python-module detection only; absence does not prove a package is uninstalled; base_operations are independent of typed manifest actions. No functional certification implied."}
 
 def normalize(value):
     return "".join(x for x in unicodedata.normalize("NFKD",value.lower()) if not unicodedata.combining(x))
 
-def route(request,source=None):
+def route(request,source=None,query=None):
     if not isinstance(request,str) or not request.strip():raise ValueError("Request required")
     q=normalize(request)
     extension=Path(source).suffix.lower() if source else None
@@ -95,6 +136,8 @@ def route(request,source=None):
     for x in specs().values():
         exe=executable(x["tool"],x["binary"])
         if not exe:continue
+        if "{query}" in x["args"] and (not isinstance(query,str) or not query.strip()):
+            continue
         if extension and "*" not in x["extensions"] and extension not in x["extensions"]:continue
         matched=[k for k in x["keywords"] if normalize(k) in q]
         if not matched:continue
@@ -104,9 +147,9 @@ def route(request,source=None):
     candidates.sort(key=lambda x:(-x["score"],x["action"]))
     return {"request":request,"input":source,"suggestions":candidates,"executed":False}
 
-def auto(request,source,folder=None,execute=False):
+def auto(request,source,folder=None,execute=False,query=None):
     """Resolve a user request to a single installed adapter; run only if unambiguous."""
-    proposal=route(request,source)
+    proposal=route(request,source,query)
     options=proposal["suggestions"]
     if not options:
         return {**proposal,"selected":None,"status":"no_matching_installed_adapter"}
@@ -117,14 +160,20 @@ def auto(request,source,folder=None,execute=False):
         return {**proposal,"selected":best,"status":"preview"}
     if not folder:
         raise ValueError("Output directory required to execute")
-    outcome=invoke(best["action"],source,folder)
+    outcome=(invoke(best["action"],source,folder,query=query)
+             if query is not None else invoke(best["action"],source,folder))
     return {**proposal,"selected":best,"status":"completed","executed":True,"result":outcome}
 
-def invoke(action,source,folder):
+def invoke(action,source,folder,query=None):
     x=specs().get(action)
     if not x:raise ValueError("Unknown executable action")
     exe=executable(x["tool"],x["binary"])
     if not exe:raise RuntimeError("Executor not installed: "+x["binary"])
+    requires_query="{query}" in x["args"]
+    if requires_query and (not isinstance(query,str) or not 1<=len(query.strip())<=200 or "\x00" in query):
+        raise ValueError("This action requires a non-empty query of up to 200 characters")
+    if not requires_query and query is not None:
+        raise ValueError("This action does not accept a query")
     if not source:raise ValueError("File input required")
     inp=Path(source)
     if inp.is_symlink() or not inp.is_file():
@@ -137,7 +186,7 @@ def invoke(action,source,folder):
     if target.exists() or target.is_symlink():
         raise FileExistsError("Refusing to overwrite "+str(target))
     outdir.mkdir(parents=True,exist_ok=True)
-    replacements={"{input}":str(inp),"{output}":str(target)}
+    replacements={"{input}":str(inp),"{output}":str(target),"{query}":query}
     args=[exe]+[replacements.get(v,v) for v in x["args"]]
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False)
@@ -159,19 +208,19 @@ def main(argv=None):
     sub=ap.add_subparsers(dest="cmd",required=True)
     sub.add_parser("inventory")
     sub.add_parser("actions")
-    r=sub.add_parser("route");r.add_argument("request");r.add_argument("--input")
+    r=sub.add_parser("route");r.add_argument("request");r.add_argument("--input");r.add_argument("--query")
     a=sub.add_parser("auto");a.add_argument("request");a.add_argument("--input",required=True)
-    a.add_argument("--output");a.add_argument("--execute",action="store_true")
+    a.add_argument("--output");a.add_argument("--query");a.add_argument("--execute",action="store_true")
     i=sub.add_parser("invoke");i.add_argument("--action",required=True)
-    i.add_argument("--input",required=True);i.add_argument("--output",required=True)
+    i.add_argument("--input",required=True);i.add_argument("--output",required=True);i.add_argument("--query")
     args=ap.parse_args(argv)
     if args.cmd=="inventory":response=inventory()
     elif args.cmd=="actions":
         response=[{"action":x["id"],"tool":x["tool"],"available":bool(executable(x["tool"],x["binary"]))}
                   for x in specs().values()]
-    elif args.cmd=="route":response=route(args.request,args.input)
-    elif args.cmd=="auto":response=auto(args.request,args.input,args.output,args.execute)
-    else:response=invoke(args.action,args.input,args.output)
+    elif args.cmd=="route":response=route(args.request,args.input,args.query)
+    elif args.cmd=="auto":response=auto(args.request,args.input,args.output,args.execute,args.query)
+    else:response=invoke(args.action,args.input,args.output,args.query)
     print(json.dumps(response,ensure_ascii=False,indent=2))
 if __name__=="__main__":
     try:main()
