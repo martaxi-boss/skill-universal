@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==32
-assert x["callable_actions"]>=32
+assert x["registered_actions"]==33
+assert x["callable_actions"]>=33
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -339,3 +339,22 @@ for tool in ("calibre","darktable","krita"):
     assert report.get("confirmed") is True and report["tool"]==tool,report
 print("FERRARI_PHASE2_PUBLISHING_THREE_REAL=PASS")
 PY_PHASE2
+
+# Phase 2 GIMP: independent, noninteractive editable output via the Ferrari
+# dispatcher; no changes to system settings or other project workspaces.
+convert -size 140x90 xc:'#c2deed' -fill '#2f5870' \
+  -draw 'rectangle 18,20 98,71' "$WORK/phase2-gimp.png"
+python3 -m engine.ferrari invoke --action gimp-png-xcf \
+  --input "$WORK/phase2-gimp.png" --output "$WORK/gimp-xcf" \
+  > "$WORK/phase2-gimp-action.json"
+python3 - "$WORK" <<'PY_GIMP'
+from pathlib import Path
+import json,sys
+root=Path(sys.argv[1])
+xcf=root/"gimp-xcf/gimp-editable.xcf"
+assert xcf.is_file() and xcf.stat().st_size>256,xcf
+assert xcf.read_bytes().startswith(b"gimp xcf "),xcf
+report=json.loads((root/"phase2-gimp-action.json").read_text())
+assert report["confirmed"] and report["tool"]=="gimp",report
+print("FERRARI_GIMP_XCF_REAL=PASS")
+PY_GIMP
