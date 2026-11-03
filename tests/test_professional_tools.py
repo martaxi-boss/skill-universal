@@ -37,7 +37,7 @@ class FerrariProfessionalTests(unittest.TestCase):
             source.write_text("IFC sample")
             def write_report(args, **kwargs):
                 target=Path(args[-1])
-                target.write_text(json.dumps({"format":"IFC","schema":"IFC4","total_entities":2}))
+                target.write_text(json.dumps({"format":"IFC","schema":"IFC4","total_entities":2,"entities_by_type":{"IfcProject":1,"IfcWall":1}}))
             with patch.object(professional_tools,"bim_available",return_value=True):
                 with patch.object(professional_tools,"_run",side_effect=write_report) as run:
                     result=professional_tools.ifc_summary(source,root/"out")
