@@ -54,8 +54,8 @@ class ExternalProgramsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             base=Path(d)
             root=base/"tools/ferrari-services/valkey-server"
-            (root/"usr/bin").mkdir(parents=True)
-            private=root/"usr/bin/valkey-server"
+            (root/"bin").mkdir(parents=True)
+            private=root/"bin/valkey-server"
             private.write_text("Ferrari service executable")
             with patch.object(tool_runtime,"HOME",base):
                 with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
@@ -67,6 +67,15 @@ class ExternalProgramsTests(unittest.TestCase):
             with patch.object(tool_runtime,"HOME",base):
                 with patch.dict(tool_runtime.ISOLATED,{"valkey":private}):
                     self.assertIsNone(tool_runtime.executable("valkey","valkey-server"))
+
+    def test_valkey_dependencies_are_ferrari_private(self):
+        script=(ROOT/"install/vps-expand-services-gui.sh").read_text()
+        self.assertIn("apt-get download liblzf1",script)
+        self.assertIn('liblzf.so.1',script)
+        self.assertIn('cat > "$out/bin/valkey-server"',script)
+        self.assertIn('export LD_LIBRARY_PATH=',script)
+        self.assertIn("FERRARI_VALKEY_EXTERNAL_BINARY_FORBIDDEN",script)
+        self.assertNotIn("sudo -n apt-get install -y liblzf1",script)
 
     def test_binary_archive_path_is_initialized_after_directory(self):
         source=SCRIPT.read_text()
