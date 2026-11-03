@@ -20,6 +20,8 @@ class PrivateReaProviderTests(unittest.TestCase):
         self.assertIn("ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db", script)
         self.assertIn("6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75", script)
         self.assertIn("sha256sum -c -", script)
+        self.assertIn('"$JDK/bin/jar" tf "$JAR"', script)
+        self.assertNotIn('unzip -tq "$JAR"', script)
         self.assertIn("GHIDRA_INSTALL_DIR", script)
         self.assertIn("REA_JADX_MCP_JAR", script)
         self.assertNotIn("/home/ubuntu/rea-final-runtime", script)
