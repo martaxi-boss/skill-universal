@@ -1,150 +1,45 @@
 # Motor Ferrari — Skill Universal Ubuntu
 
-**[Ler primeiro o BOOTSTRAP — objetivo definitivo, arquitetura, situação real e próximos passos](BOOTSTRAP.md).** É o documento de continuidade de todo o Motor Ferrari, incluindo construção, CAD, BIM e 3D. O catálogo não equivale a software instalado.
+**Situação verificada em 03/11/2026.** Uma Skill universal, um motor Ubuntu independente e um orquestrador próprio. O ChatGPT/Codex interpreta e orienta; o Ferrari seleciona os executores reais na VPS e devolve ficheiros, ZIP e relatórios. Não confundir com o projeto REA antigo.
 
-**Projeto independente**: a IA anfitriã interpreta e organiza; o Motor Ferrari na VPS Ubuntu seleciona e executa ferramentas próprias. Não depende dos executores de ChatGPT/Codex nem reutiliza Project Leader, REA anterior ou outros projetos.
+**[BOOTSTRAP canónico e pendências](BOOTSTRAP.md)** — única fonte de verdade para a fotografia operacional. Os relatórios antigos em docs/ e o histórico Git são históricos, não o estado corrente.
 
-## Ligação direta da Skill ao Ferrari no Ubuntu — PASS (02/11/2026)
+## Instalação real e provas
 
-Motor na VPS: [deploy #41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719), **68 testes PASS**. Dois pedidos reais enviados com conector GitHub: [criar SVG #41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [converter Markdown para DOCX automaticamente #41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999), ambos SUCCESS. ZIP de resultados efetivamente recolhido e inspecionado. Novo transportador exclusivo Ferrari em `martaxi-boss/VPS/.github/workflows/ferrari-skill-request.yml`, usando autenticação SSH antiga. **Os pedidos ficam públicos no repositório VPS**; não enviar ficheiros ou segredos privados. A Skill terá de ser instalada e o conector GitHub tem de estar ligado no ChatGPT. [Ver relatório de certificação](docs/CERTIFICACAO_SKILL_VPS_20261102.md).
+- [VPS #41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900): SUCCESS, **139 testes PASS**, FERRARI_DEPLOY_TRANSPORT=PASS e FERRARI_ONLY_HYGIENE=PASS. Release instalada: 6c93a392dfe9a02d7ccfef9d47317c9685976484.
+- [Skill inventário #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): FERRARI_SKILL_END_TO_END=PASS, relatório e ZIP; 81 programas detetados em catálogos combinados, 55 dos 56 candidatos Ubuntu detetados, 25 ações externas.
+- [REA próprio + Apktool #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939): análise ELF e recursos Android, Apktool 3.0.3 privado; [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) confirmou pedido e ZIP reais.
+- [Plano remoto composto #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416): orquestração com dependências e artefactos no ZIP.
 
-## Novo: ferramentas externas com descoberta e execução automáticas — 02/11/2026
+Estes números não significam que todos os programas detetados tenham ações ou testes funcionais. Em 03/11: 15 aplicações gráficas APT instaladas mas sem interface interativa certificada; ComfyUI CPU sem modelos e sem inferência certificada; Penpot preparado mas ainda sem Docker/Compose funcional.
 
-**GitHub Actions VPS [#41545170664](https://github.com/martaxi-boss/VPS/actions/runs/41545170664): SUCCESS.** 59 testes PASS; 12 adaptadores executáveis, 45 programas detetados nos catálogos combinados, seleção automática de Pandoc para pedido Markdown→DOCX, Graphviz SVG, jq JSON e orquestração real em três ferramentas. Novos comandos: `python3 -m engine.ferrari tools`, `actions`, `route`, `auto` e `invoke`. [Relatório de certificação](docs/CERTIFICACAO_UNIVERSAL_20261102.md). A Skill ainda não tem ligação direta certificada à VPS.
+## Instalações isoladas do Ferrari
 
-## Resultado mais recente: VPS limpa e Ferrari CAD/3D confirmado — 02/11/2026
+- Raiz: /home/ubuntu/.local/share/motor-ferrari/
+- REA original distribuído por npm: rea-agents@6.8.0 dentro de .runtime/npm/rea; não é o REA do outro projeto.
+- Java Temurin 25.0.5, Node.js 22.23.4, Ghidra 12.2, JADX 1.5.6 e Apktool **3.0.3** privados, com smoke tests comprovados.
+- Ferramentas APT globais Ubuntu pertencem ao sistema: não presumir que são exclusivas do Ferrari nem removê-las ao desinstalar outro projeto.
 
-**GitHub Actions VPS [#41541318347](https://github.com/martaxi-boss/VPS/actions/runs/41541318347): SUCCESS.** Release ativa `d7708a825797cc40b8726b32cbe00673929f3e4c`; 49 testes na VPS PASS, OpenSCAD STL, Blender BLEND/GLB/PNG, Office DOCX/PDF, Ghidra/JADX teste funcional. A limpeza Ferrari-only removeu 8 releases antigas e libertou **6,82 GiB**, ficando **20,42 GiB livres**, sem alterar outras pastas. A plataforma ainda necessita de integração Skill → VPS, adaptação REA/Ruflo profunda e expansão dos restantes domínios.
+**O REA antigo não está autorizado para remoção:** faltam auditoria de origem e referências cruzadas de dependências, teste funcional com o legado inacessível e plano de recuperação. Não apagar a instalação REA própria do Ferrari.
 
-## CAD/3D/Office reais na VPS — 02/11/2026
+## Funcionamento
 
-**GitHub Actions VPS [#41540947069](https://github.com/martaxi-boss/VPS/actions/runs/41540947069): SUCCESS.** OpenSCAD 2021.01 exportou STL, Blender 4.0.2 produziu BLEND/GLB/PNG em CPU e LibreOffice converteu DOCX em PDF. **48 testes unitários PASS na VPS** e smoke real dos três executores. O motor continua sem ser uma plataforma BIM de engenharia estrutural e as 56 ferramentas não estão todas instaladas/certificadas.
+A Skill única está em [skill/motor-universal-linux/](skill/motor-universal-linux/); o motor em engine/ e o instalador em install/. O transporte operacional é feito por um workflow exclusivo no repositório [martaxi-boss/VPS](https://github.com/martaxi-boss/VPS), que envia pedidos autenticados à VPS e recolhe resposta ZIP. O GitHub é transporte, não orquestrador adicional.
 
-## Ampliação CAD/3D/Office — novembro 2026
+Comandos principais dentro da release Ferrari:
 
-Foram acrescentadas três operações tipadas (`cad-stl`, `blender-house`, `office-pdf`) com adaptadores reais OpenSCAD/Blender/LibreOffice, bem como instalador adicional `install/vps-cad-3d.sh`. **A prova operacional é o GitHub Actions VPS e não apenas a presença das funções no código.** A casa 3D é conceptual, não estrutural ou BIM.
+- python3 -m engine.ferrari doctor — verificar capacidades.
+- python3 -m engine.ferrari tools — inventariar programas detetados.
+- python3 -m engine.ferrari actions — inventariar operações disponíveis.
+- python3 -m engine.ferrari route 'pedido' --input ficheiro — pré-visualizar seleção.
+- python3 -m engine.orchestrator --plan plano.json --workspace pasta --execute — executar DAG validado no ambiente autorizado.
 
-## Instalação real na VPS — 02/11/2026 (mais recente)
+Pela Skill, os pedidos suportados incluem kind=inventory, operation, invoke, auto e plan. [Contrato GitHub→VPS→ZIP](skill/motor-universal-linux/references/github-bridge.md); [protocolos por domínio](skill/motor-universal-linux/references/protocols.md).
 
-**GitHub Actions VPS [#41538472015](https://github.com/martaxi-boss/VPS/actions/runs/41538472015): SUCCESS.** O motor Ferrari foi instalado sob `/home/ubuntu/.local/share/motor-ferrari/current` (release `b8a7de8695b16bf064e0796c3cb9276d3a8254ed`). **41 testes PASS na própria VPS**, execução de HTML/SVG/strings pelo orquestrador, JADX e Ghidra com testes funcionais; REA/Ruflo instalados com smoke de CLI, não com análise/swarm certificados. Node 22.23.4 e Temurin Java 25 estão isolados. A ligação direta da Skill e as 56 ferramentas ainda não estão certificadas. [Ver relatório e evidência](docs/RELATORIO_REAL_VPS_20261102.md).
+## Segurança, limites e próximos passos
 
-## Estado da entrega anterior (histórico, ultrapassado pela instalação) — 02/11/2026
+O repositório VPS usado no transporte pode ser público: base64 **não cifra** dados. Não publicar credenciais, documentos privados ou dados pessoais. Não executar instalações ou apagar outros projetos sem autorização; preferir auditorias só de leitura e alterações mínimas verificáveis.
 
-**CI Ubuntu 24.04: PASS (#41534293244).** **PRECHECK da VPS: bloqueado (#41534293085)** pela ausência de `MOTOR_SSH_*` no GitHub Actions; sem ligação SSH nem instalação. Ver `BOOTSTRAP.md` e `docs/AUDITORIA_ENTREGA_UBUNTU.md` para retomar.
+**Prioridades:** terminar a higienização documental e de espaço; auditar proveniência de REA/Java/Node/Python/Ghidra/JADX/Apktool, fornecedores e configurações; testar independência do REA antigo e realizar certificação final; integrar funcionalidades de programas já instalados conforme necessidades reais. Não criar Skills ou camadas adicionais.
 
-## Critérios de pré-diagnóstico anteriores à instalação (histórico)
-
-**Não foi comprovada compatibilidade operacional de todas as 56 ferramentas na VPS; não instalar tudo.** O primeiro passo é um **PRECHECK por GitHub Actions, só de leitura**, sem APT nem escrita na VPS. O instalador de pacotes headless exclui Node.js/npm do Ubuntu (versão potencialmente incompatível com REA), serviços Prometheus/Valkey (evitar alterar serviços de outros projetos), recusa pacotes obrigatórios ausentes e testa resolução de dependências APT antes de instalar.
-
-## Workflow manual alternativo no repositório Ferrari (não foi a via usada na instalação real)
-
-O projeto tem agora um [workflow de instalação por fases](.github/workflows/deploy-vps.yml) e um [guia de operação](docs/INSTALACAO_VPS.md). O workflow `workflow_dispatch` é **manual**: PRECHECK (SSH e inspeção real Ubuntu, sem alteração), DEPLOY (código isolado em `$HOME/.local/share/motor-ferrari/`) e INSTALL_HEADLESS (pacotes aprovados, testes e evidência). É necessária ligação SSH configurada nos secrets deste repositório. **Estas fases deste workflow alternativo não foram usadas; a instalação foi efetuada pelo workflow independente do repositório VPS com os secrets existentes.** As 56 ferramentas são uma seleção técnica, não 56 instalações confirmadas.
-
-## Estado operacional em 02/11/2026
-
-- **Orquestrador próprio (novo):** `engine/orchestrator.py` executa planos JSON validados com dependências, etapas paralelas/serie, modo pré-visualização sem alterações, relatório e teste real Ubuntu. Prefect, Ruflo e LangGraph ficam opcionais e não são instalados por defeito.
-- **Auditoria de pacotes de Skills (nova):** `engine/skillpacks_audit.json` analisa 9 coleções públicas e 6 possíveis motores; `docs/ORQUESTRADOR_SKILLS_GITHUB.md` explica licença, compatibilidade e seleção, mantendo **uma única Skill**.
-
-- Catálogo GitHub: **125 projetos pesquisados; 56 pré-selecionados com critérios Ubuntu e qualidade** com metadados de estrelas e upstream; catálogo original: **69 entradas**, com sobreposição.
-- Motor Ferrari: diagnóstico, roteamento e **sete operações tipadas** (site HTML, cartaz SVG, PDF para texto, redimensionar imagem, thumbnail vídeo, descompilar APK com JADX e strings binárias).
-- Integração MCP independente: ferrari_doctor, ferrari_catalog, ferrari_plan, ferrari_run e ferrari_orchestrate, mais pesquisa de alternativas livres.
-- Instalador APT Ubuntu 24.04+ por perfis e modo máximo: simulação por defeito; --apply explícito para instalar pacotes compatíveis encontrados.
-- **Instalação real comprovada na VPS pelo run #41538472015**; JADX/Ghidra têm testes funcionais e REA/Ruflo smoke CLI. ComfyUI e a ligação direta Skill → motor continuam pendentes. Os testes da runner e os da VPS estão documentados separadamente.
-
-Inclui uma matriz de 18 alternativas legais a aplicações comerciais e pesquisa automática *read-only* de projetos gratuitos no GitHub. O software comercial não é desbloqueado por engenharia reversa.
-
-Consultar [a seleção profissional Ubuntu](docs/SELECAO_UBUNTU.md), [arquitetura e comandos Ferrari](docs/FERRARI.md) e [Skill única](skill/motor-universal-linux/SKILL.md). Ferramentas Adobe pirateadas não são incluídas; existem alternativas gratuitas profissionais.
-
----
-
-# Motor Universal Linux — projeto independente (protótipo v0.1)
-
-Motor e Skill portáteis para tarefas de desenvolvimento, criação web, criativos, inspeção de aplicações e outras operações numa instalação Linux. **Não reutiliza nem altera** Project Leader, REA FINAL, Ruflo ou qualquer outro projeto do utilizador.
-
-## Arquitetura
-
-```text
-ChatGPT / Codex / outros agentes
-         |
-     Uma Skill (mesmo contrato de instruções)
-         |
-     Ferramenta nativa ou MCP com ligação autenticada
-         |
-     Motor Universal Linux (CLI / MCP na VPS)
-         |
-     Descoberta automática + catálogo + seleção + execução + relatório
-         |
-     Ferramentas instaladas, REA próprio, modelos/fornecedores disponíveis
-```
-
-- **VPS**: motor independente instalado sob uma pasta exclusiva; executa trabalho, não depende de outro repositório. Pode ser invocado pela CLI; o servidor MCP é adaptador opcional, não ativado por defeito.
-- **ChatGPT**: a Skill não dá, por si só, acesso SSH à VPS. Precisa de uma ligação autorizada, por exemplo um servidor MCP remoto ou uma ação explícita via GitHub Actions no repositório novo.
-- **Codex/Claude/editores**: podem usar a CLI ou o mesmo MCP se o ambiente disponibilizar execução/autenticação. As respetivas interfaces não são idênticas.
-- **Sem IA local obrigatória**: a aplicação usa o modelo do agente anfitrião; fornecedores externos gratuitos são opcionais, exigem contas e podem ter quotas. Criativos SVG e sites HTML são gerados no motor sem GPU; criação de imagens fotorealistas não é garantida numa VPS sem GPU ou API.
-
-## O que este pacote já implementa
-
-- Catálogo de ferramentas e fornecedores gratuitos com verificação de presença no host.
-- Identificação de perfis Linux (arquitetura, capacidade, comandos).
-- Planeamento de tarefas em português/inglês com seleção de capacidade, ferramentas preferidas e alternativas.
-- Execução comprovável de três rotas locais: website HTML responsivo, criativo SVG editável e inspeção estática não-invasiva de ficheiros/APKs.
-- Ponte MCP opcional para plataformas com cliente compatível.
-- Instalador Ubuntu em modo simulação por defeito, com perfis e verificação `apt-cache` antes de instalar.
-- Suite de testes para encaminhamento, geração de artefactos e isolamento de projetos.
-
-Este é um **protótipo funcional já instalado na VPS, mas não ainda uma plataforma universal completa**. A implantação completa (REA upstream autónomo, Ghidra, JADX, motores de media, modelos e integrações remotas) exige executar o instalador no Ubuntu e testar cada componente real. Um programa listado não significa que já esteja instalado ou seja compatível com a VPS concreta.
-
-## Testes sem alterar o sistema
-
-```bash
-cd motor-universal-linux
-python3 -m unittest discover -s tests -v
-python3 -m engine.cli doctor
-python3 -m engine.cli providers
-python3 -m engine.cli catalog
-python3 -m engine.cli plan 'criar um site profissional para barbearia'
-python3 -m engine.cli run 'criar um site para barbearia' --title 'Barbearia' --output /tmp/universal-demo
-python3 -m engine.cli run 'criar criativo para campanha' --title 'Promoção de Outono' --output /tmp/universal-demo
-```
-
-## Instalação numa Ubuntu 24.04 isolada
-
-```bash
-bash install/install-ubuntu.sh --profile maximum                 # preview, não instala
-sudo bash install/install-ubuntu.sh --profile core --apply      # instala só pacote base
-sudo bash install/install-ubuntu.sh --profile creative --apply  # instalação de pacotes criativos disponíveis
-sudo bash install/install-ubuntu.sh --profile reverse --apply   # análise estática disponível via APT
-sudo bash install/install-ubuntu.sh --profile maximum --apply   # todos os perfis APT compatíveis
-```
-
-O instalador não apaga nem atualiza outros projetos. Depende de repositórios Ubuntu configurados e de internet. Dependências externas fora do APT são catalogadas para instalação verificada individualmente. O REA oficial requer Node.js compatível, e o motor só pode marcar REA como disponível **depois** de a instalação independente ser comprovada.
-
-## Uso em Codex ou outro agente local
-
-Copiar `skill/motor-universal-linux/SKILL.md` para a pasta de Skills suportada pelo respetivo anfitrião e disponibilizar a CLI `python3 -m engine.cli` dentro do checkout do novo projeto. O ficheiro `integrations/AGENTS.md` fornece compatibilidade no contexto Codex. Usar sempre um checkout independente.
-
-## Uso em ChatGPT
-
-Importar `skill.zip` na área de Skills/Plugins suportada e configurar uma ligação real ao motor (MCP ou ferramenta autenticada) antes de pedir execução na VPS. A Skill orienta o uso da ligação e não promete execução remota sem ela. O Skill ZIP é um artefacto independente do ZIP completo do projeto.
-
-## Licenças e fornecedores
-
-Este protótipo usa apenas código original e não agrega binários nem pesos de terceiros. As ferramentas são inventariadas com os seus upstreams e instaladas separadamente sob as suas licenças. O código deste protótipo é MIT (ver `LICENSE`). Fornecedores com tier gratuito não garantem utilização ilimitada nem estabilidade de preços.
-
-## Segurança e limites operacionais
-
-Sem instalação automática ao receber um pedido; `--apply` é explícito. Sem execução de comandos arbitrários a partir de prompts, SSH implícito, exposição pública de serviços, modificações de projetos antigos ou apagamentos. Entradas de ficheiros são tratadas como dados, não executadas. A engenharia reversa de software exige autorização adequada; este protótipo faz apenas inspeção estática e não neutraliza mecanismos de proteção.
-
-## GitHub Actions independente (modelo incluído)
-
-O workflow `.github/workflows/deploy-vps.yml` usa apenas os quatro secrets `MOTOR_SSH_HOST`, `MOTOR_SSH_USER`, `MOTOR_SSH_PRIVATE_KEY`, `MOTOR_SSH_KNOWN_HOSTS` (e `MOTOR_SSH_PORT` opcional). Requer um repositório GitHub **novo** e autorização `workflow_dispatch` com `DEPLOY`. Copia o motor para `$HOME/.local/share/motor-universal-linux`, corre testes/doctor e não instala pacotes do sistema. Confirmação do host SSH via known_hosts é obrigatória. Estes secrets são necessários **apenas para este workflow alternativo**. A instalação real usou a credencial SSH previamente configurada no repo `martaxi-boss/VPS`, através de um workflow dedicado que não alterou os antigos.
-
-## REA e Ruflo no mesmo projeto, mas com instalações independentes
-
-O script `install/install-agent-engines.sh` instala opcionalmente `rea-agents@6.8.0` e `ruflo@3.71.0` em duas pastas separadas dentro da nova instalação; não liga nem altera projetos antigos. É **pré-visualização por defeito**, requer Node.js compatível (22.19+, 24.11+ ou 26+) e `--apply` explícito. O teste `--help` confirma apenas que as CLIs arrancam, não certifica os motores internos, Ghidra, os fornecedores, o Codex nem ChatGPT.
-
-```bash
-bash install/install-agent-engines.sh --profile all       # ver o que se instalaria
-bash install/install-agent-engines.sh --profile all --apply
-python3 -m engine.cli doctor
-```
+Histórico extenso anterior: [README no commit 77f20a96](https://github.com/martaxi-boss/skill-universal/blob/77f20a96a90e507d12cb2579e5c0554e96eed795/README.md) e relatórios em [docs/](docs/).

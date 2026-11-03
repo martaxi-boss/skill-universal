@@ -1,3 +1,5 @@
+> **NOTA DE HIGIENIZAÇÃO (03/11/2026): documentação histórica ou de procedimento, não fotografia atual da VPS.** Para release, contagens, REA próprio, Apktool 3.0.3 e pendências reais, consultar primeiro [BOOTSTRAP.md](../BOOTSTRAP.md), confirmado pelos runs [#41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) e [#41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249). Referências nesta página a instalações pendentes, versões antigas ou ligação não certificada descrevem etapas passadas; não executar instalações automaticamente.
+
 > **Instalação real concluída em 02/11/2026.** O workflow operacional foi `martaxi-boss/VPS/.github/workflows/ferrari-independent-vps-delivery.yml`, usando o SSH existente; execução [#41538472015](https://github.com/martaxi-boss/VPS/actions/runs/41538472015) **PASS**. Ver [relatório real](RELATORIO_REAL_VPS_20261102.md). O método manual abaixo é uma **alternativa não utilizada nesta implantação**, cuja configuração SSH própria é diferente.
 
 # Instalar o Motor Ferrari na VPS Ubuntu — operação real

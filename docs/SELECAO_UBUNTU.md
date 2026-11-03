@@ -1,3 +1,5 @@
+> **NOTA DE HIGIENIZAÇÃO (03/11/2026): documentação histórica ou de procedimento, não fotografia atual da VPS.** Para release, contagens, REA próprio, Apktool 3.0.3 e pendências reais, consultar primeiro [BOOTSTRAP.md](../BOOTSTRAP.md), confirmado pelos runs [#41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) e [#41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249). Referências nesta página a instalações pendentes, versões antigas ou ligação não certificada descrevem etapas passadas; não executar instalações automaticamente.
+
 # Seleção profissional — Motor Ferrari / Ubuntu 24.04
 
 **Data da auditoria:** 2 de novembro de 2026. **Âmbito:** apenas o projeto independente `martaxi-boss/skill-universal`, sem alterações à VPS nem a outros projetos.

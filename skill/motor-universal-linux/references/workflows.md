@@ -1,24 +1,25 @@
-# Fluxos e graus de comprovação do Ferrari
+# Níveis de evidência e exemplos Ferrari
 
-O ZIP contém instruções e não credenciais. **A ligação remota foi certificada para tarefas suportadas**, pelas execuções [#41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) e [#41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999). Usar `references/github-bridge.md` para chamadas do ChatGPT à VPS.
+Uma **única Skill Universal** orienta pedidos ao Ferrari instalado na VPS Ubuntu. Consultar references/github-bridge.md e o BOOTSTRAP canónico para a fotografia corrente.
 
-## Estados
+## Estados que não se devem misturar
 
-1. Catálogo: programa descoberto.
-2. Ubuntu: instalação candidata compatível.
-3. Binário: realmente detetado na VPS.
-4. Adaptador: operação invocável pelo Ferrari.
-5. Certificação: teste funcional PASS com ficheiro válido.
-6. Remoto: chamada GitHub→VPS→ZIP confirmada para a tarefa.
+1. Catálogo: candidato encontrado.
+2. Compatibilidade: executável ou dependência com suporte Ubuntu.
+3. Instalação: binário, pacote npm ou biblioteca Python detetados na VPS.
+4. Adaptador: operação disponível no Ferrari, com contrato tipado.
+5. Teste funcional: executou ficheiro real de teste e comprovou o resultado.
+6. Teste remoto: Skill→GitHub→VPS→ZIP e artefactos válidos.
+7. Certificação de independência: não necessita de projetos externos e tem recuperação documentada.
 
-Certificar observa se funciona; não é requisito para um binário aparecer no catálogo e ser descoberto. Uma certificação antiga não comprova versões novas.
+Apenas os níveis demonstrados podem ser anunciados. Nem 81 programas detetados nem 55/56 candidatos significam execução de 81 operações.
 
-## Exemplos
+## Exemplos verificados
 
-- Cartaz: `kind=operation`, `operation=svg-poster` → SVG verdadeiro (PASS).
-- Markdown → Word: `kind=auto`, `request=Converter markdown para docx`, ficheiro `.md` codificado em base64 → Pandoc → DOCX (PASS).
-- Inventário: `kind=inventory` → JSON sobre as ferramentas detetadas no momento, não lista de certificados.
-- Loja web: `operation=web-template`, `layout=store` → template estático, não pagamentos reais.
-- BIM ou tarefa complexa: confirmar dependências e adaptadores; sem prova real não declarar concluído.
+- SVG por Skill: [#41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101) PASS.
+- Markdown → DOCX por Skill: [#41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999) PASS.
+- Plano encadeado remotamente: [#41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416) PASS.
+- REA privado: análise ELF/Android na VPS [#41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) PASS e ELF via Skill [#41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) PASS.
+- Inventário atual por Skill: [#41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249) PASS.
 
-O protocolo remoto atual não transporta automaticamente um DAG arbitrário; esse recurso requer uma extensão própria no Ferrari.
+Ainda NÃO está certificado: catálogo completo do REA, fornecedores profundos, todas as aplicações GUI interativas, modelos ComfyUI, Penpot e independência global do REA antigo. Não remover o legado com base nestas provas.
