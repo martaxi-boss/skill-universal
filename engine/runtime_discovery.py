@@ -20,7 +20,7 @@ PYTHON_MODULES = {
     "opencv": "cv2", "duckdb": "duckdb", "polars": "polars",
     "streamlit": "streamlit", "gradio": "gradio", "prefect": "prefect",
     "docling": "docling", "faster-whisper": "faster_whisper",
-    "ifcopenshell": "ifcopenshell", "bpy": "bpy",
+    "ifcopenshell": "ifcopenshell", "bpy": "bpy", "typst":"typst",
 }
 NPM_PACKAGES = {
     "rea": ("rea-agents",), "ruflo": ("ruflo",),
@@ -52,6 +52,10 @@ def _site_packages(home):
     parent = home / ".runtime/venvs"
     if _is_dir(parent):
         roots.extend(p for p in islice(parent.iterdir(), 24) if _is_dir(p))
+    # Ferrari expansion venvs contain one package environment per tool.
+    extended = parent / "extended"
+    if _is_dir(extended):
+        roots.extend(p for p in islice(extended.iterdir(), 24) if _is_dir(p))
     for root in roots:
         if not _is_dir(root):
             continue

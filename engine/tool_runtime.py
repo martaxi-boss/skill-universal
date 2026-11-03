@@ -23,8 +23,14 @@ HOME=Path.home()/".local/share/motor-ferrari"
 BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
           "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
-          "valkey":"valkey-server","ansible":"ansible"}
+          "valkey":"valkey-server","ansible":"ansible","godot":"godot",
+          "openshot":"openshot-qt","synfig":"synfigstudio"}
 ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
+          "prometheus":HOME/"tools/ferrari-services/prometheus/usr/bin/prometheus",
+          "typst":HOME/"tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
+          "godot":HOME/"tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64",
+          "freecad":HOME/"tools/freecad-1.1.4/archive.AppImage",
+          "valkey":HOME/"tools/ferrari-services/valkey-server/usr/bin/valkey-server",
           "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
           "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
@@ -84,7 +90,12 @@ def executable(tool,binary=None):
         if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
             return None
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
-    if tool=="apktool":
+    if tool=="valkey":
+        # Ubuntu provides valkey-server via symlinks in its tools package.
+        # Resolve only links staying within the Ferrari-owned service tree.
+        private=HOME/"tools/ferrari-services/valkey-server"
+        return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(private.resolve()) else None
+    if tool in {"apktool","prometheus","typst","godot","freecad"}:
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
@@ -135,13 +146,26 @@ def inventory():
     for item in absent:
         tier=item.get("installation_tier") or "unknown"
         missing_by_tier[tier]=missing_by_tier.get(tier,0)+1
+    # Include Ferrari-owned installation outcomes in the read-only Skill
+    # inventory. These are verified package states, not execution certificates.
+    expansion={}
+    reports_dir=HOME/".runtime/expansion-33"
+    for group,filename in (("services_gui","services-gui.json"),("external","external.json")):
+        report=reports_dir/filename
+        if report.is_file() and not report.is_symlink() and report.stat().st_size<=131072:
+            try:
+                content=json.loads(report.read_text(encoding="utf-8"))
+                if content.get("project")=="motor-ferrari" and isinstance(content.get("items"),list):
+                    expansion[group]=content
+            except (OSError,ValueError,UnicodeError):
+                pass
     return {"selected":len(selected),"registered_actions":len(defined),
             "installed":sum(x["installed"] for x in records),
             "selected_detected":len(picked)-len(absent),
             "selected_not_detected":len(absent),
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
-            "programs":records,"ecosystems":ecosystems,
+            "programs":records,"ecosystems":ecosystems,"expansion":expansion,
             "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
 def normalize(value):

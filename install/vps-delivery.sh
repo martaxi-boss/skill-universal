@@ -45,6 +45,9 @@ echo 'FERRARI_APT_STAGE=COMPLETED'
 # Ferrari-private Prometheus/Valkey binaries. No server is started here.
 bash install/vps-expand-services-gui.sh
 
+# Second requested group: Ferrari-only npm/Python external tools and Ubuntu candidates.
+bash install/vps-expand-external.sh
+
 # Execute real local operations, not just binary --help probes.
 python3 -m unittest discover -s tests -v
 python3 -m engine.ferrari run --operation web-template --title "Ferrari Ubuntu VPS real" --output "$RELEASE/smoke/site"
