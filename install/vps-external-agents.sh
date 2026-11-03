@@ -12,6 +12,16 @@ test -f "$SCRIPT_ROOT/engine/ferrari.py" || exit 2
   echo 'FERRARI_AGENTS_BLOCKED_NOT_UBUNTU_2404' >&2; exit 2;
 }
 ROOT="$HOME/.local/share/motor-ferrari"
+# Historical Ferrari path may be a symlink after physical project migration.
+# Accept only the exact independent Ferrari repository directory.
+if [[ -L "$ROOT" ]]; then
+  [[ "$(realpath -e "$ROOT")" == "/srv/projects/skill-universal" ]] &&
+    [[ -d "/srv/projects/skill-universal" ]] &&
+    [[ ! -L "/srv/projects/skill-universal" ]] || {
+      echo 'FERRARI_PROJECT_ALIAS_INVALID' >&2; exit 6;
+    }
+  ROOT="/srv/projects/skill-universal"
+fi
 NODE_VER="22.23.4"
 NODE_DIR="$ROOT/runtimes/node-$NODE_VER"
 NODE_ARCHIVE="node-v$NODE_VER-linux-x64.tar.xz"
