@@ -172,6 +172,43 @@ def container_discovery():
             "scope": "Ferrari-labelled containers only; never scans other projects or all images"}
 
 
+def browser_discovery(home=FERRARI_HOME):
+    """Read-only browser probe. No browser launched or cross-project scan.
+
+    System command paths and explicitly Ferrari-owned Playwright caches are
+    *presence evidence only*, not proof that Chromium can render a page.
+    """
+    names = ("chromium", "chromium-browser", "google-chrome", "firefox", "firefox-esr")
+    system = {}
+    for name in names:
+        candidate = shutil.which(name)
+        if candidate:
+            system[name] = {"path": candidate, "verification": "binary_path_only_not_launched"}
+    root = Path(home) / ".runtime/browsers"
+    owned = []
+    if _is_dir(root):
+        for folder in islice(root.iterdir(), 40):
+            if not _is_dir(folder):
+                continue
+            if not re.fullmatch(r"(chromium|chromium_headless_shell|firefox)-[0-9]+", folder.name):
+                continue
+            for relative in ("chrome-linux/headless_shell", "chrome-linux/chrome",
+                             "chrome-linux64/chrome",
+                             "chrome-headless-shell-linux64/chrome-headless-shell"):
+                # Do not traverse outside the Ferrari browser cache.
+                candidate = folder / relative
+                if candidate.is_file() and not candidate.is_symlink():
+                    owned.append({"path": str(candidate),
+                                  "verification": "ferrari_cache_file_only_not_launched"})
+                    break
+    return {
+        "system_browser_executables": system,
+        "ferrari_browser_cache": owned,
+        "ferrari_cache_root": str(root),
+        "scope": "read-only PATH and Ferrari-owned browser cache, no installation or execution",
+    }
+
+
 def discover(home=FERRARI_HOME, system_npm_roots=SYSTEM_NPM_ROOTS):
     python = {}
     npm = {}
@@ -189,5 +226,6 @@ def discover(home=FERRARI_HOME, system_npm_roots=SYSTEM_NPM_ROOTS):
         "npm": {"tools": npm, "detected": len(npm),
                 "scope": "Ferrari-owned and system-global node_modules only"},
         "containers": container_discovery(),
+        "browsers": browser_discovery(home=home),
         "note": "Read-only presence evidence, not functionality, certification or permission to install.",
     }
