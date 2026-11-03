@@ -17,7 +17,7 @@ import traceback
 import uuid
 import zipfile
 
-from engine import ferrari, tool_runtime, orchestrator
+from engine import ferrari, tool_runtime, orchestrator, rea_mcp
 
 MAX_REQUEST_BYTES = 2_800_000
 MAX_INPUT_BYTES = 2_000_000
@@ -27,13 +27,13 @@ INPUT_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\.[a-zA-Z0-9]{1,12}
 def validate_job(data):
     if not isinstance(data,dict) or data.get("version") != 1:
         raise ValueError("Expected a version 1 Ferrari job object")
-    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel"}:
+    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel","mcp_requests"}:
         raise ValueError("Unknown Ferrari job fields")
     jid=data.get("id")
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
         raise ValueError("Invalid Ferrari job ID")
     kind=data.get("kind")
-    if kind not in {"inventory","operation","auto","invoke","plan"}:
+    if kind not in {"inventory","operation","auto","invoke","plan","rea-mcp"}:
         raise ValueError("Unsupported Ferrari job kind")
     inp=data.get("input")
     if kind in {"auto","invoke"} and not isinstance(inp,dict):
@@ -59,6 +59,12 @@ def validate_job(data):
             raise ValueError("Ferrari operation is not implemented")
     if kind=="invoke" and data.get("action") not in tool_runtime.specs():
         raise ValueError("Ferrari tool action is not integrated")
+    if kind=="rea-mcp":
+        if set(data)-{"version","id","kind","input","mcp_requests"}:
+            raise ValueError("Unexpected original REA MCP job fields")
+        rea_mcp.validate_requests(data.get("mcp_requests"))
+    elif "mcp_requests" in data:
+        raise ValueError("REA MCP calls require kind=rea-mcp")
     query=data.get("query")
     if query is not None:
         if kind not in {"invoke","auto"} or not isinstance(query,str) or not 1<=len(query.strip())<=200 or "\x00" in query:
@@ -126,6 +132,8 @@ def execute(data, outdir):
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
         elif kind=="invoke":
             response=tool_runtime.invoke(data["action"],str(src),str(dest),query=data.get("query"))
+        elif kind=="rea-mcp":
+            response=rea_mcp.invoke(data["mcp_requests"],dest,src)
         elif kind=="plan":
             # Use the existing DAG runner; no changes to GitHub Actions or SSH.
             steps=[]
