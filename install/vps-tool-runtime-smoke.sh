@@ -57,7 +57,7 @@ python3 -m engine.ferrari invoke --action pdftotext-layout --input "$WORK/pdf/do
 # deliberately IMAGE-ONLY PDF; Tesseract must create real searchable text.
 convert -size 950x150 xc:white -font DejaVu-Sans -fill black -pointsize 58 \
   -gravity center -annotate +0+0 'FERRARI OCR 2026' "$WORK/ocr-scan.png"
-printf '![Documento digitalizado](ocr-scan.png)\n' > "$WORK/ocr-scan.md"
+printf '![](ocr-scan.png)\n' > "$WORK/ocr-scan.md"
 pandoc --resource-path="$WORK" -f markdown -t docx \
   "$WORK/ocr-scan.md" -o "$WORK/ocr-scan.docx"
 python3 -m engine.ferrari run --operation office-pdf \
