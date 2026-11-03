@@ -68,13 +68,13 @@ usesFramework:
   ids:
   - 1
 sdkInfo:
-  minSdkVersion: '21'
-  targetSdkVersion: '28'
+  minSdkVersion: 21
+  targetSdkVersion: 28
 packageInfo:
-  forcedPackageId: '127'
+  forcedPackageId: 127
   renameManifestPackage: null
 versionInfo:
-  versionCode: '1'
+  versionCode: 1
   versionName: '1.0'
 resourcesAreCompressed: false
 sharedLibrary: false
