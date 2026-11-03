@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==29
-assert x["callable_actions"]>=29
+assert x["registered_actions"]==33
+assert x["callable_actions"]>=33
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -286,3 +286,45 @@ assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size>100,pdf
 print("FERRARI_TYPST_PDF_REAL=PASS")
 print("FERRARI_DATA_DESIGN_FOUR_PROGRAMS_REAL=PASS")
 PY_PHASE1
+
+# Phase 2 — real images and publishing in this Ferrari job only.
+# CLI tools were detected via Ferrari private REA, with no new Ubuntu packages.
+convert -size 220x128 xc:'#e9f4fc' \
+  -fill '#235f92' -draw 'rectangle 12,18 92,102' \
+  "$WORK/phase2.png"
+convert "$WORK/phase2.png" -quality 90 "$WORK/phase2.jpg"
+printf 'Ferrari Universal\n\nFerrari real publication via Calibre.\n' > "$WORK/phase2.txt"
+python3 -m engine.ferrari invoke --action krita-png-jpeg \
+  --input "$WORK/phase2.png" --output "$WORK/phase2-krita" \
+  > "$WORK/phase2-krita-report.json"
+python3 -m engine.ferrari invoke --action darktable-photo-jpeg \
+  --input "$WORK/phase2.jpg" --output "$WORK/phase2-darktable" \
+  > "$WORK/phase2-darktable-report.json"
+python3 -m engine.ferrari invoke --action calibre-text-epub \
+  --input "$WORK/phase2.txt" --output "$WORK/phase2-calibre" \
+  > "$WORK/phase2-calibre-report.json"
+python3 -m engine.ferrari invoke --action gimp-png-xcf \
+  --input "$WORK/phase2.png" --output "$WORK/phase2-gimp" \
+  > "$WORK/phase2-gimp-report.json"
+python3 - "$WORK" <<'PY_PHASE2'
+from pathlib import Path
+import json,sys,zipfile
+p=Path(sys.argv[1])
+for name,marker in (("krita/krita-export.jpg","KRITA_JPEG"),
+                    ("darktable/darktable-export.jpg","DARKTABLE_JPEG")):
+    f=p/("phase2-"+name)
+    assert f.is_file() and f.stat().st_size>256,f
+    assert f.read_bytes()[:3]==b"\xff\xd8\xff",f
+    print("FERRARI_"+marker+"_REAL=PASS")
+epub=p/"phase2-calibre/calibre-book.epub"
+assert zipfile.is_zipfile(epub),epub
+with zipfile.ZipFile(epub) as z:
+    assert z.read("mimetype")==b"application/epub+zip"
+    assert any(s.lower().endswith((".xhtml",".html")) for s in z.namelist())
+print("FERRARI_CALIBRE_EPUB_REAL=PASS")
+xcf=p/"phase2-gimp/gimp-editable.xcf"
+assert xcf.is_file() and xcf.stat().st_size>256,xcf
+assert xcf.read_bytes().startswith(b"gimp xcf "),xcf
+print("FERRARI_GIMP_XCF_REAL=PASS")
+print("FERRARI_GRAPHICS_PUBLISHING_FOUR_PROGRAMS_REAL=PASS")
+PY_PHASE2
