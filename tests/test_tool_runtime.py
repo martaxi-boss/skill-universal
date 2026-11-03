@@ -153,8 +153,10 @@ class ToolRuntimeTests(unittest.TestCase):
                 with patch.object(tool_runtime.subprocess,"run",side_effect=pretend):
                     with self.assertRaisesRegex(RuntimeError,"Decoded directory empty"):
                         tool_runtime.invoke("apktool-decode-resources",str(inp),str(Path(folder)/"out"))
+            wrong=Path(folder)/"other.txt"
+            wrong.write_text("not an apk")
             with self.assertRaisesRegex(ValueError,"Input format not supported"):
-                tool_runtime.invoke("apktool-decode-resources",str(Path(folder)/"other.txt"),str(Path(folder)/"other-out"))
+                tool_runtime.invoke("apktool-decode-resources",str(wrong),str(Path(folder)/"other-out"))
 
     def test_apktool_action_routes_apk_only_and_requires_installation(self):
         with patch.object(tool_runtime,"executable",side_effect=lambda tool,binary=None: "/usr/bin/apktool" if tool=="apktool" else None):
