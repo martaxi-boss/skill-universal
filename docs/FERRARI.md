@@ -1,3 +1,5 @@
+> **NOTA DE HIGIENIZAÇÃO (03/11/2026): documentação histórica ou de procedimento, não fotografia atual da VPS.** Para release, contagens, REA próprio, Apktool 3.0.3 e pendências reais, consultar primeiro [BOOTSTRAP.md](../BOOTSTRAP.md), confirmado pelos runs [#41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) e [#41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249). Referências nesta página a instalações pendentes, versões antigas ou ligação não certificada descrevem etapas passadas; não executar instalações automaticamente.
+
 # Motor Ferrari — execução própria no Ubuntu
 
 A inteligência artificial interpreta e organiza; os executores vivem no Motor Ferrari, independente de ChatGPT, Codex e dos seus programas. Existe apenas uma Skill de entrada, partilhável entre anfitriões que consigam executar os seus comandos via CLI ou MCP autenticado.
