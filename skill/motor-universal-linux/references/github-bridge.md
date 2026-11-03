@@ -1,83 +1,51 @@
-# Transporte de pedidos Ferrari: ChatGPT → GitHub → VPS → ZIP
+# Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
-**Repositórios:** motor `martaxi-boss/skill-universal`, ponte `martaxi-boss/VPS`. O workflow dedicado `.github/workflows/ferrari-skill-request.yml` reage na `main` a **um novo ficheiro** `ferrari-requests/job-<identificador>.json`. Esta ponte usa o SSH existente; lógica de execução em `engine/skill_job.py`. Não alterar outros projetos.
+**Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
-## Como chamar
+## Enviar um pedido
 
-1. Confirmar o conector GitHub autenticado com acesso de escrita a `martaxi-boss/VPS`. Descobrir a operação da ferramenta GitHub compatível com **criar ficheiro** (ex.: `mcp__GitHub__create_file`). Não presumir SSH do cliente.
-2. Criar **um único JSON novo por commit**, sem alterar/reutilizar pedidos. O nome do ficheiro precisa corresponder a `ferrari-requests/job-[a-z0-9-]{8,70}.json`.
-3. Guardar o SHA do commit. Procurar a execução de workflow `Ferrari Skill - authenticated request delivery` com o mesmo `head_sha` no repositório `VPS`.
-4. Confirmar `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_END_TO_END=PASS` e obter `ferrari-skill-result-<run_id>` pelas ferramentas GitHub de artefactos. O arquivo de GitHub contém `ferrari-response.zip`, que por sua vez contém `report.json` e `artifacts/`.
-5. Verificar `status=completed` no relatório e a existência real dos ficheiros. Entregar o ficheiro no chat quando o ambiente permitir; caso contrário, indicar a execução exata.
+1. Confirmar ligação GitHub autenticada e acesso adequado a martaxi-boss/VPS. A Skill não cria credenciais.
+2. Criar **um único ficheiro novo** em ferrari-requests/job-<identificador>.json (identificador [a-z0-9-]{8,70}), um commit por pedido, sem reutilizar o caminho.
+3. Esperar pela execução Ferrari correspondente ao commit no GitHub Actions; identificar o run pela referência de commit, não pelo facto de existir um último run.
+4. Exigir no log FERRARI_SKILL_JOB_STATUS=completed e FERRARI_SKILL_END_TO_END=PASS; obter o artefacto ferrari-skill-result-<run_id>, verificar response.zip, report.json (status completed) e os ficheiros reais em artifacts/.
+5. Se a ligação/execução não for verificável, indicar a limitação; não simular um PASS nem repetir o pedido às cegas.
 
-## Exemplos de formato JSON
+## Contrato JSON — versão 1
 
-Inventário, sem input:
+Todos os exemplos exigem um nome de ficheiro **novo** no diretório ferrari-requests/. Os exemplos servem apenas como formato, não como comandos que executam automaticamente.
 
-```json
-{"version":1,"id":"inventory-20261102-0008","kind":"inventory"}
-```
+Inventário sem input:
 
-Operação de cartaz SVG:
+    {"version":1,"id":"inventory-20261103-0001","kind":"inventory"}
 
-```json
-{"version":1,"id":"poster-20261102-0009","kind":"operation","operation":"svg-poster","title":"Cartaz Ferrari"}
-```
+Uma operação base:
 
-Executar uma ação tipada com ficheiro, `file-mime`:
+    {"version":1,"id":"poster-20261103-0002","kind":"operation","operation":"svg-poster","title":"Cartaz Ferrari"}
 
-```json
-{"version":1,"id":"mime-20261102-0010","kind":"invoke","action":"file-mime","input":{"name":"exemplo.json","content_base64":"e30K"}}
-```
+Invocar uma ação externa:
 
-Escolha automática de adaptador conforme o pedido:
+    {"version":1,"id":"mime-20261103-0003","kind":"invoke","action":"file-mime","input":{"name":"exemplo.json","content_base64":"e30K"}}
 
-```json
-{"version":1,"id":"auto-20261102-0011","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
-```
+Seleção automática por pedido e entrada:
 
-Plano com etapas dependentes, usando o **orquestrador Ferrari que ja existe**, sem Skill nem ponte nova (disponivel somente quando a release com suporte `kind=plan` estiver implantada e certificada):
+    {"version":1,"id":"auto-20261103-0004","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
 
-```json
-{"version":1,"id":"plan-20261103-001","kind":"plan","max_parallel":2,"plan":{"version":1,"steps":[{"id":"site","operation":"web-template","layout":"store","title":"Montra Ferrari"},{"id":"analise","operation":"binary-strings","depends_on":["site"],"input_from":"site"}]}}
-```
+Plano com duas etapas dependentes, processado pelo orquestrador **Ferrari já existente**:
 
-Para um plano que recebe um unico ficheiro, usar o `input` base64 de topo e `"input":"$input"` no passo correspondente; para consumir resultado de passo anterior usar `depends_on` e `input_from`. O Ferrari valida e executa o plano diretamente no motor, devolvendo artefactos de cada passo e relatorio do orquestrador no ZIP. **Nao passar caminhos absolutos/relativos da VPS no plano remoto.** Se um passo falhar o resultado nao pode ser declarado PASS. O CI isolado, por si, nao certifica a ligacao remota.
+    {"version":1,"id":"plan-20261103-0005","kind":"plan","max_parallel":2,"plan":{"version":1,"steps":[{"id":"site","operation":"web-template","layout":"store","title":"Montra Ferrari"},{"id":"analise","operation":"binary-strings","depends_on":["site"],"input_from":"site"}]}}
 
-O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium Ferrari operacional devolve `browser-check.json` com testes de teclado opt-in, `browser-screenshot.png` e `browser-mobile.png`). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. A release atualmente instalada na VPS ainda nao suporta DAG remoto. O novo `kind=plan` desta fase deve ser usado apenas depois de testes CI, entrega na VPS e teste fim-a-fim confirmados.
+Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" no passo apropriado; para consumir um resultado anterior, depends_on e input_from. Não aceitar caminhos absolutos da VPS ou scripts arbitrários vindos do utilizador.
 
-## Apktool — manifesto, recursos e Smali (certificado na VPS)
+**A versão com kind=plan está demonstrada remotamente:** [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416). Para operações simples, ver [Skill #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249), inventário com ZIP PASS. Consultar engine/ferrari.py e engine/tool_actions.json para capacidades exatas, em vez de uma lista de ações antiga neste documento.
 
-Um `kind=invoke` do Ferrari, com ação `apktool-decode-resources`, aceita um APK no mesmo envelope base64:
+## Engenharia reversa do Ferrari
 
-```json
-{"version":1,"id":"apktool-demo-20261103-01","kind":"invoke","action":"apktool-decode-resources","input":{"name":"amostra.apk","content_base64":"CONTEUDO_APK_BASE64"}}
-```
+- REA: CLI oficial rea-agents@6.8.0 em /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/node_modules/.bin/rea; duas ações tipadas reais, rea-elf-notes e rea-android-resources. [VPS #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) PASS e [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) PASS.
+- Apktool oficial 3.0.3 privado Ferrari; ação apktool-decode-resources com ficheiro .apk produz diretório com manifesto, recursos e Smali quando presentes. Teste funcional na VPS [#41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900) PASS; **a invocação remota de um APK específico pela Skill ainda não está certificada**.
+- Não usar o REA antigo ou programas globais como substitutos do REA/Apktool privados; a auditoria dos fornecedores completos do REA permanece pendente.
 
-O Ferrari utiliza o programa Apktool já instalado na VPS e devolve os ficheiros produzidos dentro da pasta `apktool-decoded/` no mesmo `response.zip`, incluindo `AndroidManifest.xml`, `apktool.yml`, `res/` e `smali/` quando presentes na entrada. A descodificação funcional está certificada pelo smoke da VPS [#41630731184](https://github.com/martaxi-boss/VPS/actions/runs/41630731184) e o inventário da Skill [#41631048154](https://github.com/martaxi-boss/VPS/actions/runs/41631048154) confirmou o adaptador disponível. Um pedido remoto real de APK por `kind=invoke` ainda não foi testado ponta a ponta. Os repositórios são públicos; não publicar APKs privados ou com dados pessoais neste transporte.
+## Verificações web e privacidade
 
-## Certificação web mais recente — 03/11/2026
+vite-build usa ZIP de projeto estático suportado e pode gerar dist/, capturas desktop/móvel e browser-check.json. Ativações de controlos requerem marcadores data-ferrari-test; sem eles reportar not_requested, não alegar que todos os botões passaram.
 
-- [Ferrari VPS #41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120): SUCCESS, **99 testes PASS**, `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`; Vite, Chromium, mobile, HTML spotcheck e IFC mantiveram PASS.
-- [Skill `vite-build` #41598946695](https://github.com/martaxi-boss/VPS/actions/runs/41598946695): SUCCESS e `FERRARI_SKILL_END_TO_END=PASS`. ZIP aberto com `report.json`, HTML/CSS/JS e `artifacts/browser-check.json`, `artifacts/browser-screenshot.png` (51 916 bytes), `artifacts/browser-mobile.png` (52 507 bytes). Chromium real testou 4 elementos focáveis, Tab, Shift+Tab, botão Enter/Espaço, link e formulário Enter — todos PASS no exemplo.
-- **Versão atual VPS:** `9277a56b9b57c87b8b4e3dfbba08f4536add3625`. Higienização preservou a anterior certificada `0196f37a...` e removeu outra release antiga, libertando 2,40 MiB, sem tocar em projetos externos.
-- **Inventário estável:** 23/56 candidatos Ubuntu detetados, 49 programas combinados, **12 operações base**, 21 ações externas. Sem programa, Skill, operação ou ponte nova.
-
-**Envelope inalterado:** `{"version":1,"id":"id-unico","kind":"operation","operation":"vite-build","input":{"name":"site.zip","content_base64":"..."}}`. Só ZIP não confidencial com `index.html`, `src/` e `public/`, sem scripts de instalação ou config Vite externa. O relatório `artifacts/browser-check.json` inclui `interactions`: foco `Tab`/`Shift+Tab` e ações com `Enter`/`Space` apenas quando o site declara `data-ferrari-test="button"`, `"link"` e `"form"`. Sem marcadores os campos dizem `not_requested` — **nunca afirmar que todos os botões de um site foram testados**. O motor não executa ações arbitrárias em produção.
-
-## Histórico — início de 03/11/2026
-
-- **Motor VPS:** [#41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS, 87 testes PASS, IfcOpenShell e Vite testados com ficheiros reais.
-- **Skill IFC:** [#41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002) SUCCESS, `ifc-report.json` inspecionado (IFC4, 1 projecto e 1 parede).
-- **Skill Vite:** [#41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) SUCCESS, `dist/index.html`, CSS e JavaScript verificados.
-- **Skill inventário:** [#41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593) SUCCESS, 22/56 selecionados detetados; 48 em catálogos combinados. Ações externas: 21; operações base: 12.
-
-**As duas operações novas usam o mesmo pedido existente `kind=operation`.** Exemplos de campos: `{"kind":"operation","operation":"ifc-summary","input":{"name":"modelo.ifc","content_base64":"..."}}` e `{"kind":"operation","operation":"vite-build","input":{"name":"site.zip","content_base64":"..."}}`; incluem também `version=1` e `id` único. A origem deve ser não confidencial. Não aceitar ZIP com scripts de instalação, configurações Vite do utilizador ou caminhos fora de `index.html`, `src/` e `public/`.
-
-## Provas e visibilidade
-
-- Deploy motor: [#41546722719](https://github.com/martaxi-boss/VPS/actions/runs/41546722719), 68 testes PASS.
-- Cartaz SVG: [#41546901101](https://github.com/martaxi-boss/VPS/actions/runs/41546901101), SUCCESS com ZIP.
-- Markdown → DOCX: [#41547060999](https://github.com/martaxi-boss/VPS/actions/runs/41547060999), SUCCESS com ZIP.
-
-Os repositórios são públicos. Certificar a propriedade posteriormente **não** torna privados os commits. Não enviar dados confidenciais neste canal; usar transporte privado se necessário.
+O repositório VPS é público: base64 não é encriptação. **Nunca publicar segredos, documentos pessoais ou APKs privados neste transporte**; escolher outro canal antes de enviar dados confidenciais. A propriedade do repositório não altera a publicidade do histórico.
