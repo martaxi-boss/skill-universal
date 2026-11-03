@@ -1,6 +1,18 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Verificação mais recente — 03/11/2026: Lowcost Django/PostgreSQL PASS; staging bloqueado por runner
+## Certificação final de staging — 03/11/2026: Lowcost Europa (PR #186)
+
+**Bloqueio resolvido em GitHub Actions, sem alterar o website nem o motor Ferrari.** [PR #186 da Lowcost](https://github.com/martaxi-boss/lowcost-europa/pull/186) integrada na `main`, commit `0a1707e534d127ebd1f0f3f3cf6542ffaa5431b1`. Única alteração funcional: no workflow de QA existente, fixou-se `runs-on: ubuntu-24.04` (antes `ubuntu-latest`, que no dia 03/11 usou Ubuntu 26.04, incompatível com Playwright 1.56.1). Mantiveram-se a versão Playwright e o script de browser, acrescentando apenas triggers CI para alterações do próprio workflow ou do script.
+
+**Verificação real após integração (commit da main):** [staging browser #41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458) **SUCCESS**, artefacto `lowcost-staging-browser-qa` descarregado e `result.json` lido: `status=PASS`, **15 verificações PASS, 0 erros, 0 avisos**. Inclui 7 páginas em desktop (1440 × 900) + 7 em mobile emulado (390 × 844) e HTTP público (robots `Disallow: /`, JS imagens HTTP 200, painel anónimo HTTP 302). **14 screenshots PNG**, todas as páginas sem overflow horizontal; verificações públicas de fotografias, filtros, comparação e menu móvel passaram. É um teste real de staging público de leitura/GUI, sem login, POST, compras ou seguir `/go/`. Não comprova dispositivo Android real nem fluxos autenticados de produção.
+
+**Outras provas pós-merge:** [CI #41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466) **SUCCESS, 709/709 testes Django PASS** em PostgreSQL 16 temporário, migrações/Ruff/testes JS PASS; [audit #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS. Pré-merge: [browser #41605493764](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605493764) PASS e [CI #41605493789](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605493789) PASS. O erro histórico [#40664538172 tentativa 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/40664538172) era de instalação Chromium no runner, não um defeito demonstrado da aplicação.
+
+**Ferrari inalterado:** VPS release `ec4dc5045a034e3fbbbcfe3477e1641e80714262`, rollback `9277a56b9b57c87b8b4e3dfbba08f4536add3625`; nenhum motor, SSH, Supervisor, outra Skill, serviço ou ferramenta foi alterado. Backend e staging testados pelos workflows existentes da Lowcost, não pela operação `vite-build` do Ferrari. [Certificação e histórico completos](docs/CERTIFICACAO_DJANGO_POSTGRES_STAGING_20261103.md).
+
+---
+
+## Histórico pré-correção — 03/11/2026: Django/PostgreSQL PASS; staging bloqueado pelo runner
 
 **Backend real do projeto Lowcost Europa, via o CI existente, sem modificar repositório:** [run #41068103444, tentativa 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41068103444) **SUCCESS** no commit atual `388860c6a167686a378b89f4282304bce89c25de`. Ambiente temporário PostgreSQL 16 no GitHub Actions, `Django check`, `check --deploy`, verificação de migrações, `Ruff` e testes de JS PASS; **709/709 testes Django PASS**, migrações aplicadas à base isolada. Isto não verifica a produção.
 

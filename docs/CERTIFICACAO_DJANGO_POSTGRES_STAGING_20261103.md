@@ -1,4 +1,16 @@
-# Lowcost Europa — Django/PostgreSQL PASS e staging bloqueado no runner (03/11/2026)
+# Lowcost Europa — Django/PostgreSQL e staging certificados (03/11/2026)
+
+## Resultado final após correção mínima
+
+- [PR #186 Lowcost Europa](https://github.com/martaxi-boss/lowcost-europa/pull/186) integrada em `main` (`0a1707e534d127ebd1f0f3f3cf6542ffaa5431b1`). Único workflow alterado: `.github/workflows/staging-browser-qa.yml`, fixa o runner em Ubuntu 24.04, compatível com Playwright `1.56.1`, e executa browser QA em PR/push quando o workflow ou script mudam. Sem alterações ao código da montra, backend ou produção.
+- **Staging pós-merge** [GitHub Actions #41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458) SUCCESS. ZIP original de `lowcost-staging-browser-qa` inspecionado: `result.json` com `status=PASS`, `checks=15`, `errors=[]`, `warnings=[]`. Foram verificadas 7 páginas em desktop (1440x900) e 7 em mobile emulado (390x844) e 1 controlo HTTP. **14 PNG reais e zero overflow horizontal** nas páginas. Inclui homepage, 5 páginas de categorias e pesquisa, menu móvel, filtro/ordenar/comparar ofertas, imagem de fornecedor/fallback, robots `Disallow: /`, estáticos HTTP 200 e redirecionamento do painel anónimo HTTP 302.
+- **CI pós-merge** [#41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466) SUCCESS: PostgreSQL 16 isolado, check, check --deploy, migrações, Ruff, testes JS e **709 testes Django PASS**. [Auditoria #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS.
+- **CI de PR** [staging #41605493764](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605493764), [Django #41605493789](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605493789) e [audit #41605493709](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605493709): todos SUCCESS, antes do merge. O mesmo `result.json` de staging da PR reportou 15 PASS, 0 erros, 0 avisos.
+- **Limites:** o browser QA é de leitura e usa Playwright Chromium, com mobile emulado (não Android físico). Não executa compras, autenticados, APIs de fornecedor nem verifica serviços em produção. Django/PostgreSQL foi executado em CI com DB temporária e não leu dados da produção. Ferrari não executou o backend; coordenou registo de evidências existentes.
+
+## Histórico anterior à correção
+
+
 
 ## Âmbito e premissas
 
