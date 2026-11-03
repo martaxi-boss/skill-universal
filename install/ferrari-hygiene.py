@@ -41,9 +41,9 @@ def clean(apply=False):
         if not (item/"engine/ferrari.py").is_file():
             continue
         all_dirs.append(item)
-    # Keep active plus the last 99-test VPS-certified fallback (run 41598711120).
-    # The former 2026-11-02 fallback is obsolete; never delete this verified backup.
-    fallback_sha="9277a56b9b57c87b8b4e3dfbba08f4536add3625"
+    # Preserve active plus last 149-test Ghidra/JADX certified Ferrari release.
+    # The fallback is private Ferrari code; no provider runtimes or other projects pruned.
+    fallback_sha="39267ce692edb8f40bf9621dba29a2f9642528b7"
     fallback=release_root/fallback_sha
     keep={active.name}
     if fallback in all_dirs:
