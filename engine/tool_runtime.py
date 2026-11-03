@@ -76,7 +76,14 @@ def specs():
 def executable(tool,binary=None):
     # Ferraris REA is a Ferrari-owned npm installation, never a PATH/system REA.
     pinned=ISOLATED.get(tool)
-    if tool in {"rea","apktool"}:
+    if tool=="rea":
+        # npm creates a .bin symlink; accept only one resolving inside Ferrari.
+        private=HOME/".runtime/npm/rea"
+        node_modules=private/"node_modules"
+        if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
+            return None
+        return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
+    if tool=="apktool":
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
