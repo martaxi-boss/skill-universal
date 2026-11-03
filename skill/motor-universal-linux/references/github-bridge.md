@@ -36,16 +36,16 @@ Escolha automática de adaptador conforme o pedido:
 {"version":1,"id":"auto-20261102-0011","kind":"auto","request":"Converter markdown para docx","input":{"name":"documento.md","content_base64":"IyBOb3ZhIHBhZ2luYQo="}}
 ```
 
-O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium isolado operacional devolve também `browser-check.json` e screenshot PNG). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
+O valor base64 é o conteúdo do ficheiro e **não é cifragem**. Tamanho atual do ficheiro codificado: entrada até ~2 MB. Operações base: `web-template`, `svg-poster`, `pdf-text`, `image-resize`, `video-thumbnail`, `apk-decompile`, `binary-strings`, `cad-stl`, `blender-house`, `office-pdf`, **`ifc-summary`** (entrada `.ifc`, relatório JSON) e **`vite-build`** (entrada `.zip`, distribuição estática; com Chromium Ferrari operacional devolve `browser-check.json`, `browser-screenshot.png` e `browser-mobile.png`). Algumas requerem input. Ações extras constam em `engine/tool_actions.json`. O protocolo remoto atual não suporta DAG arbitrário.
 
 ## Certificação web mais recente — 03/11/2026
 
-- [VPS #41560720430](https://github.com/martaxi-boss/VPS/actions/runs/41560720430): SUCCESS, **99 testes PASS**, Chromium headless 156.0.8078.4, Playwright 1.64.1, `FERRARI_VITE_BROWSER_REAL=PASS`.
-- [Skill Vite + browser #41560954411](https://github.com/martaxi-boss/VPS/actions/runs/41560954411): SUCCESS, `FERRARI_SKILL_END_TO_END=PASS`, ZIP verificado com HTML, JS, CSS, `browser-check.json` e `browser-screenshot.png` (PNG de 15 875 bytes); JS executado e zero erros.
-- Inventário: **23/56** selecionados detetados, 49 programas combinados, **12 operações base** e 21 ações externas. A mesma operação `vite-build` executa o teste web adicional; sem outra Skill.
-- Falha inicial [#41560226160](https://github.com/martaxi-boss/VPS/actions/runs/41560226160) corrigida na PR #7: usar o executável headless, não o Chromium completo. A higienização excluiu apenas antigas releases do Ferrari.
+- [Motor VPS #41561998389](https://github.com/martaxi-boss/VPS/actions/runs/41561998389): SUCCESS, **99 testes PASS**, `FERRARI_VITE_RESPONSIVE_REAL=PASS` e `FERRARI_BROWSER_A11Y_SPOTCHECK_REAL=PASS`. Sem instalação adicional além do Chromium já presente.
+- [Skill Vite desktop/móvel #41562205411](https://github.com/martaxi-boss/VPS/actions/runs/41562205411): SUCCESS, ZIP inspecionado com `browser-check.json`, `browser-screenshot.png` (1280×720), `browser-mobile.png` (390×844) e HTML, CSS e JS compilados. No exemplo: overflow=0 px, HTML `lang=pt`, zero erros da página ou avisos pontuais de etiquetas. **Não** implica certificação WCAG ou emulação de Android.
+- **Versão ativa:** `0196f37a7610d1f95cd3371652308b7e2244f019`, anterior certificada `13c439925...` como recuperação. Higienização Ferrari PASS, 2,37 MiB libertados, nenhuma pasta externa alterada.
+- **Inventário:** 23/56 candidatos Ubuntu detetados, 49 ferramentas nos catálogos combinados; 12 operações base e 21 ações externas.
 
-Para verificar um site pela Skill, utilizar exatamente o mesmo envelope `kind=operation`, `operation=vite-build` e um `input` ZIP limitado a `index.html`, `src/` e `public/`. Não são aceites scripts de instalação, Vite configs externas nem backend arbitrário. O ZIP de resposta inclui `artifacts/browser-check.json` e `artifacts/browser-screenshot.png` somente quando o navegador esteve operacional.
+**Envelope inalterado:** `{"version":1,"id":"nome-unico","kind":"operation","operation":"vite-build","input":{"name":"site.zip","content_base64":"..."}}`. Enviar só ZIP não confidencial com `index.html`, `src/` e `public/`. O ZIP de resposta inclui `artifacts/browser-mobile.png` e `artifacts/browser-check.json` somente após a execução efetiva do navegador. Se o site apresentar problemas básicos de acessibilidade, o campo `mobile.findings` lista avisos — o motor não corrige automaticamente conteúdo do utilizador.
 
 ## Histórico — início de 03/11/2026
 
