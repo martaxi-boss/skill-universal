@@ -86,6 +86,87 @@ async function main() {
     if (fs.statSync(screenshot).size < 100) throw new Error("Empty screenshot");
     data.screenshot_bytes = fs.statSync(screenshot).size;
 
+    // Real keyboard probes in the SAME browser. Focus checks are read-only;
+    // activation is restricted to explicit demo/test opt-in markers, never
+    // arbitrary buttons/forms on a user's website.
+    const interactions = {
+      mode: "Playwright keyboard; opt-in data-ferrari-test controls only",
+      focusable_count: 0,
+      tab_forward: "not_tested", shift_tab_back: "not_tested",
+      button_enter: "not_requested", button_space: "not_requested",
+      link_enter: "not_requested", form_enter: "not_requested",
+      findings: [],
+    };
+    const focusable = page.locator(
+      'a[href]:visible,button:visible:not([disabled]),' +
+      'input:visible:not([disabled]):not([type=hidden]),' +
+      'select:visible:not([disabled]),textarea:visible:not([disabled])'
+    );
+    interactions.focusable_count = await focusable.count();
+    if (interactions.focusable_count >= 2) {
+      const first = await focusable.first().elementHandle();
+      try {
+        await focusable.first().focus();
+        await page.keyboard.press("Tab");
+        const moved = await page.evaluate(el =>
+          document.activeElement !== el && document.activeElement !== document.body, first);
+        await page.keyboard.press("Shift+Tab");
+        const restored = await page.evaluate(el => document.activeElement === el, first);
+        interactions.tab_forward = moved ? "passed" : "finding";
+        interactions.shift_tab_back = restored ? "passed" : "finding";
+        if (!moved) interactions.findings.push("Tab did not advance focus");
+        if (!restored) interactions.findings.push("Shift+Tab did not return focus");
+      } finally {
+        await first.dispose();
+      }
+    }
+
+    const button = page.locator('button[data-ferrari-test="button"]:visible');
+    const buttonCount = await button.count();
+    if (buttonCount > 1) interactions.findings.push("Multiple opt-in test buttons; no activation");
+    if (buttonCount === 1) {
+      await button.focus();
+      const before = Number(await button.getAttribute("data-ferrari-activations") || "0");
+      await page.keyboard.press("Enter");
+      const afterEnter = Number(await button.getAttribute("data-ferrari-activations") || "0");
+      interactions.button_enter = afterEnter === before + 1 ? "passed" : "finding";
+      await page.keyboard.press("Space");
+      const afterSpace = Number(await button.getAttribute("data-ferrari-activations") || "0");
+      interactions.button_space = afterSpace === afterEnter + 1 ? "passed" : "finding";
+      if (interactions.button_enter !== "passed") interactions.findings.push("Opt-in button did not react to Enter");
+      if (interactions.button_space !== "passed") interactions.findings.push("Opt-in button did not react to Space");
+    }
+
+    const link = page.locator('a[data-ferrari-test="link"][href^="#"]:visible');
+    const linkCount = await link.count();
+    if (linkCount > 1) interactions.findings.push("Multiple opt-in test links; no activation");
+    if (linkCount === 1) {
+      const expected = await link.getAttribute("href");
+      await link.focus();
+      await page.keyboard.press("Enter");
+      const actual = await page.evaluate(() => location.hash);
+      interactions.link_enter = expected && expected !== "#" && actual === expected ? "passed" : "finding";
+      if (interactions.link_enter !== "passed") interactions.findings.push("Opt-in anchor did not navigate via Enter");
+    }
+
+    const form = page.locator('form[data-ferrari-test="form"]:visible');
+    const formCount = await form.count();
+    if (formCount > 1) interactions.findings.push("Multiple opt-in test forms; no activation");
+    if (formCount === 1) {
+      const field = form.locator('input:not([type=hidden]):not([disabled])').first();
+      if (await field.count()) {
+        await field.fill("Ferrari fase 6");
+        await field.press("Enter");
+        const submitted = await form.getAttribute("data-ferrari-submitted");
+        interactions.form_enter = submitted === "yes" ? "passed" : "finding";
+      } else {
+        interactions.form_enter = "finding";
+      }
+      if (interactions.form_enter !== "passed") interactions.findings.push("Opt-in form did not submit via Enter");
+    }
+    interactions.status = interactions.findings.length ? "findings" : "clear";
+    data.interactions = interactions;
+
     // Responsive CSS viewport check, using the SAME browser and page.
     // This does not claim Android device emulation or WCAG certification.
     await page.setViewportSize({width: 390, height: 844});
