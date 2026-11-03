@@ -113,7 +113,8 @@ class FerrariGraphicsPublishingTests(unittest.TestCase):
                 expression=args[5]
                 self.assertIn("gimp-file-load",expression)
                 self.assertIn("gimp-xcf-save",expression)
-                self.assertIn('picture\\\\"quoted.png',expression)
+                self.assertIn(chr(92)+chr(34),expression)
+                self.assertNotIn('picture"quoted.png',expression)
                 self.assertEqual(args[-1],"(gimp-quit 0)")
                 (dest/"gimp-editable.xcf").write_bytes(b"gimp xcf v011\\0"+"Ferrari".encode())
                 return subprocess.CompletedProcess(args,0,b"",b"")
