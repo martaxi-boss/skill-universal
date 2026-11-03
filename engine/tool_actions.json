@@ -720,6 +720,50 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "calibre-html-epub",
+      "tool": "calibre",
+      "binary": "ebook-convert",
+      "category": "docs",
+      "keywords": [
+        "calibre epub",
+        "html para epub",
+        "livro epub",
+        "ebook epub"
+      ],
+      "extensions": [
+        ".html",
+        ".htm"
+      ],
+      "mode": "file",
+      "artifact": "calibre-book.epub",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "darktable-jpeg-png",
+      "tool": "darktable",
+      "binary": "darktable-cli",
+      "category": "creative",
+      "keywords": [
+        "darktable jpeg png",
+        "darktable revelar foto",
+        "darktable converter jpeg",
+        "foto darktable png"
+      ],
+      "extensions": [
+        ".jpg",
+        ".jpeg"
+      ],
+      "mode": "file",
+      "artifact": "darktable-developed.png",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }

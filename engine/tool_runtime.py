@@ -24,7 +24,8 @@ BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
           "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
           "valkey":"valkey-server","ansible":"ansible","godot":"godot",
-          "openshot":"openshot-qt","synfig":"synfigstudio"}
+          "openshot":"openshot-qt","synfig":"synfigstudio",
+          "calibre":"ebook-convert","darktable":"darktable-cli"}
 ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "prometheus":HOME/"tools/ferrari-services/prometheus/usr/bin/prometheus",
           "typst":HOME/"tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
@@ -321,6 +322,17 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
+    if x["tool"] in {"calibre","darktable"}:
+        # CLI conversions only: no GUI windows, keep generated configs and
+        # caches inside the Ferrari job instead of ~/.config and ~/.cache.
+        env=os.environ.copy()
+        env["QT_QPA_PLATFORM"]="offscreen"
+        env["GSETTINGS_BACKEND"]="memory"
+        env["XDG_CONFIG_HOME"]=str(outdir/".ferrari-cli-config")
+        env["XDG_CACHE_HOME"]=str(outdir/".ferrari-cli-cache")
+        (outdir/".ferrari-cli-config").mkdir(exist_ok=True)
+        (outdir/".ferrari-cli-cache").mkdir(exist_ok=True)
+        run_options["env"]=env
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:

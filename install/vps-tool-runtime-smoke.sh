@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==29
-assert x["callable_actions"]>=29
+assert x["registered_actions"]==31
+assert x["callable_actions"]>=31
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -286,3 +286,35 @@ assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size>100,pdf
 print("FERRARI_TYPST_PDF_REAL=PASS")
 print("FERRARI_DATA_DESIGN_FOUR_PROGRAMS_REAL=PASS")
 PY_PHASE1
+
+# Phase 2: headless Calibre publishing and Darktable photography.
+# Both are existing Ubuntu executables: do not claim they are private.
+cat > "$WORK/book.html" <<'HTML'
+<!doctype html><html lang="pt"><head><meta charset="utf-8"/>
+<title>Ferrari Fase 2</title></head>
+<body><h1>Ferrari Fase 2</h1><p>Publicacao ebook real com Calibre.</p></body></html>
+HTML
+python3 -m engine.ferrari invoke --action calibre-html-epub \
+  --input "$WORK/book.html" --output "$WORK/calibre-ebook" \
+  > "$WORK/calibre-action.json"
+convert -size 320x220 gradient:'#204060-#e7d3a0' "$WORK/photo.jpg"
+python3 -m engine.ferrari invoke --action darktable-jpeg-png \
+  --input "$WORK/photo.jpg" --output "$WORK/darktable-photo" \
+  > "$WORK/darktable-action.json"
+python3 - "$WORK" <<'PY_PUBLISH'
+import json,sys,zipfile
+from pathlib import Path
+p=Path(sys.argv[1])
+epub=p/"calibre-ebook/calibre-book.epub"
+assert epub.stat().st_size>200 and zipfile.is_zipfile(epub)
+with zipfile.ZipFile(epub) as z:
+    assert "mimetype" in z.namelist()
+    assert z.read("mimetype").decode().strip()=="application/epub+zip"
+assert json.loads((p/"calibre-action.json").read_text())["confirmed"]
+print("FERRARI_CALIBRE_HTML_EPUB_REAL=PASS")
+png=p/"darktable-photo/darktable-developed.png"
+assert png.stat().st_size>200 and png.read_bytes()[:8]==b"\x89PNG\r\n\x1a\n"
+assert json.loads((p/"darktable-action.json").read_text())["confirmed"]
+print("FERRARI_DARKTABLE_JPEG_PNG_REAL=PASS")
+print("FERRARI_PUBLISHING_TWO_PROGRAMS_REAL=PASS")
+PY_PUBLISH
