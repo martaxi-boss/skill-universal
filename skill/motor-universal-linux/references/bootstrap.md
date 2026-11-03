@@ -8,14 +8,14 @@ Uma Skill Universal Ferrari → conector GitHub autenticado → workflow exclusi
 
 ## Estado comprovado em 03/11/2026
 
-- **Versão ativa:** `29e016885f01c78941c37e4a147e207a1fc62f05`.
-- **VPS:** [#41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS com **87 testes PASS** e dois testes funcionais novos PASS.
-- **Skill ponta a ponta:** [IFC #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002), [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) e [inventário #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593), SUCCESS. Os ZIPs, `report.json` e artefactos foram inspecionados.
+- **Versão ativa:** `f7eb9dcbda78a80f127b8981d9361e853672cd62`.
+- **VPS:** [#41558189146](https://github.com/martaxi-boss/VPS/actions/runs/41558189146) SUCCESS com **93 testes PASS** e geometria IFC real PASS.
+- **Skill ponta a ponta:** [geometria IFC #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405) SUCCESS; `report.json` e `ifc-report.json` inspecionados. Parede IFC4: 5 × 0,2 × 3 m, oito vértices e doze triângulos. Provas anteriores: [IFC semântico #41556384002](https://github.com/martaxi-boss/VPS/actions/runs/41556384002), [Vite #41556406846](https://github.com/martaxi-boss/VPS/actions/runs/41556406846) e [inventário #41556541593](https://github.com/martaxi-boss/VPS/actions/runs/41556541593).
 - **Inventário real:** 56 candidatos Ubuntu, **22/56 detetados**, 48 ferramentas detetadas no catálogo combinado, **12 operações base**, 21 ações tipadas externas. Ação disponível não implica certificação de todas as funções do programa.
-- **IfcOpenShell:** `0.9.0.post1` em venv isolado; `ifc-summary` aceita `.ifc` e devolve esquema, entidades, projeto e hash. Não faz validação estrutural, geométrica, IDS ou BIM completo.
+- **IfcOpenShell:** `0.9.0.post1` em venv isolado; `ifc-summary` mantém o mesmo contrato e acrescenta limites globais de malhas trianguladas para elementos com representação, além de identificar ausência de geometria e erros. Não faz validação estrutural, IDS, quantidades líquidas, colisões ou BIM completo.
 - **Vite:** `8.3.5` com Node `22.23.4` isolado; `vite-build` aceita ZIP estático permitido e devolve HTML/CSS/JS compilados. Sem backend, sem scripts npm do projeto, sem browser Playwright.
 - **Não detetados:** FreeCAD e Playwright; não fingir que estão instalados. REA/Ruflo profundos ainda pendentes.
-- **Isolamento:** nenhuma nova Skill, SSH, Supervisor, instalação global ou outro projeto alterado. As versões dos workflows próprios Ferrari apontam para a release ativa.
+- **Higienização:** a rotina Ferrari existente removeu duas releases obsoletas, preservou a ativa e a versão anterior certificada `29e016885...`, libertou 1,70 GiB e reportou 21,61 GiB livres. Nenhuma nova Skill, SSH, Supervisor, instalação global ou outro projeto foi alterado.
 
 ## Continuidade
 
