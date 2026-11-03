@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==29
-assert x["callable_actions"]>=29
+assert x["registered_actions"]==32
+assert x["callable_actions"]>=32
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -286,3 +286,40 @@ assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size>100,pdf
 print("FERRARI_TYPST_PDF_REAL=PASS")
 print("FERRARI_DATA_DESIGN_FOUR_PROGRAMS_REAL=PASS")
 PY_PHASE1
+
+# Phase 2 - three distinct CLI paths provided by installed publishing apps.
+# Synthetic assets only, no user projects, no external network or GUI session.
+printf '# Ferrari\n\nPublicacao de teste independente.\n' > "$WORK/phase2-book.md"
+convert -size 160x100 xc:lightblue -fill navy -draw 'rectangle 16,16 110,80' \
+  "$WORK/phase2-photo.jpg"
+
+python3 -m engine.ferrari invoke --action calibre-md-epub \
+  --input "$WORK/phase2-book.md" --output "$WORK/calibre-epub" \
+  > "$WORK/phase2-calibre-action.json"
+python3 -m engine.ferrari invoke --action darktable-jpeg-tiff \
+  --input "$WORK/phase2-photo.jpg" --output "$WORK/darktable-tiff" \
+  > "$WORK/phase2-darktable-action.json"
+python3 -m engine.ferrari invoke --action krita-image-png \
+  --input "$WORK/phase2-photo.jpg" --output "$WORK/krita-png" \
+  > "$WORK/phase2-krita-action.json"
+
+python3 - "$WORK" <<'PY_PHASE2'
+import json,sys,zipfile
+from pathlib import Path
+root=Path(sys.argv[1])
+epub=root/"calibre-epub/calibre-book.epub"
+assert zipfile.is_zipfile(epub) and epub.stat().st_size>200,epub
+with zipfile.ZipFile(epub) as z:
+    assert "mimetype" in z.namelist() and z.read("mimetype")==b"application/epub+zip"
+print("FERRARI_CALIBRE_MD_EPUB_REAL=PASS")
+tiff=root/"darktable-tiff/darktable-export.tif"
+assert tiff.stat().st_size>100 and tiff.read_bytes()[:4] in (b"II*\x00",b"MM\x00*"),tiff
+print("FERRARI_DARKTABLE_JPEG_TIFF_REAL=PASS")
+png=root/"krita-png/krita-export.png"
+assert png.stat().st_size>100 and png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"),png
+print("FERRARI_KRITA_JPEG_PNG_REAL=PASS")
+for tool in ("calibre","darktable","krita"):
+    report=json.loads((root/("phase2-"+tool+"-action.json")).read_text())
+    assert report.get("confirmed") is True and report["tool"]==tool,report
+print("FERRARI_PHASE2_PUBLISHING_THREE_REAL=PASS")
+PY_PHASE2
