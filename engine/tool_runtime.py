@@ -275,9 +275,27 @@ def invoke(action,source,folder,query=None):
         if not apktool.is_file() or apktool.is_symlink():
             raise RuntimeError("Ferrari private Apktool missing")
         env=os.environ.copy()
-        env["PATH"]=str(node.parent)+os.pathsep+env.get("PATH","")
+        jdk=HOME/"runtimes/jdk-25.0.5_8"
+        env["PATH"]=os.pathsep.join((str(node.parent),str(jdk/"bin"),
+                                     str(apktool.parent),env.get("PATH","")))
         env["REA_APKTOOL_COMMAND"]=str(apktool)
-        env["JAVA_HOME"]=str(HOME/"runtimes/jdk-25.0.5_8")
+        env["JAVA_HOME"]=str(jdk)
+        env["GHIDRA_JAVA_HOME"]=str(jdk)
+        # The unmodified original REA 6.8.0 requires its verified 12.1.x
+        # Ghidra provider, independently from Ferrari's Ghidra 12.2.
+        ghidra_provider=HOME/"tools/rea-providers/ghidra-12.1.4"
+        if (ghidra_provider.is_dir() and not ghidra_provider.is_symlink() and
+                (ghidra_provider/"support/analyzeHeadless").is_file()):
+            env["GHIDRA_INSTALL_DIR"]=str(ghidra_provider)
+        else:
+            env.pop("GHIDRA_INSTALL_DIR",None)
+        # The REA JADX provider is the separate audited headless MCP JAR,
+        # not the standalone JADX command-line decompiler.
+        jadx_bridge=HOME/"tools/rea-providers/jadx-headless-mcp-0.7.1-all.jar"
+        if jadx_bridge.is_file() and not jadx_bridge.is_symlink():
+            env["REA_JADX_MCP_JAR"]=str(jadx_bridge)
+        else:
+            env.pop("REA_JADX_MCP_JAR",None)
         env["XDG_CACHE_HOME"]=str(HOME/".runtime/rea-cache")
         env["XDG_CONFIG_HOME"]=str(HOME/".runtime/rea-config")
         env["XDG_DATA_HOME"]=str(HOME/".runtime/rea-data")
