@@ -48,7 +48,7 @@ fi
 
 # A separate Python environment per package means installing Docling/Prefect
 # does not alter Streamlit, Gradio, other users or the legacy REA.
-for tool in duckdb polars streamlit gradio typst faster-whisper prefect docling; do
+for tool in duckdb polars streamlit gradio faster-whisper prefect docling; do
   case "$tool" in
     faster-whisper) package=faster-whisper; module=faster_whisper ;;
     *) package="$tool"; module="$tool" ;;
@@ -71,26 +71,73 @@ for tool in duckdb polars streamlit gradio typst faster-whisper prefect docling;
   fi
 done
 
-# FreeCAD and Godot are GUI programs. Install official Ubuntu candidates if
-# available; record installed package state, not a made-up headless GUI test.
-for tool in freecad godot; do
-  if [[ "$tool" == freecad ]]; then pkg=freecad; else pkg=godot3; fi
-  candidate="$(apt-cache policy "$pkg" 2>/dev/null | awk '$1=="Candidate:" {v=$2} END{print v}')"
-  if [[ -z "$candidate" || "$candidate" == "(none)" ]]; then
-    record "$tool" PENDING_NO_UBUNTU_APT
-  elif ! enough_disk; then
-    record "$tool" PENDING_DISK
-  else
-    if sudo -n apt-get -s install --no-install-recommends "$pkg" >/dev/null 2>&1 &&
-       sudo -n env DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends \
-           -y "$pkg" > "$OUT/$tool-install.log" 2>&1 &&
-       [[ "$(dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null)" == "install ok installed" ]]; then
-      record "$tool" INSTALLED_APT "$(dpkg-query -W -f='${Version}' "$pkg")"
-    else
-      record "$tool" FAILED_APT
+# Install exact verified official Ubuntu-compatible Linux x86_64 releases,
+# not a different Python "typst" package or the obsolete Godot 3 APT.
+# SHA-256 values are from each upstream GitHub release asset.
+install_binary() {
+  local id="$1" version="$2" url="$3" expected="$4" suffix="$5" verify="$6"
+  local dest="$ROOT/tools/$id-$version" file="$dest/archive.$suffix"
+  if ! enough_disk; then record "$id" PENDING_DISK; return; fi
+  mkdir -p "$dest"
+  if [[ ! -s "$file" ]]; then
+    if ! curl --fail --location --retry 3 --retry-delay 3 --max-time 1500 \
+           --silent --show-error "$url" -o "$file.part" > "$OUT/$id-fetch.log" 2>&1; then
+      rm -f "$file.part"
+      record "$id" DOWNLOAD_FAILED
+      return
     fi
+    mv "$file.part" "$file"
   fi
-done
+  if ! printf '%s  %s\n' "$expected" "$file" | sha256sum -c - > "$OUT/$id-sha256.log" 2>&1; then
+    rm -f "$file"
+    record "$id" CHECKSUM_FAILED
+    return
+  fi
+  if [[ "$id" == typst ]]; then
+    mkdir -p "$dest/extracted"
+    if ! tar -xf "$file" -C "$dest/extracted" > "$OUT/$id-extract.log" 2>&1; then
+      record "$id" EXTRACT_FAILED; return
+    fi
+    exe="$(find "$dest/extracted" -type f -name typst -print -quit)"
+    if [[ -n "$exe" ]]; then
+      chmod 750 "$exe"
+      if "$exe" --version > "$OUT/$id-version.txt" 2>&1; then
+        record "$id" INSTALLED_FERRARI_BINARY "$("$exe" --version)"
+        return
+      fi
+    fi
+    record "$id" BINARY_NOT_FUNCTIONAL
+  elif [[ "$id" == godot ]]; then
+    mkdir -p "$dest/extracted"
+    if ! unzip -oq "$file" -d "$dest/extracted" > "$OUT/$id-extract.log" 2>&1; then
+      record "$id" EXTRACT_FAILED; return
+    fi
+    exe="$(find "$dest/extracted" -type f -name 'Godot_v*-linux.x86_64' -print -quit)"
+    if [[ -z "$exe" ]]; then exe="$(find "$dest/extracted" -type f -name 'Godot_v*linux.x86_64' -print -quit)"; fi
+    if [[ -n "$exe" ]]; then
+      chmod 750 "$exe"
+      if timeout 45 "$exe" --headless --version > "$OUT/$id-version.txt" 2>&1; then
+        record "$id" INSTALLED_FERRARI_BINARY "$(head -n 1 "$OUT/$id-version.txt")"
+        return
+      fi
+    fi
+    record "$id" BINARY_NOT_FUNCTIONAL
+  else
+    # FreeCAD's official AppImage can exist on a headless machine with no
+    # FUSE/display. A verified AppImage is installed, GUI execution untested.
+    chmod 750 "$file"
+    record "$id" INSTALLED_VERIFIED_APPIMAGE "$version;GUI_UNTESTED"
+  fi
+}
+install_binary typst 0.15.1 \
+  "https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz" \
+  "a6d077d0a95eed5a2eba715b2dae06be954f624ccbf85758a03f389ded33118c" tar.xz typst
+install_binary godot 4.7.2 \
+  "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
+  "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4" zip godot
+install_binary freecad 1.1.4 \
+  "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.4/FreeCAD_1.1.4-Linux-x86_64-py311.AppImage" \
+  "f6dc6ba676e5ac96a565ebc8d657232f94c6158e85b4352141bd1a46f6b43434" AppImage freecad
 
 # Two server/heavy upstreams require their own verified packaging and runtime.
 # Never treat a source checkout as an installed Penpot service or a GPU
