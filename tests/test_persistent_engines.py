@@ -20,6 +20,8 @@ class PersistentEngines(unittest.TestCase):
         self.assertIn("--profile all --apply",s)
         self.assertIn("FERRARI_REA_CLI=PASS_HELP_ONLY",s)
         self.assertIn("FERRARI_EXTERNAL_REA_DEPENDENCY=NONE",s)
+        self.assertIn("FERRARI_REA_PRIVATE_RUNTIME=PASS",s)
+        self.assertIn("FERRARI_REA_EXTERNAL_CLI_FORBIDDEN",s)
 
 if __name__=="__main__":
     unittest.main()
