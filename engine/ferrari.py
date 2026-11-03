@@ -166,7 +166,7 @@ def plan(request):
     categories = set()
     for route in active:
         categories.update(cats.get(route, {route}))
-    selected = [p for p in ubuntu_selection() if p["category"] in categories]
+    selected = [p for p in ubuntu_selection() if p["category"] in categories and p["id"]!="rea"]
     # Real executors first; otherwise prefer simpler/free-license-reviewed tools,
     # then GitHub popularity as one of several secondary signals.
     selected.sort(key=lambda p: (
