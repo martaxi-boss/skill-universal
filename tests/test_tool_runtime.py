@@ -155,8 +155,9 @@ class ToolRuntimeTests(unittest.TestCase):
                         tool_runtime.invoke("apktool-decode-resources",str(inp),str(Path(folder)/"out"))
             wrong=Path(folder)/"other.txt"
             wrong.write_text("not an apk")
-            with self.assertRaisesRegex(ValueError,"Input format not supported"):
-                tool_runtime.invoke("apktool-decode-resources",str(wrong),str(Path(folder)/"other-out"))
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/apktool"):
+                with self.assertRaisesRegex(ValueError,"Input format not supported"):
+                    tool_runtime.invoke("apktool-decode-resources",str(wrong),str(Path(folder)/"other-out"))
 
     def test_apktool_action_routes_apk_only_and_requires_installation(self):
         with patch.object(tool_runtime,"executable",side_effect=lambda tool,binary=None: "/usr/bin/apktool" if tool=="apktool" else None):
