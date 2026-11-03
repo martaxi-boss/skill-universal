@@ -1,6 +1,18 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: geometria IFC e higienização
+## Certificação mais recente — 03/11/2026: Vite testado no Chromium real + higienização
+
+**Release ativa Ferrari:** `13c4399257cd19496f378ad3f15cd1ebe877977b`. [Deploy real VPS #41560720430](https://github.com/martaxi-boss/VPS/actions/runs/41560720430) SUCCESS, **99 testes PASS na VPS** e `FERRARI_VITE_BROWSER_REAL=PASS` (manteve `FERRARI_IFC_GEOMETRY_REAL=PASS`). [Pedido real pela Skill #41560954411](https://github.com/martaxi-boss/VPS/actions/runs/41560954411) SUCCESS com `FERRARI_SKILL_END_TO_END=PASS`; ZIP inspecionado com `dist/index.html`, JavaScript, CSS, `browser-check.json` e **`browser-screenshot.png` de 15 875 bytes**. Browser: Chromium headless shell `156.0.8078.4`, Playwright `1.64.1`, Node `22.23.4` e Vite `8.3.5` isolados no Ferrari; JavaScript executado (`demo_js_ready=yes`), `dom_ready=complete`, zero erros de consola/página e zero pedidos externos.
+
+**Progresso sem camadas:** a sondagem VPS [#41559647734](https://github.com/martaxi-boss/VPS/actions/runs/41559647734) encontrou ausência de navegador nos caminhos sondados. A PR [#5](https://github.com/martaxi-boss/skill-universal/pull/5) acrescentou observação read-only; a PR [#6](https://github.com/martaxi-boss/skill-universal/pull/6) ampliou a operação **já existente `vite-build`**, sem criar outra operação nem Skill; a PR [#7](https://github.com/martaxi-boss/skill-universal/pull/7) corrigiu o caminho do headless shell após a falha real [#41560226160](https://github.com/martaxi-boss/VPS/actions/runs/41560226160). O instalador do navegador é exclusivo Ferrari e não altera Node global, SSH, serviços ou os outros projetos.
+
+**Inventário real após a instalação:** 56 candidatos Ubuntu selecionados, **23/56 detetados**, **49 ferramentas nos catálogos combinados**, **12 operações base** e **21 ações externas tipadas**. Detetado **não** equivale a funcionalidade completa certificada. Testado: construir e renderizar site estático pequeno, não backend, pagamentos, autenticação, testes de acessibilidade ou aplicações complexas.
+
+**Higienização após testes:** `FERRARI_ONLY_HYGIENE=PASS` em preview e apply. Duas releases antigas removidas (incluindo a tentativa de Chromium falhada), mantendo apenas `13c439925...` ativa e `aefd8bb156...` como fallback já testado. Espaço efetivamente libertado **4 988 928 bytes (~4,76 MiB)**; **21,32 GiB** livres no final; `outside_ferrari_touched=false`. Ver [certificação detalhada](docs/CERTIFICACAO_BROWSER_VITE_20261103.md). **Próxima fase separada:** verificação responsiva, acessibilidade e navegação por browser sobre casos reais, sem instalações desnecessárias.
+
+---
+
+## Histórico — 03/11/2026: geometria IFC e higienização
 
 **Estado ativo certificado:** Ferrari release `f7eb9dcbda78a80f127b8981d9361e853672cd62`; [execução VPS #41558189146](https://github.com/martaxi-boss/VPS/actions/runs/41558189146) **SUCCESS**, **93 testes PASS na VPS**, `FERRARI_IFC_GEOMETRY_REAL=PASS`, `FERRARI_VITE_BUILD_REAL=PASS`. [Pedido real via Skill #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405) **SUCCESS**, `FERRARI_SKILL_END_TO_END=PASS`; o ZIP foi aberto e `artifacts/ifc-report.json` confirmado com `IFC4`, 1 `IfcWall`, 8 vértices, 12 triângulos e dimensões medidas **5 × 0,2 × 3 metros**, sem erros geométricos. O relatório é de limites triangulados, não validação de segurança, volumes líquidos, colisões nem IDS.
 
