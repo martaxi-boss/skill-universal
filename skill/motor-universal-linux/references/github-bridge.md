@@ -1,5 +1,7 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
+**Estado atual:** confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) antes de executar. Esta referência define apenas o contrato de transporte.
+
 **Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
 ## Enviar um pedido
