@@ -23,7 +23,8 @@ BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
           "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
           "valkey":"valkey-server","ansible":"ansible"}
-ISOLATED={"ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
+ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
+          "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
           "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
           "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo"}
@@ -73,7 +74,17 @@ def specs():
     return result
 
 def executable(tool,binary=None):
+    # Ferraris REA is a Ferrari-owned npm installation, never a PATH/system REA.
     pinned=ISOLATED.get(tool)
+    if tool=="rea":
+        # npm creates a .bin symlink; accept only one resolving inside Ferrari.
+        private=HOME/".runtime/npm/rea"
+        node_modules=private/"node_modules"
+        if not private.is_dir() or private.is_symlink() or not node_modules.is_dir() or node_modules.is_symlink():
+            return None
+        return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(node_modules.resolve()) else None
+    if tool=="apktool":
+        return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
     return shutil.which(binary or BINARIES.get(tool) or tool) if (binary or BINARIES.get(tool,tool)) else None

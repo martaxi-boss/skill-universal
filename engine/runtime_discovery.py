@@ -23,7 +23,7 @@ PYTHON_MODULES = {
     "ifcopenshell": "ifcopenshell", "bpy": "bpy",
 }
 NPM_PACKAGES = {
-    "rea": ("rea",), "ruflo": ("ruflo",),
+    "rea": ("rea-agents",), "ruflo": ("ruflo",),
     "nextjs": ("next",), "vite": ("vite",),
     "tailwind": ("tailwindcss",), "bootstrap": ("bootstrap",),
     "playwright": ("playwright", "@playwright/test"),
@@ -104,6 +104,9 @@ def npm_presence(tool, home=FERRARI_HOME, system_roots=SYSTEM_NPM_ROOTS):
     packages = NPM_PACKAGES.get(tool, ())
     base = Path(home) / ".runtime/npm"
     for root in _npm_roots(home, system_roots):
+        # An REA installed by the other VPS project must never count as Ferrari REA.
+        if tool=="rea" and root != base / "rea/node_modules":
+            continue
         for name in packages:
             manifest = root.joinpath(*name.split("/")) / "package.json"
             if manifest.is_file() and not manifest.is_symlink():

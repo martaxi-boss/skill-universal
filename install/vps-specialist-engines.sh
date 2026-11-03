@@ -104,3 +104,5 @@ grep -E 'Importing|Analysis|Finished|success|Successfully' \
 echo 'FERRARI_GHIDRA_HEADLESS_FUNCTIONAL=PASS'
 echo "FERRARI_SPECIALISTS_JDK=$("$JDK/bin/java" --version | sed -n '1p')"
 echo 'FERRARI_JADX_GHIDRA_INSTALLED=YES'
+# Ferrari-private Apktool uses the independent JDK 25 above.
+bash install/vps-apktool-isolated.sh

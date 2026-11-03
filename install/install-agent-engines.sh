@@ -11,10 +11,10 @@ while (($#)); do
 done
 case "$PROFILE" in rea|ruflo|all) ;; *) echo "Expected rea, ruflo, all" >&2; exit 2;; esac
 PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-RUNTIME="${FERRARI_NPM_RUNTIME:-$HOME/.local/share/motor-ferrari/.runtime/npm}"
+RUNTIME="$HOME/.local/share/motor-ferrari/.runtime/npm"
 VERSION_REA=6.8.0
 VERSION_RUFLO=3.71.0
-printf 'Independent runtime: %s\n' "$RUNTIME"
+printf 'Ferrari-private runtime: %s\n' "$RUNTIME"
 printf 'REA target: rea-agents@%s\nRuflo target: ruflo@%s\n' "$VERSION_REA" "$VERSION_RUFLO"
 if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   echo 'Node.js/npm absent; install compatible Node.js before proceeding.' >&2

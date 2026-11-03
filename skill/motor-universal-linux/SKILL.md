@@ -5,9 +5,14 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## Dois projetos REA distintos — Ferrari não reutiliza o legado
+
+O Ferrari universal **mantém o seu próprio REA opcional** (`rea-agents@6.8.0`), com dependências npm, CLI e dados de execução em `~/.local/share/motor-ferrari/.runtime/npm/rea`. O Node.js do Ferrari está isolado em `~/.local/share/motor-ferrari/runtimes/node-22.23.4`. A deteção e a execução do REA são restritas à árvore Ferrari: não se utiliza o REA do outro projeto da VPS, nem instalações npm globais. **O REA antigo fica inalterado, para eliminação posterior numa fase separada.** Até agora o REA Ferrari passou apenas verificações da CLI; a sua capacidade profunda ainda não foi certificada. Esta correção de isolamento depende de CI e teste na VPS da PR #18.
+
+
 ## Integração Apktool — certificada na VPS em 03/11/2026
 
-O Ferrari já disponibiliza a operação `apk-decompile` com JADX. A ação `apktool-decode-resources` utiliza o **Apktool 2.7.0 já instalado**, no mesmo manifesto e motor, para descodificar manifesto, recursos e Smali de ficheiros `.apk`. O mecanismo atual da Skill suporta o resultado do tipo `directory` no ZIP. **CI #41630397156: 111/111 PASS; deploy VPS #41630731184: `FERRARI_APKTOOL_REAL=PASS`, `FERRARI_DEPLOY_TRANSPORT=PASS`; inventário remoto #41631048154: `apktool.status=callable`, `FERRARI_SKILL_END_TO_END=PASS`.** Para testar descodificação remota, usar `kind=invoke`, `action=apktool-decode-resources` e um APK de teste em `input` base64. O teste remoto por `kind=invoke` para Apktool não foi ainda certificado; a descodificação real foi certificada pelo *smoke* da VPS. Nenhuma Skill, coordenador ou ponte adicional.
+O Ferrari já disponibiliza `apk-decompile` com JADX. Nesta fase, a ação `apktool-decode-resources` é migrada para **Apktool oficial 3.0.3 instalado e executado exclusivamente em `~/.local/share/motor-ferrari/tools/apktool-3.0.3`**, com Java 25 da própria instalação Ferrari e cache de frameworks privada. O REA **do outro projeto de Engenharia Reversa** não é dependência; o Ferrari mantém o **seu próprio REA independente** como ferramenta opcional. O mecanismo atual da Skill suporta o resultado do tipo `directory` no ZIP. **Provas anteriores, relativas ao Apktool 2.7.0 do sistema:** CI #41630397156: 111/111 PASS; deploy #41630731184: `FERRARI_APKTOOL_REAL=PASS`. **A migração para 3.0.3 ainda precisa de CI, deploy na VPS e teste real antes de ser certificada.** Para testar descodificação remota, usar `kind=invoke`, `action=apktool-decode-resources` e um APK de teste em `input` base64. O teste remoto por `kind=invoke` para Apktool não foi ainda certificado; a descodificação real foi certificada pelo *smoke* da VPS. Nenhuma Skill, coordenador ou ponte adicional.
 
 
 ## Ligacao OCRmyPDF proposta — 03/11/2026 (certificacao ainda em curso)
