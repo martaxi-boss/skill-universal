@@ -56,11 +56,11 @@ def specs():
             raise ValueError("Duplicate action or unknown tool")
         if not re.fullmatch("[a-zA-Z0-9._-]{1,80}",x["binary"]):
             raise ValueError("Invalid binary")
-        if x["mode"] not in {"stdout","file"} or not re.fullmatch("[a-zA-Z0-9._-]{1,90}",x["artifact"]):
+        if x["mode"] not in {"stdout","file","directory"} or not re.fullmatch("[a-zA-Z0-9._-]{1,90}",x["artifact"]):
             raise ValueError("Invalid artifact")
         if not isinstance(x["args"],list) or "{input}" not in x["args"]:
             raise ValueError("Missing bound input")
-        if x["mode"]=="file" and "{output}" not in x["args"]:
+        if x["mode"] in {"file","directory"} and "{output}" not in x["args"]:
             raise ValueError("Missing bound output")
         for arg in x["args"]:
             if not isinstance(arg,str) or len(arg)>160:
@@ -204,7 +204,13 @@ def invoke(action,source,folder,query=None):
     if x["mode"]=="stdout":
         if not p.stdout:raise RuntimeError("Empty executor output")
         target.write_bytes(p.stdout)
-    if not target.is_file() or target.stat().st_size==0:
+    if x["mode"]=="directory":
+        if not target.is_dir() or target.is_symlink():
+            raise RuntimeError("Expected decoded directory missing")
+        produced=list(target.rglob("*"))
+        if not produced or any(p.is_symlink() for p in produced) or not any(p.is_file() for p in produced):
+            raise RuntimeError("Decoded directory empty or contains symlinks")
+    elif not target.is_file() or target.stat().st_size==0:
         raise RuntimeError("Expected artifact missing")
     return {"id":str(uuid.uuid4()),"at":datetime.now(timezone.utc).isoformat(),
             "operation":"tool","tool":x["tool"],"action":action,"executor":exe,

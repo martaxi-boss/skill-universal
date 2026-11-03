@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 from engine import skill_job
 
 def req(kind="operation",**kwargs):
@@ -29,6 +30,28 @@ class SkillJobTests(unittest.TestCase):
             with zipfile.ZipFile(Path(d)/"job/response.zip") as z:
                 self.assertEqual(z.read("report.json").startswith(b"{"),True)
                 self.assertIn(b"json",z.read("artifacts/mime.txt"))
+    def test_apktool_decoded_directory_is_returned_inside_existing_skill_zip(self):
+        with tempfile.TemporaryDirectory() as d:
+            raw=base64.b64encode(b"PK\\x03\\x04synthetic").decode("ascii")
+            data=req("invoke",action="apktool-decode-resources",
+                     input={"name":"test.apk","content_base64":raw})
+            def decoder(action,source,folder,query=None):
+                self.assertEqual(action,"apktool-decode-resources")
+                decoded=Path(folder)/"apktool-decoded"
+                decoded.mkdir(parents=True)
+                (decoded/"apktool.yml").write_text("apkFileName: test.apk\\n")
+                (decoded/"AndroidManifest.xml").write_text('<manifest package="com.ferrari.smoke"/>')
+                return {"confirmed":True,"artifacts":[str(decoded)],"action":action}
+            with patch.object(skill_job.tool_runtime,"invoke",side_effect=decoder):
+                result,code=skill_job.execute(data,Path(d)/"job")
+            self.assertEqual(code,0,result)
+            self.assertEqual(result["status"],"completed")
+            with zipfile.ZipFile(Path(d)/"job/response.zip") as archive:
+                names=archive.namelist()
+                self.assertIn("artifacts/apktool-decoded/AndroidManifest.xml",names)
+                self.assertIn("artifacts/apktool-decoded/apktool.yml",names)
+                self.assertIn(b"com.ferrari.smoke",archive.read("artifacts/apktool-decoded/AndroidManifest.xml"))
+
     def test_wrong_job_kind_generates_failure_report(self):
         with tempfile.TemporaryDirectory() as d:
             result,code=skill_job.execute(req("arbitrary"),Path(d)/"job")

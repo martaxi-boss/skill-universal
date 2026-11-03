@@ -6,18 +6,18 @@ from unittest.mock import patch
 from engine import tool_runtime, orchestrator
 
 class ToolRuntimeTests(unittest.TestCase):
-    def test_56_selected_and_22_action_specs(self):
+    def test_56_selected_and_23_action_specs(self):
         x=tool_runtime.inventory()
         self.assertEqual(x["selected"],56)
-        self.assertEqual(x["registered_actions"],22)
+        self.assertEqual(x["registered_actions"],23)
         self.assertEqual(len(x["programs"]),len(set(p["id"] for p in x["programs"])))
         self.assertTrue(any(p["id"]=="rea" for p in x["programs"]))
         self.assertTrue(any(p["id"]=="blender" for p in x["programs"]))
     def test_manifest_is_typed(self):
         x=tool_runtime.specs()
-        self.assertEqual(len(x),22)
+        self.assertEqual(len(x),23)
         self.assertTrue(all("{input}" in s["args"] for s in x.values()))
-        self.assertTrue(all(s["mode"] in {"stdout","file"} for s in x.values()))
+        self.assertTrue(all(s["mode"] in {"stdout","file","directory"} for s in x.values()))
     def test_missing_binary_blocks_before_output_created(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/"a.json";p.write_text("{}")
@@ -112,6 +112,60 @@ class ToolRuntimeTests(unittest.TestCase):
             self.assertEqual(not_pdf["suggestions"],[])
         with patch.object(tool_runtime,"executable",return_value=None):
             self.assertEqual(tool_runtime.route("ocrmypdf","/tmp/scan.pdf")["suggestions"],[])
+
+    def test_installed_apktool_decodes_to_directory_artifact(self):
+        import subprocess
+        action=tool_runtime.specs()["apktool-decode-resources"]
+        self.assertEqual(action["tool"],"apktool")
+        self.assertEqual(action["extensions"],[".apk"])
+        self.assertEqual(action["mode"],"directory")
+        with tempfile.TemporaryDirectory() as folder:
+            inp=Path(folder)/"ferrari.apk"
+            inp.write_bytes(b"PK\\x03\\x04mock")
+            out=Path(folder)/"out"
+            decoded=out/"apktool-decoded"
+            def execute(args,**kwargs):
+                self.assertEqual(args[0],"/usr/bin/apktool")
+                self.assertEqual(args[1],"d")
+                self.assertEqual(args[-1],str(inp))
+                self.assertIn(str(decoded),args)
+                self.assertFalse(kwargs.get("shell",False))
+                decoded.mkdir()
+                (decoded/"apktool.yml").write_text("apkFileName: ferrari.apk")
+                (decoded/"AndroidManifest.xml").write_text("<manifest />")
+                return subprocess.CompletedProcess(args,0,b"",b"")
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/apktool"):
+                with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
+                    result=tool_runtime.invoke("apktool-decode-resources",str(inp),str(out))
+            self.assertTrue(result["confirmed"])
+            self.assertEqual(result["artifacts"],[str(decoded)])
+            self.assertTrue((decoded/"AndroidManifest.xml").is_file())
+
+    def test_apktool_requires_nonempty_real_directory(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as folder:
+            inp=Path(folder)/"ferrari.apk"
+            inp.write_bytes(b"PK\\x03\\x04mock")
+            def pretend(args,**kwargs):
+                (Path(folder)/"out"/"apktool-decoded").mkdir()
+                return subprocess.CompletedProcess(args,0,b"",b"")
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/apktool"):
+                with patch.object(tool_runtime.subprocess,"run",side_effect=pretend):
+                    with self.assertRaisesRegex(RuntimeError,"Decoded directory empty"):
+                        tool_runtime.invoke("apktool-decode-resources",str(inp),str(Path(folder)/"out"))
+            wrong=Path(folder)/"other.txt"
+            wrong.write_text("not an apk")
+            with patch.object(tool_runtime,"executable",return_value="/usr/bin/apktool"):
+                with self.assertRaisesRegex(ValueError,"Input format not supported"):
+                    tool_runtime.invoke("apktool-decode-resources",str(wrong),str(Path(folder)/"other-out"))
+
+    def test_apktool_action_routes_apk_only_and_requires_installation(self):
+        with patch.object(tool_runtime,"executable",side_effect=lambda tool,binary=None: "/usr/bin/apktool" if tool=="apktool" else None):
+            result=tool_runtime.route("descodificar apk com apktool","/tmp/sample.apk")
+            self.assertEqual(result["suggestions"][0]["action"],"apktool-decode-resources")
+            self.assertEqual(tool_runtime.route("descodificar apk com apktool","/tmp/sample.jar")["suggestions"],[])
+        with patch.object(tool_runtime,"executable",return_value=None):
+            self.assertEqual(tool_runtime.route("apktool","/tmp/sample.apk")["suggestions"],[])
 
     def test_base_operations_are_registered_separately(self):
         with patch.object(tool_runtime,"executable",return_value="/usr/bin/fake"):

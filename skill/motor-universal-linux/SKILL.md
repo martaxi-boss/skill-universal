@@ -5,6 +5,11 @@ description: Skill única para comandar o Motor Ferrari Ubuntu independente. Usa
 
 # Motor Ferrari — Skill Universal
 
+## Integração Apktool — desenvolvimento (pendente de certificação real)
+
+O Ferrari já disponibiliza a operação `apk-decompile` com JADX. A ação externa `apktool-decode-resources` acrescenta, **no mesmo Ferrari**, descodificação de manifesto, recursos e Smali de ficheiros `.apk`. É declarada no manifesto `engine/tool_actions.json` como saída do tipo `directory`, que o mecanismo atual da Skill inclui automaticamente no ZIP de resposta. Um pedido remoto usa `kind=invoke`, `action=apktool-decode-resources` e `input` base64 de um APK autorizado para teste. **Não declarar operacional até CI, deploy na VPS e ZIP real com conteúdo verificado.** Nenhuma Skill, coordenador ou ponte adicional.
+
+
 ## Ligacao OCRmyPDF proposta — 03/11/2026 (certificacao ainda em curso)
 
 O programa `ocrmypdf` ja estava instalado na VPS Ubuntu, mas o inventario da Skill [#41622654033](https://github.com/martaxi-boss/VPS/actions/runs/41622654033) detetou-o como `installed_unintegrated`. Esta alteracao **nao instala outro programa**: acrescenta a acao `ocrmypdf-searchable-pdf` ao manifesto do mesmo Ferrari para converter **PDFs digitalizados** em PDFs pesquisaveis. A entrada remota e um PDF nao confidencial com `kind=invoke`, `action=ocrmypdf-searchable-pdf` e `input` em base64. A acao deve ser anunciada como funcional apenas depois de CI, deploy e teste real da VPS com texto extraido do PDF resultante. Nao cria Skill adicional nem altera SSH ou Supervisor.

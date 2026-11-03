@@ -560,6 +560,30 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "apktool-decode-resources",
+      "tool": "apktool",
+      "binary": "apktool",
+      "category": "reverse",
+      "keywords": [
+        "apktool",
+        "recursos apk",
+        "manifesto android",
+        "descodificar apk",
+        "recursos android"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "directory",
+      "artifact": "apktool-decoded",
+      "args": [
+        "d",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
     }
   ]
 }

@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==22
-assert x["callable_actions"]>=22
+assert x["registered_actions"]==23
+assert x["callable_actions"]>=23
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -26,6 +26,70 @@ print("FERRARI_SELECTION_NOT_DETECTED="+str(x["selected_not_detected"]))
 print("FERRARI_SELECTION_MISSING_BY_TIER="+json.dumps(x["missing_by_tier"],sort_keys=True))
 assert next(z for z in x["programs"] if z["id"]=="blender")["base_operations"]==["blender-house"]
 PY
+
+# Build a minimal, synthetic APK with the already installed Apktool, then
+# decode it through Ferrari's existing typed tool dispatcher. No external app
+# or Android device and no access to other project repositories.
+mkdir -p "$WORK/ferrari-apk-src/res/values" "$WORK/ferrari-apk-src/smali/com/ferrari"
+cat > "$WORK/ferrari-apk-src/AndroidManifest.xml" <<'APKM'
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ferrari.smoke" android:versionCode="1" android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
+    <application android:label="@string/app_name"/>
+</manifest>
+APKM
+cat > "$WORK/ferrari-apk-src/res/values/strings.xml" <<'APKR'
+<?xml version="1.0" encoding="utf-8"?>
+<resources><string name="app_name">Ferrari APK Smoke</string></resources>
+APKR
+cat > "$WORK/ferrari-apk-src/smali/com/ferrari/Smoke.smali" <<'APKS'
+.class public Lcom/ferrari/Smoke;
+.super Ljava/lang/Object;
+.source "Smoke.java"
+
+.method public static status()Ljava/lang/String;
+    .locals 1
+    const-string v0, "Ferrari APK Smoke"
+    return-object v0
+.end method
+APKS
+cat > "$WORK/ferrari-apk-src/apktool.yml" <<'APKY'
+version: 2.7.0
+apkFileName: ferrari-sample.apk
+isFrameworkApk: false
+usesFramework:
+  ids:
+  - 1
+sdkInfo:
+  minSdkVersion: '21'
+  targetSdkVersion: '28'
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+versionInfo:
+  versionCode: '1'
+  versionName: '1.0'
+resourcesAreCompressed: false
+sharedLibrary: false
+sparseResources: false
+unknownFiles: {}
+doNotCompress: []
+APKY
+if ! apktool b "$WORK/ferrari-apk-src" -o "$WORK/ferrari-sample.apk" > "$WORK/apktool-build.log" 2>&1; then
+  echo 'FERRARI_APKTOOL_FIXTURE_BUILD_FAILED' >&2
+  tail -n 60 "$WORK/apktool-build.log" >&2
+  exit 5
+fi
+test -s "$WORK/ferrari-sample.apk"
+python3 -m engine.ferrari invoke --action apktool-decode-resources \
+  --input "$WORK/ferrari-sample.apk" --output "$WORK/apktool-decode" > "$WORK/apktool-result.json"
+test -s "$WORK/apktool-decode/apktool-decoded/AndroidManifest.xml"
+test -s "$WORK/apktool-decode/apktool-decoded/apktool.yml"
+grep -q 'com.ferrari.smoke' "$WORK/apktool-decode/apktool-decoded/AndroidManifest.xml"
+grep -q 'Ferrari APK Smoke' "$WORK/apktool-decode/apktool-decoded/res/values/strings.xml"
+grep -q 'Ferrari APK Smoke' "$WORK/apktool-decode/apktool-decoded/smali/com/ferrari/Smoke.smali"
+echo 'FERRARI_APKTOOL_REAL=PASS'
 
 printf 'digraph Ferrari { Chat -> Motor -> Ubuntu; }\n' > "$WORK/demo.dot"
 printf '# Ferrari\n\nOperacao Ubuntu com ferramenta externa real.\n' > "$WORK/demo.md"
