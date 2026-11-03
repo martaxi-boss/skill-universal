@@ -146,13 +146,26 @@ def inventory():
     for item in absent:
         tier=item.get("installation_tier") or "unknown"
         missing_by_tier[tier]=missing_by_tier.get(tier,0)+1
+    # Include Ferrari-owned installation outcomes in the read-only Skill
+    # inventory. These are verified package states, not execution certificates.
+    expansion={}
+    reports_dir=HOME/".runtime/expansion-33"
+    for group,filename in (("services_gui","services-gui.json"),("external","external.json")):
+        report=reports_dir/filename
+        if report.is_file() and not report.is_symlink() and report.stat().st_size<=131072:
+            try:
+                content=json.loads(report.read_text(encoding="utf-8"))
+                if content.get("project")=="motor-ferrari" and isinstance(content.get("items"),list):
+                    expansion[group]=content
+            except (OSError,ValueError,UnicodeError):
+                pass
     return {"selected":len(selected),"registered_actions":len(defined),
             "installed":sum(x["installed"] for x in records),
             "selected_detected":len(picked)-len(absent),
             "selected_not_detected":len(absent),
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
-            "programs":records,"ecosystems":ecosystems,
+            "programs":records,"ecosystems":ecosystems,"expansion":expansion,
             "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
 def normalize(value):
