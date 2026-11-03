@@ -190,7 +190,7 @@ class FerrariProfessionalTests(unittest.TestCase):
             self.assertEqual(item["base_operations"],[op])
             self.assertEqual(item["status"],"callable")
             self.assertTrue(item["installed"])
-        self.assertEqual(inv["registered_actions"],21)
+        self.assertEqual(inv["registered_actions"],22)
 
     def test_no_arbitrary_shell_or_project_config(self):
         src=(professional_tools.ROOT/"engine/professional_tools.py").read_text()
