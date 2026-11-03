@@ -24,7 +24,7 @@ class PublishingAdapterTests(unittest.TestCase):
                 self.assertEqual(action["artifact"],out)
                 self.assertEqual(action["mode"],"file")
                 if tool=="krita":
-                    self.assertEqual(action["args"][:2],["-platform","offscreen"])
+                    self.assertEqual(action["args"][0],"{input}")
                 self.assertIn("{input}",action["args"])
                 self.assertIn("{output}",action["args"])
 
@@ -56,10 +56,11 @@ class PublishingAdapterTests(unittest.TestCase):
                         self.assertTrue(kwargs["env"]["XDG_CACHE_HOME"].startswith(str(out)))
                         self.assertTrue(kwargs["env"]["XDG_DATA_HOME"].startswith(str(out)))
                         if tool=="krita":
-                            self.assertEqual(kwargs["env"]["QT_QPA_PLATFORM"],"offscreen")
+                            self.assertEqual(kwargs["env"]["QT_QPA_PLATFORM"],"xcb")
+                            self.assertEqual(args[:3],["/usr/bin/xvfb-run","-a","/usr/bin/mock"])
                         (out/tool_runtime.specs()[action]["artifact"]).write_bytes(magic+b"\x00"*60)
                         return subprocess.CompletedProcess(args,0,b"",b"")
-                    with patch.object(tool_runtime,"executable",return_value="/usr/bin/mock"):
+                    with patch.object(tool_runtime,"executable",return_value="/usr/bin/mock"), patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/xvfb-run"):
                         with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                             result=tool_runtime.invoke(action,str(source),str(out))
                     self.assertTrue(result["confirmed"])
