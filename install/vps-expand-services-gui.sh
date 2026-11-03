@@ -75,6 +75,16 @@ for pkg in "${SERVICES[@]}"; do
     fi
     rm -rf -- "$work"
   fi
+  # Ubuntu 24.04 Valkey server package depends on valkey-tools for its
+  # executable; unpack the matching dependency into the same private tree.
+  if [[ "$pkg" == valkey-server && ! -f "$out/usr/bin/valkey-server" ]]; then
+    work="$(mktemp -d "$REPORT/.valkey-tools.XXXXXXXX")"
+    if (cd "$work" && apt-get download valkey-tools > download.log 2>&1); then
+      deb="$(find "$work" -maxdepth 1 -name '*.deb' -type f -print -quit)"
+      if [[ -n "$deb" ]]; then dpkg-deb -x "$deb" "$out"; fi
+    fi
+    rm -rf -- "$work"
+  fi
   exe="$out/usr/bin/$pkg"
   if [[ ! -f "$exe" ]]; then
     case "$pkg" in
