@@ -9,13 +9,13 @@ class ToolRuntimeTests(unittest.TestCase):
     def test_56_selected_and_25_action_specs(self):
         x=tool_runtime.inventory()
         self.assertEqual(x["selected"],56)
-        self.assertEqual(x["registered_actions"],25)
+        self.assertEqual(x["registered_actions"],29)
         self.assertEqual(len(x["programs"]),len(set(p["id"] for p in x["programs"])))
         self.assertTrue(any(p["id"]=="rea" for p in x["programs"]))
         self.assertTrue(any(p["id"]=="blender" for p in x["programs"]))
     def test_manifest_is_typed(self):
         x=tool_runtime.specs()
-        self.assertEqual(len(x),25)
+        self.assertEqual(len(x),29)
         self.assertTrue(all("{input}" in s["args"] for s in x.values()))
         self.assertTrue(all(s["mode"] in {"stdout","file","directory"} for s in x.values()))
     def test_missing_binary_blocks_before_output_created(self):

@@ -630,6 +630,96 @@
         "{input}",
         "--json"
       ]
+    },
+    {
+      "id": "inkscape-svg-png",
+      "tool": "inkscape",
+      "binary": "inkscape",
+      "category": "creative",
+      "keywords": [
+        "inkscape svg para png",
+        "exportar svg png",
+        "vector para png"
+      ],
+      "extensions": [
+        ".svg"
+      ],
+      "mode": "file",
+      "artifact": "inkscape.png",
+      "args": [
+        "--export-filename",
+        "{output}",
+        "--export-width",
+        "960",
+        "{input}"
+      ]
+    },
+    {
+      "id": "typst-compile-pdf",
+      "tool": "typst",
+      "binary": "typst",
+      "category": "docs",
+      "keywords": [
+        "compilar typst",
+        "typst pdf",
+        "converter typst pdf"
+      ],
+      "extensions": [
+        ".typ"
+      ],
+      "mode": "file",
+      "artifact": "typst-document.pdf",
+      "args": [
+        "compile",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "duckdb-csv-profile",
+      "tool": "duckdb",
+      "binary": "python",
+      "category": "data",
+      "keywords": [
+        "duckdb csv",
+        "perfil csv duckdb",
+        "analisar csv com duckdb"
+      ],
+      "extensions": [
+        ".csv"
+      ],
+      "mode": "file",
+      "artifact": "duckdb-profile.json",
+      "args": [
+        "-m",
+        "engine.data_profiles",
+        "duckdb",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "polars-csv-profile",
+      "tool": "polars",
+      "binary": "python",
+      "category": "data",
+      "keywords": [
+        "polars csv",
+        "perfil csv polars",
+        "analisar csv com polars"
+      ],
+      "extensions": [
+        ".csv"
+      ],
+      "mode": "file",
+      "artifact": "polars-profile.json",
+      "args": [
+        "-m",
+        "engine.data_profiles",
+        "polars",
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }
