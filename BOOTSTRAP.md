@@ -1,6 +1,18 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Certificação mais recente — 03/11/2026: IFC e Vite funcionais
+## Certificação mais recente — 03/11/2026: geometria IFC e higienização
+
+**Estado ativo certificado:** Ferrari release `f7eb9dcbda78a80f127b8981d9361e853672cd62`; [execução VPS #41558189146](https://github.com/martaxi-boss/VPS/actions/runs/41558189146) **SUCCESS**, **93 testes PASS na VPS**, `FERRARI_IFC_GEOMETRY_REAL=PASS`, `FERRARI_VITE_BUILD_REAL=PASS`. [Pedido real via Skill #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405) **SUCCESS**, `FERRARI_SKILL_END_TO_END=PASS`; o ZIP foi aberto e `artifacts/ifc-report.json` confirmado com `IFC4`, 1 `IfcWall`, 8 vértices, 12 triângulos e dimensões medidas **5 × 0,2 × 3 metros**, sem erros geométricos. O relatório é de limites triangulados, não validação de segurança, volumes líquidos, colisões nem IDS.
+
+**Atualizações sem camadas:** a operação `ifc-summary` foi estendida no leitor existente (PR [#3](https://github.com/martaxi-boss/skill-universal/pull/3)); a PR [#4](https://github.com/martaxi-boss/skill-universal/pull/4) corrigiu um teste que dependia indevidamente de Vite ausente. A primeira entrega [#41557825287](https://github.com/martaxi-boss/VPS/actions/runs/41557825287) falhou apenas nesse teste; a seguinte passou na íntegra. Não foram criadas operações, Skills, pontes, serviços ou dependências novas.
+
+**Higienização real:** no deploy bem-sucedido, a rotina Ferrari própria removeu `405ae6fdcbabb9be8d81824a713296ae80b2aa04` (release de tentativa falhada) e `b8a7de8695b16bf064e0796c3cb9276d3a8254ed` (fallback obsoleto). Preservou somente a ativa `f7eb9dcb...` e a última anterior aprovada `29e016885...`. Espaço recuperado: **1 829 462 016 bytes (~1,70 GiB)**; livre final **21,61 GiB**. `outside_ferrari_touched=false`, sem modificar SSH, Supervisor ou outros projetos.
+
+**Inventário estável:** 56 candidatos Ubuntu, 22 detetados dessa seleção, 48 programas detetados nos catálogos combinados, 12 operações base, 21 ações externas. **Próxima fase separada:** testes web em navegador real; primeiro validar capacidade headless da VPS sem instalar indiscriminadamente aplicações gráficas. Ver [relatório detalhado da fase](docs/CERTIFICACAO_GEOMETRIA_IFC_HIGIENE_20261103.md).
+
+---
+
+## Histórico — 03/11/2026: IFC e Vite funcionais
 
 **Release ativa na VPS:** `29e016885f01c78941c37e4a147e207a1fc62f05`. [Instalação real #41556114851](https://github.com/martaxi-boss/VPS/actions/runs/41556114851) SUCCESS, **87 testes PASS na VPS** e marcadores `FERRARI_IFC_SEMANTIC_REAL=PASS`, `FERRARI_VITE_BUILD_REAL=PASS`. PR [#2](https://github.com/martaxi-boss/skill-universal/pull/2) integrada. IfcOpenShell `0.9.0.post1` no virtualenv independente do Ferrari, Vite `8.3.5` no npm próprio e Node `22.23.4` isolado. Nenhum SSH, Supervisor, programa global ou outro projeto alterado.
 
@@ -12,7 +24,7 @@
 
 ---
 
-## Certificação mais recente — 03/11/2026: Python, npm, contentores
+## Histórico — 03/11/2026: Python, npm, contentores
 
 **Estado atual certificado:** Motor Ferrari `1b3e232969c89801e8a0680d8ea751a536a53ce5` instalado na VPS Ubuntu, [entrega #41554557002](https://github.com/martaxi-boss/VPS/actions/runs/41554557002) SUCCESS com **79 testes PASS na VPS**. O [pedido real pela Skill #41554751046](https://github.com/martaxi-boss/VPS/actions/runs/41554751046) terminou `FERRARI_SKILL_END_TO_END=PASS` e devolveu `inventory.json` dentro de ZIP. CI do motor [#41554507978](https://github.com/martaxi-boss/skill-universal/actions/runs/41554507978) SUCCESS. A PR #1 foi integrada.
 
@@ -27,7 +39,7 @@
 **Documento canónico de continuidade do projeto.**
 **Atualizado:** 2026-11-03. **Repositório exclusivo:** `martaxi-boss/skill-universal`.
 **Ambiente-alvo:** servidor VPS Ubuntu 24.04 LTS (ou versão superior suportada, após certificação).
-**Estado atual:** base instalada e testada na VPS; REA/Ruflo instalados com teste CLI; JADX/Ghidra com teste funcional. Catálogo completo e ligação direta Skill → VPS ainda não certificados.
+**Estado atual:** base instalada e testada na VPS; REA/Ruflo com teste CLI e JADX/Ghidra com teste funcional. A ligação direta Skill → VPS está certificada para operações implementadas; catálogo completo e execução arbitrária ainda não estão certificados.
 
 ## Skill diretamente ligada ao Motor Ferrari na VPS — 02/11/2026
 
