@@ -1,5 +1,17 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+## Fase 11 — instalação dos três grupos Ubuntu (iniciada em 03/11/2026)
+
+- **Classificação correta:** serviços headless = programas de servidor (Prometheus, Valkey), aplicações gráficas = 15 programas desktop (não são fornecedores de IA), ferramentas externas = 16 aplicações, frameworks e bibliotecas, cada uma com as próprias dependências. **Candidatura não equivale a instalação**.
+- **Grupo GUI 15/15 instalado por APT oficial Ubuntu 24.04:** GIMP, Krita, Kdenlive, Scribus, Darktable, LibreCAD, QGIS, Audacity, OBS Studio, LMMS, SolveSpace, Synfig, OpenShot, Calibre e Inkscape. Comprovado pelo `dpkg-query` e `FERRARI_EXPANSION_gui_*=INSTALLED_APT` no [deploy VPS #41661949445](https://github.com/martaxi-boss/VPS/actions/runs/41661949445), `SUCCESS`. Instalação de pacote confirmada; sessão gráfica real **não testada**. Pacotes APT pertencem ao sistema Ubuntu, não às pastas do REA antigo.
+- **Serviços headless:** Prometheus `INSTALLED_PRIVATE` em `~/.local/share/motor-ferrari/tools/ferrari-services/prometheus/`, com versão testada, **não iniciado como daemon**. Valkey `DOWNLOAD_OR_LAYOUT_FAILED` nesta execução porque `valkey-server` depende de `valkey-tools`: correção para extrair ambos em pasta Ferrari incluída no lote externo seguinte, ainda a confirmar na VPS. Não declarar Valkey concluído antes da prova.
+- **Resultados do primeiro lote:** `FERRARI_EXPANSION_GUI_SERVICE_INSTALLED=16`, `FERRARI_EXPANSION_GUI_SERVICE_PENDING=1`, **124 testes PASS**, `FERRARI_ONLY_HYGIENE=PASS`, `FERRARI_DEPLOY_TRANSPORT=PASS`. Inventário pós-instalação **62 programas detetados nos catálogos combinados**, **36/56 candidatos Ubuntu detetados**, 20 restantes; dois GUI ainda não reconhecidos pelo mapeamento de nomes até atualização na fase seguinte. Espaço livre ~**17,66 GiB**; `outside_ferrari_touched=false` no âmbito da higienização.
+- **Grupo externo 16:** [PR #23](https://github.com/martaxi-boss/skill-universal/pull/23) inclui instalador Ferrari para quatro pacotes Node/npm, sete ferramentas Python, versões Linux oficiais do Typst, Godot 4 e FreeCAD. Penpot e ComfyUI estão identificados como pendentes de instalação funcional de servidor/CPU. O deploy [#41665286469](https://github.com/martaxi-boss/VPS/actions/runs/41665286469) foi iniciado; **não atribuir PASS enquanto não estiver concluído e lido o relatório**.
+- **Independência do projeto Engenharia Reversa antigo:** REA do Ferrari continua na sua própria árvore npm, com Java/Node/Apktool próprios. Os novos programas APT pertencem ao Ubuntu e os externos npm/Python ficam em `motor-ferrari`. Nenhum REA antigo foi apagado ou alterado. Remoção do projeto antigo mantém-se separada e sujeita a auditoria final de referências externas.
+
+---
+
+
 ## Fase 10 — 03/11/2026: REA privado executa ELF e APK pela Skill Ferrari
 
 - **REA próprio, sem partilha com o REA antigo:** integrado por [PR #20](https://github.com/martaxi-boss/skill-universal/pull/20) como release `52e2a9191d81d7751d4051da6857cc9882e4cff3`. `engine.tool_runtime` chama exclusivamente o `rea-agents@6.8.0` instalado em `/home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/node_modules/.bin/rea`. Executa com Node 22.23.4 privado `motor-ferrari/runtimes/node-22.23.4`, JDK 25 próprio quando aplicável, diretórios XDG privados e `REA_APKTOOL_COMMAND` a apontar apenas para o Apktool 3.0.3 do Ferrari. **Não usa nem altera** o outro projeto REA instalado na VPS.
