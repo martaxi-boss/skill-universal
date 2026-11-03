@@ -1,6 +1,19 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-## Fase 07 - 03/11/2026: Skill envia DAG diretamente ao orquestrador Ferrari
+## Estado operacional confirmado — 03/11/2026: programas, OCR e orquestrador
+
+- **Release activa Ubuntu VPS:** `5a4c881c0a76ecbbdfdc04af9239ef4a70cf0084`; [deploy Ferrari #41624775327](https://github.com/martaxi-boss/VPS/actions/runs/41624775327) **SUCCESS**, **107/107 testes PASS** na VPS. A versão anterior `9277a56b9b57c87b8b4e3dfbba08f4536add3625` foi preservada para rollback. Higienização Ferrari **PASS**, **5 263 360 bytes libertados (~5,02 MiB)**, **21,31 GiB livres** e `outside_ferrari_touched=false`.
+- **Inventário real da VPS:** [Skill #41622654033](https://github.com/martaxi-boss/VPS/actions/runs/41622654033) gerou `inventory.json` confirmado; fotografia anterior à nova ação: 56 candidatos Ubuntu, **23 detetados**, 33 não detetados, 49 ferramentas detectadas nos catálogos combinados, 21 ações externas. **Na nova release**, o deploy confirmou **22 ações externas disponíveis** (`FERRARI_UNIVERSAL_ACTIONS_AVAILABLE=22`) e 49 ferramentas nos catálogos combinados, mantendo 23/56 e 33/56. **Programas detetados não implicam adaptador funcional ou certificação profunda**.
+- **OCRmyPDF ligado sem nova instalação:** [PR #15](https://github.com/martaxi-boss/skill-universal/pull/15) acrescentou o adaptador `ocrmypdf-searchable-pdf` ao **mesmo** manifesto Ferrari; [PR #16](https://github.com/martaxi-boss/skill-universal/pull/16) corrigiu exclusivamente o contador estático do smoke BIM/web. Deploy final [#41624775327](https://github.com/martaxi-boss/VPS/actions/runs/41624775327) comprovou **`FERRARI_OCRMYPDF_REAL=PASS`**: PDF original só com imagem → PDF com texto pesquisável; verificou `pdftotext` antes e depois, sem novos fornecedores, SSH ou serviços.
+- **Skill composta real:** [#41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416) **SUCCESS**: `kind=plan` com site HTML e extração de strings, ZIP/relatórios verificados, `FERRARI_SKILL_END_TO_END=PASS`. Orquestrador é o Ferrari existente, sem camadas novas.
+- **OCR antigo encerrado com diagnóstico:** pedido original `78a92882` falhou em [#41609966814](https://github.com/martaxi-boss/VPS/actions/runs/41609966814) devido a PNG corrompido (`libpng: IDAT incorrect data check`), **não** devido à dependência Tesseract. Novo pedido [`df137c07`](https://github.com/martaxi-boss/VPS/commit/df137c0777bc7afd28da6df1edc21333d4d052fc) executou via Skill duas etapas dependentes: [run #41625566079](https://github.com/martaxi-boss/VPS/actions/runs/41625566079) **SUCCESS**, `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_END_TO_END=PASS`; ZIP real lido: `recognized.txt` continha exatamente `FERRARI OCR 2026\\n` e `matches.txt` continha `1:FERRARI OCR 2026\\n`; relatório `failed={}`, `blocked=[]`.
+- **Ainda não 100%:** REA/Ruflo apenas teste de arranque da CLI (help-only); parte das 33 ferramentas candidatas não está detectada. A fotografia do inventário demonstra detecção, não execução integral. A Skill instalada na interface ChatGPT **não foi certificada como sincronizada** com o novo ZIP; o repositório canónico e os workflows Ferrari estão actualizados.
+- **Ponte e projectos externos preservados:** apenas a referência da release dos workflows próprios Ferrari em `martaxi-boss/VPS` foi actualizada; o SSH, o Supervisor, REA independente e os outros projectos não foram modificados nesta fase.
+
+---
+
+
+## Histórico da Fase 07 - 03/11/2026: integração DAG (posteriormente certificada acima)
 
 - **Código:** [PR #14](https://github.com/martaxi-boss/skill-universal/pull/14) integrada por squash no commit `143ee613dc365e80804a579edc5faef37d38a372`. Integrado **no mesmo** `engine.skill_job` o pedido `kind=plan`, delegando para `engine.orchestrator` existente; sem Skill, coordenador, servidor ou ponte adicional.
 - **CI real:** [GitHub Actions #41619456511](https://github.com/martaxi-boss/skill-universal/actions/runs/41619456511) **SUCCESS, 105/105 testes PASS**, incluindo 6 testes novos de cadeia de etapas, ZIP de artefactos, `$input` e falha de executor. Gerado artefacto `ferrari-skill-installable` com o pacote da **mesma Skill**.
@@ -12,7 +25,7 @@
 ---
 
 
-## Fase em curso - 03/11/2026: OCR Tesseract pela Skill
+## Histórico do teste OCR inicial - 03/11/2026 (falha corrigida e certificada acima)
 
 - Pedido unico enviado pela ponte Ferrari existente em `martaxi-boss/VPS`: commit [`78a92882`](https://github.com/martaxi-boss/VPS/commit/78a92882c10ebcde7b20db065b617b60708ceb71), ficheiro `ferrari-requests/job-20261103-ocr-70e12df0b.json`, `kind=invoke`, acao `tesseract-ocr` e imagem sintetica `ferrari-test.png` sem dados privados.
 - VPS: o deploy certificado [`#41601238265`](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) regista Tesseract `5.3.4-1build5` instalado em `/usr/bin/tesseract`. Isto prova instalacao, **nao** o resultado do pedido de OCR.
