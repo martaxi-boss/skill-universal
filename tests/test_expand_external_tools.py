@@ -41,6 +41,12 @@ class ExternalProgramsTests(unittest.TestCase):
             self.assertEqual(result["scope"],"ferrari_venv")
             self.assertIn("extended/duckdb",result["location"])
 
+    def test_gui_and_godot_ubuntu_executables_are_identified(self):
+        from engine import tool_runtime
+        self.assertEqual(tool_runtime.BINARIES["openshot"],"openshot-qt")
+        self.assertEqual(tool_runtime.BINARIES["synfig"],"synfigstudio")
+        self.assertEqual(tool_runtime.BINARIES["godot"],"godot3")
+
     def test_valkey_is_detected_only_inside_private_ferrari_tree(self):
         import tempfile
         from unittest.mock import patch
