@@ -1,54 +1,29 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Fonte de verdade:** [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md). Esta cópia é para quando a **única Skill Universal Ferrari** é usada a partir de ZIP.
+**UMA Skill Universal Ferrari**, um motor Ubuntu independente e um orquestrador próprio. Este documento acompanha o ZIP da Skill e resume a fotografia de 03/11/2026. A fonte atual prevalecente é [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md); não reconstruir o estado a partir das fases antigas.
 
-## Arquitetura
+## Arquitetura e isolamento
 
-Uma Skill Universal Ferrari → conector GitHub autenticado → workflow **apenas Ferrari** em `martaxi-boss/VPS` → SSH existente → Motor Ferrari independente na VPS Ubuntu → relatório/ficheiros ZIP. A IA interpreta e orienta, o motor executa. REA e Ruflo são ferramentas opcionais, não coordenadores. Não alterar o SSH, Supervisor ou outros projetos.
+ChatGPT/Codex interpreta → uma Skill Universal → GitHub autenticado (martaxi-boss/VPS) → workflow exclusivo → SSH existente → Ferrari Ubuntu → ZIP e relatório. O motor seleciona as ferramentas; REA e Ruflo são componentes opcionais, não coordenadores. Não alterar ligação SSH, Supervisor ou projetos de terceiros.
 
-## Certificação Lowcost pós-correção — 03/11/2026
+A instalação a preservar é /home/ubuntu/.local/share/motor-ferrari/. O REA oficial do Ferrari é rea-agents@6.8.0 instalado em .runtime/npm/rea, com Node 22.23.4 privado. Tem ainda Java 25.0.5 privado, Ghidra 12.2, JADX 1.5.6 e Apktool 3.0.3 privado. **O REA antigo da VPS é outro projeto**; não o remover até provar independência funcional, proveniência e rollback.
 
-- [PR #186](https://github.com/martaxi-boss/lowcost-europa/pull/186) integrada (`0a1707e534d127ebd1f0f3f3cf6542ffaa5431b1`): staging browser no workflow existente fixado em `ubuntu-24.04`, evitando incompatibilidade Playwright 1.56.1 com `ubuntu-latest`=26.04.
-- **Staging real da main** [#41605911458](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911458): SUCCESS, artefacto ZIP e `result.json` verificados, **15 PASS, 0 erros e 0 avisos**, 14 screenshots desktop/mobile, sem overflow horizontal. 7 páginas desktop + 7 mobile emulado + HTTP (robots, ficheiro JS e acesso anónimo ao painel).
-- **Django/PostgreSQL da main** [#41605911466](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911466): SUCCESS, **709 testes PASS**; [auditoria #41605911500](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41605911500) SUCCESS. Testes usam CI do projeto, **não** o motor `vite-build` Ferrari. Nem base de produção nem outros projetos foram alterados.
-- Histórico do erro e provas em [relatório consolidado](https://github.com/martaxi-boss/skill-universal/blob/main/docs/CERTIFICACAO_DJANGO_POSTGRES_STAGING_20261103.md).
+## Evidência recente (03/11/2026 UTC)
 
----
+- [Ferrari VPS #41671631900](https://github.com/martaxi-boss/VPS/actions/runs/41671631900): 139 testes PASS, deploy e higiene Ferrari-only PASS; release 6c93a392dfe9a02d7ccfef9d47317c9685976484.
+- [Skill inventário #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): ZIP com inventário, status completed, 81 programas detetados nos catálogos; 55/56 candidatos Ubuntu encontrados; 25 ações externas e 12 operações base.
+- [REA Ferrari #41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939): ELF e Android com o REA próprio PASS, Apktool 3.0.3 PASS; [Skill REA ELF #41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) ponta a ponta PASS.
+- [DAG remoto #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416): plano com etapas e ZIP confirmado.
+- Aplicações gráficas APT 15/15 instaladas, sem utilização interativa certificada; Prometheus/Valkey em runtime privado; ComfyUI CPU sem modelos ou inferência comprovada; Penpot apenas preparado, sem Docker.
 
-## Histórico anterior à correção — testes complementares de 03/11/2026
+**Programas detetados não são automaticamente testados ou disponíveis pela Skill.** Não declarar 81 ações nem equivalência com o catálogo completo do REA original. CAD, BIM, CONSTRUÇÃO e 3D são domínios progressivos: há casos reais certificados, mas não projetos profissionais completos de qualquer formato.
 
-- **Django/PostgreSQL real em CI próprio da Lowcost**: [#41068103444, repetição 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/41068103444) SUCCESS, **709/709 testes PASS** no commit de `main` `388860c6...`. `check`, `check --deploy`, migrações, Ruff e JavaScript PASS. PostgreSQL 16 temporário, não produção. **Estes não são testes do motor Ferrari**.
-- **Staging browser não certificado agora**: [#40664538172, repetição 2](https://github.com/martaxi-boss/lowcost-europa/actions/runs/40664538172) FAIL antes de carregar páginas; runner `ubuntu-latest` disponibilizou Ubuntu 26.04 e Playwright `1.56.1` não suporta instalar Chromium. O PASS histórico `checks=13 errors=0` foi em **28/10/2026** com Ubuntu 24.04, não substitui validação atual. Solução proposta, ainda não aplicada: fixar `runs-on: ubuntu-24.04` no workflow de staging do projeto e executar a versão atual.
-- **Ferrari VPS sem alteração:** release `ec4dc5045a034e3fbbbcfe3477e1641e80714262`; nenhum ficheiro ou workflow Lowcost foi modificado. [Relatório canónico desta execução](https://github.com/martaxi-boss/skill-universal/blob/main/docs/CERTIFICACAO_DJANGO_POSTGRES_STAGING_20261103.md).
+## Continuar a trabalhar
 
----
+1. Ler o BOOTSTRAP GitHub e os novos runs da VPS antes de afirmar o estado.
+2. Para operações remotas ler references/github-bridge.md; criar um único JSON novo kind=inventory, operation, invoke, auto ou plan; conferir run, response.zip, report.json e artefactos.
+3. Auditar proveniência Java/Node/Python, pacotes do sistema, binários e serviços, bem como dependências REA e fornecedores, antes de qualquer remoção.
+4. Testar Ferrari com recursos do REA antigo inacessíveis sem mexer no legado; certificar Skill→VPS→ZIP e documentar caminhos, backups e recuperação.
+5. Integrar ferramentas faltantes só após um caso concreto e teste Ubuntu. Manter uma Skill, sem camadas novas.
 
-## Última prova real — 03/11/2026: Lowcost Europa
-
-- **Release VPS atual:** `ec4dc5045a034e3fbbbcfe3477e1641e80714262`; deploy [#41601238265](https://github.com/martaxi-boss/VPS/actions/runs/41601238265) SUCCESS, **99 testes PASS**.
-- **Teste pela Skill:** [#41601466546](https://github.com/martaxi-boss/VPS/actions/runs/41601466546), SUCCESS; abriu-se ZIP com HTML/JS/CSS originais de catálogo Lowcost Europa (repo commit `388860c6...`) montados num fixture estático com 5 ofertas fictícias. **17 testes DOM PASS**, sem erros; tecla Tab/Shift+Tab, Enter/Space PASS e `interactions.findings=[]`. Desktop 1280×720, viewport móvel 390×844, overflow 0, zero pedidos externos.
-- **Defeito de teste Ferrari corrigido:** [PR #10](https://github.com/martaxi-boss/skill-universal/pull/10): repõe foco no botão antes de verificar Space, após Enter ter mudado foco intencionalmente. Teste inicial [#41600631713](https://github.com/martaxi-boss/VPS/actions/runs/41600631713) acusou aviso de Space que não era bug Lowcost.
-- **Higiene:** release atual e rollback `9277a56b9...` preservados, remoção exclusiva Ferrari da obsoleta `0196f37a...`; libertados **~2,42 MiB**, livres **21,31 GiB**, `outside_ferrari_touched=false`.
-- **Inventário inalterado:** 56 candidatos Ubuntu, 23/56 detetados, 49 programas em catálogo combinado, **12 operações base**, 21 ações externas. Ferramentas BIM/CAD existentes não foram afetadas.
-- **Limite:** aplicação Django/PostgreSQL, staging e produção ao vivo **não** testados. Foram usados ficheiros originais de frontend e HTML controlado, não pedidos externos, credenciais ou dados comerciais.
-- Referência pormenorizada: [certificação Lowcost Europa](https://github.com/martaxi-boss/skill-universal/blob/main/docs/TESTE_REAL_LOWCOST_EUROPA_20261103.md).
-
----
-
-## Histórico — Fase 6 (03/11/2026)
-
-- **Release na VPS:** `9277a56b9b57c87b8b4e3dfbba08f4536add3625`.
-- **99 testes PASS na VPS:** [#41598711120](https://github.com/martaxi-boss/VPS/actions/runs/41598711120) SUCCESS. `FERRARI_BROWSER_KEYBOARD_REAL=PASS`, `FERRARI_BROWSER_INTERACTIVE_CONTROLS_REAL=PASS`, Vite/Chromium, mobile, acessibilidade HTML pontual e geometria IFC PASS.
-- **Skill ponta a ponta:** [#41598946695](https://github.com/martaxi-boss/VPS/actions/runs/41598946695) SUCCESS; ZIP verificado com Vite HTML/CSS/JS, `browser-check.json`, screenshots desktop 1280×720 e mobile CSS 390×844. No site de demonstração: 4 controlos focáveis, `Tab` e `Shift+Tab` PASS, botão por `Enter`/`Space` (contador 2), link e formulário por `Enter` PASS, zero erros e pedidos externos. Não implica que todos os controlos de sites externos funcionem.
-- **Ferramentas próprias:** Vite `8.3.5`, Playwright `1.64.1`, Chromium headless `156.0.8078.4`, Node `22.23.4`; IfcOpenShell para IFC.
-- **CAD/BIM:** a geometria IFC já foi testada com IfcOpenShell (parede 5 × 0,2 × 3 m na [Skill #41558414405](https://github.com/martaxi-boss/VPS/actions/runs/41558414405)); isso não certifica FreeCAD, projetos CAD completos, segurança estrutural ou análise IDS.
-- **Inventário:** 56 candidatos Ubuntu, 23/56 detetados, 49 ferramentas nos catálogos combinados, **12 operações base** e 21 ações externas.
-- **Limite operativo:** a operação existente `vite-build` observa foco real com `Tab`/`Shift+Tab`, mas só ativa controlos explicitamente marcados `data-ferrari-test` (`button`, `link`, `form`). Ausentes marcadores, o resultado dessas ações é `not_requested`, não certificação. Não há emulação Android, validação WCAG profunda ou backend.
-- **Higienização:** após PASS, removida uma release antiga `13c439925...`, preservadas a ativa e a anterior certificada `0196f37a...`. Libertados **~2,40 MiB**, **21,32 GiB livres**; nenhum projeto externo alterado.
-- **Continuidade:** testar num caso web real não confidencial antes de instalar novas ferramentas ou adicionar outros fluxos. Ver [relatório fase 6](https://github.com/martaxi-boss/skill-universal/blob/main/docs/CERTIFICACAO_INTERACOES_TECLADO_20261103.md).
-
-## Continuidade
-
-Usar `references/github-bridge.md` para enviar um JSON novo `kind=operation|invoke|auto|inventory`, confirmar o run e descarregar o ZIP. Para sites estáticos, a mesma operação `vite-build` devolve capturas desktop/móvel, diagnóstico HTML e resultados de foco/ações de teclado opt-in quando o Chromium Ferrari está operacional. As alterações e adaptações são feitas **no Ferrari**, sem segunda Skill ou novas camadas.
-
-Os pedidos são enviados para um repositório público: base64 não é encriptação e não pode conter dados pessoais ou segredos.
+O GitHub/VPS é potencialmente público: nunca enviar credenciais ou ficheiros privados por JSON/base64. Uma certificação de cliente exige ainda verificar a versão efetivamente instalada da Skill em ChatGPT.
