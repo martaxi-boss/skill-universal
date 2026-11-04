@@ -51,7 +51,7 @@ fix_private_state() {
 }
 if test -d "$TARGET"; then
   verify "$TARGET"
-  fix_private_state()
+  fix_private_state
   echo "FERRARI_ANDROID_CLI_IDEMPOTENT=PASS"
   exit 0
 fi
