@@ -876,6 +876,96 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "android-apksigner-verify",
+      "tool": "apksigner",
+      "binary": "apksigner",
+      "category": "reverse",
+      "keywords": [
+        "apksigner assinatura apk",
+        "verificar assinatura android",
+        "certificado apk",
+        "assinatura digital apk"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "apk-signature.txt",
+      "args": [
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "{input}"
+      ]
+    },
+    {
+      "id": "android-aapt2-manifest",
+      "tool": "aapt2",
+      "binary": "aapt2",
+      "category": "reverse",
+      "keywords": [
+        "aapt2 manifesto",
+        "manifesto binario android",
+        "inspecionar xmltree apk",
+        "recursos binarios aapt2"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "apk-manifest-tree.txt",
+      "args": [
+        "dump",
+        "xmltree",
+        "{input}",
+        "AndroidManifest.xml"
+      ]
+    },
+    {
+      "id": "android-zipalign-apk",
+      "tool": "zipalign",
+      "binary": "zipalign",
+      "category": "reverse",
+      "keywords": [
+        "zipalign apk",
+        "alinhar apk android",
+        "preparar apk para assinatura"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "file",
+      "artifact": "aligned.apk",
+      "args": [
+        "-f",
+        "-p",
+        "4",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "android-adb-install-apk",
+      "tool": "adb",
+      "binary": "adb",
+      "category": "mobile",
+      "keywords": [
+        "adb instalar apk",
+        "instalar apk dispositivo android",
+        "instalar no telemovel android"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "adb-install.txt",
+      "args": [
+        "install",
+        "-r",
+        "{input}"
+      ]
     }
   ]
 }
