@@ -810,6 +810,26 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "scribus-text-publication",
+      "tool": "scribus",
+      "binary": "scribus",
+      "category": "docs",
+      "keywords": [
+        "scribus texto pdf",
+        "criar publicacao scribus",
+        "documento editavel scribus"
+      ],
+      "extensions": [
+        ".txt"
+      ],
+      "mode": "directory",
+      "artifact": "scribus-publication",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }

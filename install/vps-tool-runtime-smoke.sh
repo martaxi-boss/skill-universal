@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==33
-assert x["callable_actions"]>=33
+assert x["registered_actions"]==34
+assert x["callable_actions"]>=34
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -379,3 +379,26 @@ report=json.loads((root/"phase2-gimp-action.json").read_text())
 assert report["confirmed"] and report["tool"]=="gimp",report
 print("FERRARI_GIMP_XCF_REAL=PASS")
 PY_GIMP
+
+
+# Phase 2 Scribus: same installed Xvfb as Krita, no desktop service.
+# Create a true PDF and editable SLA, both inside the Ferrari job only.
+printf 'Ferrari - Publicacao de teste\n\nScribus gera PDF e projeto editavel.\n' > "$WORK/phase2-scribus.txt"
+python3 -m engine.ferrari invoke --action scribus-text-publication \
+  --input "$WORK/phase2-scribus.txt" --output "$WORK/scribus-publication" \
+  > "$WORK/phase2-scribus-action.json"
+python3 - "$WORK" <<'PY_SCRIBUS'
+from pathlib import Path
+import json,sys
+root=Path(sys.argv[1])
+pub=root/"scribus-publication/scribus-publication"
+pdf=pub/"publication.pdf"
+sla=pub/"publication.sla"
+assert pdf.is_file() and pdf.stat().st_size>500,pdf
+assert pdf.read_bytes()[:5]==b"%PDF-",pdf
+assert sla.is_file() and sla.stat().st_size>500,sla
+assert b"SCRIBUS" in sla.read_bytes()[:400],sla
+report=json.loads((root/"phase2-scribus-action.json").read_text())
+assert report["confirmed"] and report["tool"]=="scribus",report
+print("FERRARI_SCRIBUS_PDF_SLA_REAL=PASS")
+PY_SCRIBUS
