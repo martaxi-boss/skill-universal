@@ -120,7 +120,7 @@ for pkg in "${SERVICES[@]}"; do
       cat > "$out/bin/valkey-server" <<'VALKEY_LAUNCH'
 #!/usr/bin/env bash
 set -Eeuo pipefail
-PRIVATE="$ROOT/tools/ferrari-services/valkey-server"
+PRIVATE="/srv/projects/skill-universal/tools/ferrari-services/valkey-server"
 export LD_LIBRARY_PATH="$PRIVATE/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$PRIVATE/usr/bin/valkey-server" "$@"
 VALKEY_LAUNCH
