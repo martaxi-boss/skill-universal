@@ -1,6 +1,6 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Estado operacional de referência: 03/11/2026 (UTC).** Este documento é o ponto de entrada atual. Provas antigas e fases substituídas continuam acessíveis no histórico Git e nos relatórios de docs/, mas não são o estado presente. Não promover uma previsão ou um catálogo a certificação.
+**Estado operacional de referência: 04/11/2026 (UTC).** Este documento é o ponto de entrada atual. Provas antigas e fases substituídas continuam acessíveis no histórico Git e nos relatórios de docs/, mas não são o estado presente. Não promover uma previsão ou um catálogo a certificação.
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
@@ -14,16 +14,16 @@ O motor decide a ferramenta e executa as operações; a IA orienta. O Ferrari te
 
 **Plano faseado dos programas instalados:** [PLANO_INTEGRACAO_55_PROGRAMAS_20261103.md](docs/PLANO_INTEGRACAO_55_PROGRAMAS_20261103.md). O plano acompanha todos os 55 programas inicialmente detetados sem ação direta, por fases e com distinção entre código, instalação e testes reais. Não confundir seleção com certificação.
 
-**Última certificação real:** [deploy #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469) com 164 testes PASS; relatórios [CERTIFICACAO_REA_MCP_FERRARI_SKILL_20261103.md](docs/CERTIFICACAO_REA_MCP_FERRARI_SKILL_20261103.md). O REA antigo **continua a receber pedidos pela sua branch própria** e não está autorizado a ser apagado. As linhas de inventário anteriores são históricas quando contradizem estas provas mais recentes.
+**Última certificação real do motor:** [deploy #41742497396](https://github.com/martaxi-boss/VPS/actions/runs/41742497396) SUCCESS, **187 testes PASS**, release `27baef2bcceb04c4ec681ef9b91162e856bd8c1a`, **33 ações tipadas**. **Fase 2 via Skill completa para quatro novos adaptadores:** Calibre [#41746523329](https://github.com/martaxi-boss/VPS/actions/runs/41746523329) EPUB, Darktable [#41746819318](https://github.com/martaxi-boss/VPS/actions/runs/41746819318) TIFF, Krita [#41746923061](https://github.com/martaxi-boss/VPS/actions/runs/41746923061) PNG e GIMP [#41747053943](https://github.com/martaxi-boss/VPS/actions/runs/41747053943) XCF — todos com `status=completed`, `FERRARI_SKILL_END_TO_END=PASS`, ZIP recuperado e formato do ficheiro validado. **Scribus**, incluído no plano original de cinco ferramentas da fase, permanece pendente. O REA antigo **continua a receber pedidos pela sua branch própria** e não está autorizado a ser apagado. As contagens anteriores são históricas.
 
 **Higiene física Ferrari comprovada, sem remoção de dependências:** [inventário VPS #41700386577](https://github.com/martaxi-boss/VPS/actions/runs/41700386577) mediu o Ferrari em 13 312 897 024 bytes, dos quais 10 453 159 936 bytes em .runtime. A cache npm privada continha 984 383 488 bytes. [Higiene real #41701443735](https://github.com/martaxi-boss/VPS/actions/runs/41701443735) removeu **apenas** .runtime/npm-cache/_cacache, libertando **984 383 488 bytes (~939 MiB)** e deixando **14 984 884 224 bytes (~13,95 GiB) livres**. FERRARI_PRIVATE_NPM_CACHE_HYGIENE=PASS, FERRARI_CACHE_POSTCHECK=PASS e FERRARI_OTHER_SERVICES_UNCHANGED=PASS. REA, Ruflo, Ghidra, Java, Node, Apktool, venvs e serviços de outros projetos foram preservados. O workflow único de limpeza foi retirado do repositório VPS após PASS; mantém-se o workflow normal de inventário somente de leitura. A cache poderá voltar a crescer se forem instalados novos pacotes npm. **A auditoria de duplicações e o desinstalador do REA antigo NÃO estão certificados.**
 
 | Âmbito | Estado demonstrado |
 |---|---|
-| Release Ferrari na VPS | **c5b07ed225299ad80aa2d46c28441d17f281f695**, raíz física /srv/projects/skill-universal |
-| Instalação e testes | [VPS #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469): SUCCESS, **164 testes PASS**, fornecedores Ghidra/JADX, Valkey privado e higiene PASS |
+| Release Ferrari na VPS | **27baef2bcceb04c4ec681ef9b91162e856bd8c1a**, raiz física /srv/projects/skill-universal |
+| Instalação e testes | [VPS #41742497396](https://github.com/martaxi-boss/VPS/actions/runs/41742497396): SUCCESS, **187 testes PASS**, Ghidra/JADX, serviços privados, fase 2 e higiene Ferrari PASS |
 | Inventário via Skill | [VPS run #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249): status=completed, FERRARI_SKILL_END_TO_END=PASS; ZIP com inventário |
-| Ferramentas | 81 programas detetados nos catálogos combinados; 55/56 candidatos Ubuntu detetados; 25 ações externas tipadas e 12 operações base |
+| Ferramentas | 81 programas detetados nos catálogos combinados; 55/56 candidatos Ubuntu detetados; **33 ações externas tipadas** e 12 operações base |
 | Grupos expandidos | 15 aplicações gráficas Ubuntu instaladas; Prometheus e Valkey privados instalados; 14/16 do lote externo instalados |
 | REA próprio Ferrari | rea-agents@6.8.0 original privado; **229 nomes MCP** anunciados; tools/list e tools/call reais via Skill com ZIP PASS [#41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [#41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) |
 | Apktool | Versão oficial 3.0.3 privada, Java 25.0.5 próprio, construção e descodificação de APK sintético PASS |
@@ -55,7 +55,7 @@ O REA antigo de Engenharia Reversa continua intocado. **NÃO autorizar a sua rem
 - ComfyUI v0.43.0: instalação CPU sem pesos de modelos, arranque/ajuda verificados; inferência e ação tipada **não certificadas**.
 - Penpot 2.18.5: ficheiros Compose preparados; Docker/Compose e contentores funcionais ainda em falta. É o único dos 56 candidatos atualmente não detetado.
 - FreeCAD AppImage 1.1.4: instalado, sem teste gráfico completo.
-- Next.js, Tailwind, Bootstrap, shadcn, DuckDB, Polars, Streamlit, Gradio, Faster-Whisper, Prefect, Docling, Typst e Godot: instalação detetada; muitos permanecem sem ação tipada comprovada.
+- Next.js, Tailwind, Bootstrap, shadcn, Streamlit, Gradio, Faster-Whisper, Prefect, Docling e Godot: instalação detetada; muitos permanecem sem ação tipada comprovada. DuckDB, Polars e Typst foram integrados e testados na Fase 1.
 - Ruflo 3.71.0 é opcional, com CLI --help PASS, não swarm ou fornecedor de modelos certificado.
 - Engenharia reversa: **MCP original disponível via kind=rea-mcp** na Skill Ferrari, 229 nomes conhecidos e três chamadas tools/call reais certificadas (ELF notes, Apktool e captura sintética de processo [#41718385142](https://github.com/martaxi-boss/VPS/actions/runs/41718385142)). Os dois fornecedores Ghidra/JADX têm testes profundos PASS; **nem as 229 operações nem todos os seus casos foram certificados individualmente**.
 
