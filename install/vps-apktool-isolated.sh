@@ -52,6 +52,38 @@ test -f "$JAR" && test ! -L "$JAR" && test -x "$TARGET/bin/apktool" || {
   echo 'FERRARI_APKTOOL_PRIVATE_INSTALL_INVALID' >&2; exit 2;
 }
 printf '%s  %s\n' "$SHA256" "$JAR" | sha256sum -c -
+# Existing Ferrari Apktool can retain the historical HOME launcher even after
+# the installer source is updated. Migrate only that exact old assignment.
+LAUNCHER="$TARGET/bin/apktool"
+if [[ -L "$LAUNCHER" ]]; then
+  echo 'FERRARI_APKTOOL_LAUNCHER_SYMLINK_BLOCKED' >&2; exit 5
+fi
+if grep -Fq 'ROOT="$HOME/.local/share/motor-ferrari"' "$LAUNCHER"; then
+  MIGRATION="$(mktemp -d "$ROOT/.runtime/apktool-home/.launcher-migrate.XXXXXXXX")"
+  trap 'rm -rf -- "$MIGRATION"' EXIT
+  cp -p -- "$LAUNCHER" "$MIGRATION/original"
+  python3 - "$LAUNCHER" "$MIGRATION/new" <<'PY_MIGRATE'
+from pathlib import Path
+import sys
+source = Path(sys.argv[1]).read_bytes()
+old = b'ROOT="$HOME/.local/share/motor-ferrari"'
+new = b'ROOT="/srv/projects/skill-universal"'
+if source.count(old) != 1:
+    raise SystemExit("FERRARI_APKTOOL_LAUNCHER_UNEXPECTED_OLD_PATH")
+Path(sys.argv[2]).write_bytes(source.replace(old, new))
+PY_MIGRATE
+  chmod --reference="$LAUNCHER" "$MIGRATION/new"
+  bash -n "$MIGRATION/new"
+  mv -f -- "$MIGRATION/new" "$LAUNCHER"
+  if ! "$LAUNCHER" --version 2>&1 | grep -Fxq '3.0.3'; then
+    cp -p -- "$MIGRATION/original" "$LAUNCHER"
+    echo 'FERRARI_APKTOOL_LAUNCHER_ROLLBACK=PASS' >&2
+    exit 5
+  fi
+  rm -rf -- "$MIGRATION"
+  trap - EXIT
+  echo 'FERRARI_APKTOOL_LAUNCHER_CANONICALIZED=PASS'
+fi
 "$TARGET/bin/apktool" --version | grep -Fx '3.0.3'
 echo 'FERRARI_APKTOOL_PRIVATE_VERSION=3.0.3'
 echo 'FERRARI_APKTOOL_PRIVATE_JAVA=25.0.5'
