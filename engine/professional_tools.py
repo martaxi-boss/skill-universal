@@ -15,7 +15,7 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-HOME = Path.home() / ".local/share/motor-ferrari"
+HOME = Path("/srv/projects/skill-universal")
 BIM_PYTHON = HOME / ".runtime/venvs/bim/bin/python"
 NODE = HOME / "runtimes/node-22.23.4/bin/node"
 VITE = HOME / ".runtime/npm/vite/node_modules/vite/bin/vite.js"
