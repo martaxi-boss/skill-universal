@@ -11,7 +11,7 @@ from engine import tool_runtime
 class GimpNativeExportTests(unittest.TestCase):
     def test_manifest_and_route_keep_gimp_separate_from_other_32_actions(self):
         actions=tool_runtime.specs()
-        self.assertEqual(len(actions),33)
+        self.assertEqual(len(actions),34)
         x=actions["gimp-png-xcf"]
         self.assertEqual((x["tool"],x["binary"],x["artifact"],x["extensions"]),
                          ("gimp","gimp-console-2.10","gimp-editable.xcf",[".png"]))
