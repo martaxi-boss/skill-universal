@@ -8,7 +8,6 @@ test "$(uname -s)" = Linux && test "$(uname -m)" = x86_64
 grep -q '^ID=ubuntu$' /etc/os-release
 test -d "$ROOT" && test ! -L "$ROOT"
 test "$(realpath -e "$ROOT")" = "$ROOT"
-test -d "$SDK" && test ! -L "$SDK"
 test -f "$ROOT/runtimes/jdk-25.0.5_8/bin/java"
 test -d "$ROOT/tools" && test ! -L "$ROOT/tools"
 test ! -L "$TARGET"
@@ -25,8 +24,10 @@ verify() {
   test -d "$dir" && test ! -L "$dir"
   for rel in "${FILES[@]}"; do
     test -f "$dir/$rel" && test ! -L "$dir/$rel"
-    test -f "$SDK/$rel" && test ! -L "$SDK/$rel"
-    cmp -s "$SDK/$rel" "$dir/$rel"
+    # An already installed Ferrari must work even after the old SDK is removed.
+    if test -f "$SDK/$rel" && test ! -L "$SDK/$rel"; then
+      cmp -s "$SDK/$rel" "$dir/$rel"
+    fi
   done
   test -f "$dir/build-tools/36.0.0/apksigner"
   test -x "$dir/build-tools/36.0.0/aapt2"
@@ -40,6 +41,7 @@ if test -d "$TARGET"; then
   exit 0
 fi
 test ! -e "$TARGET"
+test -d "$SDK" && test ! -L "$SDK"
 STAGE="$(mktemp -d "$ROOT/tools/.android-cli-stage.XXXXXXXX")"
 cleanup(){ if test -d "$STAGE"; then rm -rf -- "$STAGE"; fi; }
 trap cleanup EXIT
