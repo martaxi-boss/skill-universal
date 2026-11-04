@@ -10,7 +10,7 @@ from engine import tool_runtime
 class MltVideoTests(unittest.TestCase):
     def test_manifest_and_route(self):
         actions=tool_runtime.specs()
-        self.assertEqual(len(actions),36)
+        self.assertEqual(len(actions),40)
         spec=actions["kdenlive-mlt-mp4"]
         self.assertEqual((spec["tool"],spec["binary"],spec["artifact"]),
                          ("kdenlive","melt","mlt-video.mp4"))
