@@ -19,6 +19,7 @@ jobs:
           bash -n install/vps-preflight.sh
           bash -n install/install-agent-engines.sh
           bash -n install/vps-delivery.sh
+          bash -n install/vps-android-cli-isolated.sh
           bash -n install/vps-external-agents.sh
           bash -n install/vps-specialist-engines.sh
           bash -n install/vps-cad-3d.sh

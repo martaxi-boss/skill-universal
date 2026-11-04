@@ -12,7 +12,7 @@ from engine import tool_runtime
 class LmmsAudioTests(unittest.TestCase):
     def test_typed_action_routes_one_local_project(self):
         actions=tool_runtime.specs()
-        self.assertEqual(len(actions),36)
+        self.assertEqual(len(actions),40)
         spec=actions["lmms-project-wav"]
         self.assertEqual((spec["tool"],spec["binary"],spec["artifact"]),
                          ("lmms","lmms","lmms-render.wav"))

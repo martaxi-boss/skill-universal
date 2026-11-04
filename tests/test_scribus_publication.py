@@ -11,7 +11,7 @@ from engine import tool_runtime
 class ScribusPublicationTests(unittest.TestCase):
     def test_typed_manifest_and_natural_route(self):
         specs = tool_runtime.specs()
-        self.assertEqual(len(specs), 36)
+        self.assertEqual(len(specs), 40)
         action = specs["scribus-text-publication"]
         self.assertEqual((action["tool"],action["binary"],action["mode"]),
                          ("scribus","scribus","directory"))
