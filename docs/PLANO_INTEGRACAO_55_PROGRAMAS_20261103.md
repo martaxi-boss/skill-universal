@@ -6,14 +6,15 @@
 
 - [Inventário real da Skill #41728487241](https://github.com/martaxi-boss/VPS/actions/runs/41728487241): 107 entradas no catálogo, 81 detetadas, 25 ações tipadas, 55 programas detetados sem ação direta. Os estados `installed_unintegrated` são observações, não prova de funcionamento completo nem de falta absoluta de uso indireto.
 - [Ferrari anterior #41716562469](https://github.com/martaxi-boss/VPS/actions/runs/41716562469): instalação real PASS e 164 testes.
-- **Fase 1 — código integrado na main:** [PR #39](https://github.com/martaxi-boss/skill-universal/pull/39) com 4 ações novas, [CI #41735059679](https://github.com/martaxi-boss/skill-universal/actions/runs/41735059679) SUCCESS, 172 testes. [Deploy #41735337190](https://github.com/martaxi-boss/VPS/actions/runs/41735337190) iniciado para validar na VPS. **Não declarar a fase funcional até prova real dos resultados.**
+- **Fase 1 — concluída:** 4 ações novas (DuckDB, Polars, Inkscape, Typst), [deploy #41738343314](https://github.com/martaxi-boss/VPS/actions/runs/41738343314) SUCCESS com 175 testes e operações reais; pedidos pela Skill comprovados em [CSV #41738862274](https://github.com/martaxi-boss/VPS/actions/runs/41738862274), [Typst #41738907357](https://github.com/martaxi-boss/VPS/actions/runs/41738907357) e [Inkscape #41739107535](https://github.com/martaxi-boss/VPS/actions/runs/41739107535).
+- **Fase 2 — quatro novos adaptadores certificados:** [deploy #41742497396](https://github.com/martaxi-boss/VPS/actions/runs/41742497396) SUCCESS, 187 testes, 33 ações no total; Calibre [#41746523329](https://github.com/martaxi-boss/VPS/actions/runs/41746523329) EPUB, Darktable [#41746819318](https://github.com/martaxi-boss/VPS/actions/runs/41746819318) TIFF, Krita [#41746923061](https://github.com/martaxi-boss/VPS/actions/runs/41746923061) PNG e GIMP [#41747053943](https://github.com/martaxi-boss/VPS/actions/runs/41747053943) XCF, todos pela Skill com ZIP e formatos verificados. **Scribus, quinto programa previsto originalmente, continua pendente**, portanto o plano de cinco não está inteiramente fechado.
 
 ## Fases previstas sem instalações desnecessárias
 
 | Fase | Programas observados, ainda sem ação direta no inventário inicial | Resultado operacional a certificar |
 |---|---|---|
 | **1 — Dados e documentos vetoriais** | DuckDB, Polars, Inkscape, Typst (4) | CSV→perfil JSON com colunas, tipos, linhas/amostra; SVG→PNG; Typst→PDF, testes reais na VPS |
-| **2 — Design e publicação** | GIMP, Krita, Scribus, Darktable, Calibre (5) | Exportação/conversão ou metadados comprovados no Ubuntu, sem assumir que GUI funciona sem ecrã |
+| **2 — Design e publicação** | GIMP, Krita, Scribus, Darktable, Calibre (5: quatro certificados; Scribus pendente) | EPUB/TIFF/PNG/XCF reais via Skill PASS; Scribus ainda sem adaptador certificado |
 | **3 — Áudio e vídeo** | yt-dlp, Kdenlive, Audacity, OBS Studio, LMMS, Synfig, OpenShot (7) | Processamento local e verificação de duração, codecs e ficheiro final; serviços GUI por certificar |
 | **4 — CAD, mapas e jogos** | FreeCAD, LibreCAD, QGIS, SolveSpace, Godot (5) | Análise/exportação headless de CAD, dados geográficos e scripts/projetos, sem componentes gráficos falsos |
 | **5 — Web/frontend** | Next.js, Tailwind, Bootstrap, Playwright, shadcn (5) | Builds e relatórios/validação de projetos de teste na pasta Ferrari; dependências npm próprias |
@@ -34,7 +35,7 @@
 
 ## Pendências separadas da expansão
 
-- A Skill instalada no ChatGPT ainda divulga instruções antigas (68 testes); a versão canónica no GitHub já descreve a release de 164 testes e a integração MCP. Atualizar a instalação sem perder a identidade da Skill.
+- A Skill instalada no ChatGPT ainda divulga instruções antigas (68 testes); o BOOTSTRAP canónico no GitHub foi atualizado com a release de 187 testes e 33 adaptadores. O workflow GitHub da Skill já consulta a release atual; atualizar também o texto instalado da Skill sem criar outra identidade.
 - O REA FINAL continua a receber pedidos num workflow próprio; a transição para o REA privado do Ferrari exige confirmação dos consumidores.
 - Isolamento absoluto: há executáveis `/usr/bin` partilhados; copiar ou desinstalar APT globais sem uma análise de dependências não produz isolamento seguro.
 - Penpot e Docker não foram detetados; ComfyUI está instalado em CPU mas sem modelos. Não apresentar estas funcionalidades como plenamente funcionais.
