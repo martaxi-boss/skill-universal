@@ -919,8 +919,9 @@
       "args": [
         "dump",
         "xmltree",
-        "{input}",
-        "AndroidManifest.xml"
+        "--file",
+        "AndroidManifest.xml",
+        "{input}"
       ]
     },
     {
