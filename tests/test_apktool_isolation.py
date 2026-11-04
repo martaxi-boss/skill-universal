@@ -46,7 +46,7 @@ class ApktoolIsolationTests(unittest.TestCase):
                 with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
                     with patch("engine.tool_runtime.shutil.which",return_value=str(other)):
                         self.assertEqual(tool_runtime.executable("rea","rea"),str(cli))
-            with patch.object(ferrari.Path,"home",return_value=root):
+            with patch.object(ferrari,"FERRARI_HOME",home):
                 self.assertTrue(ferrari.present({"id":"rea","binary":"rea"}))
             presence=runtime_discovery.npm_presence("rea",home=home,system_roots=(root/"global",))
             self.assertEqual(presence["scope"],"ferrari_npm")
@@ -57,7 +57,7 @@ class ApktoolIsolationTests(unittest.TestCase):
             with patch.object(tool_runtime,"HOME",home):
                 with patch.dict(tool_runtime.ISOLATED,{"rea":cli}):
                     self.assertIsNone(tool_runtime.executable("rea","rea"))
-            with patch.object(ferrari.Path,"home",return_value=root):
+            with patch.object(ferrari,"FERRARI_HOME",home):
                 self.assertFalse(ferrari.present({"id":"rea","binary":"rea"}))
 
     def test_apktool_and_rea_are_private_installs(self):
