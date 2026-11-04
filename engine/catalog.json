@@ -295,8 +295,10 @@
       "id": "adb",
       "bin": "adb",
       "category": "mobile",
-      "apt": "adb",
-      "cost": "open-source"
+      "apt": null,
+      "cost": "free-to-use-android-sdk-license",
+      "source": "https://developer.android.com/tools",
+      "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
     },
     {
       "id": "aapt",
@@ -308,16 +310,20 @@
     {
       "id": "apksigner",
       "bin": "apksigner",
-      "category": "mobile",
-      "apt": "apksigner",
-      "cost": "open-source"
+      "category": "reverse",
+      "apt": null,
+      "cost": "free-to-use-android-sdk-license",
+      "source": "https://developer.android.com/tools",
+      "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
     },
     {
       "id": "zipalign",
       "bin": "zipalign",
-      "category": "mobile",
-      "apt": "zipalign",
-      "cost": "open-source"
+      "category": "reverse",
+      "apt": null,
+      "cost": "free-to-use-android-sdk-license",
+      "source": "https://developer.android.com/tools",
+      "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
     },
     {
       "id": "ffmpeg",
@@ -521,6 +527,15 @@
       "cost": "open-source",
       "source": "https://github.com/IfcOpenShell/IfcOpenShell",
       "note": "Ferrari-only Python venv; semantic IFC inventory via isolated IfcOpenShell (LGPL-3.0-or-later). Not a geometric/structural validation."
+    },
+    {
+      "id": "aapt2",
+      "bin": "aapt2",
+      "category": "reverse",
+      "apt": null,
+      "cost": "free-to-use-android-sdk-license",
+      "source": "https://developer.android.com/tools",
+      "note": "Ferrari-owned Ubuntu Linux Android Build-Tools 36.0.0; inspect compiled APK manifest/resources."
     }
   ]
 }
