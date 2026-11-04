@@ -35,8 +35,23 @@ verify() {
   test -x "$dir/build-tools/36.0.0/apksigner"
   test -x "$dir/platform-tools/adb"
 }
+fix_private_state() {
+  # The installer can run as root; the actual Ferrari worker runs as ubuntu.
+  # All writable Android state must belong to Ferrari, not root, after setup.
+  local state="$ROOT/.runtime/android-cli" part
+  if test -e "$state" || test -L "$state"; then
+    test -d "$state" && test ! -L "$state"
+    test -z "$(find "$state" -type l -print -quit)"
+    chown -R --reference="$ROOT" -- "$state"
+    chmod 700 -- "$state"
+    for part in home tmp cache config data; do
+      if test -d "$state/$part"; then chmod 700 -- "$state/$part"; fi
+    done
+  fi
+}
 if test -d "$TARGET"; then
   verify "$TARGET"
+  fix_private_state
   echo "FERRARI_ANDROID_CLI_IDEMPOTENT=PASS"
   exit 0
 fi
@@ -86,4 +101,5 @@ for rel in "${FILES[@]}"; do cmp -s "$SDK/$rel" "$TARGET/$rel"; done
 "$TARGET/build-tools/36.0.0/apksigner" --version
 echo "FERRARI_ANDROID_LINUX_PRIVATE=PASS"
 echo "FERRARI_ANDROID_NO_GLOBAL_INSTALL=PASS"
+fix_private_state
 echo "FERRARI_ANDROID_FOUR_TOOLS_ONLY=PASS"

@@ -27,6 +27,9 @@ class AndroidPrivateCliTests(unittest.TestCase):
         self.assertIn("FERRARI_ANDROID_NO_GLOBAL_INSTALL=PASS", installer)
         self.assertNotIn("apt-get install", installer)
         self.assertNotIn("ln -s", installer)
+        self.assertIn("fix_private_state()", installer)
+        self.assertIn("chown -R --reference=", installer)
+        self.assertIn('test -z "$(find "$state" -type l -print -quit)"', installer)
 
     def test_private_cli_never_falls_back_to_system_or_shared_sdk(self):
         with tempfile.TemporaryDirectory() as directory:
