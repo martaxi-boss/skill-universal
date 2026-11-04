@@ -27,7 +27,7 @@ class ExpansionTests(unittest.TestCase):
             self.assertRegex(script,r"\b"+re.escape(pkg)+r"\b")
         self.assertIn("apt-get -s install --no-install-recommends",script)
         self.assertIn("apt-get install -y --no-install-recommends",script)
-        self.assertIn('ROOT="$HOME/.local/share/motor-ferrari"',script)
+        self.assertIn('ROOT="/srv/projects/skill-universal"',script)
         self.assertNotIn("~/.rea",script)
         self.assertNotIn("/opt/rea",script)
 

@@ -7,7 +7,7 @@ R=Path(__file__).resolve().parents[1]
 class PersistentEngines(unittest.TestCase):
     def test_own_rea_and_ruflo_are_pinned(self):
         s=(R/"install/install-agent-engines.sh").read_text()
-        self.assertIn('RUNTIME="$HOME/.local/share/motor-ferrari/.runtime/npm"',s)
+        self.assertIn('RUNTIME="/srv/projects/skill-universal/.runtime/npm"',s)
         self.assertIn("FERRARI_REA_REUSE=EXACT_PINNED_VERSION",s)
         self.assertIn("FERRARI_RUFLO_REUSE=EXACT_PINNED_VERSION",s)
         self.assertIn('rea-agents@$VERSION_REA',s)
