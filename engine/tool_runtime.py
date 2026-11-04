@@ -35,7 +35,11 @@ ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
           "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
           "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
-          "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo"}
+          "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo",
+          "aapt2":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/aapt2",
+          "apksigner":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
+          "zipalign":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/zipalign",
+          "adb":HOME/"tools/android-cli-36.0.0/platform-tools/adb"}
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
@@ -111,6 +115,14 @@ def executable(tool,binary=None):
         # Resolve only links staying within the Ferrari-owned service tree.
         private=HOME/"tools/ferrari-services/valkey-server"
         return str(pinned) if pinned.is_file() and pinned.resolve().is_relative_to(private.resolve()) else None
+    if tool in {"aapt2","apksigner","zipalign","adb"}:
+        private=HOME/"tools/android-cli-36.0.0"
+        # Ferrari-only executable: never fall back to PATH or the external SDK.
+        if (not private.is_dir() or private.is_symlink() or not pinned or
+                not pinned.is_file() or pinned.is_symlink() or
+                not pinned.resolve().is_relative_to(private.resolve())):
+            return None
+        return str(pinned)
     if tool in {"apktool","prometheus","typst","godot","freecad"}:
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
@@ -312,6 +324,24 @@ def invoke(action,source,folder,query=None):
         env["XDG_CACHE_HOME"]=str(HOME/".runtime/rea-cache")
         env["XDG_CONFIG_HOME"]=str(HOME/".runtime/rea-config")
         env["XDG_DATA_HOME"]=str(HOME/".runtime/rea-data")
+        run_options["env"]=env
+    if x["tool"] in {"aapt2","apksigner","zipalign","adb"}:
+        # Ubuntu Linux private Android CLIs, with writable state inside Ferrari.
+        state=HOME/".runtime/android-cli"
+        env=os.environ.copy()
+        for key,sub in (("HOME","home"),("TMPDIR","tmp"),
+                        ("XDG_CACHE_HOME","cache"),("XDG_CONFIG_HOME","config"),
+                        ("XDG_DATA_HOME","data")):
+            local=state/sub
+            local.mkdir(parents=True,exist_ok=True)
+            env[key]=str(local)
+        env["ANDROID_USER_HOME"]=str(state/"home/.android")
+        env["JAVA_HOME"]=str(HOME/"runtimes/jdk-25.0.5_8")
+        env["PATH"]=os.pathsep.join((str(HOME/"runtimes/jdk-25.0.5_8/bin"),
+                                      "/usr/bin","/bin"))
+        env["LD_LIBRARY_PATH"]=str(HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/lib64")
+        env.pop("ANDROID_HOME",None)
+        env.pop("ANDROID_SDK_ROOT",None)
         run_options["env"]=env
     if x["tool"] in {"duckdb","polars"}:
         # -m engine.data_profiles is an existing Ferrari module run inside
