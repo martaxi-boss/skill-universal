@@ -46,11 +46,11 @@ As provas do REA e Apktool estão também em [run #41654437939](https://github.c
 ## 3. Diretórios e isolamento — não apagar
 
 - Diretório **físico** do Ferrari: **/srv/projects/skill-universal/**. O caminho histórico /home/ubuntu/.local/share/motor-ferrari é um **link exclusivo** para essa pasta, comprovado em [#41714658308](https://github.com/martaxi-boss/VPS/actions/runs/41714658308). Preservar ambos enquanto existirem consumidores do alias.
-- REA oficial privado Ferrari: /home/ubuntu/.local/share/motor-ferrari/.runtime/npm/rea/; CLI em node_modules/.bin/rea.
-- Node privado: /home/ubuntu/.local/share/motor-ferrari/runtimes/node-22.23.4/.
-- Java privado: /home/ubuntu/.local/share/motor-ferrari/runtimes/jdk-25.0.5_8/.
+- REA oficial privado Ferrari: /srv/projects/skill-universal/.runtime/npm/rea/; CLI em node_modules/.bin/rea.
+- Node privado: /srv/projects/skill-universal/runtimes/node-22.23.4/.
+- Java privado: /srv/projects/skill-universal/runtimes/jdk-25.0.5_8/.
 - Ghidra/JADX: tools/ghidra-12.2 e tools/jadx-1.5.6 (programas); tools/rea-providers/ghidra-12.1.4 e tools/rea-providers/jadx-headless-mcp-0.7.1-all.jar (fornecedores privados do REA).
-- Apktool privado: /home/ubuntu/.local/share/motor-ferrari/tools/apktool-3.0.3/; cache em .runtime/apktool-frameworks/.
+- Apktool privado: /srv/projects/skill-universal/tools/apktool-3.0.3/; cache em .runtime/apktool-frameworks/.
 - Manter também .runtime/venvs/, .runtime/npm/, .runtime/browsers/, tools/, releases/ e o apontador current.
 
 O REA do Ferrari provém do pacote oficial npm rea-agents@6.8.0; não é uma instalação compartilhada nem um clone do outro projeto REA. Os instaladores verificam versão e caminhos; a execução de REA usa Node, Apktool e diretórios XDG privados do Ferrari. **Isto ainda não prova a proveniência de todos os pacotes e serviços globais Ubuntu.**
