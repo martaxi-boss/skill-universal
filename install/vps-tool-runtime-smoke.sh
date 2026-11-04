@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==35
-assert x["callable_actions"]>=35
+assert x["registered_actions"]==36
+assert x["callable_actions"]>=36
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -446,3 +446,39 @@ report=json.loads((root/"phase3-lmms-action.json").read_text())
 assert report["confirmed"] and report["tool"]=="lmms",report
 print("FERRARI_LMMS_WAV_REAL=PASS")
 PY_LMMS_AUDIO
+
+# Phase 3: the existing Kdenlive/MLT 'melt' headless renderer.
+# All fixtures and outputs are confined to this Ferrari job.
+cat > "$WORK/phase3-colour.mlt" <<'MLT_INPUT'
+<?xml version="1.0" encoding="utf-8"?>
+<mlt LC_NUMERIC="C" version="7.0.0" producer="playlist0">
+  <profile description="Ferrari" width="320" height="180" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="25" frame_rate_den="1" colorspace="709"/>
+  <producer id="colour0" in="0" out="49">
+    <property name="mlt_service">color</property>
+    <property name="resource">#176fae</property>
+  </producer>
+  <playlist id="playlist0">
+    <entry producer="colour0" in="0" out="49"/>
+  </playlist>
+</mlt>
+MLT_INPUT
+python3 -m engine.ferrari invoke --action kdenlive-mlt-mp4 \
+  --input "$WORK/phase3-colour.mlt" --output "$WORK/mlt-video" \
+  > "$WORK/phase3-mlt-action.json"
+python3 - "$WORK" <<'PY_PHASE3_MLT'
+import json,sys,subprocess
+from pathlib import Path
+root=Path(sys.argv[1])
+mp4=root/"mlt-video/mlt-video.mp4"
+assert mp4.is_file() and mp4.stat().st_size>1024,mp4
+p=subprocess.run(["ffprobe","-v","error","-show_entries",
+  "stream=codec_type,width,height:format=duration","-of","json",str(mp4)],
+  capture_output=True,text=True,check=True,timeout=30)
+data=json.loads(p.stdout)
+streams=[v for v in data.get("streams",[]) if v.get("codec_type")=="video"]
+assert streams and streams[0]["width"]==320 and streams[0]["height"]==180,streams
+assert 1.5<float(data["format"]["duration"])<3.0,data
+report=json.loads((root/"phase3-mlt-action.json").read_text())
+assert report.get("confirmed") is True and report.get("tool")=="kdenlive",report
+print("FERRARI_KDENLIVE_MLT_MP4_REAL=PASS")
+PY_PHASE3_MLT

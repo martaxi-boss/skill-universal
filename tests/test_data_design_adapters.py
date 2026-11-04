@@ -156,8 +156,8 @@ class FerrariDataDesignAdapters(unittest.TestCase):
     def test_vps_smoke_calls_each_real_installed_adapter(self):
         smoke=(Path(__file__).resolve().parents[1] /
                "install/vps-tool-runtime-smoke.sh").read_text()
-        self.assertIn('assert x["registered_actions"]==35', smoke)
-        self.assertIn('assert x["callable_actions"]>=35', smoke)
+        self.assertIn('assert x["registered_actions"]==36', smoke)
+        self.assertIn('assert x["callable_actions"]>=36', smoke)
         for action in ("duckdb-csv-profile", "polars-csv-profile",
                        "inkscape-svg-png", "typst-compile-pdf"):
             self.assertIn("--action " + action, smoke)
