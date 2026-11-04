@@ -18,6 +18,8 @@ class AndroidPrivateCliTests(unittest.TestCase):
             "android-zipalign-apk": ("zipalign", "file"),
             "android-adb-install-apk": ("adb", "stdout"),
         }
+        self.assertEqual(specifications["android-aapt2-manifest"]["args"],
+                         ["dump","xmltree","--file","AndroidManifest.xml","{input}"])
         for action, (tool, mode) in expected.items():
             self.assertEqual(specifications[action]["tool"], tool)
             self.assertEqual(specifications[action]["mode"], mode)
