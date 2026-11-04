@@ -9,13 +9,15 @@
 - **Fase 1 — concluída:** 4 ações novas (DuckDB, Polars, Inkscape, Typst), [deploy #41738343314](https://github.com/martaxi-boss/VPS/actions/runs/41738343314) SUCCESS com 175 testes e operações reais; pedidos pela Skill comprovados em [CSV #41738862274](https://github.com/martaxi-boss/VPS/actions/runs/41738862274), [Typst #41738907357](https://github.com/martaxi-boss/VPS/actions/runs/41738907357) e [Inkscape #41739107535](https://github.com/martaxi-boss/VPS/actions/runs/41739107535).
 - **Fase 2 — cinco adaptadores certificados (5/5):** [deploy #41785048137](https://github.com/martaxi-boss/VPS/actions/runs/41785048137) SUCCESS, **192 testes**, 34 ações no total; Calibre [#41746523329](https://github.com/martaxi-boss/VPS/actions/runs/41746523329) EPUB, Darktable [#41746819318](https://github.com/martaxi-boss/VPS/actions/runs/41746819318) TIFF, Krita [#41746923061](https://github.com/martaxi-boss/VPS/actions/runs/41746923061) PNG, GIMP [#41747053943](https://github.com/martaxi-boss/VPS/actions/runs/41747053943) XCF e Scribus [#41785658074](https://github.com/martaxi-boss/VPS/actions/runs/41785658074) PDF + SLA. Os cinco passaram na Skill com ZIP real e assinatura de ficheiros verificada. Nenhum ambiente gráfico completo ou servidor novo foi instalado.
 
+- **Fase 3 — áudio iniciado:** [deploy #41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407) SUCCESS, **197 testes PASS**, 35 ações, LMMS `render` para WAV com duas notas sintéticas não silenciosas. A [Skill #41787031335](https://github.com/martaxi-boss/VPS/actions/runs/41787031335) devolveu ZIP, `report.json.status=completed` e WAV de 3,428 segundos, estéreo 44,1 kHz; ficheiro inspecionado. `melt` aceita CLI [#41786910295](https://github.com/martaxi-boss/VPS/actions/runs/41786910295), mas falta certificar vídeo. O inventário [#41786739191](https://github.com/martaxi-boss/VPS/actions/runs/41786739191) não encontrou comando `synfig`, apenas a aplicação gráfica `synfigstudio`; não instalar soluções paralelas para esconder a limitação.
+
 ## Fases previstas sem instalações desnecessárias
 
 | Fase | Programas observados, ainda sem ação direta no inventário inicial | Resultado operacional a certificar |
 |---|---|---|
 | **1 — Dados e documentos vetoriais** | DuckDB, Polars, Inkscape, Typst (4) | CSV→perfil JSON com colunas, tipos, linhas/amostra; SVG→PNG; Typst→PDF, testes reais na VPS |
 | **2 — Design e publicação** | GIMP, Krita, Scribus, Darktable, Calibre (5/5 certificados) | EPUB/TIFF/PNG/XCF e Scribus PDF+SLA via Skill PASS, todos ficheiros reais |
-| **3 — Áudio e vídeo** | yt-dlp, Kdenlive, Audacity, OBS Studio, LMMS, Synfig, OpenShot (7) | Processamento local e verificação de duração, codecs e ficheiro final; serviços GUI por certificar |
+| **3 — Áudio e vídeo** | yt-dlp, Kdenlive, Audacity, OBS Studio, LMMS, Synfig, OpenShot (7: LMMS certificado; outros pendentes) | LMMS `.mmp/.mmpz` → WAV real e não silencioso PASS via Skill; `melt` CLI descoberto para fase seguinte, sem exportação vídeo ainda |
 | **4 — CAD, mapas e jogos** | FreeCAD, LibreCAD, QGIS, SolveSpace, Godot (5) | Análise/exportação headless de CAD, dados geográficos e scripts/projetos, sem componentes gráficos falsos |
 | **5 — Web/frontend** | Next.js, Tailwind, Bootstrap, Playwright, shadcn (5) | Builds e relatórios/validação de projetos de teste na pasta Ferrari; dependências npm próprias |
 | **6 — Dados, processamento e IA CPU** | OpenCV, Docling, Streamlit, Gradio, Faster-Whisper, ComfyUI (6) | Operações reais por ambiente Python privado; recursos, modelos CPU e condições de execução documentados |
@@ -35,7 +37,7 @@
 
 ## Pendências separadas da expansão
 
-- A Skill instalada no ChatGPT ainda divulga instruções antigas (68 testes); o BOOTSTRAP canónico no GitHub está na release de 192 testes e 34 adaptadores. O workflow GitHub da Skill está sincronizado com a release atual, mas a descrição instalada da Skill continua desatualizada; atualizar sem criar outra identidade.
+- A Skill instalada no ChatGPT ainda divulga instruções antigas (68 testes); o BOOTSTRAP canónico no GitHub está na release de 197 testes e 35 adaptadores. O workflow GitHub da Skill está sincronizado com a release atual, mas a descrição instalada da Skill continua desatualizada; atualizar sem criar outra identidade.
 - O REA FINAL continua a receber pedidos num workflow próprio; a transição para o REA privado do Ferrari exige confirmação dos consumidores.
 - Isolamento absoluto: há executáveis `/usr/bin` partilhados; copiar ou desinstalar APT globais sem uma análise de dependências não produz isolamento seguro.
 - Penpot e Docker não foram detetados; ComfyUI está instalado em CPU mas sem modelos. Não apresentar estas funcionalidades como plenamente funcionais.
