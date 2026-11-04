@@ -124,7 +124,7 @@ class RuntimeDiscoveryTests(unittest.TestCase):
         self.assertEqual(vite["detection"],"npm_package")
         self.assertEqual(vite["status"],"installed_unintegrated")
         self.assertEqual(vite["actions"],[])
-        self.assertEqual(report["registered_actions"],36)
+        self.assertEqual(report["registered_actions"],40)
 
 
 if __name__=="__main__":
