@@ -17,6 +17,7 @@ import subprocess
 import sys
 import unicodedata
 import uuid
+import wave
 
 ROOT=Path(__file__).resolve().parents[1]
 HOME=Path.home()/".local/share/motor-ferrari"
@@ -321,7 +322,7 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
-    if x["tool"] in {"calibre","darktable","krita","gimp","scribus"}:
+    if x["tool"] in {"calibre","darktable","krita","gimp","scribus","lmms"}:
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
         # in Ubuntu's shared user profile or another project's directory.
@@ -349,6 +350,14 @@ def invoke(action,source,folder,query=None):
             env["TMPDIR"]=str(tmp)
             env["QT_QPA_PLATFORM"]="xcb"
             args=[xvfb,"-a",exe]+args[1:]
+        if x["tool"]=="lmms":
+            # Render only local LMMS project files; never use system user
+            # preferences or an interactive audio/desktop service.
+            env["HOME"]=str(home)
+            env["QT_QPA_PLATFORM"]="offscreen"
+            runtime=home/"runtime"
+            runtime.mkdir(mode=0o700,exist_ok=True)
+            env["XDG_RUNTIME_DIR"]=str(runtime)
         if x["tool"]=="scribus":
             # The Scribus Scripter is executed once per job, with no GUI,
             # ephemeral Xvfb and every writable path inside the Ferrari job.
@@ -391,6 +400,23 @@ def invoke(action,source,folder,query=None):
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:
         raise RuntimeError("Executor failed: "+p.stderr.decode("utf-8","replace")[-1000:])
+    if x["tool"]=="lmms":
+        # Test a real PCM WAV, never treat a zero-byte or silent export as
+        # success just because LMMS exited with code zero.
+        if target.is_symlink() or not target.is_file() or target.stat().st_size<128:
+            raise RuntimeError("LMMS did not produce a real WAV")
+        try:
+            with wave.open(str(target),"rb") as audio:
+                frames=audio.getnframes()
+                if (audio.getnchannels() not in (1,2) or
+                        not 8000<=audio.getframerate()<=192000 or
+                        not 1<=audio.getsampwidth()<=4 or frames<100):
+                    raise RuntimeError("LMMS produced invalid PCM WAV metadata")
+                sample=audio.readframes(min(frames,65536))
+                if not sample or not any(sample):
+                    raise RuntimeError("LMMS produced empty or silent audio")
+        except (wave.Error,EOFError,OSError) as exc:
+            raise RuntimeError("LMMS did not produce valid PCM WAV") from exc
     if x["tool"]=="scribus":
         pdf=target/"publication.pdf"
         sla=target/"publication.sla"
