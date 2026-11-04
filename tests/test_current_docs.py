@@ -44,7 +44,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         for text in (sk, portable):
             self.assertIn("rea-agents@6.8.0", text)
             self.assertIn("3.0.3", text)
-            self.assertIn("41716562469", text)
+            self.assertIn("41786521407", text)
             self.assertIn("rea-mcp", text)
             self.assertIn("55/56", text)
             self.assertNotIn("REA antigo como fallback", text)
