@@ -321,7 +321,7 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
-    if x["tool"] in {"calibre","darktable","krita","gimp"}:
+    if x["tool"] in {"calibre","darktable","krita","gimp","scribus"}:
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
         # in Ubuntu's shared user profile or another project's directory.
@@ -349,6 +349,25 @@ def invoke(action,source,folder,query=None):
             env["TMPDIR"]=str(tmp)
             env["QT_QPA_PLATFORM"]="xcb"
             args=[xvfb,"-a",exe]+args[1:]
+        if x["tool"]=="scribus":
+            # The Scribus Scripter is executed once per job, with no GUI,
+            # ephemeral Xvfb and every writable path inside the Ferrari job.
+            xvfb=shutil.which("xvfb-run")
+            server=shutil.which("Xvfb")
+            if not xvfb or not server:
+                raise RuntimeError("Scribus requires an existing Xvfb virtual display")
+            target.mkdir(mode=0o700)
+            tmp=home/"tmp"
+            runtime=home/"runtime"
+            tmp.mkdir(parents=True,exist_ok=True)
+            runtime.mkdir(mode=0o700)
+            env["TMPDIR"]=str(tmp)
+            env["XDG_RUNTIME_DIR"]=str(runtime)
+            env["QT_QPA_PLATFORM"]="xcb"
+            env["HOME"]=str(home)
+            env["FERRARI_SCRIBUS_INPUT"]=str(inp)
+            env["FERRARI_SCRIBUS_OUTPUT"]=str(target)
+            args=[xvfb,"-a",exe,"-g","-ns","-py",str(ROOT/"engine/scribus_job.py")]
         run_options["env"]=env
     if x["tool"]=="gimp":
         # Ferrari already verified GIMP 2.10 console's headless Script-Fu.
@@ -372,6 +391,15 @@ def invoke(action,source,folder,query=None):
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:
         raise RuntimeError("Executor failed: "+p.stderr.decode("utf-8","replace")[-1000:])
+    if x["tool"]=="scribus":
+        pdf=target/"publication.pdf"
+        sla=target/"publication.sla"
+        if (not pdf.is_file() or pdf.is_symlink() or pdf.stat().st_size<100 or
+                pdf.read_bytes()[:5]!=b"%PDF-"):
+            raise RuntimeError("Scribus did not produce a valid PDF")
+        if (not sla.is_file() or sla.is_symlink() or sla.stat().st_size<100 or
+                b"SCRIBUS" not in sla.read_bytes()[:400]):
+            raise RuntimeError("Scribus did not produce an editable SLA")
     if x["mode"]=="stdout":
         if not p.stdout:raise RuntimeError("Empty executor output")
         target.write_bytes(p.stdout)
