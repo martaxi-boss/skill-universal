@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from engine import core
 
 ROOT = Path(__file__).resolve().parent.parent
+FERRARI_HOME = Path("/srv/projects/skill-universal")
 REGISTRY = ROOT / "engine" / "ferrari_registry.json"
 ROUTES = {
  "reverse": ("apk","dex","descompil","decompil","engenharia reversa","firmware","binario","executavel"),
@@ -76,25 +77,25 @@ def system():
 def present(p):
     if p["id"]=="rea":
         # Only the Ferrari-owned rea-agents npm tree; never reuse the legacy REA.
-        private=Path.home()/".local/share/motor-ferrari/.runtime/npm/rea"
+        private=(FERRARI_HOME / ".runtime/npm/rea")
         modules=private/"node_modules"
         cli=modules/".bin/rea"
         return private.is_dir() and not private.is_symlink() and modules.is_dir() and not modules.is_symlink() and cli.is_file() and cli.resolve().is_relative_to(modules.resolve())
     if p["id"]=="apktool":
-        local=Path.home()/".local/share/motor-ferrari/tools/apktool-3.0.3/bin/apktool"
+        local=(FERRARI_HOME / "tools/apktool-3.0.3/bin/apktool")
         return local.is_file() and not local.is_symlink()
     exe=p.get("binary")
     if not exe:
         return False
     if p["id"]=="ghidra":
         home=os.getenv("GHIDRA_INSTALL_DIR")
-        local=Path.home()/".local/share/motor-ferrari/tools/ghidra-12.2/support/analyzeHeadless"
+        local=(FERRARI_HOME / "tools/ghidra-12.2/support/analyzeHeadless")
         return bool(shutil.which(exe) or (home and (Path(home)/"support/analyzeHeadless").is_file()) or local.is_file())
     if p["id"]=="jadx":
-        local=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
+        local=(FERRARI_HOME / "tools/jadx-1.5.6/bin/jadx")
         return bool(shutil.which(exe) or local.is_file())
     if p["id"]=="ruflo":
-        local=Path.home()/".local/share/motor-ferrari/.runtime/npm/ruflo/node_modules/.bin/ruflo"
+        local=(FERRARI_HOME / ".runtime/npm/ruflo/node_modules/.bin/ruflo")
         return local.is_file()
     return shutil.which(exe) is not None
 
@@ -288,7 +289,7 @@ def _output(folder,name):
 def _exe(name):
     p=shutil.which(name)
     if not p and name=="jadx":
-        candidate=Path.home()/".local/share/motor-ferrari/tools/jadx-1.5.6/bin/jadx"
+        candidate=(FERRARI_HOME / "tools/jadx-1.5.6/bin/jadx")
         if candidate.is_file() and os.access(candidate,os.X_OK):
             p=str(candidate)
     if not p:

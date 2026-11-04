@@ -15,8 +15,8 @@ import subprocess
 import tempfile
 import time
 
-ROOT = Path.home() / ".local/share/motor-ferrari"
 PROJECT_ROOT = Path("/srv/projects/skill-universal")
+ROOT = PROJECT_ROOT
 MAX_FRAME_BYTES = 64 * 1024 * 1024
 METHODS = frozenset(("tools/list", "tools/call"))
 

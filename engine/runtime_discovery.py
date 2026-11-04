@@ -15,7 +15,7 @@ import re
 import shutil
 import subprocess
 
-FERRARI_HOME = Path.home() / ".local/share/motor-ferrari"
+FERRARI_HOME = Path("/srv/projects/skill-universal")
 PYTHON_MODULES = {
     "opencv": "cv2", "duckdb": "duckdb", "polars": "polars",
     "streamlit": "streamlit", "gradio": "gradio", "prefect": "prefect",

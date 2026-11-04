@@ -20,7 +20,7 @@ import uuid
 import wave
 
 ROOT=Path(__file__).resolve().parents[1]
-HOME=Path.home()/".local/share/motor-ferrari"
+HOME=Path("/srv/projects/skill-universal")
 BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
           "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
           "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
