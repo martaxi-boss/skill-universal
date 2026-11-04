@@ -11,7 +11,7 @@ from engine import tool_runtime
 class GimpNativeExportTests(unittest.TestCase):
     def test_manifest_and_route_keep_gimp_separate_from_other_32_actions(self):
         actions=tool_runtime.specs()
-        self.assertEqual(len(actions),35)
+        self.assertEqual(len(actions),36)
         x=actions["gimp-png-xcf"]
         self.assertEqual((x["tool"],x["binary"],x["artifact"],x["extensions"]),
                          ("gimp","gimp-console-2.10","gimp-editable.xcf",[".png"]))
@@ -67,7 +67,7 @@ class GimpNativeExportTests(unittest.TestCase):
     def test_real_vps_smoke_proves_native_xcf_signature(self):
         script=(Path(__file__).resolve().parents[1] /
                 "install/vps-tool-runtime-smoke.sh").read_text()
-        self.assertIn('assert x["registered_actions"]==35',script)
+        self.assertIn('assert x["registered_actions"]==36',script)
         self.assertIn("--action gimp-png-xcf",script)
         self.assertIn("FERRARI_GIMP_XCF_REAL=PASS",script)
 

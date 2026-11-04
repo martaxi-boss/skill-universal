@@ -855,6 +855,27 @@
         "-f",
         "wav"
       ]
+    },
+    {
+      "id": "kdenlive-mlt-mp4",
+      "tool": "kdenlive",
+      "binary": "melt",
+      "category": "media",
+      "keywords": [
+        "kdenlive mlt para mp4",
+        "renderizar projeto mlt",
+        "converter mlt em video mp4"
+      ],
+      "extensions": [
+        ".mlt",
+        ".kdenlive"
+      ],
+      "mode": "file",
+      "artifact": "mlt-video.mp4",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
     }
   ]
 }

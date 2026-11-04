@@ -322,7 +322,7 @@ def invoke(action,source,folder,query=None):
         env["PYTHONNOUSERSITE"]="1"
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
-    if x["tool"] in {"calibre","darktable","krita","gimp","scribus","lmms"}:
+    if x["tool"] in {"calibre","darktable","krita","gimp","scribus","lmms","kdenlive"}:
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
         # in Ubuntu's shared user profile or another project's directory.
@@ -358,6 +358,17 @@ def invoke(action,source,folder,query=None):
             runtime=home/"runtime"
             runtime.mkdir(mode=0o700,exist_ok=True)
             env["XDG_RUNTIME_DIR"]=str(runtime)
+        if x["tool"]=="kdenlive":
+            # Kdenlive uses the installed MLT rendering engine. Render
+            # without starting GUI; state is kept inside this Ferrari job.
+            env["HOME"]=str(home)
+            env["LC_NUMERIC"]="C"
+            env["MLT_NO_VDPAU"]="1"
+            runtime=home/"runtime"
+            runtime.mkdir(mode=0o700,exist_ok=True)
+            env["XDG_RUNTIME_DIR"]=str(runtime)
+            args=[exe,str(inp),"-consumer","avformat:"+str(target),
+                  "vcodec=libx264","acodec=aac","real_time=-1"]
         if x["tool"]=="scribus":
             # The Scribus Scripter is executed once per job, with no GUI,
             # ephemeral Xvfb and every writable path inside the Ferrari job.
@@ -400,6 +411,30 @@ def invoke(action,source,folder,query=None):
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:
         raise RuntimeError("Executor failed: "+p.stderr.decode("utf-8","replace")[-1000:])
+    if x["tool"]=="kdenlive":
+        # Verify actual playable video, not just a successful process exit.
+        if target.is_symlink() or not target.is_file() or target.stat().st_size<1024:
+            raise RuntimeError("MLT did not produce a real MP4 video")
+        ffprobe=shutil.which("ffprobe")
+        if not ffprobe:
+            raise RuntimeError("FFprobe is required to validate MLT video")
+        check=subprocess.run(
+            [ffprobe,"-v","error","-show_entries",
+             "stream=codec_type,codec_name,width,height:format=duration",
+             "-of","json",str(target)],
+            shell=False,capture_output=True,timeout=35,check=False)
+        if check.returncode:
+            raise RuntimeError("FFprobe could not inspect MLT video")
+        try:
+            info=json.loads(check.stdout)
+            streams=[s for s in info.get("streams",[])
+                     if s.get("codec_type")=="video" and
+                     int(s.get("width",0))>=64 and int(s.get("height",0))>=64]
+            duration=float(info.get("format",{}).get("duration",0))
+            if not streams or duration<0.2:
+                raise ValueError("missing video stream or duration")
+        except (ValueError,TypeError,KeyError,AttributeError) as exc:
+            raise RuntimeError("MLT output is not a valid playable MP4 video") from exc
     if x["tool"]=="lmms":
         # Test a real PCM WAV, never treat a zero-byte or silent export as
         # success just because LMMS exited with code zero.
