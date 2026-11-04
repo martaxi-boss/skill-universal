@@ -830,6 +830,31 @@
         "{input}",
         "{output}"
       ]
+    },
+    {
+      "id": "lmms-project-wav",
+      "tool": "lmms",
+      "binary": "lmms",
+      "category": "audio",
+      "keywords": [
+        "lmms para wav",
+        "renderizar projeto lmms",
+        "exportar lmms wav"
+      ],
+      "extensions": [
+        ".mmp",
+        ".mmpz"
+      ],
+      "mode": "file",
+      "artifact": "lmms-render.wav",
+      "args": [
+        "render",
+        "{input}",
+        "-o",
+        "{output}",
+        "-f",
+        "wav"
+      ]
     }
   ]
 }

@@ -13,8 +13,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==34
-assert x["callable_actions"]>=34
+assert x["registered_actions"]==35
+assert x["callable_actions"]>=35
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -402,3 +402,47 @@ report=json.loads((root/"phase2-scribus-action.json").read_text())
 assert report["confirmed"] and report["tool"]=="scribus",report
 print("FERRARI_SCRIBUS_PDF_SLA_REAL=PASS")
 PY_SCRIBUS
+
+
+# Phase 3: render two original oscillator notes with already installed LMMS.
+# The reference is LMMS's installed factory template, not another project.
+# Create the fixture and output only under Ferrari's private test workspace.
+python3 - "$WORK" <<'PY_LMMS_SOURCE'
+from pathlib import Path
+import xml.etree.ElementTree as ET
+import sys
+root=Path(sys.argv[1])
+template=Path("/usr/share/lmms/projects/templates/default.mpt")
+assert template.is_file(),template
+document=ET.parse(template)
+track=document.getroot().find(".//song/trackcontainer/track[@type='0']")
+assert track is not None,"LMMS default oscillator track missing"
+pattern=ET.SubElement(track,"pattern",{
+    "name":"Ferrari Original Two Notes","type":"1","pos":"0",
+    "len":"192","steps":"16","muted":"0"})
+for pitch,at,duration in ((57,0,96),(64,96,96)):
+    ET.SubElement(pattern,"note",{
+        "key":str(pitch),"pos":str(at),"len":str(duration),
+        "vol":"85","pan":"0"})
+document.write(root/"phase3-original.mmp",encoding="utf-8",xml_declaration=True)
+PY_LMMS_SOURCE
+python3 -m engine.ferrari invoke --action lmms-project-wav \
+  --input "$WORK/phase3-original.mmp" --output "$WORK/lmms-audio" \
+  > "$WORK/phase3-lmms-action.json"
+python3 - "$WORK" <<'PY_LMMS_AUDIO'
+from pathlib import Path
+import wave,json,sys
+root=Path(sys.argv[1])
+path=root/"lmms-audio/lmms-render.wav"
+assert path.is_file() and path.stat().st_size>1000,path
+with wave.open(str(path),"rb") as audio:
+    frames=audio.getnframes()
+    rate=audio.getframerate()
+    channels=audio.getnchannels()
+    samples=audio.readframes(min(frames,65536))
+    assert frames>1000 and 8000<=rate<=192000 and channels in (1,2)
+    assert samples and any(samples),"LMMS WAV is silent"
+report=json.loads((root/"phase3-lmms-action.json").read_text())
+assert report["confirmed"] and report["tool"]=="lmms",report
+print("FERRARI_LMMS_WAV_REAL=PASS")
+PY_LMMS_AUDIO
