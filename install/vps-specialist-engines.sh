@@ -10,7 +10,7 @@ umask 077
  echo 'FERRARI_SPECIALISTS_UNSUPPORTED_UBUNTU' >&2; exit 2;
 }
 SOURCE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 TOOLS="$ROOT/tools"
 JDK="$ROOT/runtimes/jdk-25.0.5_8"
 JADX="$TOOLS/jadx-1.5.6"

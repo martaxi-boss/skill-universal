@@ -140,7 +140,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--apply", action="store_true", help="Remove Ferrari npm download cache only")
     args = p.parse_args()
-    root = Path.home() / ".local/share/motor-ferrari"
+    root = PROJECT_ROOT
     try:
         result = audit(root, apply=args.apply)
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:

@@ -7,11 +7,12 @@ umask 077
 test "$ID" = ubuntu && test "$VERSION_ID" = 24.04 && test "$(uname -m)" = x86_64
 test "$(id -u)" -ne 0
 cd "$(dirname "$0")/.."
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
+LEGACY_ALIAS="$HOME/.local/share/motor-ferrari"
 # When Ferrari's historical location is a symlink, verify the exact
 # independent GitHub project before checking the resolved Valkey binary.
-if [[ -L "$ROOT" ]]; then
-  [[ "$(realpath -e "$ROOT")" == "/srv/projects/skill-universal" ]] &&
+if [[ -L "$LEGACY_ALIAS" ]]; then
+  [[ "$(realpath -e "$LEGACY_ALIAS")" == "/srv/projects/skill-universal" ]] &&
     [[ -d "/srv/projects/skill-universal" ]] &&
     [[ ! -L "/srv/projects/skill-universal" ]] || {
       echo 'FERRARI_PROJECT_ALIAS_INVALID' >&2; exit 6;
@@ -119,7 +120,7 @@ for pkg in "${SERVICES[@]}"; do
       cat > "$out/bin/valkey-server" <<'VALKEY_LAUNCH'
 #!/usr/bin/env bash
 set -Eeuo pipefail
-PRIVATE="$HOME/.local/share/motor-ferrari/tools/ferrari-services/valkey-server"
+PRIVATE="$ROOT/tools/ferrari-services/valkey-server"
 export LD_LIBRARY_PATH="$PRIVATE/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$PRIVATE/usr/bin/valkey-server" "$@"
 VALKEY_LAUNCH

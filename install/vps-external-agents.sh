@@ -11,11 +11,12 @@ test -f "$SCRIPT_ROOT/engine/ferrari.py" || exit 2
 [[ "$ID" == ubuntu && "$VERSION_ID" == 24.04 ]] || {
   echo 'FERRARI_AGENTS_BLOCKED_NOT_UBUNTU_2404' >&2; exit 2;
 }
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
+LEGACY_ALIAS="$HOME/.local/share/motor-ferrari"
 # Historical Ferrari path may be a symlink after physical project migration.
 # Accept only the exact independent Ferrari repository directory.
-if [[ -L "$ROOT" ]]; then
-  [[ "$(realpath -e "$ROOT")" == "/srv/projects/skill-universal" ]] &&
+if [[ -L "$LEGACY_ALIAS" ]]; then
+  [[ "$(realpath -e "$LEGACY_ALIAS")" == "/srv/projects/skill-universal" ]] &&
     [[ -d "/srv/projects/skill-universal" ]] &&
     [[ ! -L "/srv/projects/skill-universal" ]] || {
       echo 'FERRARI_PROJECT_ALIAS_INVALID' >&2; exit 6;

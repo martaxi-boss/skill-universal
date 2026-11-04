@@ -6,7 +6,7 @@ umask 077
 [[ "$ID" == ubuntu && "$VERSION_ID" == "24.04" && "$(uname -m)" == "x86_64" ]] || {
   echo 'FERRARI_APKTOOL_UNSUPPORTED_UBUNTU' >&2; exit 2;
 }
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 JAVA="$ROOT/runtimes/jdk-25.0.5_8/bin/java"
 TARGET="$ROOT/tools/apktool-3.0.3"
 JAR="$TARGET/apktool_3.0.3.jar"
@@ -32,7 +32,7 @@ if [[ ! -f "$JAR" ]]; then
 #!/usr/bin/env bash
 # Ferrari-owned Java and frameworks; no PATH Java, REA, or shared Apktool cache.
 set -Eeuo pipefail
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 JAVA="$ROOT/runtimes/jdk-25.0.5_8/bin/java"
 JAR="$ROOT/tools/apktool-3.0.3/apktool_3.0.3.jar"
 FRAME="$ROOT/.runtime/apktool-frameworks"

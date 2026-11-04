@@ -9,7 +9,7 @@ umask 077
 }
 (( EUID != 0 )) || { echo 'FERRARI_BROWSER_ROOT_DISALLOWED' >&2; exit 2; }
 
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 NODE_ROOT="$ROOT/runtimes/node-22.23.4"
 NODE="$NODE_ROOT/bin/node"
 NPM="$NODE_ROOT/bin/npm"

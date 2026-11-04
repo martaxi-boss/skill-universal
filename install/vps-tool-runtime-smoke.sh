@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 umask 077
 cd "$(dirname "$0")/.."
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 mkdir -p "$ROOT/.runtime"
 WORK="$(mktemp -d "$ROOT/.runtime/tool-smoke.XXXXXXXX")"
 trap 'rm -rf -- "$WORK"' EXIT
@@ -117,7 +117,7 @@ assert "sha256" in elf_text.lower() and ("table" in elf_text.lower() or "notes" 
 assert "com.ferrari.smoke" in apk_text or "Ferrari APK Smoke" in apk_text, apk_text[:1000]
 for fn in ("rea-elf-run.json","rea-apk-run.json"):
     outcome=json.loads((p/fn).read_text())
-    assert outcome["confirmed"] and "/motor-ferrari/" in outcome["executor"]
+    assert outcome["confirmed"] and "/srv/projects/skill-universal/" in outcome["executor"]
 print("FERRARI_PRIVATE_REA_ELF_REAL=PASS")
 print("FERRARI_PRIVATE_REA_ANDROID_REAL=PASS")
 REA_CHECK

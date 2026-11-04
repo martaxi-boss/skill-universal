@@ -25,7 +25,7 @@ command -v blender
 command -v openscad
 blender --background --factory-startup --version | sed -n '1p'
 QT_QPA_PLATFORM=offscreen openscad --version
-OUT="$HOME/.local/share/motor-ferrari/current/smoke/cad-3d"
+OUT="/srv/projects/skill-universal/current/smoke/cad-3d"
 mkdir -p "$OUT"
 cat > "$OUT/ferrari-sample.scad" <<'SCAD'
 difference() {

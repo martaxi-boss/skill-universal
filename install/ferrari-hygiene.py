@@ -2,7 +2,7 @@
 """Conservative Ferrari-only release cleanup; default report-only.
 
 Never touches any other project. Only 40-hex Ferrari release directories,
-verified beneath ~/.local/share/motor-ferrari/releases, can be pruned.
+verified beneath /srv/projects/skill-universal/releases, can be pruned.
 """
 from __future__ import annotations
 import argparse
@@ -18,14 +18,16 @@ HEX40=re.compile(r"[0-9a-f]{40}\Z")
 PROJECT_ROOT=Path("/srv/projects/skill-universal")
 
 def clean(apply=False):
-    root=Path.home()/".local"/"share"/"motor-ferrari"
-    # The Ferrari-only alias is permitted only when it points at the
-    # dedicated physical GitHub project directory under /srv/projects.
-    if root.is_symlink():
+    alias=Path.home()/".local"/"share"/"motor-ferrari"
+    # The legacy link is optional, but a present unexpected link or physical
+    # duplicate outside the canonical project root still blocks hygiene.
+    if alias.is_symlink():
         if (not PROJECT_ROOT.is_dir() or PROJECT_ROOT.is_symlink() or
-                root.resolve(strict=True)!=PROJECT_ROOT):
+                alias.resolve(strict=True)!=PROJECT_ROOT):
             raise RuntimeError("Ferrari project alias is outside its isolated directory")
-        root=PROJECT_ROOT
+    elif alias.exists():
+        raise RuntimeError("Ferrari project alias is outside its isolated directory")
+    root=PROJECT_ROOT
     release_root=root/"releases"
     pointer=root/"current"
     if root.is_symlink() or release_root.is_symlink():
