@@ -15,7 +15,7 @@ import subprocess
 import tempfile
 import time
 
-FERRARI = Path.home() / ".local/share/motor-ferrari"
+FERRARI = Path("/srv/projects/skill-universal")
 LEGACY = Path.home() / "rea-final-runtime/bin/rea-mcp"
 CLI = FERRARI / ".runtime/npm/rea/node_modules/.bin/rea"
 MAX_MESSAGE = 32 * 1024 * 1024

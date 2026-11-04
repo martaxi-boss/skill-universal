@@ -17,7 +17,7 @@ class ExternalProgramsTests(unittest.TestCase):
 
     def test_installer_keeps_private_python_and_node_dependencies(self):
         src=SCRIPT.read_text()
-        self.assertIn('ROOT="$HOME/.local/share/motor-ferrari"',src)
+        self.assertIn('ROOT="/srv/projects/skill-universal"',src)
         self.assertIn('NODE="$ROOT/runtimes/node-22.23.4/bin/node"',src)
         self.assertIn('dir="$ROOT/.runtime/venvs/extended/$tool"',src)
         self.assertIn('root="$ROOT/.runtime/npm/$tool"',src)

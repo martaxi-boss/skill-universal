@@ -11,7 +11,7 @@ while (($#)); do
 done
 case "$PROFILE" in rea|ruflo|all) ;; *) echo "Expected rea, ruflo, all" >&2; exit 2;; esac
 PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-RUNTIME="$HOME/.local/share/motor-ferrari/.runtime/npm"
+RUNTIME="/srv/projects/skill-universal/.runtime/npm"
 VERSION_REA=6.8.0
 VERSION_RUFLO=3.71.0
 printf 'Ferrari-private runtime: %s\n' "$RUNTIME"

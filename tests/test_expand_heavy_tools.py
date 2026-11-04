@@ -17,8 +17,8 @@ class HeavyToolsTests(unittest.TestCase):
         self.assertIn("download.pytorch.org/whl/cpu",src)
         self.assertIn("penpot/penpot/$PENPOT_VERSION/docker/images/docker-compose.yaml",src)
         self.assertIn("PENPOT_VERSION=2.18.5",src)
-        self.assertIn('ROOT="$HOME/.local/share/motor-ferrari"', (ROOT/"install/vps-bim-web.sh").read_text())
-        self.assertIn('ROOT="$HOME/.local/share/motor-ferrari"',src)
+        self.assertIn('ROOT="/srv/projects/skill-universal"', (ROOT/"install/vps-bim-web.sh").read_text())
+        self.assertIn('ROOT="/srv/projects/skill-universal"',src)
 
     def test_heavy_installation_never_starts_other_projects_or_network_services(self):
         src=HEAVY.read_text()

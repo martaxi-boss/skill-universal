@@ -6,7 +6,7 @@ umask 077
 . /etc/os-release
 test "$ID" = ubuntu && test "$VERSION_ID" = 24.04 && test "$(uname -m)" = x86_64
 test "$(id -u)" -ne 0
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 OUT="$ROOT/.runtime/expansion-33"
 mkdir -p "$OUT" "$ROOT/.runtime/venvs/extended" "$ROOT/.runtime/npm"
 TSV="$OUT/external.tsv"

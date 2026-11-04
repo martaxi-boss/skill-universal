@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Real Ferrari-private REA Ghidra/JADX smoke. Never consult legacy REA or other projects.
 set -Eeuo pipefail
-ROOT="$(realpath -e "$HOME/.local/share/motor-ferrari")"
+ROOT="$(realpath -e "/srv/projects/skill-universal")"
 REA="$ROOT/.runtime/npm/rea/node_modules/.bin/rea"
 APKTOOL="$ROOT/tools/apktool-3.0.3/bin/apktool"
 JDK="$ROOT/runtimes/jdk-25.0.5_8"

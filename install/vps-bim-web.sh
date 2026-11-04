@@ -10,7 +10,7 @@ umask 077
 [[ "$(uname -m)" == x86_64 && "$(id -u)" != 0 ]] || {
   echo 'FERRARI_PRO_TOOLS_UNSUPPORTED_USER_OR_ARCH' >&2; exit 2;
 }
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 WORK="$ROOT/.runtime"
 NODE_ROOT="$ROOT/runtimes/node-22.23.4"
 PY_DIR="$WORK/venvs/bim"

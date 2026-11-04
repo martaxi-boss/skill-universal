@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 umask 077
 cd "$(dirname "$0")/.."
-ROOT="$HOME/.local/share/motor-ferrari"
+ROOT="/srv/projects/skill-universal"
 bash install/vps-bim-web.sh
 bash install/vps-browser-headless.sh
 mkdir -p "$ROOT/.runtime"
