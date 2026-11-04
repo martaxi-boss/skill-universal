@@ -47,6 +47,16 @@ def validate_requests(value):
             raise ValueError("Invalid tools/list pagination cursor")
 
 
+def _private_hopper_launcher(root: Path) -> str | None:
+    """Use only the Ferrari-owned Hopper executable, never a global APT launcher."""
+    launcher = root / "tools/hopper-6.6.1/opt/hopper/bin/Hopper"
+    if (launcher.is_symlink() or not launcher.is_file()
+            or not os.access(launcher, os.X_OK)
+            or not launcher.resolve().is_relative_to(root.resolve())):
+        return None
+    return str(launcher)
+
+
 def _resources(root: Path):
     node = root / "runtimes/node-22.23.4/bin/node"
     jdk = root / "runtimes/jdk-25.0.5_8"
@@ -86,6 +96,11 @@ def _resources(root: Path):
         "XDG_CACHE_HOME": str(root / ".runtime/rea-cache"),
         "XDG_DATA_HOME": str(root / ".runtime/rea-data"),
     })
+    # Do not inherit external Hopper paths from the VPS environment.
+    env.pop("HOPPER_LAUNCHER_PATH", None)
+    hopper = _private_hopper_launcher(root)
+    if hopper is not None:
+        env["HOPPER_LAUNCHER_PATH"] = hopper
     return cli, env
 
 
