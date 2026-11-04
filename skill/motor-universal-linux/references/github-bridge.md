@@ -42,7 +42,7 @@ Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" n
 
 ## REA original MCP através da mesma Skill Ferrari
 
-A release Ferrari **c5b07ed225299ad80aa2d46c28441d17f281f695** já está instalada na VPS e certificada pela Skill para pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
+A release Ferrari **0a1a4c190a7d33752d6dc3f4418ed44735c8a7dd** está instalada na VPS [#41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407), com 197 testes PASS, e mantém o suporte certificado pela Skill a pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
 
 Exemplo de inventário do REA original:
 
