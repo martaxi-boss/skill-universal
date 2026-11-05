@@ -21,7 +21,8 @@ TARGET = ROOT / "tools/ubuntu-cli"
 BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings",
             "ffmpeg", "ffprobe", "pdfinfo", "pdftotext",
             "pandoc", "dot", "identify", "convert", "tesseract",
-            "r2", "vips", "vipsheader", "tshark", "inkscape")
+            "r2", "vips", "vipsheader", "tshark", "inkscape",
+            "binwalk", "ansible-inventory", "ocrmypdf", "ebook-convert")
 LIB_PATTERN = re.compile(r"(?:=>\s*)?(/(?:usr/)?lib\S*)\s*\(")
 
 
@@ -153,6 +154,9 @@ def install() -> dict:
         "r2": (("/usr/share/radare2", "share/radare2"),),
         "inkscape": (("/usr/share/inkscape", "share/inkscape"),),
         "tshark": (("/usr/lib/x86_64-linux-gnu/wireshark", "lib/wireshark"),),
+        "ebook-convert": (("/usr/lib/calibre", "lib/calibre"),
+                           ("/usr/share/calibre", "share/calibre")),
+        "binwalk": (("/usr/share/binwalk", "share/binwalk"),),
     }
     assets = {}
     for tool,entries in private_resources.items():
