@@ -10,6 +10,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Prepare project-owned CI fixtures (runner only, never VPS)
+        run: |
+          set -euo pipefail
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/bin
+          for exe in strings file jq; do
+            src="$(command -v "$exe")"
+            sudo install -m 0755 "$src" "/srv/projects/skill-universal/tools/ubuntu-cli/bin/$exe"
+          done
       - name: Unit tests, core and Ferrari
         run: python3 -m unittest discover -s tests -v
       - name: Validate both installers

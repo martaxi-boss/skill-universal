@@ -288,8 +288,6 @@ def auto(request,source,folder=None,execute=False,query=None):
 def invoke(action,source,folder,query=None):
     x=specs().get(action)
     if not x:raise ValueError("Unknown executable action")
-    exe=executable(x["tool"],x["binary"])
-    if not exe:raise RuntimeError("Executor not installed: "+x["binary"])
     requires_query="{query}" in x["args"]
     if requires_query and (not isinstance(query,str) or not 1<=len(query.strip())<=200 or "\x00" in query):
         raise ValueError("This action requires a non-empty query of up to 200 characters")
@@ -302,6 +300,9 @@ def invoke(action,source,folder,query=None):
     inp=inp.resolve(strict=True)
     if "*" not in x["extensions"] and inp.suffix.lower() not in x["extensions"]:
         raise ValueError("Input format not supported by "+action)
+    # Validate user input before checking dependencies, including if missing.
+    exe=executable(x["tool"],x["binary"])
+    if not exe:raise RuntimeError("Executor not installed: "+x["binary"])
     outdir=Path(folder).resolve()
     target=outdir/x["artifact"]
     if target.exists() or target.is_symlink():
