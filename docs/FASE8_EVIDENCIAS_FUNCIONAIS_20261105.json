@@ -6,11 +6,20 @@
   "date": "2026-11-05",
   "status": "phase8_partial_real_evidence_not_full_certification",
   "registered_actions": 40,
-  "phase8_new_individual_e2e": 13,
-  "without_phase8_individual_e2e": 27,
+  "phase8_new_individual_e2e": 25,
+  "without_phase8_individual_e2e": 15,
   "sources": {
     "inventory": "https://github.com/martaxi-boss/VPS/actions/runs/42100973198",
-    "manifest": "engine/tool_actions.json"
+    "manifest": "engine/tool_actions.json",
+    "phase8_new_runs": [
+      42104010500,
+      42104082188,
+      42104494930,
+      42104715432,
+      42105045224,
+      42105075709,
+      42105268489
+    ]
   },
   "policy": "Only downloaded GitHub Actions response ZIP outputs count. No arbitrary global executable fallback or third-party project writes. Historical per-domain proof is separate.",
   "actions": [
@@ -37,9 +46,16 @@
       "tool": "pandoc",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42105045224,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42105045224",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/pandoc",
+        "artifact_basename": "document.docx",
+        "verified_result": "DOCX real ZIP assinado PK gerado de Markdown sintético",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "graphviz-dot-svg",
@@ -149,9 +165,16 @@
       "tool": "binwalk",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104010500,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104010500",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/binwalk",
+        "artifact_basename": "signatures.txt",
+        "verified_result": "ELF64 sintético identificado; assinaturas de compressão heurísticas não tomadas como prova",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "readelf-header",
@@ -176,9 +199,16 @@
       "tool": "pdftotext",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104494930,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104494930",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/pdfinfo",
+        "artifact_basename": "pdf-info.txt",
+        "verified_result": "PDF sintético: 1 página A4 e versão 1.4",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "radare2-binary-info",
@@ -186,9 +216,16 @@
       "tool": "radare2",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104010500,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104010500",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/r2",
+        "artifact_basename": "binary-info.txt",
+        "verified_result": "radare2 identificou ELF64 x86-64 e metadados do ficheiro",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "vips-image-thumbnail",
@@ -213,9 +250,16 @@
       "tool": "libvips",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104715432,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104715432",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/vipsheader",
+        "artifact_basename": "image-header.txt",
+        "verified_result": "PNG de origem 8x8 e WebP de saída 8x8 reconhecidos em duas invocações",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "imagemagick-webp",
@@ -223,9 +267,16 @@
       "tool": "imagemagick",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104715432,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104715432",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/convert",
+        "artifact_basename": "converted.webp",
+        "verified_result": "WEBP RIFF válido de 8 por 8 píxeis produzido a partir de PNG sintético",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "pdftotext-layout",
@@ -233,9 +284,16 @@
       "tool": "pdftotext",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104494930,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104494930",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/pdftotext",
+        "artifact_basename": "extracted.txt",
+        "verified_result": "Texto literal FERRARI FASE 8 PDF TESTE extraído do PDF",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "objdump-file-header",
@@ -304,9 +362,16 @@
       "tool": "wireshark",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42104082188,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42104082188",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/tshark",
+        "artifact_basename": "traffic-summary.txt",
+        "verified_result": "Resumo TShark indicou um frame no PCAP sintético; não houve captura real de rede",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "ocrmypdf-searchable-pdf",
@@ -371,9 +436,16 @@
       "tool": "typst",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42105075709,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42105075709",
+        "executor": "/srv/projects/skill-universal/tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
+        "artifact_basename": "typst-document.pdf",
+        "verified_result": "PDF real assinado %PDF gerado a partir de Typst sintético",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "duckdb-csv-profile",
@@ -381,9 +453,16 @@
       "tool": "duckdb",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42105268489,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42105268489",
+        "executor": "/srv/projects/skill-universal/.runtime/venvs/extended/duckdb/bin/python",
+        "artifact_basename": "duckdb-profile.json",
+        "verified_result": "DuckDB privado 2.0.0: perfil CSV com 3 linhas, duas colunas e amostra correta",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "polars-csv-profile",
@@ -391,9 +470,16 @@
       "tool": "polars",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42105268489,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42105268489",
+        "executor": "/srv/projects/skill-universal/.runtime/venvs/extended/polars/bin/python",
+        "artifact_basename": "polars-profile.json",
+        "verified_result": "Polars privado 2.1.0: perfil CSV com 3 linhas, duas colunas e amostra correta",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "calibre-md-epub",
@@ -401,9 +487,16 @@
       "tool": "calibre",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42105045224,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42105045224",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/ebook-convert",
+        "artifact_basename": "calibre-book.epub",
+        "verified_result": "EPUB real ZIP assinado PK gerado de Markdown sintético",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed through downloaded inner ZIP, real artifact and private executor path"
     },
     {
       "action": "darktable-jpeg-tiff",
