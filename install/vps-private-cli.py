@@ -147,15 +147,21 @@ def install_private_python_modules() -> dict:
             elif item.is_file():
                 copy_one(item,target)
                 copied.append(item.name)
-        for suffix in ("*.dist-info","*.egg-info"):
-            for info in source.glob(name.replace("_","-")+"-"+suffix):
-                if info.is_symlink():
-                    continue
-                target=dest/info.name
-                if info.is_dir() and not target.exists():
-                    shutil.copytree(info,target,symlinks=False)
-                elif info.is_file() and not target.exists():
-                    copy_one(info,target)
+        names_to_match={name.casefold().replace("_","-")}
+        aliases={"yaml":"pyyaml","PIL":"pillow","ansible":"ansible-core"}
+        if name in aliases:
+            names_to_match.add(aliases[name])
+        for info in source.iterdir():
+            if info.is_symlink() or not info.name.endswith((".dist-info",".egg-info")):
+                continue
+            normalized=info.name.casefold().replace("_","-")
+            if not any(normalized.startswith(n+"-") for n in names_to_match):
+                continue
+            target=dest/info.name
+            if info.is_dir() and not target.exists():
+                shutil.copytree(info,target,symlinks=False)
+            elif info.is_file() and not target.exists():
+                copy_one(info,target)
     for required in ("binwalk","ansible","ocrmypdf"):
         if not (dest/required).is_dir():
             raise RuntimeError("Missing installed Ubuntu Python module "+required)
