@@ -7,6 +7,8 @@ pip or npm. All writes are under /srv/projects/skill-universal/tools/ubuntu-cli.
 from __future__ import annotations
 
 import argparse
+import os
+import sys
 import hashlib
 import json
 from pathlib import Path
@@ -39,6 +41,71 @@ def copy_one(source: Path, target: Path) -> None:
         return
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, target)
+
+
+def private_python() -> dict:
+    """Copy Ubuntu 3.12 Python/stdlib and point only Ferrari's two venvs to it."""
+    source=Path("/usr/bin/python3.12").resolve(strict=True)
+    stdlib=Path("/usr/lib/python3.12")
+    target=ROOT/"runtimes/python3.12"
+    private=target/"bin/python3.12"
+    if not stdlib.is_dir() or not ROOT.is_dir() or target.is_symlink():
+        raise RuntimeError("Ubuntu Python 3.12 or private Ferrari project not available")
+    copy_one(source,private)
+    private_stdlib=target/"lib/python3.12"
+    if not private_stdlib.exists():
+        shutil.copytree(stdlib,private_stdlib,symlinks=False,
+                        ignore=shutil.ignore_patterns("__pycache__","*.pyc","*.pyo"))
+    check=subprocess.run(["ldd",str(source)],capture_output=True,text=True,timeout=15,check=False)
+    if check.returncode or "not found" in check.stdout:
+        raise RuntimeError("Unable to inspect Python runtime libraries")
+    for match in LIB_PATTERN.finditer(check.stdout):
+        lib=Path(match.group(1))
+        copy_one(lib,target/"lib"/lib.name)
+    changed=[]
+    for name in ("duckdb","polars"):
+        venv=ROOT/".runtime/venvs/extended"/name
+        cfg=venv/"pyvenv.cfg"
+        if not cfg.is_file() or not venv.is_dir() or venv.is_symlink():
+            raise RuntimeError("Ferrari private Python environment missing: "+name)
+        for executable in ("python","python3","python3.12"):
+            link=venv/"bin"/executable
+            if not link.is_symlink():
+                if not link.is_file():
+                    raise RuntimeError("Missing Ferrari Python venv executable: "+str(link))
+                continue
+            current=link.resolve(strict=True)
+            if current==private.resolve(strict=True):
+                continue
+            if current!=source:
+                raise RuntimeError("Unrecognized Python venv target: "+str(current))
+            replacement=link.with_name(link.name+".ferrari-new")
+            if replacement.exists() or replacement.is_symlink():
+                raise RuntimeError("Python swap path already exists: "+str(replacement))
+            replacement.symlink_to(private)
+            os.replace(replacement,link)
+            changed.append(str(link))
+        old=cfg.read_text(encoding="utf-8")
+        lines=[]
+        for line in old.splitlines():
+            if line.startswith("home = "):
+                line="home = "+str(private.parent)
+            elif line.startswith("executable = "):
+                line="executable = "+str(private)
+            lines.append(line)
+        result="\n".join(lines)+"\n"
+        if result!=old:
+            cfg.write_text(result,encoding="utf-8")
+        env=os.environ.copy()
+        env.pop("PYTHONHOME",None)
+        env["PYTHONNOUSERSITE"]="1"
+        env["LD_LIBRARY_PATH"]=str(target/"lib")
+        probe=subprocess.run([str(venv/"bin/python"),"-c",
+           "import sys, "+name+"; assert sys.base_prefix.startswith('/srv/projects/skill-universal/runtimes/python3.12'); print(sys.base_prefix)"],
+           capture_output=True,text=True,env=env,timeout=45)
+        if probe.returncode:
+            raise RuntimeError("Private Python "+name+" failed: "+probe.stderr[-500:])
+    return {"runtime":str(target),"venvs":["duckdb","polars"],"links_updated":changed}
 
 
 def install() -> dict:
@@ -110,8 +177,10 @@ def install() -> dict:
         if not private.exists():
             shutil.copytree(root,private)
         assets["lib/ImageMagick"]=str(private)
+    python_result=private_python()
     return {"root": str(TARGET), "binaries": sorted(installed),
             "private_libraries": len(all_libs), "private_resources": assets,
+            "python": python_result,
             "magic_database": str(TARGET / "share/magic.mgc"),
             "system_installation": False, "other_projects_touched": False}
 
