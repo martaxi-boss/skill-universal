@@ -76,7 +76,7 @@ class ToolRuntimeTests(unittest.TestCase):
     def test_read_only_python_module_detection(self):
         from importlib.machinery import ModuleSpec
         with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
-            self.assertEqual(tool_runtime.python_module_location("opencv"),"/usr/lib/cv2.so")
+            self.assertIsNone(tool_runtime.python_module_location("opencv"))  # System Python is not private Ferrari
         self.assertIsNone(tool_runtime.python_module_location("not-a-python-package"))
 
     def test_existing_ocrmypdf_adapter_uses_pdf_and_no_shell(self):
