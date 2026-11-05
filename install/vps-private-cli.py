@@ -263,6 +263,15 @@ def install() -> dict:
                 raise RuntimeError("Incomplete Ferrari plugin libraries: "+plugin.name)
             for match in LIB_PATTERN.finditer(probe.stdout+probe.stderr):
                 dep=Path(match.group(1))
+                if not dep.is_file():
+                    alternatives=(TARGET/"lib/lmms"/dep.name,
+                                  Path("/usr/lib/x86_64-linux-gnu/lmms")/dep.name,
+                                  Path("/usr/lib/lmms")/dep.name)
+                    dep=next((candidate for candidate in alternatives if candidate.is_file()),dep)
+                if not dep.is_file():
+                    raise RuntimeError("Unresolved private plugin dependency: "+dep.name)
+                if dep.is_relative_to(TARGET):
+                    continue
                 copy_one(dep,library_dir/dep.name)
     python_result=private_python()
     python_packages=install_private_python_modules()
