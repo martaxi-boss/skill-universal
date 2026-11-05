@@ -2,7 +2,7 @@
 
 **Estado de referência: 05/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. Plano de fecho: [fases 5–10](docs/PLANO_FECHO_FERRARI_20261105.md). O resultado de CI não substitui um teste operacional na VPS.
 
-**Estado prevalecente — Fase 5 CERTIFICADA (05/11/2026):** `current` = `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`; fallback = `87969badbde0a77c2c181bb9605357d51a4a30c0`. Rollback isolado na VPS 3/3 PASS [#42068780199](https://github.com/martaxi-boss/VPS/actions/runs/42068780199). [Certificado com CI, ativação, Skill→ZIP e saúde](docs/CERTIFICACAO_FASE5_20261105.md). Fase 6 não iniciada; provas anteriores abaixo são históricas.
+**Estado atual — Fase 6 em execução (05/11):** `current` = `146145d5ada9c13e368df18727e4dbf4f5807664`; fallback F5 = `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`. [VPS ativação #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [audit 33 ELF #42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679), saúde [#42079801582](https://github.com/martaxi-boss/VPS/actions/runs/42079801582) PASS. **40/40 ações privadas; 47/56 candidatos detetados. Fase 6 ainda não encerrada:** 16 aplicações globais sem prova de consumidor, sem remoções. [Relatório](docs/AUDITORIA_FASE6_20261105.md).
 
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
@@ -15,8 +15,8 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 
 | Elemento | Prova e âmbito |
 |---|---|
-| **Release certificada do motor — Fase 5** | **`40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`**; CI Ferrari [#42068518899](https://github.com/martaxi-boss/skill-universal/actions/runs/42068518899) **SUCCESS**; VPS [#42066363098](https://github.com/martaxi-boss/VPS/actions/runs/42066363098) **SUCCESS**, [rollback em cópia #42068780199](https://github.com/martaxi-boss/VPS/actions/runs/42068780199) **PASS** |
-| **Release ativa comprovada em 05/11 (última)** | **`40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`** em `/srv/projects/skill-universal/current`, lida por SSH no início e fim de [VPS #42068780199](https://github.com/martaxi-boss/VPS/actions/runs/42068780199). **Fallback preservado**: `87969badbde0a77c2c181bb9605357d51a4a30c0` |
+| **Release atual — Fase 6 (PARCIAL)** | `146145d5ada9c13e368df18727e4dbf4f5807664`; CI Ferrari [#42078107669](https://github.com/martaxi-boss/skill-universal/actions/runs/42078107669) PASS; VPS precheck [#42078448805](https://github.com/martaxi-boss/VPS/actions/runs/42078448805) e ativação [#42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765) PASS |
+| **VPS read-back + fallback** | `current` verificado na auditoria [#42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679); fallback F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` preservado. [Certificado histórico F5](docs/CERTIFICACAO_FASE5_20261105.md) |
 | **Auditoria inicial do isolamento — contexto histórico** | [VPS #42011202485](https://github.com/martaxi-boss/VPS/actions/runs/42011202485) identificou apenas **8 de 40 executores privados**. Esta lacuna **foi corrigida e retestada** em [VPS #42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124); manter a auditoria antiga apenas como comparação, não como estado atual |
 | **Inventário depois da correção — 05/11** | [VPS #42011461022](https://github.com/martaxi-boss/VPS/actions/runs/42011461022): 55/56 candidatos detetados, 40 ações; OpenCV identificado numa venv Docling **privada Ferrari**, sem depender da instalação global de Python para a sua deteção. Penpot continua ausente; `report.json` completed e ZIP PASS |
 | **Ponto 3 — CERTIFICAÇÃO FUNCIONAL (05/11)** | [Matriz e 7 execuções reais pela Skill](docs/CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md): web/browser, documentos, dados, imagem, áudio/vídeo, CAD/IFC/3D, orquestração e REA/Android, com limites por caso testado; sem certificar automaticamente todas as ferramentas |
