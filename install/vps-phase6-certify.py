@@ -34,7 +34,7 @@ SCAN_ROOTS = (
     ".runtime/browsers", ".runtime/python",
     ".runtime/venv", "releases/" + ACTIVE,
 )
-ENTRY_LIMIT = 220000
+ENTRY_LIMIT = 800000
 BASE_INTERPRETERS = ("/bin/sh", "/bin/bash", "/usr/bin/bash", "/usr/bin/env")
 
 
@@ -123,6 +123,7 @@ def scan_links():
     links = 0
     external = []
     broken = []
+    system_links = []
     examples = []
     by_root = {}
     truncated = False
@@ -143,16 +144,25 @@ def scan_links():
                 if not p.is_symlink():
                     continue
                 links += 1
-                rel = p.relative_to(ROOT).parts
-                safe = "/".join(rel[:4])
+                rel = p.relative_to(ROOT).as_posix()
+                safe = rel[:220]
                 try:
                     target = p.resolve(strict=True)
                     if not inside(target):
-                        external.append(safe)
-                        if len(examples) < 30:
-                            examples.append({"path": safe, "scope": "link_external"})
+                        category = ("ubuntu_system_runtime" if
+                                    str(target).startswith(("/usr/","/bin/","/lib/"))
+                                    else "external_other_path")
+                        if category == "ubuntu_system_runtime":
+                            system_links.append(safe)
+                        else:
+                            external.append(safe)
+                        if len(examples) < 65:
+                            examples.append({"path": safe, "scope": category,
+                                             "target": str(target)[:180]})
                 except (OSError, RuntimeError):
                     broken.append(safe)
+                    if len(examples) < 65:
+                        examples.append({"path": safe, "scope": "broken_link"})
             if count >= ENTRY_LIMIT:
                 truncated = True
                 break
@@ -161,6 +171,7 @@ def scan_links():
             break
     return {"entries_checked": count, "symlinks_checked": links,
             "external_links_total": len(external),
+            "ubuntu_system_links_total": len(system_links),
             "broken_links_total": len(broken),
             "examples": examples,
             "by_root": by_root,
