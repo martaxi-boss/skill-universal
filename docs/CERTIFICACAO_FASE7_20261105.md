@@ -9,7 +9,7 @@
 - `current` → `/srv/projects/skill-universal/releases/758e1b435317fa26277b332b75bc47c67910be81`.
 - Fallback certificado Fase 6 preservado: `146145d5ada9c13e368df18727e4dbf4f5807664`; não remover a release de recuperação.
 - Ponte GitHub já existente em `martaxi-boss/VPS`, com pedidos F7 estritamente allowlisted e SHA pinado. Nenhuma alteração ao SSH partilhado ou ao Supervisor.
-- A fonte da Fase 6 continua na PR #64 ainda sem merge. Os SHAs de execução estão documentados e são a referência de verdade; não alegar que o SHA de `main` está automaticamente em produção.
+- As PRs [#64 (F6)](https://github.com/martaxi-boss/skill-universal/pull/64) e [#65 (F7)](https://github.com/martaxi-boss/skill-universal/pull/65) foram integradas na `main` sem reescrever os commits da release. `main` está em `a20de11bb919020c2b735dd3965c7c7fefb3dc1c`, enquanto a VPS mantém a release F7 exata `758e1b435317fa26277b332b75bc47c67910be81`, que está no histórico de `main`. [CI da main #42100862876](https://github.com/martaxi-boss/skill-universal/actions/runs/42100862876) **274 testes PASS**, [inventário da VPS pós-merge #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198) **40 ações, 47/56 candidatos privados, ZIP PASS**.
 
 ## Matriz de provas reais
 
