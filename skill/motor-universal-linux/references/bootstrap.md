@@ -10,7 +10,7 @@ A instalação física a preservar é **/srv/projects/skill-universal/**, com a 
 
 ## Sincronia real — 05/11/2026
 
-- **Main Ferrari:** b2869e334d9d68a0c988905e71ce0badec6ba359; [CI #41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) PASS. **Ponte VPS:** usa ainda a revisão pinada 292aeb7d10eecef8c3ca84760cd579e84e4b97f3 para validar pedidos; não é prova de que current na VPS corresponda ao HEAD GitHub.
+- **Código Ferrari verificado antes da atualização documental:** b2869e334d9d68a0c988905e71ce0badec6ba359; [CI #41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) PASS. **Ponte VPS:** usa ainda a revisão pinada 292aeb7d10eecef8c3ca84760cd579e84e4b97f3 para validar pedidos; não é prova de que current na VPS corresponda ao HEAD GitHub.
 - **Hopper 6.6.1 privado e oficial:** tools/hopper-6.6.1, assinatura e origem verificadas [#41921893982](https://github.com/martaxi-boss/VPS/actions/runs/41921893982), REA doctor [#41922087539](https://github.com/martaxi-boss/VPS/actions/runs/41922087539) PASS. **Demo sem licença comercial**; não declarar exportação/depuração ou análise completa certificada.
 - **Pedido real REA:** [#41981152670](https://github.com/martaxi-boss/VPS/actions/runs/41981152670) status completed e ZIP PASS. [#41981478159](https://github.com/martaxi-boss/VPS/actions/runs/41981478159) foi apenas higiene do workflow, sem motor executado.
 

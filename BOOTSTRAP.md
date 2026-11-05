@@ -12,7 +12,7 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 
 | Elemento | Prova e âmbito |
 |---|---|
-| Código fonte no GitHub | **main b2869e334d9d68a0c988905e71ce0badec6ba359**; CI [#41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) SUCCESS. Inclui integração do Hopper privado |
+| Última alteração funcional do motor | **commit b2869e334d9d68a0c988905e71ce0badec6ba359** (antes da atualização documental); CI [#41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) SUCCESS. Inclui integração do Hopper privado |
 | Transporte por GitHub Actions | O workflow Ferrari no repositório VPS continua **pinado em 292aeb7d10eecef8c3ca84760cd579e84e4b97f3 para seleção/validação do pedido**. Não confundir o pin com o HEAD do motor nem mudar o workflow/SSH sem ordem específica |
 | Funcionamento ponta a ponta | [#41981152670](https://github.com/martaxi-boss/VPS/actions/runs/41981152670), de 05/11: pedido real **kind=rea-mcp**, status completed, executor privado e ZIP; FERRARI_SKILL_END_TO_END=PASS |
 | Última execução consultada | [#41981478159](https://github.com/martaxi-boss/VPS/actions/runs/41981478159): sucesso de higiene de pedidos, **sem executar motor nem produzir ZIP**; não é uma certificação adicional |

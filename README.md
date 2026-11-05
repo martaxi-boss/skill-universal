@@ -6,7 +6,7 @@
 
 ## Estado confirmado
 
-- **GitHub:** main **b2869e334d9d68a0c988905e71ce0badec6ba359**, CI [#41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) SUCCESS. Inclui o integrador do Hopper oficial 6.6.1.
+- **Código funcional Ferrari:** commit **b2869e334d9d68a0c988905e71ce0badec6ba359**, anterior às atualizações documentais,  CI [#41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) SUCCESS. Inclui o integrador do Hopper oficial 6.6.1.
 - **VPS isolada:** /srv/projects/skill-universal/, com .runtime/, runtimes/, tools/, releases/ e current dentro do projeto. O antigo link /home/ubuntu/.local/share/motor-ferrari foi retirado após migração dos launchers (merge 292aeb7d). A revisão exata de current deve ser lida na VPS.
 - **Motor REA próprio:** rea-agents@6.8.0 privado, catálogo de 229 ferramentas MCP, não todas certificadas. Ghidra/JADX/Apktool, Node e Java privados do Ferrari. Hopper 6.6.1 em modo demo tem origem/doctor verificados: [#41921893982](https://github.com/martaxi-boss/VPS/actions/runs/41921893982), [#41922087539](https://github.com/martaxi-boss/VPS/actions/runs/41922087539).
 - **Legado:** REA FINAL e Trial antigos removidos e ausência comprovada [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411). Preservar o REA privado Ferrari.

@@ -1,6 +1,6 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
-**Estado em 05/11/2026:** o validador do workflow Ferrari está pinado à revisão 292aeb7d10eecef8c3ca84760cd579e84e4b97f3; a main do Ferrari já atingiu b2869e334d9d68a0c988905e71ce0badec6ba359. O motor corre no diretório físico /srv/projects/skill-universal. Não alterar o pin ou SSH sem ordem específica. Confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) antes de executar. Esta referência define apenas o contrato de transporte.
+**Estado em 05/11/2026:** o validador do workflow Ferrari está pinado à revisão 292aeb7d10eecef8c3ca84760cd579e84e4b97f3; o código funcional do Ferrari foi verificado no commit b2869e334d9d68a0c988905e71ce0badec6ba359 antes da atualização documental. O motor corre no diretório físico /srv/projects/skill-universal. Não alterar o pin ou SSH sem ordem específica. Confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) antes de executar. Esta referência define apenas o contrato de transporte.
 
 **Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
