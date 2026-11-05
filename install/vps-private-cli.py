@@ -119,7 +119,7 @@ def install_private_python_modules() -> dict:
         raise RuntimeError("Ubuntu Python packages or private destination unavailable")
     names=("binwalk","ansible","ocrmypdf","yaml","jinja2","markupsafe",
            "cryptography","packaging","resolvelib","pikepdf","PIL",
-           "img2pdf","pluggy","magic","capstone","reportlab",
+           "img2pdf","jp2","pluggy","magic","capstone","reportlab",
            "psutil","lxml","attr","attrs","click","rich","distro",
            "dateutil","six","defusedxml","tqdm","numpy","cffi",
            "_cffi_backend","idna","certifi","chardet","pypdf",
