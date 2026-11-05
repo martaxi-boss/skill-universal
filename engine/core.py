@@ -27,18 +27,26 @@ def load_json(filename: str) -> dict:
 
 
 def installed(tool: dict) -> bool:
+    """Discover Ferrari-owned applications; never count a global PATH binary."""
     if tool.get("cost") == "built-in":
         return True
+    name = str(tool.get("id", "")).lower()
     executable = tool.get("bin")
     if not executable:
-        return False  # needs checking within a project/virtualenv, not global PATH
-    if shutil.which(executable):
-        return True
-    if tool["id"] in {"REA", "ruflo"}:
-        namespace = "rea" if tool["id"] == "REA" else "ruflo"
-        local = ROOT / ".runtime" / "npm" / namespace / "node_modules" / ".bin" / executable
-        return local.is_file() and os.access(local, os.X_OK)
-    return False
+        return False
+    from engine import tool_runtime
+    # Application runtimes are owned by Ferrari, not system Python/Node/Java.
+    runtimes = {
+        "python": ("runtimes/python3.12/bin/python3.12",),
+        "node": ("runtimes/node-22.23.4/bin/node",),
+        "java": ("runtimes/jdk-25.0.5_8/bin/java",),
+    }
+    for rel in runtimes.get(name, ()):
+        candidate = tool_runtime.HOME / rel
+        if (candidate.is_file() and os.access(candidate, os.X_OK)
+                and candidate.resolve().is_relative_to(tool_runtime.HOME.resolve())):
+            return True
+    return tool_runtime.executable(name, executable) is not None
 
 
 def inventory(category: str | None = None) -> list[dict]:
@@ -152,7 +160,17 @@ def providers() -> list[dict]:
     out = []
     for p in load_json("providers.json")["providers"]:
         key = p.get("env")
-        ready = (bool(os.environ.get(key)) if key else p["kind"] == "local" and (p.get("binary") is None or bool(shutil.which(p["binary"]))))
+        # Cloud-provider configuration remains separate from executable
+        # availability; a global PATH command cannot satisfy a local provider.
+        if key:
+            ready = bool(os.environ.get(key))
+        elif p["kind"] == "local":
+            from engine import tool_runtime
+            binary = p.get("binary")
+            ready = (binary is None or
+                     tool_runtime.executable(str(p.get("id", "")).lower(), binary) is not None)
+        else:
+            ready = False
         out.append({**p, "configured": ready, "availability_verified": False if p["kind"] == "cloud" else ready})
     return out
 
@@ -204,11 +222,14 @@ def inspect_artifact(target: Path, output: Path) -> list[Path]:
     with target.open("rb") as f:
         for chunk in iter(lambda: f.read(1024 * 1024), b""):
             h.update(chunk)
+    from engine import tool_runtime
+    private_file = tool_runtime.executable("file", "file")
+    private_readelf = tool_runtime.executable("readelf", "readelf")
     result = {
         "target": str(target.resolve()),
         "size_bytes": target.stat().st_size,
         "sha256": h.hexdigest(),
-        "file": _first_output(["file", "-b", str(target)]) if shutil.which("file") else "not_installed",
+        "file": _first_output([private_file, "-b", str(target)]) if private_file else "private_executor_unavailable",
         "zip_entries": [],
         "readelf_header": None,
         "warning": "Analise estatica basica apenas; nao foi executado REA, Ghidra, JADX ou decompilacao completa.",
@@ -219,8 +240,8 @@ def inspect_artifact(target: Path, output: Path) -> list[Path]:
             result["zip_total_entries"] = len(z.infolist())
     with target.open("rb") as f:
         is_elf = f.read(4) == b"\x7fELF"
-    if is_elf and shutil.which("readelf"):
-        result["readelf_header"] = _first_output(["readelf", "-h", str(target)])
+    if is_elf and private_readelf:
+        result["readelf_header"] = _first_output([private_readelf, "-h", str(target)])
     report = _write_text(output / "reverse" / "report.json", json.dumps(result, ensure_ascii=False, indent=2))
     return [report]
 
