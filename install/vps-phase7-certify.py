@@ -120,26 +120,43 @@ def orchestrator_smoke():
         raise RuntimeError("Ferrari private cancellation marker missing")
     marker.unlink()
 
-    # The same run is resumed from a new invocation of the persistent journal.
-    resumed=orchestrator.orchestrate(
-        plan,str(WORK),execute=True,job_key=KEY,resume=True,max_parallel=2,
-        max_runtime_seconds=180,max_artifacts_bytes=67108864)
-    report=resumed["result"]
+    # The resumed DAG runs in a *separate private Python process*, proving
+    # persistence across process termination rather than a same-process mock.
+    planfile=WORK/"checkpoint-plan.json"
+    planfile.write_text(json.dumps(plan,sort_keys=True),encoding="utf-8")
+    python=ROOT/"runtimes/python3.12/bin/python3.12"
+    if python.is_symlink() or not python.is_file() or not python.resolve(strict=True).is_relative_to(ROOT.resolve(strict=True)):
+        raise RuntimeError("Ferrari private Python interpreter missing")
+    env={"PATH":str(python.parent)+":/usr/bin:/bin",
+         "HOME":str(WORK),"TMPDIR":str(WORK),
+         "PYTHONNOUSERSITE":"1","PYTHONDONTWRITEBYTECODE":"1",
+         "LANG":"C","LC_ALL":"C"}
+    def independent_resume():
+        p=subprocess.run(
+            [str(python),"-B","-m","engine.orchestrator",
+             "--plan",str(planfile),"--workspace",str(WORK),
+             "--execute","--job-key",KEY,"--resume",
+             "--max-parallel","2","--max-runtime-seconds","180",
+             "--max-artifacts-bytes","67108864"],
+            cwd=str(ROOT/"current"),env=env,timeout=180,
+            capture_output=True,text=True,check=False)
+        if p.returncode:
+            raise RuntimeError("Ferrari private subprocess resume failed with exit "+str(p.returncode))
+        return json.loads((WORK/("ferrari-"+KEY)/"report.json").read_text(encoding="utf-8"))
+    report=independent_resume()
     if (report["status"]!="completed" or
             set(report["completed"])!={"site","extract"} or
-            resumed["reused_steps"]!=["site"] or report["attempt"]!=2):
+            report["reused_steps"]!=["site"] or report["attempt"]!=2):
         raise RuntimeError("Ferrari F7 checkpoint replay did not complete correctly")
     if site_file.read_bytes()!=digest_before:
         raise RuntimeError("Ferrari F7 replay changed a completed artifact")
     extracted=Path(report["completed"]["extract"]["artifacts"][0])
     if not extracted.is_file() or b"Ferrari F7 privado" not in extracted.read_bytes():
         raise RuntimeError("Ferrari F7 dependent real extraction failed")
-    final=orchestrator.orchestrate(
-        plan,str(WORK),execute=True,job_key=KEY,resume=True,max_parallel=2,
-        max_runtime_seconds=180,max_artifacts_bytes=67108864)
-    if (final["result"]["status"]!="completed" or
-            final["reused_steps"]!=["extract","site"] or
-            final["result"]["attempt"]!=2):
+    final=independent_resume()
+    if (final["status"]!="completed" or
+            final["reused_steps"]!=["site"] or
+            final["attempt"]!=2):
         raise RuntimeError("Ferrari idempotency on completed job is not respected")
 
     parallel={"version":1,"steps":[
@@ -162,8 +179,9 @@ def orchestrator_smoke():
         "sequential_checkpoint": {
             "first_status":interrupted["result"]["status"],
             "resumed_status":report["status"],
-            "attempts":report["attempt"],"reused_steps":resumed["reused_steps"],
-            "completed_replay_no_repeat":final["result"]["attempt"]==2,
+            "attempts":report["attempt"],"reused_steps":report["reused_steps"],
+            "independent_resume_process":True,
+            "completed_replay_no_repeat":final["attempt"]==2,
         },
         "parallel_dag":{"status":second["result"]["status"],
                         "steps_completed":len(second["result"]["completed"]),
