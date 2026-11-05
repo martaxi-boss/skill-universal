@@ -67,7 +67,7 @@ def office_pdf(source: Path, output_dir: Path) -> tuple[str, list[Path]]:
     target = output_dir / (source.stem + ".pdf")
     if target.exists() or target.is_symlink():
         raise FileExistsError("Refusing overwrite: " + str(target))
-    with TemporaryDirectory(prefix="ferrari-office-") as profile:
+    with TemporaryDirectory(prefix=".ferrari-office-", dir=str(output_dir)) as profile:
         _run([exe, "--headless", "-env:UserInstallation=" + Path(profile).as_uri(),
               "--convert-to", "pdf", "--outdir", str(output_dir), str(source)],
              timeout=150)
