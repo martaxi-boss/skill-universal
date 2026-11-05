@@ -461,7 +461,8 @@ def invoke(action,source,folder,query=None):
                 env["DARKTABLE_MODULEDIR"]=str(PRIVATE_CLI_ROOT/"lib/darktable")
             if x["tool"]=="gimp":
                 env["GIMP2_DATADIR"]=str(PRIVATE_CLI_ROOT/"share/gimp/2.0")
-                env["GIMP2_PLUGINDIR"]=str(PRIVATE_CLI_ROOT/"lib/gimp/2.0/plug-ins")
+                env["GIMP2_PLUGINDIR"]=str(PRIVATE_CLI_ROOT/"lib/gimp/2.0")
+                env["GIMP2_SYSCONFDIR"]=str(PRIVATE_CLI_ROOT/"etc/gimp/2.0")
             if x["tool"]=="lmms":
                 env["LMMS_PLUGIN_DIR"]=str(PRIVATE_CLI_ROOT/"lib/lmms")
                 env["LMMS_DATA_DIR"]=str(PRIVATE_CLI_ROOT/"share/lmms")
