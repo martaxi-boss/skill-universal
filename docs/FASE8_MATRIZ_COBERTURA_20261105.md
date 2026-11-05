@@ -1,5 +1,8 @@
 # Fase 8 — matriz atualizada de cobertura funcional real do Motor Ferrari
 
+**ATUALIZAÇÃO DE FECHO — 05/11/2026:** Fase 8 **CERTIFICADA 40/40** ações tipadas com provas individuais reais. A antiga ação pendente `android-adb-install-apk` foi executada em Android físico autorizado por Ferrari/GitHub Actions [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714) e devolveu `Performing Streamed Install` / `Success` no ZIP de resultados. A aplicação de teste `com.example.empty9patch` foi depois desinstalada com `Success`, confirmado no terminal ConnectBot. [Relatório de fecho](FASE8_FECHO_20261105.md) · [Evidências atualizadas em JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json). As menções a 39/40 e bloqueio ADB no levantamento abaixo representam o **estado histórico anterior a esta execução**, não o estado atual. Nenhuma alteração ao PINK IPTV.
+
+
 **Estado:** Fase 8 em certificação, com **39 ações tipadas individualmente verificadas por saídas reais**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
 
 **Regra permanente:** repositório `martaxi-boss/skill-universal` = pasta exclusiva `/srv/projects/skill-universal/`, sem programas, executores, caches ou dependências de aplicação Ferrari instalados globalmente. Nada de outros projetos, fornecedores partilhados ou novos coordenadores. O Ubuntu conserva as suas bibliotecas de SO.
