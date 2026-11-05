@@ -71,9 +71,12 @@ display_aspect_den="9" frame_rate_num="25" frame_rate_den="1" colorspace="709"/>
     sources={"darktable-jpeg-tiff":jpg,"krita-image-png":jpg,
              "gimp-png-xcf":image,"scribus-text-publication":text,
              "lmms-project-wav":song,"kdenlive-mlt-mp4":mlt}
+    selected=tuple(sys.argv[2:]) or ACTIONS
+    if any(name not in ACTIONS for name in selected) or len(set(selected))!=len(selected):
+        raise ValueError("Unknown or duplicate Ferrari GUI action")
     failed=[]
     passed=[]
-    for action in ACTIONS:
+    for action in selected:
         spec=tool_runtime.specs()[action]
         exe=tool_runtime.executable(spec["tool"],spec["binary"])
         print("FERRARI_GUI_BEGIN="+action,flush=True)
@@ -105,7 +108,7 @@ display_aspect_den="9" frame_rate_num="25" frame_rate_den="1" colorspace="709"/>
     print("FERRARI_GUI_RESULT="+json.dumps({"passed":passed,"failed":failed},sort_keys=True),flush=True)
     if failed:
         raise SystemExit(2)
-    print("FERRARI_GUI_SIX_REAL=PASS",flush=True)
+    print("FERRARI_GUI_SIX_REAL=PASS" if len(selected)==len(ACTIONS) else "FERRARI_GUI_SELECTED_REAL=PASS",flush=True)
 
 if __name__=="__main__":
     main()
