@@ -42,8 +42,9 @@ ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "adb":HOME/"tools/android-cli-36.0.0/platform-tools/adb"}
 # Local copies of Ubuntu CLI binaries, shared only within this Ferrari project.
 PRIVATE_CLI_ROOT=HOME/"tools/ubuntu-cli"
-PRIVATE_CLI={"file":"file","jq":"jq","ripgrep":"rg",
-             "readelf":"readelf","objdump":"objdump","strings":"strings"}
+PRIVATE_CLI={"file":("file",),"jq":("jq",),"ripgrep":("rg",),
+             "readelf":("readelf",),"objdump":("objdump",),"strings":("strings",),
+             "ffmpeg":("ffmpeg","ffprobe"),"pdftotext":("pdfinfo","pdftotext")}
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
@@ -131,8 +132,8 @@ def executable(tool,binary=None):
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
-    if tool in PRIVATE_CLI:
-        private=PRIVATE_CLI_ROOT/"bin"/PRIVATE_CLI[tool]
+    if tool in PRIVATE_CLI and (binary or BINARIES.get(tool) or tool) in PRIVATE_CLI[tool]:
+        private=PRIVATE_CLI_ROOT/"bin"/(binary or BINARIES.get(tool) or tool)
         if private.is_file() and not private.is_symlink() and private.stat().st_mode & 0o111:
             return str(private)
     return shutil.which(binary or BINARIES.get(tool) or tool) if (binary or BINARIES.get(tool,tool)) else None
