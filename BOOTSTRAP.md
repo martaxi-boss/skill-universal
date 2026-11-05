@@ -4,7 +4,7 @@
 
 **Estado prevalecente — Fase 7 certificada (05/11):** `current` = `758e1b435317fa26277b332b75bc47c67910be81`; fallback F6 `146145d5ada9c13e368df18727e4dbf4f5807664` (F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`; histórico `87969badbde0a77c2c181bb9605357d51a4a30c0`). [Certificado F7](docs/CERTIFICACAO_FASE7_20261105.md): 274 testes CI PASS; [DAG VPS #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995) retoma privada; [Skill→ZIP #42099036932](https://github.com/martaxi-boss/VPS/actions/runs/42099036932) PASS. **40/40 ações, 7/7 venvs, 47/56 candidatos.** CPU/RAM hard e Ruflo multiagentes não certificados; 16 APT globais e remoção transversal ficam F9–F10.
 
-**Fase 8 (05/11): 39/40 ações com prova real na VPS**; AAPT2, REA Android, Apktool e Apksigner PASS ([certificado Android](docs/FASE8_CERTIFICACAO_ANDROID_20261105.md)). **ADB em Android físico autorizado sem prova; F8 continua aberta.** [Matriz F8](docs/FASE8_MATRIZ_COBERTURA_20261105.md). Release ativa F7 e fallback F6 preservados, sem APT global.
+**Fase 8 (05/11): CERTIFICADA 40/40 ações tipadas com prova individual real.** ADB Android físico autorizado `android-adb-install-apk` executou instalação `Success` por GitHub Actions [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714); a APK de teste `com.example.empty9patch` foi depois removida com `adb uninstall` → `Success` (prova ConnectBot do proprietário). Não alterou PINK IPTV. [Fecho F8](docs/FASE8_FECHO_20261105.md), [certificado Android](docs/FASE8_CERTIFICACAO_ANDROID_20261105.md), [matriz F8 histórica](docs/FASE8_MATRIZ_COBERTURA_20261105.md). Fase 8 fechada apenas neste âmbito; release ativa F7 e fallback F6 preservados, sem APT global.
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
