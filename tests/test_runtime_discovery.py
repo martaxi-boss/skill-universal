@@ -20,12 +20,22 @@ class RuntimeDiscoveryTests(unittest.TestCase):
             self.assertEqual(result["scope"],"ferrari_venv")
             self.assertEqual(result["verification"],"files_present_not_import_tested")
 
-    def test_python_spec_keeps_current_interpreter_support(self):
-        with patch("engine.runtime_discovery.importlib.util.find_spec",
-                   return_value=SimpleNamespace(origin="/usr/lib/python3/dist-packages/cv2.so")):
-            result=runtime_discovery.python_presence("cv2")
-        self.assertEqual(result["scope"],"current_python")
-        self.assertTrue(result["location"].endswith("cv2.so"))
+    def test_system_python_module_does_not_count_as_ferrari(self):
+        with tempfile.TemporaryDirectory() as d:
+            with patch("engine.runtime_discovery.importlib.util.find_spec",
+                       return_value=SimpleNamespace(origin="/usr/lib/python3/dist-packages/cv2.so")):
+                self.assertIsNone(runtime_discovery.python_presence("cv2",home=Path(d)))
+
+    def test_private_python_spec_is_still_detected(self):
+        with tempfile.TemporaryDirectory() as d:
+            own=Path(d)/".runtime/python/cv2.py"
+            own.parent.mkdir(parents=True)
+            own.write_text("pass")
+            with patch("engine.runtime_discovery.importlib.util.find_spec",
+                       return_value=SimpleNamespace(origin=str(own))):
+                result=runtime_discovery.python_presence("cv2",home=Path(d))
+            self.assertEqual(result["scope"],"ferrari_python")
+            self.assertEqual(result["location"],str(own))
 
     def test_npm_detects_ferrari_isolated_package(self):
         with tempfile.TemporaryDirectory() as d:
@@ -37,6 +47,17 @@ class RuntimeDiscoveryTests(unittest.TestCase):
             self.assertEqual(result["scope"],"ferrari_npm")
             self.assertEqual(result["package"],"vite")
             self.assertEqual(result["verification"],"manifest_present_not_executed")
+
+    def test_npm_system_global_roots_are_never_ferrari_dependencies(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            system=root/"global/node_modules"
+            manifest=system/"next/package.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"name":"next"}')
+            own=root/"ferrari"
+            own.mkdir()
+            self.assertIsNone(runtime_discovery.npm_presence("nextjs",home=own,system_roots=(system,)))
 
     def test_npm_does_not_scan_unrelated_project(self):
         with tempfile.TemporaryDirectory() as d:
