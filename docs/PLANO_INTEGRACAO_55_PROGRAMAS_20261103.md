@@ -1,5 +1,7 @@
 # Ferrari — integração progressiva dos 55 programas detetados sem ação direta (03/11/2026)
 
+**Atualização de 05/11/2026 (após este plano histórico):** inventário real da VPS [#41991752006](https://github.com/martaxi-boss/VPS/actions/runs/41991752006) confirmou **55/56 candidatos Ubuntu presentes**, 40 ações invocáveis e Penpot ausente. Vídeo MLT/Kdenlive → MP4 foi **certificado para um projeto sintético** pela Skill em [#41992064762](https://github.com/martaxi-boss/VPS/actions/runs/41992064762), com artefacto H.264 válido e FFprobe PASS. As indicações posteriores nesta página de vídeo pendente descrevem o estado de 03/11 e não anulam esta prova nova.
+
 **Objetivo:** integrar as capacidades dos programas **já presentes** na VPS, dentro da única Skill e motor Ferrari. Cada projeto de outros repositórios mantém diretório e dependências separados. A ligação GitHub Actions → SSH é apenas transporte e não deve ganhar lógica de seleção, regras ou coordenação.
 
 ## Linha de base verificada
