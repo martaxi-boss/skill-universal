@@ -75,6 +75,11 @@ class FerrariProfessionalTests(unittest.TestCase):
             (vite_dir/"package.json").write_text('{"version":"8.3.5"}')
             def build(args, **kwargs):
                 out=Path(args[args.index("--outDir")+1])
+                private=out.parent
+                self.assertEqual(Path(kwargs["cwd"]).parent,private)
+                for variable in ("HOME","TMPDIR","TMP","TEMP","XDG_CACHE_HOME",
+                                 "XDG_CONFIG_HOME","XDG_DATA_HOME","XDG_RUNTIME_DIR"):
+                    self.assertTrue(Path(kwargs["env"][variable]).is_relative_to(private),variable)
                 (out/"assets").mkdir(parents=True)
                 (out/"index.html").write_text("<h1>Ferrari</h1>")
                 (out/"assets/app.js").write_text("console.log(1)")
