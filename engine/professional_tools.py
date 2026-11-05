@@ -132,13 +132,23 @@ def vite_build(source: Path, output_dir: Path):
     if dist.exists() or dist.is_symlink() or report.exists() or report.is_symlink():
         raise FileExistsError("Refusing to overwrite Vite outputs")
     output_dir.mkdir(parents=True, exist_ok=True)
-    with TemporaryDirectory(prefix="ferrari-vite-build-") as folder:
+    # All temporary Vite and Playwright state stays in this Ferrari job folder.
+    with TemporaryDirectory(prefix=".ferrari-vite-build-", dir=str(output_dir)) as folder:
         work = Path(folder)
         inputs = _unpack_project(source, work)
         env = os.environ.copy()
         env.pop("NODE_OPTIONS", None)
         env["PATH"] = str(NODE.parent) + os.pathsep + env.get("PATH", "")
         env["CI"] = "true"
+        env["HOME"] = str(output_dir)
+        env["TMPDIR"] = str(output_dir)
+        env["TMP"] = str(output_dir)
+        env["TEMP"] = str(output_dir)
+        for var, folder_name in (("XDG_CACHE_HOME", ".cache"), ("XDG_CONFIG_HOME", ".config"),
+                                 ("XDG_DATA_HOME", ".local"), ("XDG_RUNTIME_DIR", ".run")):
+            folder_path = output_dir / folder_name
+            folder_path.mkdir(mode=0o700, exist_ok=True)
+            env[var] = str(folder_path)
         _run([str(NODE), str(VITE), "build", str(work),
               "--outDir", str(dist), "--emptyOutDir"],
              timeout=150, cwd=work, env=env)
