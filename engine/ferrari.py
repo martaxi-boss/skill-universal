@@ -77,6 +77,16 @@ def system():
 def present(p):
     """Report only Ferrari-owned executors, never Ubuntu PATH availability."""
     name=p.get("id")
+    if name=="rea":
+        private=FERRARI_HOME/".runtime/npm/rea"
+        modules=private/"node_modules"
+        cli=modules/".bin/rea"
+        return (private.is_dir() and not private.is_symlink()
+                and modules.is_dir() and not modules.is_symlink()
+                and cli.is_file() and cli.resolve().is_relative_to(modules.resolve()))
+    if name=="apktool":
+        local=FERRARI_HOME/"tools/apktool-3.0.3/bin/apktool"
+        return local.is_file() and not local.is_symlink()
     if name in {"blender","openscad","libreoffice"}:
         from engine import cad_tools
         try:
