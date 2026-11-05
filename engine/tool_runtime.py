@@ -50,7 +50,10 @@ PRIVATE_CLI={"file":("file",),"jq":("jq",),"ripgrep":("rg",),
              "radare2":("r2",),"libvips":("vips","vipsheader"),
              "wireshark":("tshark",),"inkscape":("inkscape",),
              "binwalk":("binwalk",),"ansible":("ansible-inventory",),
-             "ocrmypdf":("ocrmypdf",),"calibre":("ebook-convert",)}
+             "ocrmypdf":("ocrmypdf",),"calibre":("ebook-convert",),
+             "darktable":("darktable-cli",),"krita":("krita",),
+             "gimp":("gimp-console-2.10",),"scribus":("scribus",),
+             "lmms":("lmms",),"kdenlive":("melt",)}
 PRIVATE_PYTHON_SCRIPTS=frozenset({"binwalk","ansible","ocrmypdf","calibre"})
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
@@ -430,6 +433,23 @@ def invoke(action,source,folder,query=None):
             directory=home/part
             directory.mkdir(parents=True,exist_ok=True)
             env[field]=str(directory)
+        if Path(exe).parent==PRIVATE_CLI_ROOT/"bin":
+            env["XDG_DATA_DIRS"]=str(PRIVATE_CLI_ROOT/"share")
+            env["QT_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/qt5/plugins")
+            if x["tool"] in {"krita","scribus","lmms"}:
+                env["QT_QPA_PLATFORM_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/qt5/plugins/platforms")
+            if x["tool"]=="darktable":
+                env["DARKTABLE_DATADIR"]=str(PRIVATE_CLI_ROOT/"share/darktable")
+                env["DARKTABLE_MODULEDIR"]=str(PRIVATE_CLI_ROOT/"lib/darktable")
+            if x["tool"]=="gimp":
+                env["GIMP2_DATADIR"]=str(PRIVATE_CLI_ROOT/"share/gimp/2.0")
+                env["GIMP2_PLUGINDIR"]=str(PRIVATE_CLI_ROOT/"lib/gimp/2.0/plug-ins")
+            if x["tool"]=="lmms":
+                env["LMMS_PLUGIN_DIR"]=str(PRIVATE_CLI_ROOT/"lib/lmms")
+                env["LMMS_DATA_DIR"]=str(PRIVATE_CLI_ROOT/"share/lmms")
+            if x["tool"]=="kdenlive":
+                env["MLT_REPOSITORY"]=str(PRIVATE_CLI_ROOT/"lib/mlt-7")
+                env["MLT_DATA"]=str(PRIVATE_CLI_ROOT/"share/mlt-7")
         if x["tool"]=="calibre":
             env["CALIBRE_CONFIG_DIRECTORY"]=env["XDG_CONFIG_HOME"]
         if x["tool"]=="calibre":
@@ -437,8 +457,10 @@ def invoke(action,source,folder,query=None):
         if x["tool"]=="krita":
             # Krita ignores Qt offscreen and requires a display. The Ubuntu
             # VPS already has Xvfb; run an ephemeral display for this job.
-            xvfb=shutil.which("xvfb-run")
-            server=shutil.which("Xvfb")
+            private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
+            private_server=PRIVATE_CLI_ROOT/"bin/Xvfb"
+            xvfb=str(private_xvfb) if private_xvfb.is_file() else shutil.which("xvfb-run")
+            server=str(private_server) if private_server.is_file() else shutil.which("Xvfb")
             if not xvfb or not server:
                 raise RuntimeError("Krita requires an existing Xvfb virtual display")
             tmp=home/"tmp"
@@ -468,8 +490,10 @@ def invoke(action,source,folder,query=None):
         if x["tool"]=="scribus":
             # The Scribus Scripter is executed once per job, with no GUI,
             # ephemeral Xvfb and every writable path inside the Ferrari job.
-            xvfb=shutil.which("xvfb-run")
-            server=shutil.which("Xvfb")
+            private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
+            private_server=PRIVATE_CLI_ROOT/"bin/Xvfb"
+            xvfb=str(private_xvfb) if private_xvfb.is_file() else shutil.which("xvfb-run")
+            server=str(private_server) if private_server.is_file() else shutil.which("Xvfb")
             if not xvfb or not server:
                 raise RuntimeError("Scribus requires an existing Xvfb virtual display")
             target.mkdir(mode=0o700)
