@@ -494,6 +494,9 @@ def invoke(action,source,folder,query=None):
                 private_qt_socket=sockets/("k"+uuid.uuid4().hex[:12])
                 private_qt_socket.mkdir(mode=0o700)
                 env["XDG_RUNTIME_DIR"]=str(private_qt_socket)
+                env["TMPDIR"]=str(private_qt_socket)
+                env["TMP"]=str(private_qt_socket)
+                env["TEMP"]=str(private_qt_socket)
             # Krita ignores Qt offscreen and requires a display. The Ubuntu
             # VPS already has Xvfb; run an ephemeral display for this job.
             private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
@@ -502,7 +505,7 @@ def invoke(action,source,folder,query=None):
             server=str(private_server) if private_server.is_file() else shutil.which("Xvfb")
             if not xvfb or not server:
                 raise RuntimeError("Krita requires an existing Xvfb virtual display")
-            tmp=home/"tmp"
+            tmp=private_qt_socket or home/"tmp"
             tmp.mkdir(parents=True,exist_ok=True)
             env["TMPDIR"]=str(tmp)
             env["QT_QPA_PLATFORM"]="xcb"
