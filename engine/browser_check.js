@@ -4,11 +4,8 @@
 // requests are blocked. Only a screenshot and JSON report are written.
 "use strict";
 const fs = require("node:fs");
-const os = require("node:os");
 const path = require("node:path");
-const { chromium } = require(path.join(
-  os.homedir(), ".local/share/motor-ferrari/.runtime/npm/playwright/node_modules/playwright"
-));
+const { chromium } = require("/srv/projects/skill-universal/.runtime/npm/playwright/node_modules/playwright");
 
 async function main() {
   if (process.argv.length !== 5) throw new Error("Expected: DIST SCREENSHOT REPORT");
