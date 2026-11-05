@@ -1,12 +1,14 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Estado certificado em 05/11/2026.** Este ficheiro acompanha a **única Skill Universal Ferrari**. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
+**Estado certificado em 05/11/2026.** Este ficheiro acompanha **uma Skill Universal Ferrari**, única e independente. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
 
 ## Arquitetura e projeto
 
 ChatGPT/Codex interpreta o pedido → Skill Ferrari → GitHub autenticado `martaxi-boss/VPS` → workflow Ferrari existente → SSH existente → `/srv/projects/skill-universal/current` → motor/fornecedores/executores privados → `report.json` e `response.zip`.
 
 Não instalar nada do Ferrari fora de `/srv/projects/skill-universal/`; não misturar pastas, dependências, fornecedores ou versões com PINK IPTV, Project Leader, Telegram, REA legado, FADEGO ou Low Cost Europa. Não criar coordenador na VPS. O Supervisor é passivo. Não alterar ponte SSH, workflow de transporte nem pin sem autorização específica. Componentes fundamentais do Ubuntu não são dependências de aplicação e não devem ser removidos sem auditoria.
+
+**Transporte e código histórico:** o validador do workflow GitHub VPS está pinado em `292aeb7d10eecef8c3ca84760cd579e84e4b97f3`; não alterar SSH nem ponte. O commit antigo `b2869e334d9d68a0c988905e71ce0badec6ba359` foi verificado em CI e [VPS #41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407) certificou uma release anterior. São provas históricas, não a release ativa.
 
 ## Prova operacional vigente
 
