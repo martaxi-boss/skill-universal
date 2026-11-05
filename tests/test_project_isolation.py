@@ -42,7 +42,7 @@ class ProjectIsolationTests(unittest.TestCase):
     def test_no_global_installs_in_entrypoints(self):
         from pathlib import Path
         root=Path(__file__).resolve().parents[1]
-        for p in ("install/ferrari-ubuntu.sh","install/vps-cad-3d.sh",
+        for p in ("install/ferrari-ubuntu.sh","install/install-ubuntu.sh","install/vps-cad-3d.sh",
                   "install/vps-delivery.sh","install/vps-expand-services-gui.sh"):
             s=(root/p).read_text()
             self.assertNotIn("apt-get install -y",s,p)

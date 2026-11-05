@@ -6,7 +6,7 @@ set -Eeuo pipefail
 [[ "$(uname -m)" == x86_64 ]] || exit 2
 ROOT="/srv/projects/skill-universal"
 cd "$ROOT/current"
-PY="$ROOT/runtimes/python3.12/bin/python3"
+PY="$ROOT/runtimes/python3.12/bin/python3.12"
 PANDOC="$ROOT/tools/ubuntu-cli/bin/pandoc"
 test -x "$PY" && test -x "$PANDOC" || { echo FERRARI_PRIVATE_RUNTIME_MISSING; exit 3; }
 "$PY" - <<'PYCODE'

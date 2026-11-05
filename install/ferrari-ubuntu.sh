@@ -53,7 +53,7 @@ if (( ${#MISSING[@]} )); then
   printf '  %s\n' "${MISSING[@]}"
 fi
 if (( ! APPLY )); then
-  echo 'DRY RUN. No packages installed. Use --apply to install.'
+  echo 'DRY RUN ONLY. Global --apply is blocked; install executables in the Ferrari project.'
   exit 0
 fi
 # Global package installation would break Ferrari uninstall independence.

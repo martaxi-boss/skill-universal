@@ -44,13 +44,7 @@ printf 'Profile: %s | installable: %s | unavailable APT: %s\n' "$PROFILE" "${#IN
 printf 'Installable packages:\n'; printf '  %s\n' "${INSTALLABLE[@]}"
 if ((${#MISSING[@]})); then printf 'Unavailable in configured repositories:\n'; printf '  %s\n' "${MISSING[@]}"; fi
 if ((APPLY)); then
-  if ((EUID != 0)); then echo "Use sudo only for --apply" >&2; exit 2; fi
-  if ((${#INSTALLABLE[@]})); then
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get install --no-install-recommends -y "${INSTALLABLE[@]}"
-  fi
-  echo 'APT packages installed; verify binary status with: python3 -m engine.cli doctor'
-  echo 'REA, Ruflo, JADX, Ghidra, ComfyUI and cloud-provider credentials require separate checks; NOT installed by this APT script.'
-else
-  echo 'DRY RUN: no changes made. Add --apply explicitly after reviewing hardware, disk and packages.'
+  echo 'FERRARI_GLOBAL_APT_INSTALL_FORBIDDEN: applications must stay within their own project folder' >&2
+  exit 4
 fi
+echo 'DRY RUN ONLY: APT candidates shown for Ubuntu compatibility; no global installation supported.'

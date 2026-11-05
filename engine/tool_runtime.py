@@ -139,7 +139,8 @@ def executable(tool,binary=None):
             return None
         return str(pinned)
     if tool in {"apktool","prometheus","typst","godot","freecad"}:
-        return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
+        return (str(pinned) if (pinned.is_file() and
+                pinned.resolve().is_relative_to(HOME.resolve())) else None)
     if pinned and pinned.is_file() and pinned.resolve().is_relative_to(HOME.resolve()):
         return str(pinned)
     if tool in PRIVATE_CLI and (binary or BINARIES.get(tool) or tool) in PRIVATE_CLI[tool]:
