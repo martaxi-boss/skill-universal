@@ -109,6 +109,58 @@ def private_python() -> dict:
     return {"runtime":str(target),"venvs":["duckdb","polars"],"links_updated":changed}
 
 
+def install_private_python_modules() -> dict:
+    """Copy selected Ubuntu-owned Python modules, never the global site-packages tree."""
+    source=Path("/usr/lib/python3/dist-packages")
+    dest=TARGET/"lib/python"
+    if not source.is_dir() or dest.is_symlink():
+        raise RuntimeError("Ubuntu Python packages or private destination unavailable")
+    names=("binwalk","ansible","ocrmypdf","yaml","jinja2","markupsafe",
+           "cryptography","packaging","resolvelib","pikepdf","PIL",
+           "img2pdf","pluggy","magic","capstone","reportlab",
+           "psutil","lxml","attr","attrs","click","rich","distro",
+           "dateutil","six","defusedxml","tqdm","numpy","cffi",
+           "_cffi_backend","idna","certifi","chardet","pypdf",
+           "typing_extensions","sortedcontainers","ocrmypdf_plugins",
+           "pdfminer","deprecation","pdf2image","colorama",
+           "setuptools","pkg_resources","importlib_metadata","zipp",
+           "shellingham","cryptography","pytesseract")
+    copied=[]
+    for name in dict.fromkeys(names):
+        candidates=[source/name,source/(name+".py")]
+        candidates.extend(source.glob(name+".cpython-312-*.so"))
+        candidates.extend(source.glob(name+".abi3.so"))
+        for item in candidates:
+            if not item.exists() or item.is_symlink():
+                continue
+            target=dest/item.name
+            if item.is_dir():
+                if not target.exists():
+                    size=sum(p.stat().st_size for p in item.rglob("*") if p.is_file() and not p.is_symlink())
+                    if size>200_000_000:
+                        raise RuntimeError("Refuse oversized global Python module: "+name)
+                    shutil.copytree(item,target,symlinks=False,
+                                    ignore=shutil.ignore_patterns("__pycache__","*.pyc"))
+                copied.append(item.name)
+            elif item.is_file():
+                copy_one(item,target)
+                copied.append(item.name)
+        for suffix in ("*.dist-info","*.egg-info"):
+            for info in source.glob(name.replace("_","-")+"-"+suffix):
+                if info.is_symlink():
+                    continue
+                target=dest/info.name
+                if info.is_dir() and not target.exists():
+                    shutil.copytree(info,target,symlinks=False)
+                elif info.is_file() and not target.exists():
+                    copy_one(info,target)
+    for required in ("binwalk","ansible","ocrmypdf"):
+        if not (dest/required).is_dir():
+            raise RuntimeError("Missing installed Ubuntu Python module "+required)
+    return {"private_python_modules_root":str(dest),
+            "module_count":len(copied),"modules":sorted(copied)}
+
+
 def install() -> dict:
     if not ROOT.is_dir() or ROOT.is_symlink():
         raise RuntimeError("Ferrari project folder missing or linked")
@@ -182,9 +234,11 @@ def install() -> dict:
             shutil.copytree(root,private)
         assets["lib/ImageMagick"]=str(private)
     python_result=private_python()
+    python_packages=install_private_python_modules()
     return {"root": str(TARGET), "binaries": sorted(installed),
             "private_libraries": len(all_libs), "private_resources": assets,
             "python": python_result,
+            "python_packages": python_packages,
             "magic_database": str(TARGET / "share/magic.mgc"),
             "system_installation": False, "other_projects_touched": False}
 
