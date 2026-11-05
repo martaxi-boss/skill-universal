@@ -48,7 +48,10 @@ PRIVATE_CLI={"file":("file",),"jq":("jq",),"ripgrep":("rg",),
              "pandoc":("pandoc",),"graphviz":("dot",),
              "imagemagick":("identify","convert"),"tesseract":("tesseract",),
              "radare2":("r2",),"libvips":("vips","vipsheader"),
-             "wireshark":("tshark",),"inkscape":("inkscape",)}
+             "wireshark":("tshark",),"inkscape":("inkscape",),
+             "binwalk":("binwalk",),"ansible":("ansible-inventory",),
+             "ocrmypdf":("ocrmypdf",),"calibre":("ebook-convert",)}
+PRIVATE_PYTHON_SCRIPTS=frozenset({"binwalk","ansible","ocrmypdf","calibre"})
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
@@ -302,6 +305,11 @@ def invoke(action,source,folder,query=None):
     outdir.mkdir(parents=True,exist_ok=True)
     replacements={"{input}":str(inp),"{output}":str(target),"{query}":query}
     args=[exe]+[replacements.get(v,v) for v in x["args"]]
+    if x["tool"] in PRIVATE_PYTHON_SCRIPTS and Path(exe).parent==PRIVATE_CLI_ROOT/"bin":
+        interpreter=HOME/"runtimes/python3.12/bin/python3.12"
+        if not interpreter.is_file() or interpreter.is_symlink():
+            raise RuntimeError("Ferrari private Python interpreter is missing")
+        args=[str(interpreter),exe]+args[1:]
     run_options={}
     if x["tool"] in PRIVATE_CLI and Path(exe).parent == PRIVATE_CLI_ROOT/"bin":
         env=os.environ.copy()
@@ -315,6 +323,21 @@ def invoke(action,source,folder,query=None):
             value=outdir/dirname
             value.mkdir(mode=0o700, exist_ok=True)
             env[variable]=str(value)
+        if x["tool"] in PRIVATE_PYTHON_SCRIPTS:
+            modules=PRIVATE_CLI_ROOT/"lib/python"
+            if not modules.is_dir() or modules.is_symlink():
+                raise RuntimeError("Ferrari private Python libraries are missing")
+            env["PYTHONPATH"]=os.pathsep.join((str(modules),str(PRIVATE_CLI_ROOT/"lib/calibre")))
+            env["PYTHONNOUSERSITE"]="1"
+            env["PYTHONDONTWRITEBYTECODE"]="1"
+            env["LD_LIBRARY_PATH"]=os.pathsep.join((str(HOME/"runtimes/python3.12/lib"),env["LD_LIBRARY_PATH"]))
+            env["PATH"]=str(PRIVATE_CLI_ROOT/"bin")+os.pathsep+env.get("PATH","")
+            env.pop("PYTHONHOME",None)
+            if x["tool"]=="calibre":
+                env["CALIBRE_RESOURCES_PATH"]=str(PRIVATE_CLI_ROOT/"share/calibre")
+            if x["tool"]=="ansible":
+                env["ANSIBLE_HOME"]=str(outdir)
+                env["ANSIBLE_LOCAL_TEMP"]=str(outdir)
         if x["tool"]=="file":
             env["MAGIC"]=str(PRIVATE_CLI_ROOT/"share/magic.mgc")
         if x["tool"]=="tesseract":
@@ -399,7 +422,7 @@ def invoke(action,source,folder,query=None):
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
         # in Ubuntu's shared user profile or another project's directory.
-        env=os.environ.copy()
+        env=run_options.get("env",os.environ.copy())
         home=outdir/".ferrari-application-state"
         for field,part in (("XDG_CACHE_HOME","cache"),
                            ("XDG_CONFIG_HOME","config"),
