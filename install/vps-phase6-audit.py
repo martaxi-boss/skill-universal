@@ -52,7 +52,7 @@ def dependencies(paths: list[Path], cap=22):
     for exe in paths[:cap]:
         try:
             with exe.open("rb") as stream:
-                if stream.read(4) != b"\\x7fELF":
+                if stream.read(4) != b"\x7fELF":
                     continue
             probe = subprocess.run([str(cli), str(exe)], capture_output=True,
                                    text=True, timeout=7, check=False,
@@ -62,7 +62,7 @@ def dependencies(paths: list[Path], cap=22):
             continue
         libraries = []
         for line in probe.stdout.splitlines()[:110]:
-            match = re.match(r"\\s*([A-Za-z0-9_.+-]+\\.so(?:\\.[0-9]+)*)\\s*=>\\s*(/[^ ]+|not found)", line)
+            match = re.match(r"\s*([A-Za-z0-9_.+-]+\.so(?:\.[0-9]+)*)\s*=>\s*(/[^ ]+|not found)", line)
             if not match:
                 continue
             lib, location = match.groups()
