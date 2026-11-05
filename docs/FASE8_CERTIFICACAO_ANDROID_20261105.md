@@ -1,5 +1,8 @@
 # Ferrari — Fase 8: quatro certificados Android adicionais e bloqueio físico separado
 
+**ATUALIZAÇÃO DE FECHO — 05/11/2026:** a certificação F8 foi concluída **40/40** com instalação real por ADB privado do Ferrari num Android físico autorizado. Execução GitHub Actions [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714): `report.json.status=completed`, artefacto `adb-install.txt` com `Performing Streamed Install` e `Success`. A APK pública temporária `com.example.empty9patch` foi posteriormente desinstalada com `Success` em ConnectBot, sem alterar PINK IPTV. [Relatório de fecho](FASE8_FECHO_20261105.md). O texto restante abaixo documenta a **situação histórica anterior à ligação física** e não indica um bloqueio atual.
+
+
 **Data: 05/11/2026. Estado: 39/40 ações tipadas provadas em execuções individuais reais, F8 NÃO encerrada.** Este certificado é restrito às quatro verificações abaixo e ao âmbito de executor privado. Não certifica instalação Android física, APK de produção, todos os 56 candidatos Ubuntu, interfaces GUI integrais, modelos externos ou todos os fornecedores MCP.
 
 ## Casos verificados na VPS e artefactos devolvidos
