@@ -44,7 +44,11 @@ ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
 PRIVATE_CLI_ROOT=HOME/"tools/ubuntu-cli"
 PRIVATE_CLI={"file":("file",),"jq":("jq",),"ripgrep":("rg",),
              "readelf":("readelf",),"objdump":("objdump",),"strings":("strings",),
-             "ffmpeg":("ffmpeg","ffprobe"),"pdftotext":("pdfinfo","pdftotext")}
+             "ffmpeg":("ffmpeg","ffprobe"),"pdftotext":("pdfinfo","pdftotext"),
+             "pandoc":("pandoc",),"graphviz":("dot",),
+             "imagemagick":("identify","convert"),"tesseract":("tesseract",),
+             "radare2":("r2",),"libvips":("vips","vipsheader"),
+             "wireshark":("tshark",),"inkscape":("inkscape",)}
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
@@ -304,8 +308,26 @@ def invoke(action,source,folder,query=None):
         env["LD_LIBRARY_PATH"]=str(PRIVATE_CLI_ROOT/"lib")
         env["HOME"]=str(outdir)
         env["TMPDIR"]=str(outdir)
+        env["TMP"]=str(outdir)
+        env["TEMP"]=str(outdir)
+        for variable,dirname in (("XDG_CACHE_HOME",".cache"),("XDG_CONFIG_HOME",".config"),
+                                 ("XDG_DATA_HOME",".data")):
+            value=outdir/dirname
+            value.mkdir(mode=0o700, exist_ok=True)
+            env[variable]=str(value)
         if x["tool"]=="file":
             env["MAGIC"]=str(PRIVATE_CLI_ROOT/"share/magic.mgc")
+        if x["tool"]=="tesseract":
+            env["TESSDATA_PREFIX"]=str(PRIVATE_CLI_ROOT/"share/tesseract-ocr/5/tessdata")
+        if x["tool"]=="graphviz":
+            env["GVBINDIR"]=str(PRIVATE_CLI_ROOT/"lib/graphviz")
+        if x["tool"]=="imagemagick":
+            env["MAGICK_CONFIGURE_PATH"]=str(PRIVATE_CLI_ROOT/"etc/ImageMagick-6")
+            env["MAGICK_CODER_MODULE_PATH"]=str(PRIVATE_CLI_ROOT/"lib/ImageMagick-6.9.11/modules-Q16/coders")
+        if x["tool"]=="vips":
+            env["VIPS_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/vips-modules-8.15")
+        if x["tool"]=="tshark":
+            env["WIRESHARK_PLUGIN_DIR"]=str(PRIVATE_CLI_ROOT/"lib/wireshark")
         run_options["env"]=env
     if x["tool"]=="rea":
         # The REA CLI, Node, Apktool and REA state belong to Ferrari alone.
