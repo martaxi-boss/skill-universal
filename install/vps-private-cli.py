@@ -122,7 +122,7 @@ def install_private_python_modules() -> dict:
            "img2pdf","jp2","pluggy","magic","capstone","reportlab",
            "psutil","lxml","attr","attrs","click","rich","distro",
            "dateutil","six","defusedxml","tqdm","numpy","cffi",
-           "_cffi_backend","idna","certifi","chardet","pypdf",
+           "_cffi_backend","idna","certifi","chardet","charset_normalizer","pypdf",
            "typing_extensions","sortedcontainers","ocrmypdf_plugins",
            "pdfminer","deprecation","deprecated","wrapt","olefile","pdf2image","colorama",
            "setuptools","pkg_resources","importlib_metadata","zipp",
