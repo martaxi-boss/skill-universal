@@ -84,6 +84,40 @@ def clean(apply=False):
                 raise RuntimeError("Unsafe cleanup target")
             shutil.rmtree(p)
             removed.append(p.name)
+    # Delete only known disposable Ferrari certification workspaces.
+    # Never touch provider runtimes, npm node_modules, other project names or
+    # arbitrary folders: these names are exclusively Ferrari smoke artefacts.
+    runtime=root_real/".runtime"
+    scratch_names=("private-gui-test","python-tools-smoke","private-python-smoke",
+                   "private-cli-cert","private-media-cert","native-cli-cert",
+                   "python-cli-cert","private-python-cert","private-gui-cert",
+                   "browser-release-smoke","isolation-release-smoke",
+                   "native-cli-release-smoke","media-cli-release-smoke",
+                   "private-cli-release-smoke","python-cli-release-smoke")
+    scratch_targets=[]
+    if runtime.exists():
+        if runtime.is_symlink() or not runtime.is_dir():
+            raise RuntimeError("Unsafe Ferrari private runtime root")
+        for name in scratch_names:
+            p=runtime/name
+            if p.is_symlink():
+                raise RuntimeError("Unsafe Ferrari smoke symlink: "+name)
+            if p.is_dir():
+                for base,dirs,files in os.walk(p,followlinks=False):
+                    for entry in dirs+files:
+                        if (Path(base)/entry).is_symlink():
+                            raise RuntimeError("Unsafe link within Ferrari smoke directory: "+name)
+                scratch_targets.append(p)
+    scratch_sizes={p.name:size(p) for p in scratch_targets}
+    scratch_removed=[]
+    if apply:
+        if not shutil.rmtree.avoids_symlink_attacks:
+            raise RuntimeError("Safe Ferrari scratch cleanup requires fd-safe rmtree")
+        for p in scratch_targets:
+            if p.parent!=runtime or p.is_symlink() or not p.is_dir():
+                raise RuntimeError("Unsafe Ferrari smoke cleanup target")
+            shutil.rmtree(p)
+            scratch_removed.append(p.name)
     after=shutil.disk_usage(root_real).free
     report={
         "mode":"apply" if apply else "preview",
@@ -92,7 +126,9 @@ def clean(apply=False):
         "preserved_releases":sorted(keep),
         "eligible_old_releases":[p.name for p in candidates],
         "removed_releases":removed,
-        "estimated_reclaim_bytes":sum(sizes.values()),
+        "removed_smoke_directories":scratch_removed,
+        "eligible_smoke_directories":[p.name for p in scratch_targets],
+        "estimated_reclaim_bytes":sum(sizes.values())+sum(scratch_sizes.values()),
         "actual_free_delta_bytes":after-before,
         "disk_free_after_gib":round(after/(1024**3),2),
         "outside_ferrari_touched":False,
