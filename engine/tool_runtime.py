@@ -430,6 +430,17 @@ def invoke(action,source,folder,query=None):
         # in Ubuntu's shared user profile or another project's directory.
         env=run_options.get("env",os.environ.copy())
         home=outdir/".ferrari-application-state"
+        home.mkdir(mode=0o700,exist_ok=True)
+        tmp=home/"tmp"
+        runtime=home/"runtime"
+        tmp.mkdir(mode=0o700,exist_ok=True)
+        runtime.mkdir(mode=0o700,exist_ok=True)
+        env["HOME"]=str(home)
+        env["TMPDIR"]=str(tmp)
+        env["TMP"]=str(tmp)
+        env["TEMP"]=str(tmp)
+        env["XDG_RUNTIME_DIR"]=str(runtime)
+        env["PATH"]=str(PRIVATE_CLI_ROOT/"bin")+os.pathsep+env.get("PATH","")
         for field,part in (("XDG_CACHE_HOME","cache"),
                            ("XDG_CONFIG_HOME","config"),
                            ("XDG_DATA_HOME","data")):
@@ -533,7 +544,8 @@ def invoke(action,source,folder,query=None):
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:
-        raise RuntimeError("Executor failed: "+p.stderr.decode("utf-8","replace")[-1000:])
+        details=(p.stderr+b"\n"+p.stdout).decode("utf-8","replace")[-1600:]
+        raise RuntimeError("Executor failed (code "+str(p.returncode)+"): "+details)
     if x["tool"]=="kdenlive":
         # Verify actual playable video, not just a successful process exit.
         if target.is_symlink() or not target.is_file() or target.stat().st_size<1024:
