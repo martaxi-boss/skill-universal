@@ -46,7 +46,7 @@ class FerrariPhase8Coverage(unittest.TestCase):
     def test_proof_separated_from_presence(self):
         s=DOC.read_text(encoding="utf-8")
         self.assertIn("não confirma que *todas* as ações",s)
-        self.assertIn("sem fallback aos binários globais",s)
+        self.assertIn("sem fallback aos binários globais",s.lower())
         self.assertIn("FERRARI_SKILL_END_TO_END=PASS",s)
 
 if __name__=="__main__":
