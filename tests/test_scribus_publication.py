@@ -65,8 +65,9 @@ class ScribusPublicationTests(unittest.TestCase):
             src=Path(folder)/"input.txt"
             src.write_text("Ferrari",encoding="utf-8")
             dest=Path(folder)/"out"
+            # Test missing Ferrari Xvfb even when the VPS has its private copy.
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/scribus"):
-                with patch.object(tool_runtime.shutil,"which",return_value=None):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",Path(folder)/"missing-private-cli"):
                     with self.assertRaisesRegex(RuntimeError,"Xvfb"):
                         tool_runtime.invoke("scribus-text-publication",str(src),str(dest))
             self.assertFalse((dest/"scribus-publication/publication.pdf").exists())
