@@ -338,6 +338,9 @@ def invoke(action,source,folder,query=None):
             env.pop("PYTHONHOME",None)
             if x["tool"]=="calibre":
                 env["CALIBRE_RESOURCES_PATH"]=str(PRIVATE_CLI_ROOT/"share/calibre")
+                env["CALIBRE_PYTHON_PATH"]=str(PRIVATE_CLI_ROOT/"lib/calibre")
+                env["CALIBRE_EXTENSIONS_PATH"]=str(PRIVATE_CLI_ROOT/"lib/calibre/calibre/plugins")
+                env["CALIBRE_EXECUTABLES_PATH"]=str(PRIVATE_CLI_ROOT/"bin")
             if x["tool"]=="ansible":
                 env["ANSIBLE_HOME"]=str(outdir)
                 env["ANSIBLE_LOCAL_TEMP"]=str(outdir)
