@@ -249,6 +249,7 @@ def install() -> dict:
         assets["lib/ImageMagick"]=str(private)
     # GUI and MLT load native plugin libraries at runtime. Include the plugin
     # dependencies inside Ferrari rather than borrowing another project copy.
+    optional_plugin_deps=set()
     modules=(TARGET/"lib/mlt-7", TARGET/"lib/lmms", TARGET/"lib/gimp/2.0",
              TARGET/"lib/darktable", TARGET/"lib/qt5/plugins")
     for folder in modules:
@@ -274,7 +275,10 @@ def install() -> dict:
                     alternatives=tuple(folder/dep.name for folder in roots)
                     dep=next((candidate for candidate in alternatives if candidate.is_file()),dep)
                 if not dep.is_file():
-                    raise RuntimeError("Unresolved private plugin dependency: "+dep.name)
+                    # Optional plugins may reference libraries absent on a headless host.
+                    # Do not certify them; real actions still have to pass below.
+                    optional_plugin_deps.add(dep.name)
+                    continue
                 if dep.is_relative_to(TARGET):
                     continue
                 copy_one(dep,library_dir/dep.name)
@@ -284,6 +288,7 @@ def install() -> dict:
             "private_libraries": len(all_libs), "private_resources": assets,
             "python": python_result,
             "python_packages": python_packages,
+            "optional_plugin_dependencies_unresolved": sorted(optional_plugin_deps),
             "magic_database": str(TARGET / "share/magic.mgc"),
             "system_installation": False, "other_projects_touched": False}
 
