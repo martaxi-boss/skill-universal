@@ -146,8 +146,8 @@ def _owned_workspace(path: str) -> Path:
         if not resolved.is_relative_to(project):
             raise ValueError("Ferrari workspace must remain inside the isolated project")
         for parent in (root, *root.parents):
-            if parent.is_symlink():
-                raise ValueError("Ferrari workspace has a symlinked parent")
+            if parent.is_symlink() and not parent.resolve(strict=True).is_relative_to(project):
+                raise ValueError("Ferrari workspace parent escapes its isolated project")
             if parent == project:
                 break
     return resolved
