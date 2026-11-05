@@ -1,46 +1,41 @@
-# Certificação da Fase 6 — Ferrari (05/11/2026)
+# Certificação final da Fase 6 — Ferrari / Skill Universal Ubuntu
 
-**Veredito formal: PASS OPERACIONAL / NO-GO PARA FECHO INTEGRAL DA FASE 6.**
+**Data da prova final:** 05/11/2026. **VEREDITO: PASS — isolamento físico do projeto Ferrari certificado no âmbito observado.** Fase 6 de isolamento do Ferrari encerrada. O presente certificado **não** é uma certificação 100% de toda a VPS, nem converte programas globais do Ubuntu em dependências do Ferrari.
 
-Esta certificação distingue resultados executados e comprovados de requisitos ainda sem evidência. A Fase 7 **não foi iniciada nem autorizada**. Uma execução GitHub Actions com código concluído não equivale, por si só, a prova de todos os recursos internos da VPS.
+## Instalação e correspondência GitHub ↔ VPS
 
-## Ambiente verificado
+- **Repositório canónico:** `martaxi-boss/skill-universal`. **Diretório real:** `/srv/projects/skill-universal/`. Motor, releases, runtimes Python/Node/Java, executores externos, venvs, npm, ferramentas e caches específicas pertencem a essa pasta.
+- **Release `current` comprovada:** `146145d5ada9c13e368df18727e4dbf4f5807664`.
+- **Fallback preservado:** `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`. As duas releases anteriores `87969badbde0a77c2c181bb9605357d51a4a30c0` e `62f862cdf9727842546a244a3e4ec19dd8bc82f4` foram removidas depois de pré-visualização e confirmação de não utilização; não confundir estes SHA com o fallback atual.
+- **Branch certificada GitHub:** `isolation/20261105-private-executors-only`, PR [#64](https://github.com/martaxi-boss/skill-universal/pull/64) mantida **draft/sem merge**. O SHA da release VPS é intencionalmente imutável; as auditorias, scripts de migração e documentação posteriores são versionados no mesmo repositório e invocados por SHA fixo através do workflow já existente em `martaxi-boss/VPS`.
+- Nenhum coordenador novo na VPS, nenhuma instalação por APT global para o Ferrari, nenhum novo fornecedor partilhado, nenhum ajuste ao SSH nem ao Supervisor.
 
-- Projeto: `martaxi-boss/skill-universal`, instalado exclusivamente como projeto em `/srv/projects/skill-universal`.
-- Release operacional confirmada de novo pela VPS: `146145d5ada9c13e368df18727e4dbf4f5807664`.
-- Release anterior preservada para fallback: `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`.
-- GitHub PR [#64](https://github.com/martaxi-boss/skill-universal/pull/64) continua **draft**, sem merge. O código publicado na PR depois do deploy inclui testes e auditoria, não uma segunda ativação em produção.
+## Matriz de certificação real
 
-## Matriz de certificação
-
-| Requisito | Evidência real | Resultado |
+| Requisito | Evidência | Resultado |
 |---|---|---|
-| Regressão e regras de isolamento no GitHub | Ferrari [#42083633239](https://github.com/martaxi-boss/skill-universal/actions/runs/42083633239) e [#42083646367](https://github.com/martaxi-boss/skill-universal/actions/runs/42083646367), última execução CI **245 testes PASS** | **PASS CI** |
-| Ações privadas e inventário fresco da Skill | [VPS #42083666378](https://github.com/martaxi-boss/VPS/actions/runs/42083666378), `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_RESPONSE_ZIP=PASS`, `FERRARI_SKILL_END_TO_END=PASS`; ZIP analisado com `report.json.status=completed` e `artifacts/inventory.json` | **PASS: 40/40 ações invocáveis, 47/56 programas selecionados detetados** |
-| Correção real da descoberta CAD/Office | No inventário real #42083666378: Blender em `tools/blender/blender`; OpenSCAD em `tools/openscad/bin/openscad`; LibreOffice em `tools/libreoffice/program/soffice` | **PASS para estes 3 executores** |
-| Teste funcional protegido da release em produção | [VPS #42078448805](https://github.com/martaxi-boss/VPS/actions/runs/42078448805) (precheck: 241 testes/40 ações/CAD/Office/ZIP), [#42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765) (ativação e fallback); [#42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679) (read-back) | **PASS** |
-| Dependências ELF ligadas | [VPS #42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679): 33 binários ELF amostrados, 1 447 resoluções de bibliotecas dentro Ferrari, 13 do Ubuntu base, zero bibliotecas externas ou em falta **nessa amostra** | **PASS amostral; não prova plugins e shebangs indiretos** |
-| Inventário físico vivo da VPS e serviços | [VPS #42044862915, tentativa 2](https://github.com/martaxi-boss/VPS/actions/runs/42044862915) de 05/11 às 18:25 UTC; artefacto read-only `vps-project-inventory-42044862915` | **PASS da recolha**, release correta e serviços principais em execução; inventário `/opt` marcado `INCOMPLETE` |
-| Auditoria de saúde/higiene posterior | [VPS #42084337560](https://github.com/martaxi-boss/VPS/actions/runs/42084337560), [issue #343](https://github.com/martaxi-boss/VPS/issues/343): `AUDIT_ONLY`, `health_after=true`, `protected_services_unchanged=true`, 7 raízes de caches verificadas, 0 elegíveis e 0 removidas, diferença de espaço de 0 bytes | **PASS sem alteração dos serviços** |
-| Atribuição de instalações globais e remoção dos exclusivos | Inventário vivo #42044862915 ainda mostra as 16 aplicações globais; nenhuma prova suficiente de instalação exclusiva ou ausência de consumidores em todos os serviços | **PENDENTE — NÃO ELIMINAR** |
-| Auditoria integral dos links/interpretadores e órfãos Ferrari | Novas verificações read-only em `install/vps-phase6-certify.py`; quatro regressões locais novas passaram no CI #42083633239. **O novo auditor ainda não foi executado na VPS**: não confundir validação do código com execução remota | **PENDENTE de prova física** |
+| CI fonte e regressões da Fase 6 | Ferrari [#42091895647](https://github.com/martaxi-boss/skill-universal/actions/runs/42091895647) e [#42091906947](https://github.com/martaxi-boss/skill-universal/actions/runs/42091906947), `fa832a71b7164e5163b89d14ee757bdba3b96f72` | **255 testes PASS**, sem enfraquecer bloqueios |
+| Release privada e rollback | VPS [pré-teste #42078448805](https://github.com/martaxi-boss/VPS/actions/runs/42078448805), [ativação #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [certificação de rollback F5 #42068780199](https://github.com/martaxi-boss/VPS/actions/runs/42068780199) | **PASS**, release F6 ativa, F5 intacta |
+| 40 ações tipadas, runtimes e 47/56 candidatos privados detetados | [Skill → GitHub → VPS → ZIP #42092496058](https://github.com/martaxi-boss/VPS/actions/runs/42092496058), `report.json.status=completed` + `artifacts/inventory.json` | **PASS:** 40/40 ações privadas, Python/Node/Java privados e 47/56 selecionados detetados |
+| Bibliotecas dinâmicas dos executores ELF | [Auditoria de 33 executáveis #42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679) | **PASS no âmbito amostrado:** 1 447 resoluções privadas, 13 Ubuntu base, 0 bibliotecas de aplicação externas ou em falta |
+| Higiene de releases e temporários | [Preview #42087327564](https://github.com/martaxi-boss/VPS/actions/runs/42087327564) → [apply #42087599243](https://github.com/martaxi-boss/VPS/actions/runs/42087599243) | **PASS:** duas releases antigas excluídas, **2 719 744 bytes adicionais livres medidos**, 0 diretórios temporários elegíveis, atual/fallback preservados |
+| Sete ambientes Python usam somente runtime privado | [Preview #42089682145](https://github.com/martaxi-boss/VPS/actions/runs/42089682145) → [apply #42089823880](https://github.com/martaxi-boss/VPS/actions/runs/42089823880) | **PASS:** **21 symlinks + 7 configurações** ajustados, **7/7** ambientes arrancaram e confirmaram `prefix`, `base_prefix` e interpretador dentro do Ferrari |
+| Quatro scripts Python e 13 links obsoletos | [Preview válida #42092208327](https://github.com/martaxi-boss/VPS/actions/runs/42092208327) → [apply #42092331962](https://github.com/martaxi-boss/VPS/actions/runs/42092331962) | **PASS:** quatro shebangs apontam para o Python privado, incluindo opções originais; treze ligações **já quebradas** de recursos opcionais Ferrari removidas, restantes ficheiros preservados |
+| Varrimento profundo integral dos diretórios Ferrari escolhidos | [VPS #42088052659, **tentativa 3**](https://github.com/martaxi-boss/VPS/actions/runs/42088052659), JSON pós-limpeza | **PASS:** **315 441 entradas**, **436 symlinks**, **0 externos**, **0 quebrados**, **0 para Python global**, **4 shebangs para Python privado**. `complete_under_budget=true` |
+| Provas funcionais de programas com shebang alterado | [Ansible inventário JSON #42092622311](https://github.com/martaxi-boss/VPS/actions/runs/42092622311), [Calibre Markdown→EPUB #42092650850](https://github.com/martaxi-boss/VPS/actions/runs/42092650850) | **PASS:** ambas as ações concluídas com `response.zip`; `hosts.json` e EPUB verdadeiros devolvidos |
+| Saúde dos serviços após a fase | [VPS #42092526699](https://github.com/martaxi-boss/VPS/actions/runs/42092526699), [issue #352](https://github.com/martaxi-boss/VPS/issues/352) | **PASS:** `AUDIT_ONLY`, `protected_services_unchanged=true`, `health_after=true`, sem cache elegível ou dados de aplicações eliminados |
+| Ausência de atalho legado Ferrari | Auditoria privada #42088052659 | **PASS:** `historical_alias=absent` |
 
-## Dezasseis aplicações globais ainda existentes
+Os scripts de intervenção foram fixados por SHA no workflow de administração Ferrari em `martaxi-boss/VPS`, com pedidos explícitos de pré-visualização e aplicação, verificação `current` antes/depois e fallback obrigatório. A migração dos venvs e a correção de links mantêm metadados de recuperação na própria `.runtime/`. Os resultados dos comandos GitHub não substituem a evidência operacional: os IDs acima incluem os testes reais.
 
-As versões APT do Ubuntu foram confirmadas na fotografia atual, não são automaticamente uma instalação do Ferrari e não devem ser confundidas com as cópias executáveis privadas do motor:
+## Limites e responsabilidade de limpeza da VPS
 
-`ansible`, `audacity`, `blender`, `calibre`, `darktable`, `gimp`, `kdenlive`, `librecad`, `libreoffice`, `obs-studio`, `openscad`, `openshot-qt`, `qgis`, `solvespace`, `synfigstudio` e `yt-dlp`.
+**Dezasseis programas APT globais continuam presentes no Ubuntu**: `ansible-core`, `audacity`, `blender`, `calibre`, `darktable`, `gimp`, `kdenlive`, `librecad`, `libreoffice-common`, `obs-studio`, `openscad`, `openshot-qt`, `qgis`, `solvespace`, `synfigstudio` e `yt-dlp`. O inventário `dpkg-query` atribuiu o pacote de cada executável, mas **não provou o consumidor ou proprietário exclusivo da instalação**. Por isso, não foram desinstalados; isso não constitui dependência operacional das 40 ações privadas Ferrari e não compromete o isolamento acima. Classificar e, se seguro, eliminar globalmente estes pacotes pertence à **Fase 9 — auditoria transversal de toda a VPS**, sem alterar por acidente PINK, Telegram, FADEGO, Low Cost, Project Leader ou os serviços base.
 
-Não foram identificados todos os seus consumidores ou a responsabilidade original pela instalação. Ausência de um processo numa fotografia pontual não comprova ausência de uso por tarefas agendadas, projetos independentes, serviços que arrancam sob pedido ou outras ferramentas. Por isso **zero pacotes APT removidos**. Os nove candidatos da shortlist ainda sem presença privada não são apresentados como operacionais no Ferrari.
+**Nove candidatos selecionados não foram detetados em instalação privada**: `ytdlp`, `librecad`, `qgis`, `audacity`, `obs`, `solvespace`, `synfig`, `openshot` e `penpot`. São declarados indisponíveis no Ferrari; integração funcional futura é matéria da Fase 8, não uma razão para recorrer silenciosamente aos binários globais.
 
-## Segurança dos restantes projetos
+As 315 441 entradas correspondem aos diretórios privados Ferrari cobertos pelo auditor. Não são uma varredura de todos os ficheiros do Ubuntu nem uma prova de execução completa das 56 ferramentas ou de todos os plugins opcionais. Linux mantém necessariamente kernel, loader, shell e bibliotecas fundamentais do SO. O inventário geral de `/opt` já esteve incompleto, por isso **a VPS inteira não recebe a classificação 100% limpa**; isso fica na Fase 9.
 
-O inventário vivo manteve em execução serviços nomeados `fadego-staging`, `lowcost-europa`, `pink-iptv-backend`, `pink-vpn`, `pm2-iptvpn-bot`, `pm2-telegram-robot-leads`, `nginx` e `postgresql@16-main`, além de serviços Ubuntu. A auditoria de saúde posterior confirmou que **os serviços protegidos permaneceram inalterados**. Esta confirmação não é uma prova funcional individual de todas as funcionalidades de cada aplicação.
+## Decisão
 
-O inventário de `/opt` ficou **INCOMPLETE**. Não afirmar que todas as referências externas, binários soltos, symlinks, scripts e dados órfãos foram encontrados. O script de auditoria profunda foi criado dentro do projeto Ferrari e testado em CI, mas **não foi executado nem instalado na VPS**.
-
-## Critério de passagem e decisão
-
-Para certificar formalmente o **fecho integral** da Fase 6, falta produzir prova VPS de: (1) varrimento das symlinks/interpretadores `PATH`, bibliotecas e plugins para os executores realmente usados, com resultados e limites; (2) inventário completo dos caminhos potencialmente Ferrari fora da pasta, incluindo `/opt`; (3) atribuição dos 16 pacotes globais por proprietário e consumidor e eliminação *somente* dos exclusivamente residuais cuja remoção seja comprovadamente segura; (4) pós-teste real 40/40 + Skill→ZIP, fallback e saúde dos serviços após quaisquer alterações.
-
-**Decisão responsável em 05/11/2026: Fase 6 ainda não certificada como concluída.** O núcleo de isolamento e execução é certificado, mas o fecho completo é **NO-GO**, sem avanço para a Fase 7. Não aceitar 100%, 10/10, nem desinstalações globais por inferência. Nenhum outro projeto foi alterado por esta certificação.
+**Fase 6 = CERTIFICADA, PASS no âmbito de isolamento e higienização do próprio Ferrari.** Todos os executores certificados, os 7 venvs, os 4 launchers corrigidos, a varredura total das raízes Ferrari selecionadas, a resposta da Skill, o fallback e a saúde pós-limpeza passaram. **A Fase 7 ainda não foi iniciada.** A manutenção dos 16 APT globais é uma reserva explícita de segurança e pertence ao trabalho transversal da Fase 9, não uma autorização para instalações fora da pasta Ferrari.
