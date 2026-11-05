@@ -104,7 +104,7 @@ display_aspect_den="9" frame_rate_num="25" frame_rate_den="1" colorspace="709"/>
             print("FERRARI_GUI_PASS="+action,flush=True)
         except Exception as exc:
             failed.append(action)
-            print("FERRARI_GUI_ERROR="+action+"|"+type(exc).__name__+": "+str(exc)[-1800:],flush=True)
+            print("FERRARI_GUI_ERROR="+action+"|"+type(exc).__name__+": "+str(exc)[-8500:],flush=True)
     print("FERRARI_GUI_RESULT="+json.dumps({"passed":passed,"failed":failed},sort_keys=True),flush=True)
     if failed:
         raise SystemExit(2)
