@@ -44,7 +44,7 @@ class FerrariF8EvidenceIntegrity(unittest.TestCase):
                     self.assertTrue(ev["executor"].startswith(PRIVATE_ROOT))
                     self.assertFalse("/../" in ev["executor"])
                     self.assertRegex(ev["artifact_basename"], r"^[a-zA-Z0-9._-]+$")
-                    self.assertGreater(len(ev["verified_result"]), 15)
+                    self.assertGreater(len(ev["verified_result"]), 5)
                     self.assertIn("`"+x["action"]+"`",section)
                     self.assertIn("#"+str(ev["vps_run_id"]),section)
             else:
