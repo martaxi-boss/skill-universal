@@ -192,7 +192,7 @@ def do(mode: str):
         "schema": 1, "phase": 6, "previous": {
             rel: {"config": d["config"],
                   "links": {k: item["old_link"] for k,item in d["links"].items()}}
-            for rel,d in envs.items(),
+            for rel,d in envs.items()
         },
     }
     # Store rollback metadata inside Ferrari before touching any links.
