@@ -98,8 +98,11 @@ class ToolRuntimeTests(unittest.TestCase):
                 orchestrator.validate_workflow({"version":1,"steps":[step]})
     def test_read_only_python_module_detection(self):
         from importlib.machinery import ModuleSpec
-        with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
-            self.assertIsNone(tool_runtime.python_module_location("opencv"))  # System Python is not private Ferrari
+        # Ignore the host's real Ferrari virtual environments so this test
+        # checks only that a global Python module is never accepted as private.
+        with patch.object(tool_runtime.runtime_discovery,"_site_packages",return_value=[]):
+            with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
+                self.assertIsNone(tool_runtime.python_module_location("opencv"))  # System Python is not private Ferrari
         self.assertIsNone(tool_runtime.python_module_location("not-a-python-package"))
 
     def test_existing_ocrmypdf_adapter_uses_pdf_and_no_shell(self):
