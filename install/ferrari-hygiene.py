@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Conservative Ferrari-only release cleanup; default report-only.
 
-Never touches any other project. Only 40-hex Ferrari release directories,
+Never touches any other project. Only verified Ferrari release directories and known disposable smoke folders,
 verified beneath /srv/projects/skill-universal/releases, can be pruned.
 """
 from __future__ import annotations
@@ -103,10 +103,8 @@ def clean(apply=False):
             if p.is_symlink():
                 raise RuntimeError("Unsafe Ferrari smoke symlink: "+name)
             if p.is_dir():
-                for base,dirs,files in os.walk(p,followlinks=False):
-                    for entry in dirs+files:
-                        if (Path(base)/entry).is_symlink():
-                            raise RuntimeError("Unsafe link within Ferrari smoke directory: "+name)
+                # fd-safe rmtree removes nested symlinks themselves, never
+                # their targets. The top-level directory is never a symlink.
                 scratch_targets.append(p)
     scratch_sizes={p.name:size(p) for p in scratch_targets}
     scratch_removed=[]
