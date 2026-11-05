@@ -2,7 +2,7 @@
 
 **Estado de referência: 05/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. Plano de fecho: [fases 5–10](docs/PLANO_FECHO_FERRARI_20261105.md). O resultado de CI não substitui um teste operacional na VPS.
 
-**Estado atual — Fase 6 em execução (05/11):** `current` = `146145d5ada9c13e368df18727e4dbf4f5807664`; fallback F5 = `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` (fallback anterior histórico: `87969badbde0a77c2c181bb9605357d51a4a30c0`). [VPS ativação #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [audit 33 ELF #42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679), saúde [#42079801582](https://github.com/martaxi-boss/VPS/actions/runs/42079801582) PASS. **40/40 ações privadas; 47/56 candidatos detetados. Fase 6 ainda não encerrada:** 16 aplicações globais sem prova de consumidor, sem remoções. [Relatório](docs/AUDITORIA_FASE6_20261105.md).
+**Estado atual — Fase 6 em execução (05/11):** `current` = `146145d5ada9c13e368df18727e4dbf4f5807664`; fallback F5 = `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` (fallback anterior histórico: `87969badbde0a77c2c181bb9605357d51a4a30c0`). [VPS ativação #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [audit 33 ELF #42079545679](https://github.com/martaxi-boss/VPS/actions/runs/42079545679), saúde [#42079801582](https://github.com/martaxi-boss/VPS/actions/runs/42079801582) PASS. **40/40 ações privadas; 47/56 candidatos detetados. Fase 6 ainda não encerrada:** 16 aplicações globais sem prova de consumidor, sem remoções. [Certificação formal parcial / NO-GO](docs/CERTIFICACAO_FASE6_20261105.md).
 
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
