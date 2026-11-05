@@ -40,7 +40,7 @@ PRIVATE_PYTHON="$ROOT/runtimes/python3.12/bin/python3.12"
 WORK="$(mktemp -d "$ROOT/.runtime/.private-office-20261105.XXXXXXXX")"
 cleanup() {
   case "$WORK" in "$ROOT"/.runtime/.private-office-20261105.*)
-    [[ -d "$WORK" && ! -L "$WORK" ]] && rm -rf -- "$WORK"
+    if [[ -d "$WORK" && ! -L "$WORK" ]]; then rm -rf -- "$WORK"; fi
     ;;
   esac
 }
