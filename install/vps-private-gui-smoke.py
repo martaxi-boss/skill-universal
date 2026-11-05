@@ -19,11 +19,11 @@ ACTIONS=("darktable-jpeg-tiff","krita-image-png","gimp-png-xcf",
          "scribus-text-publication","lmms-project-wav","kdenlive-mlt-mp4")
 
 def png(width=160,height=90):
-    raw=b"".join(b"\\x00"+b"\\xa9\\xd7\\xee"*width for _ in range(height))
+    raw=b"".join(b"\x00"+b"\xa9\xd7\xee"*width for _ in range(height))
     def chunk(name,data):
         return struct.pack(">I",len(data))+name+data+struct.pack(">I",zlib.crc32(name+data)&0xffffffff)
     header=struct.pack(">IIBBBBB",width,height,8,2,0,0,0)
-    return b"\\x89PNG\\r\\n\\x1a\\n"+chunk(b"IHDR",header)+chunk(b"IDAT",zlib.compress(raw))+chunk(b"IEND",b"")
+    return b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",header)+chunk(b"IDAT",zlib.compress(raw))+chunk(b"IEND",b"")
 
 def main():
     if len(sys.argv)<2 or not sys.argv[1].isdigit():
@@ -45,7 +45,7 @@ def main():
     subprocess.run([str(own/"bin/convert"),str(image),str(jpg)],
                    check=True,capture_output=True,timeout=30,env=env)
     text=work/"publication.txt"
-    text.write_text("Ferrari private publication\\n\\nUbuntu sandbox\\n")
+    text.write_text("Ferrari private publication\n\nUbuntu sandbox\n")
     mlt=work/"video.mlt"
     mlt.write_text('''<?xml version="1.0" encoding="utf-8"?>
 <mlt LC_NUMERIC="C" version="7.0.0" producer="playlist0">
