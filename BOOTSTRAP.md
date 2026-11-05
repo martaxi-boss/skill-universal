@@ -44,6 +44,14 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 
 **Ponte pinada:** o validador histórico rejeita kind=invoke de alguns IDs Android introduzidos depois. kind=auto com Zipalign devolveu ZIP real [#41856969562](https://github.com/martaxi-boss/VPS/actions/runs/41856969562). Não corrigir por alterações silenciosas da ligação SSH.
 
+## 4-A. Âmbito universal e portas de passagem
+
+O objetivo progressivo continua a incluir **CONSTRUÇÃO, CAD, BIM/IFC, 3D, web, aplicações, gráficos, vídeo, áudio, documentos, mapas e engenharia reversa autorizada**. Cobertura transversal ainda **NÃO IMPLEMENTADA** como certificação global: não confundir catálogo com resultado entregue.
+
+Estados que a seleção deve distinguir: DESCOBERTO → compatível com Ubuntu → dependências verificadas → **INSTALADO_VPS** → adaptador tipado → teste real → **DISPONIVEL_PELA_SKILL**. Apenas certificar cada fase com evidência correspondente.
+
+O workflow manual de deploy do repositório Ferrari mantém as fases **PRECHECK, DEPLOY e INSTALL_HEADLESS**; a via operacional já existente usa o workflow exclusivo do repositório VPS. Não executar deploy/instalação manual para repetir componentes funcionais ou contornar portas de segurança.
+
 ## 5. Pendências prioritárias
 
 1. **Sincronia de estado:** aferir por pedido de inventário somente de leitura a release realmente ativa, número atual de ações e executores privados; comparar com GitHub e com o pin do validador.
