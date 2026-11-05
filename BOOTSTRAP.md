@@ -2,7 +2,7 @@
 
 **Estado de referência: 05/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. Plano de fecho: [fases 5–10](docs/PLANO_FECHO_FERRARI_20261105.md). O resultado de CI não substitui um teste operacional na VPS.
 
-**Estado prevalecente — Fase 6 CERTIFICADA (05/11):** `current` = `146145d5ada9c13e368df18727e4dbf4f5807664`; fallback F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` (fallback histórico anterior `87969badbde0a77c2c181bb9605357d51a4a30c0`). [Certificado final](docs/CERTIFICACAO_FASE6_20261105.md): [auditoria VPS #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659) **315441 entradas, zero links externos/quebrados/Python global**; **40/40 ações, 7/7 venvs, 47/56 programas detetados**. Higiene e Skill→ZIP PASS. Os 16 APT globais não atribuídos ficam para Fase 9, sem fallback ao Ferrari. Fase 7 não iniciada.
+**Estado prevalecente — Fase 7 certificada (05/11):** `current` = `758e1b435317fa26277b332b75bc47c67910be81`; fallback F6 `146145d5ada9c13e368df18727e4dbf4f5807664` (F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`; histórico `87969badbde0a77c2c181bb9605357d51a4a30c0`). [Certificado F7](docs/CERTIFICACAO_FASE7_20261105.md): 274 testes CI PASS; [DAG VPS #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995) retoma privada; [Skill→ZIP #42099036932](https://github.com/martaxi-boss/VPS/actions/runs/42099036932) PASS. **40/40 ações, 7/7 venvs, 47/56 candidatos.** CPU/RAM hard e Ruflo multiagentes não certificados; 16 APT globais e remoção transversal ficam F9–F10.
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
@@ -14,8 +14,8 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 
 | Elemento | Prova e âmbito |
 |---|---|
-| **Release atual — Fase 6 CERTIFICADA** | `146145d5ada9c13e368df18727e4dbf4f5807664`; [CI Ferrari #42091895647](https://github.com/martaxi-boss/skill-universal/actions/runs/42091895647) 255 testes PASS; [deploy #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [auditoria #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659) PASS |
-| **VPS read-back + fallback** | `current` validado em [VPS #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659); fallback F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` preservado ([certificado F5](docs/CERTIFICACAO_FASE5_20261105.md)) |
+| **Release atual — Fase 7 CERTIFICADA no âmbito DAG** | `758e1b435317fa26277b332b75bc47c67910be81`; [ativação VPS #42098645092](https://github.com/martaxi-boss/VPS/actions/runs/42098645092), [DAG #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995), [CI 274 testes](https://github.com/martaxi-boss/skill-universal/actions/runs/42097832176) PASS |
+| **VPS read-back + fallback** | `current` e fallback F6 `146145d5ada9c13e368df18727e4dbf4f5807664` comprovados em [VPS #42098645092](https://github.com/martaxi-boss/VPS/actions/runs/42098645092); [certificado F6](docs/CERTIFICACAO_FASE6_20261105.md) |
 | **Auditoria inicial do isolamento — contexto histórico** | [VPS #42011202485](https://github.com/martaxi-boss/VPS/actions/runs/42011202485) identificou apenas **8 de 40 executores privados**. Esta lacuna **foi corrigida e retestada** em [VPS #42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124); manter a auditoria antiga apenas como comparação, não como estado atual |
 | **Inventário depois da correção — 05/11** | [VPS #42011461022](https://github.com/martaxi-boss/VPS/actions/runs/42011461022): 55/56 candidatos detetados, 40 ações; OpenCV identificado numa venv Docling **privada Ferrari**, sem depender da instalação global de Python para a sua deteção. Penpot continua ausente; `report.json` completed e ZIP PASS |
 | **Ponto 3 — CERTIFICAÇÃO FUNCIONAL (05/11)** | [Matriz e 7 execuções reais pela Skill](docs/CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md): web/browser, documentos, dados, imagem, áudio/vídeo, CAD/IFC/3D, orquestração e REA/Android, com limites por caso testado; sem certificar automaticamente todas as ferramentas |
@@ -62,7 +62,7 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 | Imagem/design | **PASS** — Inkscape SVG→PNG, GIMP XCF, Krita PNG, Darktable TIFF, Scribus PDF/SLA | Exportação headless sintética, não sessão GUI interativa completa |
 | Áudio/vídeo | **PASS** — LMMS WAV e MLT/Kdenlive MP4, FFmpeg/FFprobe em ficheiros reais | Não certifica projetos de edição complexos nem aceleração GPU |
 | CAD/BIM/3D | **PASS** — IFC semântico+geometria, OpenSCAD→STL, Blender→BLEND+GLB+PNG (ficheiros e render verificados) | Modelo 3D conceptual; não projeto de engenharia/obra certificado |
-| Automação | **PASS** — Ferrari DAG com cinco passos, paralelismo limitado e dependência real SVG→Inkscape PNG; sem coordenador na VPS | Não certifica agendamento permanente nem recuperação pós-reinício |
+| Automação | **PASS** — DAG com checkpoint, retoma em outro processo, paralelismo e [Skill→ZIP](https://github.com/martaxi-boss/VPS/actions/runs/42099036932), sem outro coordenador | Tempo cooperativo; CPU/RAM hard e agentes Ruflo ainda não certificados |
 | REA/Engenharia reversa | **PASS parcial** — REA privado analisou ELF e APK sintético; Ghidra/JADX possuem testes concretos anteriores | 229 nomes MCP não equivalem a 229 ferramentas testadas |
 | Android | **PASS parcial** — Apktool 3.0.3 construiu e descodificou APK sintético; ferramentas Android privadas verificadas | ADB e instalação real em telemóvel permanecem sem teste físico |
 
