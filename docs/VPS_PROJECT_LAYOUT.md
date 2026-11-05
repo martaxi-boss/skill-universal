@@ -1,5 +1,7 @@
 # Ferrari — mapa de instalacao isolada Ubuntu VPS
 
+> **Nota de 05/11/2026:** este mapa descreve a migração física e o symlink de compatibilidade em 03/11; o link histórico /home/ubuntu/.local/share/motor-ferrari foi retirado depois da migração dos launchers (merge Ferrari 292aeb7d). O estado corrente está em [BOOTSTRAP.md](../BOOTSTRAP.md). Não recriar o atalho com base neste relatório histórico.
+
 **GitHub:** `martaxi-boss/skill-universal` (Motor Ferrari).
 **Leitura e alteracao real:** 03-11-2026 via motor REA FINAL. Prova: [GitHub Actions #41714161162](https://github.com/martaxi-boss/VPS/actions/runs/41714161162).
 

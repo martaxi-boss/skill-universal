@@ -22,4 +22,4 @@ Apenas os níveis demonstrados podem ser anunciados. Nem 81 programas detetados 
 - REA privado: análise ELF/Android na VPS [#41654437939](https://github.com/martaxi-boss/VPS/actions/runs/41654437939) PASS e ELF via Skill [#41655035184](https://github.com/martaxi-boss/VPS/actions/runs/41655035184) PASS.
 - Inventário atual por Skill: [#41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249) PASS.
 
-Ainda NÃO está certificado: catálogo completo do REA, fornecedores profundos, todas as aplicações GUI interativas, modelos ComfyUI, Penpot e independência global do REA antigo. Não remover o legado com base nestas provas.
+Ainda NÃO está certificado: catálogo completo do REA, as 229 operações REA, todas as aplicações GUI interativas, modelos ComfyUI, Penpot e independência completa dos executores privados face a dependências globais do Ubuntu. Os REAs antigos foram removidos [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411); não reinstalar legado para esconder problemas.
