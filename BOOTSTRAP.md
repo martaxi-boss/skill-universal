@@ -66,7 +66,7 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 | REA/Engenharia reversa | **PASS parcial** — REA privado analisou ELF e APK sintético; Ghidra/JADX possuem testes concretos anteriores | 229 nomes MCP não equivalem a 229 ferramentas testadas |
 | Android | **PASS parcial** — Apktool 3.0.3 construiu e descodificou APK sintético; ferramentas Android privadas verificadas | ADB e instalação real em telemóvel permanecem sem teste físico |
 
-**CAD/3D privado (05/11):** no ponto 3 usaram-se `/usr/bin/openscad` e `/usr/bin/blender` (operações base, não as 40 ações tipadas). Depois, o proprietário comprovou em ConnectBot a instalação privada e `FERRARI_PRIVATE_CAD_REAL_SMOKE=PASS` com STL, BLEND, GLB e PNG. [Prova e limites](docs/CAD_PRIVADO_TESTE_MANUAL_20261105.md). **Release ativa por migrar; LibreOffice privado corrigido para cópia offline local, ainda por certificar na VPS. Skill→VPS→ZIP pendente.**
+**CAD/3D privado (05/11):** no ponto 3 usaram-se `/usr/bin/openscad` e `/usr/bin/blender` (operações base, não as 40 ações tipadas). Depois, o proprietário comprovou em ConnectBot a instalação privada e `FERRARI_PRIVATE_CAD_REAL_SMOKE=PASS` com STL, BLEND, GLB e PNG. [Prova e limites](docs/CAD_PRIVADO_TESTE_MANUAL_20261105.md). **Release ativa por migrar; LibreOffice privado instalado e DOCX→PDF real PASS (captura 15:22). Skill→VPS→ZIP pendente.**
 
 **Limites externos não bloqueantes:** dispositivo Android físico, Penpot sem instalação operacional, ComfyUI sem modelos, GUI totalmente interativa, fornecedores pagos e Hopper em modo de demonstração. Estas capacidades não recebem certificação por associação às ferramentas instaladas.
 
