@@ -34,6 +34,7 @@ ESSENTIAL_LIBS = {
     "linux-vdso.so.1","ld-linux-x86-64.so.2","libc.so.6",
     "libm.so.6","libdl.so.2","librt.so.1","libpthread.so.0",
     "libresolv.so.2","libnss_files.so.2","libgcc_s.so.1",
+    "libutil.so.1",
     "libstdc++.so.6","libz.so.1","libzstd.so.1",
 }
 
@@ -45,7 +46,7 @@ def inside(path: Path) -> bool:
         return False
 
 
-def dependencies(paths: list[Path], cap=22):
+def dependencies(paths: list[Path], cap=96):
     """Use Ubuntu's ldd for inspection only, never to launch an app workload."""
     records = []
     cli = Path("/usr/bin/ldd")
@@ -92,7 +93,7 @@ def dependencies(paths: list[Path], cap=22):
                               "resolved_to":location if location != "not found" else None})
         records.append({"tool":exe.name,"probe":"ldd_read_only",
                         "returncode":probe.returncode,
-                        "libraries":libraries[:100]})
+                        "libraries":libraries[:160]})
     return {"probe":"ldd_read_only","sampled":len(records),"records":records}
 
 
