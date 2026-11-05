@@ -1,6 +1,6 @@
 # Ferrari — plano de fecho do motor universal e isolamento total por projeto
 
-**Preparado em 05/11/2026.** Este documento detalha as **próximas fases 5–10** após os pontos 2 (40 ações tipadas privadas), 3 (certificação por domínio) e 4 (Skill empacotada/ponte testada). Não constitui autorização para operações destrutivas cegas nem prova de deploy; usar o [BOOTSTRAP](../BOOTSTRAP.md) e as execuções reais como fonte de estado.
+**Preparado em 05/11/2026; Fase 5 certificada no próprio dia.** Este documento detalha as **próximas fases 5–10** após os pontos 2 (40 ações tipadas privadas), 3 (certificação por domínio) e 4 (Skill empacotada/ponte testada). Não constitui autorização para operações destrutivas cegas nem prova de deploy; usar o [BOOTSTRAP](../BOOTSTRAP.md) e as execuções reais como fonte de estado.
 
 ## Contrato obrigatório, sem exceções de aplicação
 
@@ -11,7 +11,7 @@
 5. Cada fase começa com baseline e revisão de consumidores e só termina com **CI PASS + execução VPS real PASS + evidência de saída + higiene Ferrari-only + pós-teste de outros serviços**. Conservar rollback e não adicionar novas camadas.
 6. Nunca remover aplicações do Ubuntu, diretórios ou PM2 de outros projetos por parecerem duplicados. Para um pacote global, documentar **quem o instalou, quais processos/serviços o usam e quem ficaria afetado**. Se pertencer apenas ao Ferrari, migrar consumidores Ferrari para o privado, testar, remover o pacote global com rollback e voltar a testar. Se algum outro projeto ainda o usa, isolar primeiro esse projeto; só remover a cópia global após confirmar zero consumidores.
 
-## Linha de base observada em 05/11
+## Linha de base histórica antes da ativação em 05/11
 
 - Motor em produção **última confirmação explícita:** release `87969badbde0a77c2c181bb9605357d51a4a30c0` em `current` na auditoria VPS [#42044862915](https://github.com/martaxi-boss/VPS/actions/runs/42044862915), 14:25 UTC. Não há prova de ativação posterior; verificar de novo antes de mudar.
 - Candidato isolado em PR [#64](https://github.com/martaxi-boss/skill-universal/pull/64), SHA `eb2398c0b52b71f24abd39acdefbc67d3d13ff12`, CI [#42055880677](https://github.com/martaxi-boss/skill-universal/actions/runs/42055880677) **SUCCESS**, mas **sem confirmação de deploy/merge**.
@@ -21,7 +21,11 @@
 - O proprietário comprovou execução manual com caminhos privados de **Blender 4.5.15 LTS/OpenSCAD** (STL, BLEND, GLB, PNG) e **LibreOffice 24.2.7.2** (DOCX→PDF), em 05/11. [CAD](CAD_PRIVADO_TESTE_MANUAL_20261105.md) e [LibreOffice](CERTIFICACAO_LIBREOFFICE_PRIVADO_20261105.md). `javaldx` continua sem certificação Java; não bloqueou PDF.
 - Ruflo está no npm privado Ferrari, detetado como **instalado sem ação tipada**, mas funções multiagente, fornecedor de modelo e persistência **não certificados**. O instalador fixa `ruflo@3.71.0`; essa versão requer leitura real do manifest no host antes de declarar que é a instalada. O DAG nativo Ferrari já tem provas de execução.
 
-## Fase 5 — alinhar e ativar a release isolada
+## Fase 5 — CERTIFICADA (PASS, 05/11/2026)
+
+**Prova de fecho:** [certificado operacional](CERTIFICACAO_FASE5_20261105.md), com CI Ferrari [#42068518899](https://github.com/martaxi-boss/skill-universal/actions/runs/42068518899) e [#42068530678](https://github.com/martaxi-boss/skill-universal/actions/runs/42068530678), precheck VPS [#42066226440](https://github.com/martaxi-boss/VPS/actions/runs/42066226440), ativação real [#42066363098](https://github.com/martaxi-boss/VPS/actions/runs/42066363098), Skill→ZIP [#42066521890](https://github.com/martaxi-boss/VPS/actions/runs/42066521890), fault-injection do rollback em cópia privada na VPS [#42068780199](https://github.com/martaxi-boss/VPS/actions/runs/42068780199) e auditoria de saúde [#42066853562](https://github.com/martaxi-boss/VPS/actions/runs/42066853562), todos **PASS/SUCCESS**. Release ativa `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856`; fallback `87969badbde0a77c2c181bb9605357d51a4a30c0`. Rollback ensaiado **numa cópia**, sem introduzir falha na produção. Fase 6 ainda não iniciada.
+
+## Fase 5 — procedimento executado (histórico)
 
 **Trabalho:** ler `current` e fallback por execução GitHub Actions **somente de leitura**; comparar SHA, `main`, PR #64, a Skill portátil e os executáveis reais. Executar `install/vps-isolated-release.sh` com `--check` na VPS através de um **caminho autorizado do workflow existente**, sem pedir comandos ConnectBot ao proprietário. O script candidato verifica o código, 40 ações, CAD 3D, Office e um `response.zip`; corrigir qualquer incompatibilidade antes de mudar `current`. Usar a forma de deploy autenticada existente, sem alterar fingerprint/credenciais nem enfiar comandos genéricos de root na ponte.
 
@@ -78,5 +82,5 @@
 ## Estado resumido
 
 - **Confirmado:** instalação funcional e CI do Ferrari; 40 ações; DAG e provas reais em múltiplos domínios; Skill→GitHub→VPS→ZIP; Blender/OpenSCAD/LibreOffice privados testados pelo proprietário; higienização Ferrari anterior e caches VPS auditados.
-- **Ainda pendente:** deploy do candidato de isolamento em `current`; revisão de todos os caminhos globais/instaladores; persistência/retoma; função real do Ruflo; integração de capacidades não testadas; higienização integral da VPS e matriz de desinstalação.
+- **Ainda pendente após a Fase 5 certificada:** revisão de todos os caminhos globais/instaladores (Fase 6), persistência/retoma e função real do Ruflo (Fase 7), integração de capacidades não testadas (Fase 8), higienização integral da VPS (Fase 9), merge e instalação/verificação da Skill cliente e matriz de desinstalação (Fase 10). O deploy em `current` foi concluído e não permanece pendente.
 - **Não declarar 10/10 por antecedência:** só depois dos critérios objetivos das fases 5–10.
