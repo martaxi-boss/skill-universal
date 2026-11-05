@@ -41,9 +41,9 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
 
-## Provas funcionais individuais verificadas na Fase 8 (13/40)
+## Provas funcionais individuais verificadas na Fase 8 (25/40)
 
-Estas **13 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 27 ID continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+Estas **25 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 15 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
 
 | Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
 |---|---|---|---|
@@ -60,6 +60,21 @@ Estas **13 ações** foram efetivamente executadas pelo Ferrari privado na VPS, 
 | `strings-file-extract` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/strings` | [#42103286913](https://github.com/martaxi-boss/VPS/actions/runs/42103286913) | marca FERRARI_F8_SAFE_ELF_FIXTURE_2026 extraída |
 | `ripgrep-find-text` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/rg` | [#42102487995](https://github.com/martaxi-boss/VPS/actions/runs/42102487995) | Correspondência de Ferrari na linha 1 |
 | `inkscape-svg-png` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/inkscape` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | PNG válido de 960x1200 proveniente de SVG |
+
+| `pandoc-md-docx` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/pandoc` | [#42105045224](https://github.com/martaxi-boss/VPS/actions/runs/42105045224) | DOCX real ZIP assinado PK gerado de Markdown sintético |
+| `binwalk-scan` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/binwalk` | [#42104010500](https://github.com/martaxi-boss/VPS/actions/runs/42104010500) | ELF64 sintético identificado; assinaturas de compressão heurísticas não tomadas como prova |
+| `pdfinfo-report` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/pdfinfo` | [#42104494930](https://github.com/martaxi-boss/VPS/actions/runs/42104494930) | PDF sintético: 1 página A4 e versão 1.4 |
+| `radare2-binary-info` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/r2` | [#42104010500](https://github.com/martaxi-boss/VPS/actions/runs/42104010500) | radare2 identificou ELF64 x86-64 e metadados do ficheiro |
+| `vips-image-inspect` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/vipsheader` | [#42104715432](https://github.com/martaxi-boss/VPS/actions/runs/42104715432) | PNG de origem 8x8 e WebP de saída 8x8 reconhecidos em duas invocações |
+| `imagemagick-webp` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/convert` | [#42104715432](https://github.com/martaxi-boss/VPS/actions/runs/42104715432) | WEBP RIFF válido de 8 por 8 píxeis produzido a partir de PNG sintético |
+| `pdftotext-layout` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/pdftotext` | [#42104494930](https://github.com/martaxi-boss/VPS/actions/runs/42104494930) | Texto literal FERRARI FASE 8 PDF TESTE extraído do PDF |
+| `tshark-pcap-summary` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/tshark` | [#42104082188](https://github.com/martaxi-boss/VPS/actions/runs/42104082188) | Resumo TShark indicou um frame no PCAP sintético; não houve captura real de rede |
+| `typst-compile-pdf` | `/srv/projects/skill-universal/tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst` | [#42105075709](https://github.com/martaxi-boss/VPS/actions/runs/42105075709) | PDF real assinado %PDF gerado a partir de Typst sintético |
+| `duckdb-csv-profile` | `/srv/projects/skill-universal/.runtime/venvs/extended/duckdb/bin/python` | [#42105268489](https://github.com/martaxi-boss/VPS/actions/runs/42105268489) | DuckDB privado 2.0.0: perfil CSV com 3 linhas, duas colunas e amostra correta |
+| `polars-csv-profile` | `/srv/projects/skill-universal/.runtime/venvs/extended/polars/bin/python` | [#42105268489](https://github.com/martaxi-boss/VPS/actions/runs/42105268489) | Polars privado 2.1.0: perfil CSV com 3 linhas, duas colunas e amostra correta |
+| `calibre-md-epub` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ebook-convert` | [#42105045224](https://github.com/martaxi-boss/VPS/actions/runs/42105045224) | EPUB real ZIP assinado PK gerado de Markdown sintético |
+
+**Outras provas desta fase:** PDF sintético de uma página → `pdfinfo`, `pdftotext` e operação base `pdf-text`; PNG de 8×8 → WebP via ImageMagick → inspeção privada libvips; Markdown → DOCX Pandoc e EPUB Calibre; Typst → PDF; CSV → perfis DuckDB 2.0.0 e Polars 2.1.0; ELF sintético → Radare2 e Binwalk; PCAP sintético de um frame → TShark. O run CSV [#42105059671](https://github.com/martaxi-boss/VPS/actions/runs/42105059671) foi cancelado antes do trabalho e **não conta**; a prova válida é o reenvio isolado [#42105268489](https://github.com/martaxi-boss/VPS/actions/runs/42105268489). Todos os executáveis observados pertencem à árvore Ferrari.
 
 **Cadeias de produção:** `SVG → Inkscape PNG → {Tesseract OCR, ImageMagick identificar, libvips thumbnail}`; `WAV sintético → FFmpeg WAV → ffprobe` em entrada e saída; `ELF64 sintético não executável → readelf, objdump e strings`; `JSON → file/jq/ripgrep` em três trabalhadores paralelos. Todos os resultados ficaram em `/srv/projects/skill-universal/.runtime/` e nenhum input confidencial foi publicado.
 
