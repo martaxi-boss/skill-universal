@@ -25,3 +25,29 @@ A release ativa Ferrari manteve-se no SHA 758e1b435317fa26277b332b75bc47c67910be
 3. Classificar pequenos resíduos legados fora das pastas, agendamentos e integrações OS, com testes de saúde posteriores.
 
 **Não declarar Fase 9 completa até fechar estes pontos.** Nenhum novo coordenador ou Skill permanente foi criado.
+
+## Auditoria APT por consumidores — 05/11/2026
+
+Execução read-only [VPS #42132313840](https://github.com/martaxi-boss/VPS/actions/runs/42132313840), artefacto `vps-project-inventory.txt` recuperado e inspecionado:
+
+- **16/16 pacotes globais presentes.** O `apt-get -s purge` isolado de cada um devolveu `exit=0` e identificou somente o pacote solicitado como alvo direto da simulação. **Não foi aplicado nenhum `apt purge` real.**
+- **Zero processos a executar diretamente os binários globais identificados** no instante da leitura. A ausência de processo não prova ausência de consumidores futuros, dependências indiretas ou tarefas agendadas.
+- **3 163 ficheiros de código/configuração de projetos inspecionados** sem referências diretas detetadas aos nomes dos 16 pacotes. A pesquisa foi limitada a certas extensões e 1 200 ficheiros por projeto; `fadego` atingiu esse limite e vários diretórios de dependências/release foram excluídos. Isto não justifica apagar instalações globalmente por si só.
+- **8 famílias com alternativa privada já demonstrada no Ferrari:** LibreOffice, Ansible, GIMP, Blender, Kdenlive/MLT, Darktable, OpenSCAD, Calibre (o grau de cobertura funcional de cada alternativa é apenas o dos casos testados).
+- **8 famílias sem cópia privada certificada:** yt-dlp, LibreCAD, QGIS, Audacity, OBS Studio, SolveSpace, Synfig Studio e OpenShot. Preservar por agora até integração privada testada.
+- **Cautela:** `libreoffice`, `ansible` e outros nomes APT podem ser metapacotes ou depender de pacotes auxiliares; remover só o pacote nominal não equivale a eliminar todos os componentes globais nem a garantir reversibilidade. Fazer plano por pacote completo, com utilizadores e rollback antes de qualquer remoção.
+
+**Árvores externas classificadas, sem eliminação:** `/root/.cursor` (416 ficheiros, ~9,8 MB de conteúdo, última modificação há 54 dias), `/root/.vscode` (1 ficheiro), `/root/.claude-server-commander` (4 ficheiros, ~5,4 MB), `/home/ubuntu/.local/share/rea-github-transport` (1 ficheiro), `/home/ubuntu/.local/share/hopper` (zero ficheiros), `/root/migration-preserved` (17 ficheiros), `/root/migration-20260923` (265 ficheiros). Nenhuma referência direta de processo/cwd/FD encontrada na fotografia da auditoria; **não apagar dados, sessões, histórico ou segredos apenas por ausência de processos**.
+
+## Reconciliação de commits do GitHub — sem alterar produção
+
+Comparação autenticada dos commits locais registados na auditoria da VPS com a `main` dos seus repositórios:
+
+| Projeto | Código/release registado na VPS | GitHub main | Relação de histórico |
+|---|---|---|---|
+| `pink-iptv` | `ccccaf1eb25ca80936763f7d6a17e4dd00347e8a` | `32f3638d3e02f01558ef86127d865956f5c52e64` | A `main` tem 665 commits posteriores ao HEAD local; é preciso verificar a versão realmente usada pelo serviço |
+| `fadego` | `2b3554ec6e075e36041e44178f99535e00961b2f` | `7b2aea337605e145a9b5b3122bed399c48309b95` | A `main` tem 6 commits posteriores à release identificada |
+| `iptvpn-bot` | `6d26ea34a5843dae1e3d48e276ad05b54f614d1b` | `a5b4861af910e92763ab435cf8812cb856d4d700` | **Históricos divergentes:** 9 commits exclusivos à `main` e 2 exclusivos ao HEAD local; scripts PM2/deploy entre os ficheiros alterados |
+
+**Decisão:** NO-GO para `git reset --hard`, atualização automática, limpeza de branches ou deploy dos três projetos até confirmar o contrato de release, eventuais alterações locais e testes funcionais. O nome das pastas coincide com os repositórios; isso não demonstra identidade de versões em execução.
+
