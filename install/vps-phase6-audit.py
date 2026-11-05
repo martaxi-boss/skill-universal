@@ -51,6 +51,17 @@ def dependencies(paths: list[Path], cap=22):
     cli = Path("/usr/bin/ldd")
     if not cli.is_file():
         return {"probe":"unavailable","records":[]}
+    # Match the verified private execution environment. Plain ldd misses
+    # bundled libraries such as Darktable's libdarktable.so and can falsely
+    # classify Ferrari-owned FFmpeg/ImageMagick libs as system dependencies.
+    private_lib_dirs = (
+        HOME/"tools/ubuntu-cli/lib",
+        HOME/"tools/ubuntu-cli/lib/darktable",
+        HOME/"runtimes/python3.12/lib",
+        HOME/"tools/blender/lib",
+        HOME/"tools/libreoffice/program",
+    )
+    lib_path = ":".join(str(p) for p in private_lib_dirs if p.is_dir() and inside(p))
     for exe in paths[:cap]:
         try:
             with exe.open("rb") as stream:
@@ -58,7 +69,8 @@ def dependencies(paths: list[Path], cap=22):
                     continue
             probe = subprocess.run([str(cli), str(exe)], capture_output=True,
                                    text=True, timeout=7, check=False,
-                                   env={"PATH":"/usr/bin:/bin","LANG":"C"})
+                                   env={"PATH":"/usr/bin:/bin","LANG":"C",
+                                        "LD_LIBRARY_PATH":lib_path})
         except (OSError, subprocess.TimeoutExpired):
             records.append({"tool":exe.name,"probe":"unavailable"})
             continue
@@ -76,7 +88,8 @@ def dependencies(paths: list[Path], cap=22):
                 origin = "ubuntu_base"
             else:
                 origin = "system_or_other_project_review"
-            libraries.append({"library":lib,"origin":origin})
+            libraries.append({"library":lib,"origin":origin,
+                              "resolved_to":location if location != "not found" else None})
         records.append({"tool":exe.name,"probe":"ldd_read_only",
                         "returncode":probe.returncode,
                         "libraries":libraries[:100]})
