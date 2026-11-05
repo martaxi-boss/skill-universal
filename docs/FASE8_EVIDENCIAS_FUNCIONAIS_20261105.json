@@ -6,8 +6,8 @@
   "date": "2026-11-05",
   "status": "phase8_partial_real_evidence_not_full_certification",
   "registered_actions": 40,
-  "phase8_new_individual_e2e": 25,
-  "without_phase8_individual_e2e": 15,
+  "phase8_new_individual_e2e": 32,
+  "without_phase8_individual_e2e": 8,
   "sources": {
     "inventory": "https://github.com/martaxi-boss/VPS/actions/runs/42100973198",
     "manifest": "engine/tool_actions.json",
@@ -19,6 +19,14 @@
       42105045224,
       42105075709,
       42105268489
+    ],
+    "phase8_additional_runs": [
+      42106208050,
+      42106415524,
+      42106673246,
+      42107145362,
+      42107289996,
+      42107489642
     ]
   },
   "policy": "Only downloaded GitHub Actions response ZIP outputs count. No arbitrary global executable fallback or third-party project writes. Historical per-domain proof is separate.",
@@ -352,9 +360,16 @@
       "tool": "ansible",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42106208050,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42106208050",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/ansible-inventory",
+        "artifact_basename": "hosts.json",
+        "verified_result": "Inventário local sintético; grupo ferrari_test e host localhost identificados",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "tshark-pcap-summary",
@@ -504,9 +519,16 @@
       "tool": "darktable",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42107145362,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42107145362",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/darktable-cli",
+        "artifact_basename": "darktable-export.tif",
+        "verified_result": "JPEG sintético válido convertido em TIFF RGB de 16x16",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "krita-image-png",
@@ -514,9 +536,16 @@
       "tool": "krita",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42106415524,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42106415524",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/krita",
+        "artifact_basename": "krita-export.png",
+        "verified_result": "PNG real 8x8 com assinatura PNG produzido por Krita privado",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "gimp-png-xcf",
@@ -524,9 +553,16 @@
       "tool": "gimp",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42106415524,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42106415524",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/gimp-console-2.10",
+        "artifact_basename": "gimp-editable.xcf",
+        "verified_result": "Projeto editável XCF com assinatura gimp xcf v01",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "scribus-text-publication",
@@ -534,9 +570,16 @@
       "tool": "scribus",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42106673246,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42106673246",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/scribus",
+        "artifact_basename": "scribus-publication",
+        "verified_result": "Publicação Scribus com PDF real e ficheiro SLA editável",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "lmms-project-wav",
@@ -554,9 +597,16 @@
       "tool": "kdenlive",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42107289996,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42107289996",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/melt",
+        "artifact_basename": "mlt-video.mp4",
+        "verified_result": "MP4 real H.264/AAC de 2,005 segundos, 320x180",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "android-apksigner-verify",
@@ -584,9 +634,16 @@
       "tool": "zipalign",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42107489642,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42107489642",
+        "executor": "/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/zipalign",
+        "artifact_basename": "aligned.apk",
+        "verified_result": "ZIP sintético no formato de arquivo APK alinhado e íntegro; não instalável nem assinado",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "Ferrari F8 confirmed via downloaded inner ZIP; synthetic case only, no global executor"
     },
     {
       "action": "android-adb-install-apk",

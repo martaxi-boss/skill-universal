@@ -55,6 +55,9 @@
 
 ## Fase 8 — completar cobertura funcional por necessidades reais
 
+**EM CURSO — 32/40 ações tipadas com execução individual real e executores privados**, verificadas por ZIP/artefacto na [matriz F8](FASE8_MATRIZ_COBERTURA_20261105.md) e [base estruturada de provas](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json). Foram testados também PDF e MLT/MP4, DuckDB/Polars, CAD/3D e Office, usando ferramentas já instaladas na árvore `/srv/projects/skill-universal`. **8 ações não têm prova nova nesta fase**, sobretudo assinaturas/manifestos Android, REA específico, OCR PDF, LMMS e ADB físico; não fingir cobertura. A release operacional F7 permanece com fallback F6, sem dependências globais adicionadas. A Fase 8 NÃO está encerrada.
+
+
 **Trabalho:** relacionar as capacidades originais — web/full-stack, apps, imagem, vídeo, áudio, Office/OCR, CAD/BIM/IFC/3D, cartografia, dados, segurança/engenharia reversa legítima, automação — com **um caso real representativo**, entrada e saída. Reaproveitar as certificações do Ponto 3 sem as repetir desnecessariamente. Para ferramentas detetadas mas `installed_unintegrated`, decidir se precisam de adaptação ou se são dependências indiretas; não inflacionar contagens. REA tem 229 nomes MCP mas não 229 operações certificadas; continuar cobertura prioritária dos fornecedores quando fizer sentido.
 
 **Limites explícitos não escondidos:** Penpot ausente; ComfyUI CPU sem modelos certificados; Hopper demo sem licença comercial; GUI interativa total, GPU e ADB físico ainda sem prova. Integrar apenas quando for compatível e houver recursos/licença; não prometer cobertura absoluta de hardware/fornecedores indisponíveis. **Higiene após cada grupo:** apagar dependências/protótipos abandonados pertencentes ao Ferrari e guardar provas GitHub Actions/VPS/ZIP.

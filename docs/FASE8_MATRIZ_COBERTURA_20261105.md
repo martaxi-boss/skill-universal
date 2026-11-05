@@ -41,9 +41,9 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
 
-## Provas funcionais individuais verificadas na Fase 8 (25/40)
+## Provas funcionais individuais verificadas na Fase 8 (32/40)
 
-Estas **25 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 15 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+Estas **32 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 8 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
 
 | Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
 |---|---|---|---|
@@ -74,9 +74,35 @@ Estas **25 ações** foram efetivamente executadas pelo Ferrari privado na VPS, 
 | `polars-csv-profile` | `/srv/projects/skill-universal/.runtime/venvs/extended/polars/bin/python` | [#42105268489](https://github.com/martaxi-boss/VPS/actions/runs/42105268489) | Polars privado 2.1.0: perfil CSV com 3 linhas, duas colunas e amostra correta |
 | `calibre-md-epub` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ebook-convert` | [#42105045224](https://github.com/martaxi-boss/VPS/actions/runs/42105045224) | EPUB real ZIP assinado PK gerado de Markdown sintético |
 
+| `ansible-inventory-json` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ansible-inventory` | [#42106208050](https://github.com/martaxi-boss/VPS/actions/runs/42106208050) | Inventário local sintético; grupo ferrari_test e host localhost identificados |
+| `darktable-jpeg-tiff` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/darktable-cli` | [#42107145362](https://github.com/martaxi-boss/VPS/actions/runs/42107145362) | JPEG sintético válido convertido em TIFF RGB de 16x16 |
+| `krita-image-png` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/krita` | [#42106415524](https://github.com/martaxi-boss/VPS/actions/runs/42106415524) | PNG real 8x8 com assinatura PNG produzido por Krita privado |
+| `gimp-png-xcf` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/gimp-console-2.10` | [#42106415524](https://github.com/martaxi-boss/VPS/actions/runs/42106415524) | Projeto editável XCF com assinatura gimp xcf v01 |
+| `scribus-text-publication` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/scribus` | [#42106673246](https://github.com/martaxi-boss/VPS/actions/runs/42106673246) | Publicação Scribus com PDF real e ficheiro SLA editável |
+| `kdenlive-mlt-mp4` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/melt` | [#42107289996](https://github.com/martaxi-boss/VPS/actions/runs/42107289996) | MP4 real H.264/AAC de 2,005 segundos, 320x180 |
+| `android-zipalign-apk` | `/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/zipalign` | [#42107489642](https://github.com/martaxi-boss/VPS/actions/runs/42107489642) | ZIP sintético no formato de arquivo APK alinhado e íntegro; não instalável nem assinado |
+
 **Outras provas desta fase:** PDF sintético de uma página → `pdfinfo`, `pdftotext` e operação base `pdf-text`; PNG de 8×8 → WebP via ImageMagick → inspeção privada libvips; Markdown → DOCX Pandoc e EPUB Calibre; Typst → PDF; CSV → perfis DuckDB 2.0.0 e Polars 2.1.0; ELF sintético → Radare2 e Binwalk; PCAP sintético de um frame → TShark. O run CSV [#42105059671](https://github.com/martaxi-boss/VPS/actions/runs/42105059671) foi cancelado antes do trabalho e **não conta**; a prova válida é o reenvio isolado [#42105268489](https://github.com/martaxi-boss/VPS/actions/runs/42105268489). Todos os executáveis observados pertencem à árvore Ferrari.
 
 **Cadeias de produção:** `SVG → Inkscape PNG → {Tesseract OCR, ImageMagick identificar, libvips thumbnail}`; `WAV sintético → FFmpeg WAV → ffprobe` em entrada e saída; `ELF64 sintético não executável → readelf, objdump e strings`; `JSON → file/jq/ripgrep` em três trabalhadores paralelos. Todos os resultados ficaram em `/srv/projects/skill-universal/.runtime/` e nenhum input confidencial foi publicado.
+
+## Oito ações sem nova prova individual F8
+
+Abaixo permanece a distinção entre **execução previamente demonstrada por outro teste** e **teste individual nesta fase**:
+
+| Ação ainda não provada individualmente na F8 | Próxima porta / limite honesto |
+|---|---|
+| `ocrmypdf-searchable-pdf` | Testar PDF digitalizado sintético, OCR e saída pesquisável, com artefactos reais |
+| `apktool-decode-resources` | Requer APK seguro com recursos/manifesto válidos; não usar APKs de utilizadores em GitHub público |
+| `rea-elf-notes`, `rea-android-resources` | Existem testes anteriores de REA e MCP, mas estas ações tipadas pedem novos artefactos específicos |
+| `lmms-project-wav` | Já houve síntese sonora real na Fase 6, mas não foi repetida nesta ronda da F8 |
+| `android-apksigner-verify` | Precisa de APK realmente assinado; alinhamento ZIP não comprova assinatura |
+| `android-aapt2-manifest` | Exige APK válido com manifesto binário compilado; não confundir com ZIP genérico |
+| `android-adb-install-apk` | Não pode ser certificado sem dispositivo Android físico autorizado; não inventar instalação |
+
+A execução [#42106858184](https://github.com/martaxi-boss/VPS/actions/runs/42106858184) falhou devido a um **JPEG de teste corrompido no envio**; não representa falha do Darktable instalado. Foi refeita com 659 bytes íntegros, e [#42107145362](https://github.com/martaxi-boss/VPS/actions/runs/42107145362) produziu o TIFF verificado. Para `android-zipalign-apk`, a prova é apenas alinhamento de um **ZIP com extensão APK**, não uma aplicação instalável ou assinada.
+
+**Nesta ronda não se adicionaram dependências globais ou serviços à VPS; os testes usaram os executores já privados do Ferrari.** A higiene destrutiva não é necessária para provar funções, e permanece limitada a resíduos próprios com identificação e recuperação.
 
 ## Nove candidatos ainda não privados
 
