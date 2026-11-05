@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# Ferrari-only LibreOffice Standard AppImage, from the LibreOffice-endorsed
-# LibreItalia distribution. No apt install, snap, sudo, global writes, or
-# dependency sharing with another project.
+# Ferrari-only OFFLINE LibreOffice relocation from the already-installed
+# Ubuntu package. Read-only system source; all written files stay in Ferrari.
+# No APT install, network, sudo, shared app files or edits to other projects.
 set -Eeuo pipefail
 umask 077
 
 ROOT="/srv/projects/skill-universal"
 DEST="$ROOT/tools/libreoffice"
-URL="https://appimages.libreitalia.org/LibreOffice-previous.standard-x86_64.AppImage"
 . /etc/os-release
 [[ "${ID:-}" == ubuntu && "${VERSION_ID:-}" == 24.04 && "$(uname -m)" == x86_64 ]] || {
   echo FERRARI_PRIVATE_OFFICE_UNSUPPORTED_PLATFORM >&2; exit 2;
@@ -33,7 +32,7 @@ fi
 [[ "$(df -Pk "$ROOT" | awk 'END{print $4}')" -ge 3145728 ]] || {
   echo FERRARI_PRIVATE_OFFICE_DISK_BELOW_3GIB >&2; exit 3;
 }
-for exe in curl sha256sum timeout; do command -v "$exe" >/dev/null || exit 4; done
+for exe in timeout; do command -v "$exe" >/dev/null || exit 4; done
 PRIVATE_PYTHON="$ROOT/runtimes/python3.12/bin/python3.12"
 [[ -x "$PRIVATE_PYTHON" ]] || { echo FERRARI_PRIVATE_OFFICE_PYTHON_MISSING >&2; exit 4; }
 
@@ -46,52 +45,79 @@ cleanup() {
 }
 trap cleanup EXIT
 
-mkdir -p "$WORK/office/program" "$WORK/test" "$WORK/test/profile" "$WORK/test/out"
-APPIMAGE="$WORK/office/LibreOffice-previous.standard-x86_64.AppImage"
-curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
-  --retry 2 --connect-timeout 20 --max-time 1500 "$URL" -o "$APPIMAGE"
-[[ -s "$APPIMAGE" ]] || { echo FERRARI_PRIVATE_OFFICE_DOWNLOAD_EMPTY >&2; exit 5; }
-HASH="$(sha256sum "$APPIMAGE" | awk '{print $1}')"
-[[ "$HASH" =~ ^[a-f0-9]{64}$ ]] || exit 5
-chmod 700 "$APPIMAGE"
-(
-  cd "$WORK/office"
-  timeout 180 "$APPIMAGE" --appimage-extract > "$WORK/extract.log"
-)
-[[ -x "$WORK/office/squashfs-root/AppRun" ]] || {
-  echo FERRARI_PRIVATE_OFFICE_EXTRACTION_FAILED >&2; exit 6;
-}
-"$PRIVATE_PYTHON" - "$WORK/office/squashfs-root" <<'PYLINKS'
-from pathlib import Path
-import sys
-root=Path(sys.argv[1]).resolve(strict=True)
-for candidate in root.rglob('*'):
-    if candidate.is_symlink() and not candidate.resolve(strict=False).is_relative_to(root):
-        raise RuntimeError("FERRARI_PRIVATE_OFFICE_EXTERNAL_SYMLINK")
-PYLINKS
 
-cat > "$WORK/office/program/soffice" <<'WRAPPER'
-#!/usr/bin/env bash
-set -Eeuo pipefail
-PREFIX="$(cd "$(dirname "$0")/.." && pwd -P)"
-[[ "$PREFIX" == "/srv/projects/skill-universal/tools/libreoffice" ]] || {
-  # During installation, this wrapper is tested inside Ferrari .runtime.
-  [[ "$PREFIX" == /srv/projects/skill-universal/.runtime/.private-office-20261105.*/office ]] || exit 3
+# The Ubuntu package source is read-only. The program AND application assets
+# are copied, and hardcoded FHS references are changed in the private copy.
+SOURCE="/usr/lib/libreoffice"
+[[ -x "$SOURCE/program/soffice" && -f "$SOURCE/program/soffice.bin" ]] || {
+  echo FERRARI_PRIVATE_OFFICE_LOCAL_SOURCE_MISSING >&2; exit 5;
 }
-exec "$PREFIX/squashfs-root/AppRun" "$@"
-WRAPPER
-chmod 700 "$WORK/office/program/soffice"
+mkdir -p "$WORK/test" "$WORK/test/profile" "$WORK/test/out" "$WORK/test/run"
+chmod 700 "$WORK/test/run"
+
+"$PRIVATE_PYTHON" - "$WORK/office" <<'PYCOPY'
+from pathlib import Path
+import hashlib
+import shutil
+import sys
+
+target=Path(sys.argv[1])
+sources=(
+    (Path('/usr/lib/libreoffice'), target),
+    (Path('/usr/share/libreoffice'), target/'share'),
+    (Path('/etc/libreoffice'), target/'etc'),
+)
+for src,dst in sources:
+    if src.is_dir() and not src.is_symlink():
+        shutil.copytree(src,dst,symlinks=False,
+                        ignore_dangling_symlinks=True,dirs_exist_ok=True)
+
+def patch(name,old,new):
+    path=target/'program'/name
+    content=path.read_text(encoding='utf-8')
+    if old not in content:
+        raise RuntimeError("FERRARI_PRIVATE_OFFICE_RELOCATION_PATTERN_MISSING="+name)
+    path.write_text(content.replace(old,new,1),encoding='utf-8')
+
+patch('fundamentalrc',
+      'BRAND_BASE_DIR=file:///usr/lib/libreoffice',
+      'BRAND_BASE_DIR=${ORIGIN}/..')
+patch('sofficerc',
+      'FHS_CONFIG_FILE=file:///etc/libreoffice/sofficerc',
+      'FHS_CONFIG_FILE=${ORIGIN}/../etc/sofficerc')
+for path in target.rglob('*'):
+    if path.is_symlink():
+        raise RuntimeError("FERRARI_PRIVATE_OFFICE_EXTERNAL_SYMLINK="+str(path))
+program=target/'program/soffice.bin'
+original=Path('/usr/lib/libreoffice/program/soffice.bin')
+if not program.is_file() or program.stat().st_size<1024:
+    raise RuntimeError("FERRARI_PRIVATE_OFFICE_CORE_MISSING")
+digest=hashlib.sha256(program.read_bytes()).hexdigest()
+if digest != hashlib.sha256(original.read_bytes()).hexdigest():
+    raise RuntimeError("FERRARI_PRIVATE_OFFICE_SOURCE_MISMATCH")
+(target/'source.txt').write_text(
+    'Origin: existing Ubuntu LibreOffice package (read-only, local copy)\\n'
+    'System app files modified: NO\\n'
+    'Project destination: /srv/projects/skill-universal/tools/libreoffice\\n'
+    'SHA256 copied soffice.bin: '+digest+'\\n'
+    'Bootstrap: project-relative (no /usr/lib/libreoffice or /etc/libreoffice)\\n'
+    'Vendor signature: not verified by this local-copy script\\n',
+    encoding='utf-8')
+print("FERRARI_PRIVATE_OFFICE_LOCAL_COPY=PASS")
+PYCOPY
+
 export HOME="$WORK/test"
 export XDG_CONFIG_HOME="$WORK/test/config"
 export XDG_CACHE_HOME="$WORK/test/cache"
 export XDG_DATA_HOME="$WORK/test/data"
 export TMPDIR="$WORK/test"
-export SAL_USE_VCLPLUGIN=gen
+export SAL_USE_VCLPLUGIN=svp
 export QT_QPA_PLATFORM=offscreen
+export XDG_RUNTIME_DIR="$WORK/test/run"
 
 VERSION="$(timeout 90 "$WORK/office/program/soffice" --version)"
 printf 'FERRARI_PRIVATE_OFFICE_VERSION=%s\n' "$VERSION"
-[[ "$VERSION" == *"LibreOffice 26.2."* ]] || {
+[[ "$VERSION" == LibreOffice\ * ]] || {
   echo FERRARI_PRIVATE_OFFICE_UNEXPECTED_VERSION >&2; exit 7;
 }
 "$PRIVATE_PYTHON" - "$WORK/test/demo.docx" <<'PYDOCX'
@@ -127,17 +153,7 @@ with p.open("rb") as f:
     assert f.read(5)==b"%PDF-", "FERRARI_OFFICE_PDF_INVALID"
 print("FERRARI_PRIVATE_OFFICE_PDF_TEST=PASS")
 PYPDF
-cat > "$WORK/office/source.txt" <<EOF
-Origin: The Document Foundation endorsed LibreItalia AppImage (Standard)
-Source URL: $URL
-Retrieved UTC: $(date -u +%FT%TZ)
-SHA256: $HASH
-Verification scope: HTTPS source plus local SHA256 inventory; vendor signature not verified
-Test: headless DOCX to PDF performed successfully before activation
-EOF
-# Drop the downloaded archive; keep only the extracted application and its
-# launcher inside the project. No temporary files or profiles outside Ferrari.
-rm -f -- "$APPIMAGE"
+# The staged local copy is activated inside Ferrari after its PDF test.
 [[ ! -e "$DEST" && ! -L "$DEST" ]] || { echo FERRARI_OFFICE_DEST_RACE >&2; exit 8; }
 mv -- "$WORK/office" "$DEST"
 [[ -x "$DEST/program/soffice" ]] || exit 8
