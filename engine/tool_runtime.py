@@ -453,6 +453,9 @@ def invoke(action,source,folder,query=None):
             env["QT_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/qt5/plugins")
             if x["tool"] in {"krita","scribus","lmms"}:
                 env["QT_QPA_PLATFORM_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/qt5/plugins/platforms")
+            if x["tool"]=="krita":
+                env["KRITA_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/kritaplugins")
+                env["QT_PLUGIN_PATH"]=os.pathsep.join((str(PRIVATE_CLI_ROOT/"lib/kritaplugins"),str(PRIVATE_CLI_ROOT/"lib/qt5/plugins")))
             if x["tool"]=="darktable":
                 env["DARKTABLE_DATADIR"]=str(PRIVATE_CLI_ROOT/"share/darktable")
                 env["DARKTABLE_MODULEDIR"]=str(PRIVATE_CLI_ROOT/"lib/darktable")
