@@ -323,7 +323,8 @@ def invoke(action,source,folder,query=None):
             env["GVBINDIR"]=str(PRIVATE_CLI_ROOT/"lib/graphviz")
         if x["tool"]=="imagemagick":
             env["MAGICK_CONFIGURE_PATH"]=str(PRIVATE_CLI_ROOT/"etc/ImageMagick-6")
-            env["MAGICK_CODER_MODULE_PATH"]=str(PRIVATE_CLI_ROOT/"lib/ImageMagick-6.9.11/modules-Q16/coders")
+            env["MAGICK_CODER_MODULE_PATH"]=str(PRIVATE_CLI_ROOT/"lib/ImageMagick/coders")
+            env["MAGICK_FILTER_MODULE_PATH"]=str(PRIVATE_CLI_ROOT/"lib/ImageMagick/filters")
         if x["tool"]=="vips":
             env["VIPS_PLUGIN_PATH"]=str(PRIVATE_CLI_ROOT/"lib/vips-modules-8.15")
         if x["tool"]=="tshark":
