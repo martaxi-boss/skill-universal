@@ -1,6 +1,8 @@
 """F7 Ferrari only: persistent DAG, replay safety, isolation and cooperative quotas."""
 import json
+import itertools
 import os
+from types import SimpleNamespace
 from pathlib import Path
 import tempfile
 import threading
@@ -206,9 +208,10 @@ class FerrariPhase7Tests(unittest.TestCase):
     def test_cooperative_timeout_blocks_future_wave(self):
         plan = {"version": 1, "steps": [step("one"),
                                         step("two", depends_on=["one"])]}
+        clock = itertools.chain([0, 0], itertools.repeat(2))
         with patch.object(orchestrator.ferrari, "run", side_effect=svg_runner):
-            with patch.object(orchestrator.time, "monotonic",
-                              side_effect=[0, 0, 2]):
+            with patch.object(orchestrator, "time",
+                              SimpleNamespace(monotonic=lambda: next(clock))):
                 response = orchestrator.orchestrate(
                     plan, self.workspace, execute=True,
                     max_runtime_seconds=1)
