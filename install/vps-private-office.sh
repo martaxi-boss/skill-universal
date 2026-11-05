@@ -48,7 +48,7 @@ trap cleanup EXIT
 
 mkdir -p "$WORK/office/program" "$WORK/test" "$WORK/test/profile" "$WORK/test/out"
 APPIMAGE="$WORK/office/LibreOffice-previous.standard-x86_64.AppImage"
-curl --fail --silent --show-error --location --proto '=https' \
+curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
   --retry 2 --connect-timeout 20 --max-time 1500 "$URL" -o "$APPIMAGE"
 [[ -s "$APPIMAGE" ]] || { echo FERRARI_PRIVATE_OFFICE_DOWNLOAD_EMPTY >&2; exit 5; }
 HASH="$(sha256sum "$APPIMAGE" | awk '{print $1}')"
