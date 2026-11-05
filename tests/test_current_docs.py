@@ -44,12 +44,16 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
         for doc in (bootstrap, readme, sk, portable):
-            self.assertIn("b2869e33", doc)
             self.assertIn("292aeb7d", doc)
             self.assertIn("Hopper", doc)
             self.assertNotIn("é um link exclusivo", doc)
+        # Historic code SHAs are not immutable requirements of the live snapshot.
+        for doc in (readme, sk, portable):
+            self.assertIn("b2869e33", doc)
+        self.assertIn("87969badbde0a77c2c181bb9605357d51a4a30c0", bootstrap)
+        self.assertIn("42030605124", bootstrap)
+        self.assertIn("FERRARI_PRIVATE_EXECUTORS=40/40_PASS", bootstrap)
         self.assertIn("41981152670", bootstrap)
-        self.assertIn("41981478159", bootstrap)
         self.assertIn("41840478411", bootstrap)
 
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
