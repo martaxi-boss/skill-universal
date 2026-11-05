@@ -302,7 +302,15 @@ def install() -> dict:
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--apply", action="store_true")
+    p.add_argument("--python-only", action="store_true")
     args = p.parse_args()
+    if args.python_only:
+        if not ROOT.is_dir() or ROOT.is_symlink() or TARGET.is_symlink() or not TARGET.is_dir():
+            raise RuntimeError("Ferrari private project must exist")
+        result=install_private_python_modules()
+        print("FERRARI_PRIVATE_PYTHON_MODULES=PASS")
+        print(json.dumps(result,sort_keys=True))
+        return
     if not args.apply:
         print(json.dumps({"mode": "preview", "target": str(TARGET), "binaries": BINARIES}))
         return
