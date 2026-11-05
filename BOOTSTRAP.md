@@ -66,7 +66,7 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 | REA/Engenharia reversa | **PASS parcial** — REA privado analisou ELF e APK sintético; Ghidra/JADX possuem testes concretos anteriores | 229 nomes MCP não equivalem a 229 ferramentas testadas |
 | Android | **PASS parcial** — Apktool 3.0.3 construiu e descodificou APK sintético; ferramentas Android privadas verificadas | ADB e instalação real em telemóvel permanecem sem teste físico |
 
-**Nota de isolamento observada pelo teste de 3D:** os cinco passos do DAG passaram, mas as operações base `cad-stl` e `blender-house` executaram `/usr/bin/openscad` e `/usr/bin/blender`, respetivamente. Não confundir estas operações base com a certificação **40/40 das ações tipadas com executores privados** do ponto 2. A dependência destes dois executáveis do Ubuntu continua documentada; não declarar isolamento físico total de todas as operações base.
+**CAD/3D privado (05/11):** no ponto 3 usaram-se `/usr/bin/openscad` e `/usr/bin/blender` (operações base, não as 40 ações tipadas). Depois, o proprietário comprovou em ConnectBot a instalação privada e `FERRARI_PRIVATE_CAD_REAL_SMOKE=PASS` com STL, BLEND, GLB e PNG. [Prova e limites](docs/CAD_PRIVADO_TESTE_MANUAL_20261105.md). **A release ativa ainda não foi migrada; LibreOffice privado e Skill→VPS→ZIP continuam pendentes.**
 
 **Limites externos não bloqueantes:** dispositivo Android físico, Penpot sem instalação operacional, ComfyUI sem modelos, GUI totalmente interativa, fornecedores pagos e Hopper em modo de demonstração. Estas capacidades não recebem certificação por associação às ferramentas instaladas.
 
@@ -78,13 +78,6 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 **Pendentes de prova de produto final:** aplicações GUI totalmente interativas; ComfyUI CPU sem modelos; Penpot sem Docker operacional; dispositivo físico para ADB; funções pagas da demonstração do Hopper. O branch PR [#43](https://github.com/martaxi-boss/skill-universal/pull/43) permanece aberto e deve ser reavaliado contra as funções Calibre/Darktable já certificadas antes de qualquer merge.
 
 **Ponte pinada:** o validador histórico rejeita kind=invoke de alguns IDs Android introduzidos depois. kind=auto com Zipalign devolveu ZIP real [#41856969562](https://github.com/martaxi-boss/VPS/actions/runs/41856969562). Não corrigir por alterações silenciosas da ligação SSH.
-
-## 4-B. Prova manual CAD/3D privada e migração Office (05/11/2026)
-
-- **Instalação privada efetuada pelo proprietário:** saída ConnectBot às 14:40 com `FERRARI_PRIVATE_CAD_INSTALL=PASS` e Blender 4.5.15 LTS. Os instaladores usados guardam as ferramentas específicas apenas em `/srv/projects/skill-universal/tools/`.
-- **Render real em executores privados:** captura ConnectBot às 14:50 com `FERRARI_PRIVATE_CAD_REAL_SMOKE=PASS`, `FERRARI_SMOKE_ONLY_PRIVATE_RUNTIME=PASS`, STL 1449 bytes, BLEND 578223 bytes, GLB 9644 bytes e PNG 196500 bytes. O script guarda trabalho temporário em `.runtime/` e limpa-o ao terminar. [Transcrição factual e limites](docs/CAD_PRIVADO_TESTE_MANUAL_20261105.md). **Esta prova é do teste manual no servidor**, não de um novo deploy ativo nem de uma execução Skill→VPS→ZIP.
-- **Próximo componente:** `install/vps-private-office.sh` prepara LibreOffice Standard AppImage em `tools/libreoffice/`, a partir da distribuição LibreItalia apresentada nos métodos alternativos de LibreOffice. Faz DOCX→PDF real antes de o publicar no projeto; não executa APT nem escreve fora do Ferrari. A assinatura criptográfica da origem não é verificada por esse script, pelo que requer análise da proveniência e teste real antes da ativação.
-- **Porta de ativação:** não publicar a nova release que impede fallbacks globais enquanto LibreOffice e os restantes adaptadores não tiverem executores privados testados; preservar `current` e fallback. Não remover pacotes globais existentes até confirmar que outros projetos não dependem deles.
 
 ## 4-A. Âmbito universal e portas de passagem
 
