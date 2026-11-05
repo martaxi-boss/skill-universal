@@ -181,6 +181,24 @@ class FerrariPhase7Tests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "symlink"):
                 orchestrator.orchestrate(self.plan, str(shortcut), execute=True)
 
+    def test_live_scope_accepts_only_intra_project_aliases(self):
+        base = Path(self.temp.name) / "fake-ferrari"
+        source = base / ".runtime/real"
+        source.mkdir(parents=True)
+        alias = base / ".runtime/alias"
+        alias.symlink_to(source, target_is_directory=True)
+        with patch.object(orchestrator, "_production_root", return_value=base.resolve()):
+            accepted = orchestrator._owned_workspace(str(alias / "job"))
+            self.assertEqual(accepted, source / "job")
+            with self.assertRaisesRegex(ValueError, "inside the isolated project"):
+                orchestrator._owned_workspace(str(Path(self.temp.name)/"other-project"))
+            outside = Path(self.temp.name) / "external-root"
+            outside.mkdir()
+            bad = base / ".runtime/external-alias"
+            bad.symlink_to(outside, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "inside the isolated project"):
+                orchestrator._owned_workspace(str(bad / "job"))
+
     def test_parallel_waves_still_run_without_second_coordinator(self):
         plan = {"version": 1, "steps": [step("a"), step("b")]}
         current = 0
