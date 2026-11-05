@@ -514,7 +514,7 @@ def invoke(action,source,folder,query=None):
             tmp=home/"tmp"
             runtime=home/"runtime"
             tmp.mkdir(parents=True,exist_ok=True)
-            runtime.mkdir(mode=0o700)
+            runtime.mkdir(mode=0o700,exist_ok=True)
             env["TMPDIR"]=str(tmp)
             env["XDG_RUNTIME_DIR"]=str(runtime)
             env["QT_QPA_PLATFORM"]="xcb"
