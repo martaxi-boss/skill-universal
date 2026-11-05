@@ -7,6 +7,7 @@ When FERRARI_PHASE5_LIVE_ROOT is set, read the active VPS script directly.
 from __future__ import annotations
 
 import os
+import hashlib
 from pathlib import Path
 import shlex
 import subprocess
@@ -14,6 +15,7 @@ import tempfile
 import unittest
 
 EXPECTED_ACTIVE_SHA = "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
+EXPECTED_SCRIPT_BLOB = "e64669da13afd55dce3f0d6c368aa17ebec2561c"
 LIVE_ROOT = os.environ.get("FERRARI_PHASE5_LIVE_ROOT")
 ROOT = (Path(LIVE_ROOT) if LIVE_ROOT else Path(__file__).resolve().parents[1]).resolve()
 SCRIPT = (ROOT / "current/install/vps-isolated-release.sh"
@@ -22,7 +24,11 @@ SCRIPT = (ROOT / "current/install/vps-isolated-release.sh"
 
 def release_shell_blocks():
     """Extract UNCHANGED rollback and atomic switch statements from real source."""
-    source = SCRIPT.read_text(encoding="utf-8")
+    data = SCRIPT.read_bytes()
+    # Git blob hash confirms that the tested bytes are the deployed source.
+    blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\0" + data).hexdigest()
+    assert blob == EXPECTED_SCRIPT_BLOB, "FERRARI_PHASE5_ACTIVE_SCRIPT_BLOB_MISMATCH"
+    source = data.decode("utf-8")
     begin = source.index("cleanup() {\n")
     end = source.index("\ntrap cleanup EXIT", begin) + len("\ntrap cleanup EXIT")
     cleanup = source[begin:end]
