@@ -45,7 +45,8 @@ class F6FinalHygiene(unittest.TestCase):
         for i,rel in enumerate(self.module.LAUNCHERS):
             p=self.root/rel
             p.parent.mkdir(parents=True,exist_ok=True)
-            p.write_bytes((b"#!/usr/bin/python3.12\n" if i==2 else b"#!/usr/bin/python3\n")+b"print('ok')\n")
+            first=(b"#!/usr/bin/python3.12 -s\n" if i==2 else b"#!/usr/bin/python3 -Es\n" if i==0 else b"#!/usr/bin/python3\n")
+            p.write_bytes(first+b"print('ok')\n")
             p.chmod(0o755)
         for rel in self.module.DEADLINKS:
             p=self.root/rel
@@ -66,7 +67,9 @@ class F6FinalHygiene(unittest.TestCase):
         self.assertEqual(r["service_changes"],0)
         self.assertTrue(self.backup.is_file())
         for rel in self.module.LAUNCHERS:
-            self.assertTrue((self.root/rel).read_bytes().startswith(("#!"+str(self.python)+"\n").encode()))
+            self.assertTrue((self.root/rel).read_bytes().startswith(("#!"+str(self.python)).encode()))
+        self.assertTrue((self.root/self.module.LAUNCHERS[0]).read_bytes().startswith(("#!"+str(self.python)+" -Es\n").encode()))
+        self.assertTrue((self.root/self.module.LAUNCHERS[2]).read_bytes().startswith(("#!"+str(self.python)+" -s\n").encode()))
         for rel in self.module.DEADLINKS:
             self.assertFalse((self.root/rel).is_symlink())
 
