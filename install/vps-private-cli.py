@@ -220,7 +220,8 @@ def install() -> dict:
         "darktable-cli": (("/usr/share/darktable", "share/darktable"),
                              ("/usr/lib/x86_64-linux-gnu/darktable", "lib/darktable")),
         "krita": (("/usr/share/krita", "share/krita"),
-                  ("/usr/share/mime", "share/mime")),
+                  ("/usr/share/mime", "share/mime"),
+                  ("/usr/lib/x86_64-linux-gnu/kritaplugins", "lib/kritaplugins")),
         "gimp-console-2.10": (("/usr/share/gimp", "share/gimp"),
                               ("/usr/lib/gimp/2.0", "lib/gimp/2.0")),
         "scribus": (("/usr/share/scribus", "share/scribus"),),
@@ -257,7 +258,7 @@ def install() -> dict:
     # GUI and MLT load native plugin libraries at runtime. Include the plugin
     # dependencies inside Ferrari rather than borrowing another project copy.
     optional_plugin_deps=set()
-    modules=(TARGET/"lib/mlt-7", TARGET/"lib/lmms", TARGET/"lib/gimp/2.0",
+    modules=(TARGET/"lib/mlt-7", TARGET/"lib/lmms", TARGET/"lib/kritaplugins", TARGET/"lib/gimp/2.0",
              TARGET/"lib/darktable", TARGET/"lib/qt5/plugins")
     for folder in modules:
         if not folder.is_dir() or folder.is_symlink():
