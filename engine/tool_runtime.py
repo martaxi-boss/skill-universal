@@ -40,6 +40,10 @@ ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           "apksigner":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
           "zipalign":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/zipalign",
           "adb":HOME/"tools/android-cli-36.0.0/platform-tools/adb"}
+# Local copies of Ubuntu CLI binaries, shared only within this Ferrari project.
+PRIVATE_CLI_ROOT=HOME/"tools/ubuntu-cli"
+PRIVATE_CLI={"file":"file","jq":"jq","ripgrep":"rg",
+             "readelf":"readelf","objdump":"objdump","strings":"strings"}
 # Python libraries have no command-line executable; detect them as modules instead.
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
 # Base Ferrari operations are independently implemented and tested, not manifest adapters.
@@ -127,6 +131,10 @@ def executable(tool,binary=None):
         return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
     if pinned and pinned.is_file():
         return str(pinned)
+    if tool in PRIVATE_CLI:
+        private=PRIVATE_CLI_ROOT/"bin"/PRIVATE_CLI[tool]
+        if private.is_file() and not private.is_symlink() and private.stat().st_mode & 0o111:
+            return str(private)
     return shutil.which(binary or BINARIES.get(tool) or tool) if (binary or BINARIES.get(tool,tool)) else None
 
 def ferrari_source_presence(tool):
@@ -290,6 +298,14 @@ def invoke(action,source,folder,query=None):
     replacements={"{input}":str(inp),"{output}":str(target),"{query}":query}
     args=[exe]+[replacements.get(v,v) for v in x["args"]]
     run_options={}
+    if x["tool"] in PRIVATE_CLI and Path(exe).parent == PRIVATE_CLI_ROOT/"bin":
+        env=os.environ.copy()
+        env["LD_LIBRARY_PATH"]=str(PRIVATE_CLI_ROOT/"lib")
+        env["HOME"]=str(outdir)
+        env["TMPDIR"]=str(outdir)
+        if x["tool"]=="file":
+            env["MAGIC"]=str(PRIVATE_CLI_ROOT/"share/magic.mgc")
+        run_options["env"]=env
     if x["tool"]=="rea":
         # The REA CLI, Node, Apktool and REA state belong to Ferrari alone.
         # No global REA command, package root or legacy project's providers.
