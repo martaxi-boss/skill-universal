@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy six Ubuntu CLI tools and their dynamic libraries into Ferrari only.
+"""Copy ten Ubuntu CLI tools and their dynamic libraries into Ferrari only.
 
 Copies existing, already installed Ubuntu executables; never calls apt, sudo,
 pip or npm. All writes are under /srv/projects/skill-universal/tools/ubuntu-cli.
@@ -16,7 +16,8 @@ import subprocess
 
 ROOT = Path("/srv/projects/skill-universal")
 TARGET = ROOT / "tools/ubuntu-cli"
-BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings")
+BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings",
+            "ffmpeg", "ffprobe", "pdfinfo", "pdftotext")
 LIB_PATTERN = re.compile(r"(?:=>\s*)?(/(?:usr/)?lib\S*)\s*\(")
 
 
