@@ -1,6 +1,6 @@
 # Fase 7 — automação profissional no único motor Ferrari
 
-**Estado: candidato sob certificação, não concluído enquanto a execução VPS não demonstrar o fluxo.**
+**Estado: CERTIFICADA no âmbito operacional do DAG privado (05/11/2026).** [Certificado final com provas](CERTIFICACAO_FASE7_20261105.md). A remoção da VPS inteira e hard quotas de CPU/RAM continuam fora do âmbito certificado.
 
 ## Arquitetura mantida
 
@@ -31,7 +31,7 @@
 5. Validar saída ZIP `kind=plan` pela ponte Skill → GitHub → VPS, read-back do SHA, execução sem instalações globais.
 6. Auditoria posterior e higienização limitada ao Ferrari, saúde dos serviços de outros projetos mantida.
 
-Não declarar estes passos concluídos antes de existirem os IDs e resultados GitHub Actions correspondentes.
+Os seis critérios receberam provas operacionais: [CI #42097832176](https://github.com/martaxi-boss/skill-universal/actions/runs/42097832176) 274 testes, [precheck #42098462830](https://github.com/martaxi-boss/VPS/actions/runs/42098462830), [ativação #42098645092](https://github.com/martaxi-boss/VPS/actions/runs/42098645092), [DAG retomado noutro processo #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995), [Skill→ZIP #42099036932](https://github.com/martaxi-boss/VPS/actions/runs/42099036932) e [saúde #42099108182](https://github.com/martaxi-boss/VPS/actions/runs/42099108182) PASS. Ruflo 3.71.0 é CLI opcional e os testes de agentes pagos/gratuitos não foram realizados.
 
 ## Programas globais
 
@@ -39,4 +39,4 @@ Os 16 pacotes APT identificados na Fase 6 não são removidos automaticamente: a
 
 ## Continuidade
 
-O registo de certificação será atualizado com os commits concretos, ID de execução, SHA realmente instalado, testes e bloqueios reais. A Fase 8 não começa automaticamente por ter um CI verde.
+Release VPS ativa: `758e1b435317fa26277b332b75bc47c67910be81`; fallback F6: `146145d5ada9c13e368df18727e4dbf4f5807664`. O orquestrador, os sete venvs, os executores e os resultados permanecem no diretório privado Ferrari. A Fase 8 ainda não foi iniciada.
