@@ -36,7 +36,7 @@ def sample_pdf():
 def main():
     if len(sys.argv)!=2:
         raise SystemExit("Expected unique GitHub run ID")
-    work=ROOT/".runtime/private-python-smoke"/sys.argv[1]
+    work=ROOT/".runtime/python-tools-smoke"/sys.argv[1]
     if work.exists() or work.is_symlink():
         raise FileExistsError("Fresh Ferrari job directory required")
     work.mkdir(parents=True)
