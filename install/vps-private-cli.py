@@ -81,8 +81,7 @@ def install() -> dict:
     private_resources = {
         "tesseract": (("/usr/share/tesseract-ocr", "share/tesseract-ocr"),),
         "dot": (("/usr/lib/x86_64-linux-gnu/graphviz", "lib/graphviz"),),
-        "identify": (("/etc/ImageMagick-6", "etc/ImageMagick-6"),
-                     ("/usr/lib/x86_64-linux-gnu/ImageMagick-6.9.11", "lib/ImageMagick-6.9.11")),
+        "identify": (("/etc/ImageMagick-6", "etc/ImageMagick-6"),),
         "vips": (("/usr/lib/vips-modules-8.15", "lib/vips-modules-8.15"),),
         "r2": (("/usr/share/radare2", "share/radare2"),),
         "inkscape": (("/usr/share/inkscape", "share/inkscape"),),
@@ -102,6 +101,15 @@ def install() -> dict:
             if not target.exists():
                 shutil.copytree(source,target,symlinks=False)
             assets[target_name]=str(target)
+    if "identify" in installed:
+        codecs=list(Path("/usr/lib/x86_64-linux-gnu").glob("ImageMagick-*/modules-*/coders/png.so"))
+        if len(codecs)!=1:
+            raise RuntimeError("ImageMagick PNG plugin not unique on Ubuntu")
+        root=codecs[0].parent.parent
+        private=TARGET/"lib/ImageMagick"
+        if not private.exists():
+            shutil.copytree(root,private)
+        assets["lib/ImageMagick"]=str(private)
     return {"root": str(TARGET), "binaries": sorted(installed),
             "private_libraries": len(all_libs), "private_resources": assets,
             "magic_database": str(TARGET / "share/magic.mgc"),
