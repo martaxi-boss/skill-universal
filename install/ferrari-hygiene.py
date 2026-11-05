@@ -71,7 +71,7 @@ def clean(apply=False):
         try:
             refs=[os.readlink(proc/"cwd"),os.readlink(proc/"exe")]
             refs.extend(arg.decode("utf-8","replace") for arg in
-                        (proc/"cmdline").read_bytes().split(b"\\x00")[:9] if arg)
+                        (proc/"cmdline").read_bytes().split(b"\x00")[:9] if arg)
         except (OSError,PermissionError):
             continue
         for p in candidates:
