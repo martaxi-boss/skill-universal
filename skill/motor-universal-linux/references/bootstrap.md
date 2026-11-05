@@ -1,12 +1,18 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**UMA Skill Universal Ferrari**, um motor Ubuntu independente e um orquestrador próprio. Este documento acompanha o ZIP da Skill e resume a fotografia de 04/11/2026. A fonte atual prevalecente é [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md); não reconstruir o estado a partir das fases antigas.
+**UMA Skill Universal Ferrari**, um motor Ubuntu independente e um orquestrador próprio. Este documento acompanha o ZIP da Skill e resume a fotografia verificada em 05/11/2026. A fonte atual prevalecente é [BOOTSTRAP.md](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md); não reconstruir o estado a partir das fases antigas.
 
 ## Arquitetura e isolamento
 
 ChatGPT/Codex interpreta → uma Skill Universal → GitHub autenticado (martaxi-boss/VPS) → workflow exclusivo → SSH existente → Ferrari Ubuntu → ZIP e relatório. O motor seleciona as ferramentas; REA e Ruflo são componentes opcionais, não coordenadores. Não alterar ligação SSH, Supervisor ou projetos de terceiros.
 
-A instalação física a preservar é **/srv/projects/skill-universal/**, com o alias histórico /home/ubuntu/.local/share/motor-ferrari/ apontando exclusivamente para esse projeto [#41714658308](https://github.com/martaxi-boss/VPS/actions/runs/41714658308). O REA oficial do Ferrari é rea-agents@6.8.0 instalado em .runtime/npm/rea, com Node 22.23.4 privado. Tem ainda Java 25.0.5 privado, Ghidra 12.2 e JADX 1.5.6 independentes, Ghidra 12.1.4 e JADX headless MCP 0.7.1 compatíveis com o REA original, e Apktool 3.0.3 privado. **Os dois REAs antigos (REA FINAL e Trial) foram removidos da VPS** e a ausência validada em [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411). O REA privado do Ferrari continua e deve permanecer dentro deste projeto.
+A instalação física a preservar é **/srv/projects/skill-universal/**, com a ligação histórica /home/ubuntu/.local/share/motor-ferrari/ retirada após migração dos launchers (merge Ferrari 292aeb7d). O REA oficial do Ferrari é rea-agents@6.8.0 instalado em .runtime/npm/rea, com Node 22.23.4 privado. Tem ainda Java 25.0.5 privado, Ghidra 12.2 e JADX 1.5.6 independentes, Ghidra 12.1.4 e JADX headless MCP 0.7.1 compatíveis com o REA original, e Apktool 3.0.3 privado. **Os dois REAs antigos (REA FINAL e Trial) foram removidos da VPS** e a ausência validada em [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411). O REA privado do Ferrari continua e deve permanecer dentro deste projeto.
+
+## Sincronia real — 05/11/2026
+
+- **Main Ferrari:** b2869e334d9d68a0c988905e71ce0badec6ba359; [CI #41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) PASS. **Ponte VPS:** usa ainda a revisão pinada 292aeb7d10eecef8c3ca84760cd579e84e4b97f3 para validar pedidos; não é prova de que current na VPS corresponda ao HEAD GitHub.
+- **Hopper 6.6.1 privado e oficial:** tools/hopper-6.6.1, assinatura e origem verificadas [#41921893982](https://github.com/martaxi-boss/VPS/actions/runs/41921893982), REA doctor [#41922087539](https://github.com/martaxi-boss/VPS/actions/runs/41922087539) PASS. **Demo sem licença comercial**; não declarar exportação/depuração ou análise completa certificada.
+- **Pedido real REA:** [#41981152670](https://github.com/martaxi-boss/VPS/actions/runs/41981152670) status completed e ZIP PASS. [#41981478159](https://github.com/martaxi-boss/VPS/actions/runs/41981478159) foi apenas higiene do workflow, sem motor executado.
 
 ## Atualização operacional — Android CLI privado, 04/11/2026
 
@@ -33,7 +39,7 @@ A instalação física a preservar é **/srv/projects/skill-universal/**, com o 
 1. Ler o BOOTSTRAP GitHub e os novos runs da VPS antes de afirmar o estado.
 2. Para operações remotas ler references/github-bridge.md; criar um único JSON novo kind=inventory, operation, invoke, auto, plan ou rea-mcp (catálogo e duas funções MCP reais já certificados via Skill; outras funções precisam de testes por caso); conferir run, response.zip, report.json e artefactos.
 3. Auditar proveniência Java/Node/Python, pacotes do sistema, binários e serviços, bem como dependências REA e fornecedores, antes de qualquer remoção.
-4. Testar Ferrari com recursos do REA antigo inacessíveis sem mexer no legado; certificar Skill→VPS→ZIP e documentar caminhos, backups e recuperação.
+4. Confirmar que já não há dependências nos caminhos dos REAs antigos removidos; auditar runtime Ferrari isolado, certificar Skill→VPS→ZIP e documentar caminhos, backups e recuperação.
 5. Integrar ferramentas faltantes só após um caso concreto e teste Ubuntu. Manter uma Skill, sem camadas novas.
 
 O GitHub/VPS é potencialmente público: nunca enviar credenciais ou ficheiros privados por JSON/base64. Uma certificação de cliente exige ainda verificar a versão efetivamente instalada da Skill em ChatGPT.

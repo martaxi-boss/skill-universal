@@ -38,6 +38,20 @@ class CurrentFerrariDocsTests(unittest.TestCase):
                 self.assertNotIn("ligação direta ainda não certificada", doc)
                 self.assertNotIn("Apktool 2.7.0", doc)
 
+    def test_20261105_state_and_legacy_alias_retirement(self):
+        bootstrap = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
+        portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
+        for doc in (bootstrap, readme, sk, portable):
+            self.assertIn("b2869e33", doc)
+            self.assertIn("292aeb7d", doc)
+            self.assertIn("Hopper", doc)
+            self.assertNotIn("é um link exclusivo", doc)
+        self.assertIn("41981152670", bootstrap)
+        self.assertIn("41981478159", bootstrap)
+        self.assertIn("41840478411", bootstrap)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")

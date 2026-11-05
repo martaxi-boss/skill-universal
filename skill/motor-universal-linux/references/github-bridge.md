@@ -1,6 +1,6 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
-**Estado atual:** confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) antes de executar. Esta referência define apenas o contrato de transporte.
+**Estado em 05/11/2026:** o validador do workflow Ferrari está pinado à revisão 292aeb7d10eecef8c3ca84760cd579e84e4b97f3; a main do Ferrari já atingiu b2869e334d9d68a0c988905e71ce0badec6ba359. O motor corre no diretório físico /srv/projects/skill-universal. Não alterar o pin ou SSH sem ordem específica. Confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) antes de executar. Esta referência define apenas o contrato de transporte.
 
 **Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
@@ -42,7 +42,7 @@ Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" n
 
 ## REA original MCP através da mesma Skill Ferrari
 
-A release Ferrari **0a1a4c190a7d33752d6dc3f4418ed44735c8a7dd** está instalada na VPS [#41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407), com 197 testes PASS, e mantém o suporte certificado pela Skill a pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
+A release histórica Ferrari **0a1a4c190a7d33752d6dc3f4418ed44735c8a7dd** passou 197 testes [#41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407). A release ativa atual deve ser lida na VPS, sem presumir que é esse commit. A Skill mantém suporte certificado a pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
 
 Exemplo de inventário do REA original:
 
@@ -58,7 +58,7 @@ Exemplo de chamada de uma ferramenta **após consultar o nome e contrato em tool
 
 O exemplo `inspect_apktool_client` foi **executado realmente** em [#41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160). Para ferramentas com entrada binária, incluir `input` com ficheiro **completo** codificado em base64, e usar `$input` no argumento de caminho que o schema da ferramenta pedir; o Ferrari resolve essa referência para a sua pasta privada. Não enviar um prefixo ELF incompleto como exemplo de ficheiro real. O REA executa com Node, Ghidra 12.1.4, JDK25, JADX headless MCP 0.7.1 e Apktool 3.0.3 privados.
 
-O catálogo dos dois REAs contém **229 nomes iguais**, certificado em [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353); a execução profunda de Ghidra e JADX passou em [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556). **A chamada por kind=rea-mcp já foi certificada ponta a ponta para `tools/list`, `inspect_elf_notes` e `inspect_apktool_client`.** Isso não prova todas as 229 operações, nem permite apagar o REA antigo enquanto o seu workflow recebe pedidos.
+A comparação histórica dos dois REAs encontrou **229 nomes iguais**, certificada em [#41708905353](https://github.com/martaxi-boss/VPS/actions/runs/41708905353); a execução profunda de Ghidra e JADX passou em [#41710014556](https://github.com/martaxi-boss/VPS/actions/runs/41710014556). **A chamada por kind=rea-mcp já foi certificada ponta a ponta para `tools/list`, `inspect_elf_notes` e `inspect_apktool_client`.** Isso não prova todas as 229 operações, nem prova as 229 operações. Os REAs antigos FINAL e Trial foram posteriormente removidos com ausência comprovada [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411); preservar o REA original privado do Ferrari.
 
 ## Engenharia reversa do Ferrari
 
