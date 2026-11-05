@@ -101,6 +101,15 @@ def specs():
     return result
 
 def executable(tool,binary=None):
+    # CAD and Office are verified Ferrari-owned base executors, not manifest
+    # actions. The previous inventory incorrectly omitted these three even
+    # though their real functional smoke tests passed in the active release.
+    if tool in {"blender","openscad","libreoffice"}:
+        from engine import cad_tools
+        try:
+            return cad_tools._binary(tool)
+        except RuntimeError:
+            return None
     # Ferraris REA is a Ferrari-owned npm installation, never a PATH/system REA.
     pinned=ISOLATED.get(tool)
     if tool=="rea":
@@ -146,7 +155,8 @@ def executable(tool,binary=None):
     if tool in PRIVATE_CLI and (binary or BINARIES.get(tool) or tool) in PRIVATE_CLI[tool]:
         private=PRIVATE_CLI_ROOT/"bin"/(binary or BINARIES.get(tool) or tool)
         if (private.is_file() and not private.is_symlink()
-                and private.stat().st_mode & 0o111):
+                and private.stat().st_mode & 0o111
+                and private.resolve(strict=True).is_relative_to(HOME.resolve())):
             return str(private)
     return None  # Never fall back to a global PATH executor.
 
