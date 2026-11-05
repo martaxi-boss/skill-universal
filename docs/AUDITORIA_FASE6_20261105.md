@@ -1,6 +1,6 @@
 # Motor Ferrari — Fase 6: isolamento físico, inventário e auditoria real
 
-**Data:** 05/11/2026. **Estado da fase: PARCIAL / NÃO ENCERRADA.** A correção de código e a release operacional estão certificadas; a atribuição dos pacotes globais e o inventário de órfãos exigem ainda prova adicional. Não misturar o PASS da instalação Ferrari com a certificação de independência de todos os programas do Ubuntu.
+**Registo histórico das verificações intermédias de 05/11/2026.** A Fase 6 foi posteriormente concluída para o Ferrari, ver [certificado final PASS](CERTIFICACAO_FASE6_20261105.md). **Na data desta fotografia: fase parcial.** A correção de código e a release operacional estão certificadas; a atribuição dos pacotes globais e o inventário de órfãos exigem ainda prova adicional. Não misturar o PASS da instalação Ferrari com a certificação de independência de todos os programas do Ubuntu.
 
 ## Identidade operacional e política imutável
 
@@ -55,4 +55,4 @@ A fotografia de processos conseguiu ler apenas **3 processos** em `/proc/*/exe` 
 3. Os 16 programas globalmente disponíveis e quaisquer consumidores não foram totalmente atribuídos. A segurança dos outros projetos foi monitorizada, mas o pós-teste não prova a separação física de cada projeto.
 4. Para encerrar **integralmente** a Fase 6: auditar proprietários/consumidores de aplicações globais, todos os caminhos indiretos (shebangs, `PATH`, `LD_LIBRARY_PATH`, plugins e links relevantes), corrigir qualquer dependência Ferrari fora da pasta, eliminar apenas resíduos comprovadamente exclusivos e órfãos, preservar o Ubuntu base e voltar a certificar 40/40 + Skill→ZIP + saúde.
 
-**Decisão:** **Fase 6 — progresso técnico certificado e release operacional PASS; fecho integral pendente**. Não iniciar Fase 7 automaticamente nem declarar 10/10. PR [#64](https://github.com/martaxi-boss/skill-universal/pull/64) permanece draft e sem merge para `main`.
+**Decisão histórica no momento desta auditoria:** trabalho parcial; posteriormente encerrado no âmbito Ferrari, com [prova final](CERTIFICACAO_FASE6_20261105.md). Não iniciar Fase 7 automaticamente nem declarar 10/10. PR [#64](https://github.com/martaxi-boss/skill-universal/pull/64) permanece draft e sem merge para `main`.
