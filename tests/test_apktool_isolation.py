@@ -78,9 +78,10 @@ class ApktoolIsolationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             private=Path(folder)/"apktool"
             private.write_text("#!/bin/sh\nexit 0\n")
-            with patch.dict(tool_runtime.ISOLATED,{"apktool":private}):
-                with patch("engine.tool_runtime.shutil.which",return_value=None):
-                    self.assertEqual(tool_runtime.executable("apktool","apktool"),str(private))
+            with patch.object(tool_runtime,"HOME",Path(folder)):
+                with patch.dict(tool_runtime.ISOLATED,{"apktool":private}):
+                    with patch("engine.tool_runtime.shutil.which",return_value="/usr/bin/apktool"):
+                        self.assertEqual(tool_runtime.executable("apktool","apktool"),str(private))
 
 if __name__=="__main__":
     unittest.main()
