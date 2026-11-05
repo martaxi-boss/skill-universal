@@ -45,6 +45,10 @@ class PublishingAdapterTests(unittest.TestCase):
             root=Path(folder)
             source=root/"photo.jpg"
             source.write_bytes(b"\xff\xd8\xff"+b"\x00"*32)
+            private=root/"private-cli"
+            (private/"bin").mkdir(parents=True)
+            for name in ("xvfb-run","Xvfb"):
+                (private/"bin"/name).write_text("private fixture")
             for action,tool,magic in (
                     ("darktable-jpeg-tiff","darktable",b"II*\x00"),
                     ("krita-image-png","krita",b"\x89PNG\r\n\x1a\n")):
@@ -57,10 +61,10 @@ class PublishingAdapterTests(unittest.TestCase):
                         self.assertTrue(kwargs["env"]["XDG_DATA_HOME"].startswith(str(out)))
                         if tool=="krita":
                             self.assertEqual(kwargs["env"]["QT_QPA_PLATFORM"],"xcb")
-                            self.assertEqual(args[:3],["/usr/bin/xvfb-run","-a","/usr/bin/mock"])
+                            self.assertEqual(args[:3],[str(private/"bin/xvfb-run"),"-a","/usr/bin/mock"])
                         (out/tool_runtime.specs()[action]["artifact"]).write_bytes(magic+b"\x00"*60)
                         return subprocess.CompletedProcess(args,0,b"",b"")
-                    with patch.object(tool_runtime,"executable",return_value="/usr/bin/mock"), patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/xvfb-run"):
+                    with patch.object(tool_runtime,"executable",return_value="/usr/bin/mock"), patch.object(tool_runtime,"PRIVATE_CLI_ROOT",private):
                         with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                             result=tool_runtime.invoke(action,str(source),str(out))
                     self.assertTrue(result["confirmed"])

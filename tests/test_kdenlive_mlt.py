@@ -26,6 +26,10 @@ class MltVideoTests(unittest.TestCase):
             src.write_text("<mlt/>",encoding="utf-8")
             out=base/"output"
             seen=[]
+            cli=base/"private-cli"
+            probe=cli/"bin/ffprobe"
+            probe.parent.mkdir(parents=True)
+            probe.write_text("private ffprobe fixture")
             def run(args,**kwargs):
                 seen.append(args)
                 self.assertFalse(kwargs.get("shell",False))
@@ -39,12 +43,12 @@ class MltVideoTests(unittest.TestCase):
                         self.assertTrue(env[key].startswith(str(out)),key)
                     (out/"mlt-video.mp4").write_bytes(b"movie"+b"x"*1600)
                     return subprocess.CompletedProcess(args,0,b"",b"")
-                self.assertEqual(args[0],"/usr/bin/ffprobe")
+                self.assertEqual(args[0],str(probe))
                 data={"streams":[{"codec_type":"video","codec_name":"h264",
                                   "width":320,"height":180}],"format":{"duration":"2.0"}}
                 return subprocess.CompletedProcess(args,0,json.dumps(data).encode(),b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/melt"):
-                with patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/ffprobe"):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",cli):
                     with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                         result=tool_runtime.invoke("kdenlive-mlt-mp4",str(src),str(out))
             self.assertTrue(result["confirmed"])
