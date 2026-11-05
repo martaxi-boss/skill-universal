@@ -1,6 +1,6 @@
 # Fase 8 — matriz inicial de cobertura funcional real do Motor Ferrari
 
-**Estado:** Fase 8 em certificação, com **13 testes funcionais novos e individualmente verificados**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
+**Estado:** Fase 8 em certificação, com **35 ações tipadas individualmente verificadas por saídas reais**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
 
 **Regra permanente:** repositório `martaxi-boss/skill-universal` = pasta exclusiva `/srv/projects/skill-universal/`, sem programas, executores, caches ou dependências de aplicação Ferrari instalados globalmente. Nada de outros projetos, fornecedores partilhados ou novos coordenadores. O Ubuntu conserva as suas bibliotecas de SO.
 
@@ -41,12 +41,15 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
 
-## Provas funcionais individuais verificadas na Fase 8 (32/40)
+## Provas funcionais individuais verificadas na Fase 8 (35/40)
 
-Estas **32 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 8 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+Estas **35 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 5 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
 
 | Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
 |---|---|---|---|
+| `rea-elf-notes` | `/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea` | [#42110956481](https://github.com/martaxi-boss/VPS/actions/runs/42110956481) | REA identificou ELF64 relocatable x86-64; zero PT_NOTE/SHT_NOTE na amostra, sem inventar notas |
+| `ocrmypdf-searchable-pdf` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ocrmypdf` | [#42111644331](https://github.com/martaxi-boss/VPS/actions/runs/42111644331) | PDF só imagem transformado em PDF pesquisável; texto OCR extraído 'FERRARI OCF TEST' (1 letra imprecisa) |
+| `lmms-project-wav` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/lmms` | [#42111734245](https://github.com/martaxi-boss/VPS/actions/runs/42111734245) | LMMS privado renderizou WAV PCM estéreo 44,1 kHz, 3,428 s, amostra não silenciosa |
 | `file-mime` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/file` | [#42102487995](https://github.com/martaxi-boss/VPS/actions/runs/42102487995) | application/json confirmado |
 | `graphviz-dot-svg` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/dot` | [#42101994176](https://github.com/martaxi-boss/VPS/actions/runs/42101994176) | SVG real renderizado de grafo DOT |
 | `imagemagick-identify` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/identify` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | PNG 960x1200 |
@@ -86,19 +89,19 @@ Estas **32 ações** foram efetivamente executadas pelo Ferrari privado na VPS, 
 
 **Cadeias de produção:** `SVG → Inkscape PNG → {Tesseract OCR, ImageMagick identificar, libvips thumbnail}`; `WAV sintético → FFmpeg WAV → ffprobe` em entrada e saída; `ELF64 sintético não executável → readelf, objdump e strings`; `JSON → file/jq/ripgrep` em três trabalhadores paralelos. Todos os resultados ficaram em `/srv/projects/skill-universal/.runtime/` e nenhum input confidencial foi publicado.
 
-## Oito ações sem nova prova individual F8
+## Cinco ações sem nova prova individual F8
 
 Abaixo permanece a distinção entre **execução previamente demonstrada por outro teste** e **teste individual nesta fase**:
 
 | Ação ainda não provada individualmente na F8 | Próxima porta / limite honesto |
 |---|---|
-| `ocrmypdf-searchable-pdf` | Testar PDF digitalizado sintético, OCR e saída pesquisável, com artefactos reais |
 | `apktool-decode-resources` | Requer APK seguro com recursos/manifesto válidos; não usar APKs de utilizadores em GitHub público |
-| `rea-elf-notes`, `rea-android-resources` | Existem testes anteriores de REA e MCP, mas estas ações tipadas pedem novos artefactos específicos |
-| `lmms-project-wav` | Já houve síntese sonora real na Fase 6, mas não foi repetida nesta ronda da F8 |
+| `rea-android-resources` | REA Android aguarda APK sintético com manifesto e recursos binários válidos; ELF foi testado separadamente |
 | `android-apksigner-verify` | Precisa de APK realmente assinado; alinhamento ZIP não comprova assinatura |
 | `android-aapt2-manifest` | Exige APK válido com manifesto binário compilado; não confundir com ZIP genérico |
 | `android-adb-install-apk` | Não pode ser certificado sem dispositivo Android físico autorizado; não inventar instalação |
+
+O primeiro envio de OCR [#42111364504](https://github.com/martaxi-boss/VPS/actions/runs/42111364504) falhou por um PDF de entrada inválido; o reenvio independente [#42111644331](https://github.com/martaxi-boss/VPS/actions/runs/42111644331) concluiu um PDF pesquisável verificado. O reconhecimento da amostra não foi 100% literal (uma letra imprecisa), registado nas provas. Não conta o pedido falhado.
 
 A execução [#42106858184](https://github.com/martaxi-boss/VPS/actions/runs/42106858184) falhou devido a um **JPEG de teste corrompido no envio**; não representa falha do Darktable instalado. Foi refeita com 659 bytes íntegros, e [#42107145362](https://github.com/martaxi-boss/VPS/actions/runs/42107145362) produziu o TIFF verificado. Para `android-zipalign-apk`, a prova é apenas alinhamento de um **ZIP com extensão APK**, não uma aplicação instalável ou assinada.
 
