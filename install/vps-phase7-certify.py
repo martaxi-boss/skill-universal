@@ -175,6 +175,80 @@ def orchestrator_smoke():
     }
 
 
+def uninstall_footprint():
+    """Read-only, bounded ownership inventory; never remove the live Ferrari."""
+    prefixes=(b"/srv/projects/skill-universal",b"/home/ubuntu/.local/share/motor-ferrari")
+    roots=[
+        Path("/etc/systemd/system"),
+        Path("/etc/cron.d"),
+        Path("/etc/nginx/sites-enabled"),
+        Path("/etc/supervisor/conf.d"),
+        Path("/home/ubuntu/.config/systemd/user"),
+    ]
+    findings=[]
+    scanned=0
+    incomplete=False
+    for base in roots:
+        if not base.is_dir():
+            continue
+        if base.is_symlink():
+            incomplete=True
+            continue
+        for folder, directories, files in os.walk(base,followlinks=False):
+            if scanned>=800:
+                incomplete=True
+                break
+            for filename in files:
+                if scanned>=800:
+                    incomplete=True
+                    break
+                path=Path(folder)/filename
+                if path.is_symlink():
+                    try:
+                        target=path.resolve(strict=True)
+                        # Permit Ubuntu's own Nginx sites-enabled -> sites-available.
+                        if base != Path("/etc/nginx/sites-enabled") or not target.is_relative_to(Path("/etc/nginx")):
+                            continue
+                        path=target
+                    except (RuntimeError,OSError):
+                        incomplete=True
+                        continue
+                try:
+                    if not path.is_file() or path.stat().st_size>1024*1024:
+                        continue
+                    # Only test for Ferrari root references. Never print config content.
+                    data=path.read_bytes()
+                    scanned+=1
+                    if any(pattern in data for pattern in prefixes):
+                        findings.append(str(path))
+                except (OSError,PermissionError):
+                    incomplete=True
+            if scanned>=800:
+                break
+    alias=Path("/home/ubuntu/.local/share/motor-ferrari")
+    if alias.is_symlink():
+        alias_status="project_alias" if alias.resolve(strict=True)==ROOT.resolve(strict=True) else "external_or_unsafe_alias"
+    elif alias.exists():
+        alias_status="unexpected_physical_object"
+    else:
+        alias_status="absent"
+    root_children=sorted(p.name for p in ROOT.iterdir() if p.name not in (".", ".."))
+    return {
+        "scope":"read_only_uninstall_readiness",
+        "exact_ownership_directory":str(ROOT),
+        "project_folder_matches_github_repo":"skill-universal"==ROOT.name,
+        "external_registrations_sampled":scanned,
+        "external_registrations_with_ferrari_references":findings[:40],
+        "unscanned_or_unreadable_possible":incomplete,
+        "legacy_alias":alias_status,
+        "root_top_level_entries":root_children[:120],
+        "uninstall_executed":False,
+        "global_package_removal_authorized":False,
+        "other_project_files_touched":False,
+        "limitations":"Bounded allowlisted service-config scan; not a proof of zero indirect or future consumers.",
+    }
+
+
 def main():
     guarded()
     before=time.monotonic()
@@ -187,7 +261,7 @@ def main():
         "executed_utc":datetime.now(timezone.utc).isoformat(),
         "mode":"existing_private_orchestrator_real_vps_smoke",
         "root":str(ROOT),"release":F7_ACTIVE,"fallback":F6_FALLBACK,
-        "dag":dag,"ruflo":ruflo,
+        "dag":dag,"ruflo":ruflo,"uninstall_footprint":uninstall_footprint(),
         "usage":{"wall_seconds":round(time.monotonic()-before,2),
                  "maxrss_kib":int(after.ru_maxrss),
                  "timeout_policy":"cooperative_between_waves",
