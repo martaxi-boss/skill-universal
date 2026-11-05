@@ -10,6 +10,8 @@
 - Um processo PM2 abandonado numa release antiga do Ferrari, comprovadamente sem processos-filhos, foi terminado com guardas: [#42131306097](https://github.com/martaxi-boss/VPS/actions/runs/42131306097). O workflow temporário foi retirado depois.
 - Pós-verificação independente: [#42131425267](https://github.com/martaxi-boss/VPS/actions/runs/42131425267) — PASS; serviços protegidos ativos, dois PM2 dos robôs preservados, processo abandonado ausente.
 
+- Pós-limpeza da Skill: [#42131769522](https://github.com/martaxi-boss/VPS/actions/runs/42131769522) — execução `kind=inventory`, `report.json.status=completed`, artefacto ZIP validado; **40/40 ações invocáveis e 47/56 candidatos privados detetados**, sem regressão após a higiene.
+
 ## Organização
 
 Oito pastas em /srv/projects com nomes correspondentes a repositórios: skill-universal, pink-iptv, fadego, lowcost-europa, telegram-robot-leads, iptvpn-bot, Codex e VPS. Quatro remotos Git foram identificados diretamente; nas outras instalações é necessária confirmação pela cadeia de entrega, pois nem todas são worktrees Git.
