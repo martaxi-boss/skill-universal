@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy ten Ubuntu CLI tools and their dynamic libraries into Ferrari only.
+"""Copy locally installed Ubuntu CLI tools and their libraries into Ferrari only.
 
 Copies existing, already installed Ubuntu executables; never calls apt, sudo,
 pip or npm. All writes are under /srv/projects/skill-universal/tools/ubuntu-cli.
@@ -17,7 +17,9 @@ import subprocess
 ROOT = Path("/srv/projects/skill-universal")
 TARGET = ROOT / "tools/ubuntu-cli"
 BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings",
-            "ffmpeg", "ffprobe", "pdfinfo", "pdftotext")
+            "ffmpeg", "ffprobe", "pdfinfo", "pdftotext",
+            "pandoc", "dot", "identify", "convert", "tesseract",
+            "r2", "vips", "vipsheader", "tshark", "inkscape")
 LIB_PATTERN = re.compile(r"(?:=>\s*)?(/(?:usr/)?lib\S*)\s*\(")
 
 
@@ -74,8 +76,34 @@ def install() -> dict:
     if magic is None:
         raise RuntimeError("Ubuntu libmagic database missing")
     copy_one(magic, TARGET / "share/magic.mgc")
+    # Copy application data and plugins that native tools need after migration.
+    # Never change, delete or install anything outside the Ferrari directory.
+    private_resources = {
+        "tesseract": (("/usr/share/tesseract-ocr", "share/tesseract-ocr"),),
+        "dot": (("/usr/lib/x86_64-linux-gnu/graphviz", "lib/graphviz"),),
+        "identify": (("/etc/ImageMagick-6", "etc/ImageMagick-6"),
+                     ("/usr/lib/x86_64-linux-gnu/ImageMagick-6.9.11", "lib/ImageMagick-6.9.11")),
+        "vips": (("/usr/lib/vips-modules-8.15", "lib/vips-modules-8.15"),),
+        "r2": (("/usr/share/radare2", "share/radare2"),),
+        "inkscape": (("/usr/share/inkscape", "share/inkscape"),),
+        "tshark": (("/usr/lib/x86_64-linux-gnu/wireshark", "lib/wireshark"),),
+    }
+    assets = {}
+    for tool,entries in private_resources.items():
+        if tool not in installed:
+            continue
+        for source_name, target_name in entries:
+            source=Path(source_name)
+            if not source.is_dir() or source.is_symlink():
+                continue
+            target=TARGET/target_name
+            if target.is_symlink():
+                raise RuntimeError("Ferrari resource location cannot be symlink: "+str(target))
+            if not target.exists():
+                shutil.copytree(source,target,symlinks=False)
+            assets[target_name]=str(target)
     return {"root": str(TARGET), "binaries": sorted(installed),
-            "private_libraries": len(all_libs),
+            "private_libraries": len(all_libs), "private_resources": assets,
             "magic_database": str(TARGET / "share/magic.mgc"),
             "system_installation": False, "other_projects_touched": False}
 
