@@ -18,6 +18,29 @@ class ToolRuntimeTests(unittest.TestCase):
         self.assertEqual(len(x),40)
         self.assertTrue(all("{input}" in s["args"] for s in x.values()))
         self.assertTrue(all(s["mode"] in {"stdout","file","directory"} for s in x.values()))
+    def test_private_cli_executable_preferred_and_private_state(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/"ubuntu-cli"
+            private=root/"bin/jq"
+            private.parent.mkdir(parents=True)
+            private.write_text("#!/bin/sh\\nexit 0\\n")
+            private.chmod(0o755)
+            source=Path(d)/"input.json"
+            source.write_text('{"ferrari":true}')
+            def execute(args, **kwargs):
+                self.assertEqual(args[0],str(private))
+                self.assertEqual(kwargs["env"]["LD_LIBRARY_PATH"],str(root/"lib"))
+                self.assertEqual(kwargs["env"]["HOME"],str(Path(d)/"result"))
+                self.assertEqual(kwargs["env"]["TMPDIR"],str(Path(d)/"result"))
+                return subprocess.CompletedProcess(args,0,b'{"ferrari":true}\\n',b"")
+            with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root):
+                self.assertEqual(tool_runtime.executable("jq","jq"),str(private))
+                with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
+                    result=tool_runtime.invoke("jq-format-json",str(source),str(Path(d)/"result"))
+            self.assertTrue(result["confirmed"])
+            self.assertTrue((Path(d)/"result/formatted.json").is_file())
+
     def test_missing_binary_blocks_before_output_created(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/"a.json";p.write_text("{}")
