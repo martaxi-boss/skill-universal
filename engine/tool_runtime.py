@@ -557,7 +557,8 @@ def invoke(action,source,folder,query=None):
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("Executor timeout: "+action) from exc
     if p.returncode:
-        details=(p.stderr+b"\n"+p.stdout).decode("utf-8","replace")[-1600:]
+        log=(p.stderr+b"\n"+p.stdout).decode("utf-8","replace")
+        details=log[:2500]+(" ... [middle omitted] ... " if len(log)>8500 else "")+log[-6000:] if len(log)>8500 else log
         raise RuntimeError("Executor failed (code "+str(p.returncode)+"): "+details)
     if x["tool"]=="kdenlive":
         # Verify actual playable video, not just a successful process exit.
