@@ -264,9 +264,14 @@ def install() -> dict:
             for match in LIB_PATTERN.finditer(probe.stdout+probe.stderr):
                 dep=Path(match.group(1))
                 if not dep.is_file():
-                    alternatives=(TARGET/"lib/lmms"/dep.name,
-                                  Path("/usr/lib/x86_64-linux-gnu/lmms")/dep.name,
-                                  Path("/usr/lib/lmms")/dep.name)
+                    roots=(TARGET/"lib/lmms", TARGET/"lib/darktable", TARGET/"lib/mlt-7",
+                           TARGET/"lib/gimp/2.0", TARGET/"lib/qt5/plugins",
+                           Path("/usr/lib/x86_64-linux-gnu/lmms"),
+                           Path("/usr/lib/x86_64-linux-gnu/darktable"),
+                           Path("/usr/lib/x86_64-linux-gnu/mlt-7"),
+                           Path("/usr/lib/lmms"),Path("/usr/lib/darktable"),
+                           Path("/usr/lib/mlt-7"))
+                    alternatives=tuple(folder/dep.name for folder in roots)
                     dep=next((candidate for candidate in alternatives if candidate.is_file()),dep)
                 if not dep.is_file():
                     raise RuntimeError("Unresolved private plugin dependency: "+dep.name)
