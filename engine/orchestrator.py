@@ -120,25 +120,36 @@ def _atomic_json(path: Path, value: dict):
             os.unlink(temporary)
 
 
-def _owned_workspace(path: str) -> Path:
-    """On the real VPS, refuse workspaces outside the Ferrari project root.
+def _production_root() -> Path | None:
+    """Recognize the live Ferrari release, not a runner's temporary CLI fixtures."""
+    project = Path("/srv/projects/skill-universal")
+    if project.is_symlink():
+        raise ValueError("Ferrari physical project directory cannot be a symlink")
+    current = project / "current"
+    if not (project.is_dir() and current.is_symlink()
+            and (current / "engine/ferrari.py").is_file()):
+        return None
+    release = current.resolve(strict=True)
+    if not release.is_relative_to((project / "releases").resolve(strict=True)):
+        raise ValueError("Ferrari active release escapes the project")
+    return project.resolve(strict=True)
 
-    CI tests use ephemeral runner directories because the Ferrari VPS root does
-    not exist there. In production the scope is enforced unconditionally.
-    """
+
+def _owned_workspace(path: str) -> Path:
+    """Enforce same-repo project boundaries whenever the live VPS is present."""
     root = Path(path).expanduser()
     if root.is_symlink():
         raise ValueError("Ferrari workspace cannot be a symlink")
     resolved = root.resolve()
-    project = Path("/srv/projects/skill-universal")
-    if project.exists():
-        if project.is_symlink() or not resolved.is_relative_to(project.resolve(strict=True)):
+    project = _production_root()
+    if project is not None:
+        if not resolved.is_relative_to(project):
             raise ValueError("Ferrari workspace must remain inside the isolated project")
-    for parent in (root, *root.parents):
-        if parent.is_symlink():
-            raise ValueError("Ferrari workspace has a symlinked parent")
-        if parent == resolved.anchor:
-            break
+        for parent in (root, *root.parents):
+            if parent.is_symlink():
+                raise ValueError("Ferrari workspace has a symlinked parent")
+            if parent == project:
+                break
     return resolved
 
 
@@ -321,9 +332,8 @@ def orchestrate(spec: dict, workspace: str, execute: bool = False, max_parallel:
                 item = Path(source)
                 if item.is_symlink() or not item.is_file():
                     raise ValueError("Ferrari input must be a regular file")
-                project = Path("/srv/projects/skill-universal")
-                if project.is_dir() and not item.resolve(strict=True).is_relative_to(
-                        project.resolve(strict=True)):
+                project = _production_root()
+                if project is not None and not item.resolve(strict=True).is_relative_to(project):
                     raise ValueError("Ferrari may not read inputs outside its project")
             if step["operation"] == "tool":
                 return tool_runtime.invoke(step["action"], source,
