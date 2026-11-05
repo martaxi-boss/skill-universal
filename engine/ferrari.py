@@ -287,17 +287,15 @@ def _output(folder,name):
     return p
 
 def _exe(name):
-    private=FERRARI_HOME/"tools/ubuntu-cli/bin"/name
-    if private.is_file() and not private.is_symlink() and os.access(private,os.X_OK):
-        return str(private)
-    p=shutil.which(name)
-    if not p and name=="jadx":
-        candidate=(FERRARI_HOME / "tools/jadx-1.5.6/bin/jadx")
-        if candidate.is_file() and os.access(candidate,os.X_OK):
-            p=str(candidate)
-    if not p:
-        raise RuntimeError("Missing Ubuntu executor: "+name)
-    return p
+    # Missing private binaries are unavailable, not replaced by the Ubuntu PATH.
+    paths=[FERRARI_HOME/"tools/ubuntu-cli/bin"/name]
+    if name=="jadx":
+        paths.append(FERRARI_HOME/"tools/jadx-1.5.6/bin/jadx")
+    for p in paths:
+        if (p.is_file() and os.access(p,os.X_OK)
+                and p.resolve().is_relative_to(FERRARI_HOME.resolve())):
+            return str(p)
+    raise RuntimeError("FERRARI_PRIVATE_EXECUTOR_MISSING="+name)
 
 def _call(args,timeout=240,stdout=None):
     env=os.environ.copy()
