@@ -15,7 +15,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn("41718385142", text)
         self.assertIn("Apktool", text)
         self.assertIn("3.0.3", text)
-        self.assertIn("REA antigo", text)
+        self.assertIn("REA FINAL e Trial removidos", text)
         self.assertIn("NÃO autorizar", text)
         self.assertLess(len(text), 17000, "Keep old milestone narratives in Git history/docs")
         self.assertNotIn("Instalação na VPS: não iniciada", text)
