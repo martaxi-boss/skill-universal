@@ -424,6 +424,7 @@ def invoke(action,source,folder,query=None):
         env["HOME"]=str(outdir)
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
+    private_qt_socket=None
     if x["tool"] in {"calibre","darktable","krita","gimp","scribus","lmms","kdenlive"}:
         # Installed GUI applications provide dedicated command-line export.
         # Keep per-run caches/preferences inside this Ferrari job, never
@@ -482,6 +483,16 @@ def invoke(action,source,folder,query=None):
                      "--tmpdir",str(tmp),
                      "--disable-opencl"]
         if x["tool"]=="krita":
+            # Qt local socket names must fit Linux's 108-byte Unix socket limit.
+            # An XDG_RUNTIME_DIR nested under the long job path fails with
+            # QLocalServer::listen: Unknown error 22.
+            sockets=HOME/".runtime/q"
+            sockets.mkdir(mode=0o700,parents=True,exist_ok=True)
+            if sockets.is_symlink():
+                raise RuntimeError("Unsafe Ferrari Qt runtime directory")
+            private_qt_socket=sockets/("k"+uuid.uuid4().hex[:12])
+            private_qt_socket.mkdir(mode=0o700)
+            env["XDG_RUNTIME_DIR"]=str(private_qt_socket)
             # Krita ignores Qt offscreen and requires a display. The Ubuntu
             # VPS already has Xvfb; run an ephemeral display for this job.
             private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
@@ -556,6 +567,11 @@ def invoke(action,source,folder,query=None):
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("Executor timeout: "+action) from exc
+    finally:
+        if private_qt_socket is not None:
+            if private_qt_socket.is_symlink() or private_qt_socket.parent!=HOME/".runtime/q":
+                raise RuntimeError("Unsafe Ferrari Qt runtime cleanup")
+            shutil.rmtree(private_qt_socket)
     if p.returncode:
         log=(p.stderr+b"\n"+p.stdout).decode("utf-8","replace")
         details=log[:2500]+(" ... [middle omitted] ... " if len(log)>8500 else "")+log[-6000:] if len(log)>8500 else log
