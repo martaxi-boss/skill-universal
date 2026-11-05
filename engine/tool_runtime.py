@@ -468,6 +468,19 @@ def invoke(action,source,folder,query=None):
             env["CALIBRE_CONFIG_DIRECTORY"]=env["XDG_CONFIG_HOME"]
         if x["tool"]=="calibre":
             env["QT_QPA_PLATFORM"]="offscreen"
+        if x["tool"]=="darktable" and Path(exe).parent==PRIVATE_CLI_ROOT/"bin":
+            # darktable-cli requires explicit core resource roots; environment
+            # variables alone do not override the compiled Ubuntu defaults.
+            private_data=PRIVATE_CLI_ROOT/"share/darktable"
+            private_modules=PRIVATE_CLI_ROOT/"lib/darktable"
+            if not private_data.is_dir() or not private_modules.is_dir():
+                raise RuntimeError("Ferrari private Darktable resources are missing")
+            args += ["--core","--datadir",str(private_data),
+                     "--moduledir",str(private_modules),
+                     "--configdir",str(env["XDG_CONFIG_HOME"]),
+                     "--cachedir",str(env["XDG_CACHE_HOME"]),
+                     "--tmpdir",str(tmp),
+                     "--disable-opencl"]
         if x["tool"]=="krita":
             # Krita ignores Qt offscreen and requires a display. The Ubuntu
             # VPS already has Xvfb; run an ephemeral display for this job.
@@ -538,7 +551,7 @@ def invoke(action,source,folder,query=None):
             + output + ' ' + output + ') '
             '(gimp-image-delete image))'
         )
-        args=[exe,"-i","-n","-s","-b",expression,"-b","(gimp-quit 0)"]
+        args=[exe,"-i","-n","-s","-d","-f","--no-shm","-b",expression,"-b","(gimp-quit 0)"]
     try:
         p=subprocess.run(args,shell=False,capture_output=True,timeout=240,check=False,**run_options)
     except subprocess.TimeoutExpired as exc:
