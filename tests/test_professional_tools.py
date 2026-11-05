@@ -87,6 +87,11 @@ class FerrariProfessionalTests(unittest.TestCase):
             report=json.loads((root/"out/vite-build.json").read_text())
             self.assertIn("assets/app.js",report["built_files"])
 
+    def test_browser_loader_uses_canonical_ferrari_root(self):
+        script=(Path(__file__).resolve().parents[1]/"engine/browser_check.js").read_text(encoding="utf-8")
+        self.assertIn("/srv/projects/skill-universal/.runtime/npm/playwright/node_modules/playwright",script)
+        self.assertNotIn(".local/share/motor-ferrari",script)
+
     def test_browser_isolated_runtime_detection(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)
