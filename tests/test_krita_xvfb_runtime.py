@@ -40,8 +40,10 @@ class KritaVirtualDisplayTests(unittest.TestCase):
             root=Path(d)
             src=root/"sample.jpg"
             src.write_bytes(b"\xff\xd8\xff")
+            # A private Xvfb exists on the real VPS; force a missing private
+            # executor so this negative test is independent of the host.
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/krita"):
-                with patch.object(tool_runtime.shutil,"which",return_value=None):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root/"missing-private-cli"):
                     with patch.object(tool_runtime.subprocess,"run") as invoke:
                         with self.assertRaisesRegex(RuntimeError,"existing Xvfb virtual display"):
                             tool_runtime.invoke("krita-image-png",str(src),str(root/"out"))
