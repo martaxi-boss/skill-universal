@@ -26,7 +26,7 @@ def release_shell_blocks():
     """Extract UNCHANGED rollback and atomic switch statements from real source."""
     data = SCRIPT.read_bytes()
     # Git blob hash confirms that the tested bytes are the deployed source.
-    blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\0" + data).hexdigest()
+    blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
     assert blob == EXPECTED_SCRIPT_BLOB, "FERRARI_PHASE5_ACTIVE_SCRIPT_BLOB_MISMATCH"
     source = data.decode("utf-8")
     begin = source.index("cleanup() {\n")
