@@ -19,6 +19,12 @@ Não instalar nada do Ferrari fora de `/srv/projects/skill-universal/`; não mis
 - **Limite remanescente de isolamento das operações base:** testes do ponto 3 confirmaram que `cad-stl` usou `/usr/bin/openscad`; `blender-house` usou `/usr/bin/blender`. Os 40/40 privados referem-se às **ações tipadas**, não a estas operações base. Não declarar isolamento universal nem reinstalar esses executáveis globalmente.
 - **Outros limites reais:** ADB sem dispositivo físico; nenhuma validação de toda a GUI interativa, Penpot, modelos/inferência ComfyUI ou funções pagas do Hopper. O catálogo MCP e os 83 programas detetados não estão integralmente certificados.
 
+## Contrato de desinstalação independente
+
+O projeto Ferrari deve guardar programas, ferramentas, bibliotecas de aplicação, fornecedores, caches e dados apenas em `/srv/projects/skill-universal/`. Nunca instalar globalmente via APT para o projeto, procurar programas em `/usr/bin` por fallback ou importar dependências de outro projeto. O Ubuntu básico (kernel, loader, bibliotecas essenciais do sistema operativo) é a base comum inevitável.
+
+Antes de desinstalar: preservar backup, identificar serviços/processos/agendamentos/links específicos do Ferrari, desligar e remover **apenas** esses registos, apagar a pasta do Ferrari quando autorizado e confirmar os restantes projetos. Não remover programas globais antigos sem verificar os seus consumidores. A migração física dos executáveis CAD/Blender na VPS ainda precisa de teste real e ZIP.
+
 ## Usar a Skill
 
 1. Confirmar o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e, quando necessário, pedir inventário novo por `kind=inventory`.

@@ -35,6 +35,12 @@ A fonte de verdade atual é o [BOOTSTRAP do repositório](https://github.com/mar
 
 As operações base e ações externas reais estão definidas em engine/ferrari.py e engine/tool_actions.json, não neste texto. Distinguir catálogo, binário instalado, adaptador, teste funcional e entrega ao utilizador.
 
+## Independência física — regra obrigatória
+
+Um projeto = uma pasta. Todas as aplicações, executáveis, fornecedores, dependências de aplicação, versões, caches e dados Ferrari devem residir em `/srv/projects/skill-universal/`. É proibido instalar aplicações globalmente para Ferrari, usar executáveis do `PATH`/`/usr/bin` ou reutilizar dependências dos outros projetos. Ferramenta privada em falta significa **bloqueio explícito**, nunca fallback silencioso. O kernel e as bibliotecas fundamentais do Ubuntu são infraestrutura do sistema operativo e não instalações de aplicação.
+
+O ponto 3 provou que as operações base CAD/Blender ainda usavam executáveis globais na VPS. Alterações de código/CI **não** migraram fisicamente esses binários: instalar e validar as cópias privadas antes de ativar uma release ou declarar isolamento completo. A futura desinstalação inclui parar serviços próprios e retirar agendamentos, ligações e configurações exclusivas sem afetar os restantes projetos.
+
 ## Higiene, segurança e expansão
 
 - A limpeza de releases Ferrari em install/ferrari-hygiene.py é limitada a essa árvore e preserva ativo/fallback. Não tocar em sistemas ou outros projetos, nem eliminar o REA Ferrari privado; os REAs legados já foram removidos após auditoria.
