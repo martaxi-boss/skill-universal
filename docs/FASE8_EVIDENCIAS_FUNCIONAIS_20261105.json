@@ -6,8 +6,8 @@
   "date": "2026-11-05",
   "status": "phase8_partial_real_evidence_not_full_certification",
   "registered_actions": 40,
-  "phase8_new_individual_e2e": 32,
-  "without_phase8_individual_e2e": 8,
+  "phase8_new_individual_e2e": 35,
+  "without_phase8_individual_e2e": 5,
   "sources": {
     "inventory": "https://github.com/martaxi-boss/VPS/actions/runs/42100973198",
     "manifest": "engine/tool_actions.json",
@@ -26,7 +26,10 @@
       42106673246,
       42107145362,
       42107289996,
-      42107489642
+      42107489642,
+      42110956481,
+      42111644331,
+      42111734245
     ]
   },
   "policy": "Only downloaded GitHub Actions response ZIP outputs count. No arbitrary global executable fallback or third-party project writes. Historical per-domain proof is separate.",
@@ -394,9 +397,16 @@
       "tool": "ocrmypdf",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42111644331,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42111644331",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/ocrmypdf",
+        "artifact_basename": "searchable.pdf",
+        "verified_result": "PDF só imagem transformado em PDF pesquisável; texto OCR extraído 'FERRARI OCF TEST' (1 letra imprecisa)",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "VPS GitHub Actions ZIP downloaded; searchable PDF validated with PDF text extraction, minor OCR recognition error declared"
     },
     {
       "action": "apktool-decode-resources",
@@ -414,9 +424,16 @@
       "tool": "rea",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42110956481,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42110956481",
+        "executor": "/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea",
+        "artifact_basename": "rea-elf-notes.json",
+        "verified_result": "REA identificou ELF64 relocatable x86-64; zero PT_NOTE/SHT_NOTE na amostra, sem inventar notas",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "VPS GitHub Actions ZIP downloaded and parsed: correct ELF64 parser output with explicit no-notes limitation"
     },
     {
       "action": "rea-android-resources",
@@ -587,9 +604,16 @@
       "tool": "lmms",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42111734245,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42111734245",
+        "executor": "/srv/projects/skill-universal/tools/ubuntu-cli/bin/lmms",
+        "artifact_basename": "lmms-render.wav",
+        "verified_result": "LMMS privado renderizou WAV PCM estéreo 44,1 kHz, 3,428 s, amostra não silenciosa",
+        "input": "synthetic non-sensitive"
+      },
+      "scope_note": "VPS GitHub Actions ZIP downloaded; WAV header, frame rate, duration and non-silence validated"
     },
     {
       "action": "kdenlive-mlt-mp4",
