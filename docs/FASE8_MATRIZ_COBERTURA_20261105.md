@@ -1,6 +1,6 @@
-# Fase 8 — matriz inicial de cobertura funcional real do Motor Ferrari
+# Fase 8 — matriz atualizada de cobertura funcional real do Motor Ferrari
 
-**Estado:** Fase 8 em certificação, com **35 ações tipadas individualmente verificadas por saídas reais**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
+**Estado:** Fase 8 em certificação, com **39 ações tipadas individualmente verificadas por saídas reais**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
 
 **Regra permanente:** repositório `martaxi-boss/skill-universal` = pasta exclusiva `/srv/projects/skill-universal/`, sem programas, executores, caches ou dependências de aplicação Ferrari instalados globalmente. Nada de outros projetos, fornecedores partilhados ou novos coordenadores. O Ubuntu conserva as suas bibliotecas de SO.
 
@@ -41,12 +41,16 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
 
-## Provas funcionais individuais verificadas na Fase 8 (35/40)
+## Provas funcionais individuais verificadas na Fase 8 (39/40)
 
-Estas **35 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 5 IDs continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+Estas **39 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. O único ID restante continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
 
 | Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
 |---|---|---|---|
+| `android-aapt2-manifest` | `/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/aapt2` | [#42113835768](https://github.com/martaxi-boss/VPS/actions/runs/42113835768) | AAPT2 leu manifesto AXML real: package app.hello.jni, minSdk 21, targetSdk 29 |
+| `rea-android-resources` | `/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea` | [#42113866996](https://github.com/martaxi-boss/VPS/actions/runs/42113866996) | REA/Apktool 3.0.3 extraiu manifesto, SDK 21/29, pacote app.hello.jni, 5 ficheiros; sem strings.xml neste APK |
+| `apktool-decode-resources` | `/srv/projects/skill-universal/tools/apktool-3.0.3/bin/apktool` | [#42114077392](https://github.com/martaxi-boss/VPS/actions/runs/42114077392) | Apktool 3.0.3 devolveu 5 ficheiros reais: manifesto XML, apktool.yml, smali, ELF ARM64 e manifesto AXML |
+| `android-apksigner-verify` | `/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/apksigner` | [#42114234808](https://github.com/martaxi-boss/VPS/actions/runs/42114234808) | Apksigner Verifies: true; assinaturas v1 e v2 verdadeiras, v3/v4 ausentes; certificado Android Debug de teste RSA 1024 |
 | `rea-elf-notes` | `/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea` | [#42110956481](https://github.com/martaxi-boss/VPS/actions/runs/42110956481) | REA identificou ELF64 relocatable x86-64; zero PT_NOTE/SHT_NOTE na amostra, sem inventar notas |
 | `ocrmypdf-searchable-pdf` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ocrmypdf` | [#42111644331](https://github.com/martaxi-boss/VPS/actions/runs/42111644331) | PDF só imagem transformado em PDF pesquisável; texto OCR extraído 'FERRARI OCF TEST' (1 letra imprecisa) |
 | `lmms-project-wav` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/lmms` | [#42111734245](https://github.com/martaxi-boss/VPS/actions/runs/42111734245) | LMMS privado renderizou WAV PCM estéreo 44,1 kHz, 3,428 s, amostra não silenciosa |
@@ -89,17 +93,13 @@ Estas **35 ações** foram efetivamente executadas pelo Ferrari privado na VPS, 
 
 **Cadeias de produção:** `SVG → Inkscape PNG → {Tesseract OCR, ImageMagick identificar, libvips thumbnail}`; `WAV sintético → FFmpeg WAV → ffprobe` em entrada e saída; `ELF64 sintético não executável → readelf, objdump e strings`; `JSON → file/jq/ripgrep` em três trabalhadores paralelos. Todos os resultados ficaram em `/srv/projects/skill-universal/.runtime/` e nenhum input confidencial foi publicado.
 
-## Cinco ações sem nova prova individual F8
+## Uma ação sem prova individual F8: dispositivo Android físico
 
-Abaixo permanece a distinção entre **execução previamente demonstrada por outro teste** e **teste individual nesta fase**:
+| Ação pendente | Limite real | Estado |
+|---|---|---|
+| `android-adb-install-apk` | Exige dispositivo Android físico autorizado, conectado à VPS e APK instalável; um binário `adb` no catálogo não equivale a uma instalação real | **BLOQUEIO EXTERNO — não certificado** |
 
-| Ação ainda não provada individualmente na F8 | Próxima porta / limite honesto |
-|---|---|
-| `apktool-decode-resources` | Requer APK seguro com recursos/manifesto válidos; não usar APKs de utilizadores em GitHub público |
-| `rea-android-resources` | REA Android aguarda APK sintético com manifesto e recursos binários válidos; ELF foi testado separadamente |
-| `android-apksigner-verify` | Precisa de APK realmente assinado; alinhamento ZIP não comprova assinatura |
-| `android-aapt2-manifest` | Exige APK válido com manifesto binário compilado; não confundir com ZIP genérico |
-| `android-adb-install-apk` | Não pode ser certificado sem dispositivo Android físico autorizado; não inventar instalação |
+**As outras quatro ações Android passaram na VPS em execuções independentes e com ZIP validado** ([certificado e proveniência](FASE8_CERTIFICACAO_ANDROID_20261105.md)). O APK mínimo usado para AAPT2, REA e Apktool é um exemplo público de 2.498 bytes sem dados de utilizadores; o teste de assinatura usa um APK público de 8.993 bytes. **Não executar `adb install` sem aprovação explícita do proprietário e identificação do dispositivo.** O run de Apktool [#42113858985](https://github.com/martaxi-boss/VPS/actions/runs/42113858985) foi cancelado pela fila GitHub, não conta; o teste isolado #42114077392 passou.
 
 O primeiro envio de OCR [#42111364504](https://github.com/martaxi-boss/VPS/actions/runs/42111364504) falhou por um PDF de entrada inválido; o reenvio independente [#42111644331](https://github.com/martaxi-boss/VPS/actions/runs/42111644331) concluiu um PDF pesquisável verificado. O reconhecimento da amostra não foi 100% literal (uma letra imprecisa), registado nas provas. Não conta o pedido falhado.
 

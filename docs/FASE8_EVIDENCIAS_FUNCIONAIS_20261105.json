@@ -6,8 +6,8 @@
   "date": "2026-11-05",
   "status": "phase8_partial_real_evidence_not_full_certification",
   "registered_actions": 40,
-  "phase8_new_individual_e2e": 35,
-  "without_phase8_individual_e2e": 5,
+  "phase8_new_individual_e2e": 39,
+  "without_phase8_individual_e2e": 1,
   "sources": {
     "inventory": "https://github.com/martaxi-boss/VPS/actions/runs/42100973198",
     "manifest": "engine/tool_actions.json",
@@ -29,7 +29,11 @@
       42107489642,
       42110956481,
       42111644331,
-      42111734245
+      42111734245,
+      42113835768,
+      42113866996,
+      42114077392,
+      42114234808
     ]
   },
   "policy": "Only downloaded GitHub Actions response ZIP outputs count. No arbitrary global executable fallback or third-party project writes. Historical per-domain proof is separate.",
@@ -414,9 +418,16 @@
       "tool": "apktool",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42114077392,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42114077392",
+        "executor": "/srv/projects/skill-universal/tools/apktool-3.0.3/bin/apktool",
+        "artifact_basename": "apktool-decoded",
+        "verified_result": "Apktool 3.0.3 devolveu 5 ficheiros reais: manifesto XML, apktool.yml, smali, ELF ARM64 e manifesto AXML",
+        "input": "public upstream test APK, no user or secret data"
+      },
+      "scope_note": "ZIP downloaded/parsed; public unsigned Hello JNI fixture; cancelled earlier #42113858985 excluded, validated isolated rerun."
     },
     {
       "action": "rea-elf-notes",
@@ -441,9 +452,16 @@
       "tool": "rea",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42113866996,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42113866996",
+        "executor": "/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea",
+        "artifact_basename": "rea-android-resources.json",
+        "verified_result": "REA/Apktool 3.0.3 extraiu manifesto, SDK 21/29, pacote app.hello.jni, 5 ficheiros; sem strings.xml neste APK",
+        "input": "public upstream test APK, no user or secret data"
+      },
+      "scope_note": "ZIP downloaded/parsed. Public upstream Hello JNI fixture; no res/values/strings.xml in this test, do not claim locale/string coverage."
     },
     {
       "action": "inkscape-svg-png",
@@ -638,9 +656,16 @@
       "tool": "apksigner",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42114234808,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42114234808",
+        "executor": "/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
+        "artifact_basename": "apk-signature.txt",
+        "verified_result": "Apksigner Verifies: true; assinaturas v1 e v2 verdadeiras, v3/v4 ausentes; certificado Android Debug de teste RSA 1024",
+        "input": "public upstream test APK, no user or secret data"
+      },
+      "scope_note": "ZIP downloaded/parsed. Public Apktool v3.0.1 issue1157.apk (8993 bytes); test-key signature only, not a production signing or a live device install."
     },
     {
       "action": "android-aapt2-manifest",
@@ -648,9 +673,16 @@
       "tool": "aapt2",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42113835768,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42113835768",
+        "executor": "/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/aapt2",
+        "artifact_basename": "apk-manifest-tree.txt",
+        "verified_result": "AAPT2 leu manifesto AXML real: package app.hello.jni, minSdk 21, targetSdk 29",
+        "input": "public upstream test APK, no user or secret data"
+      },
+      "scope_note": "ZIP downloaded/parsed. Public upstream unsigned minimal Hello JNI fixture (2498 bytes), no user data; AndroidManifest.xml binary."
     },
     {
       "action": "android-zipalign-apk",
@@ -677,7 +709,7 @@
       "private_executor_in_f7_inventory": true,
       "phase8_individual_e2e_verified": false,
       "evidence": null,
-      "scope_note": "Executor private in F7, no F8 action-specific test in this batch; earlier domain tests may exist"
+      "scope_note": "F8 individual installation not verified: requires a reachable, expressly authorized physical Android device. Private adb executable is callable in inventory; no install was attempted and no emulated/mocked result counts as proof."
     }
   ]
 }
