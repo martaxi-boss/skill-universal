@@ -86,10 +86,21 @@ def check_candidates():
         if not 0 < len(blob) < 65536:
             raise RuntimeError("Unexpected private script size: " + rel)
         shebang = blob.split(b"\n",1)[0]
-        if shebang not in (b"#!/usr/bin/python3", b"#!/usr/bin/python3.12", ("#!"+str(PYTHON)).encode()):
+        private_header = ("#!"+str(PYTHON)).encode()
+        # Debian launchers legitimately include flags such as -Es or -s.
+        # Only accept one short interpreter-option token; preserve it exactly.
+        legacy = re.fullmatch(rb"#!/usr/bin/python3(?:\.12)?([ \t]+-[A-Za-z]{1,10})?", shebang)
+        local = re.fullmatch(re.escape(private_header) + rb"([ \t]+-[A-Za-z]{1,10})?", shebang)
+        if legacy:
+            trailing = legacy.group(1) or b""
+            needs_change = True
+        elif local:
+            trailing = local.group(1) or b""
+            needs_change = False
+        else:
             raise RuntimeError("Unexpected launcher interpreter: " + rel)
         copied[rel] = {"data":blob,"mode":stat.S_IMODE(p.stat().st_mode),
-                       "needs_change":shebang != ("#!"+str(PYTHON)).encode()}
+                       "trailing":trailing,"needs_change":needs_change}
     links = {}
     for rel in DEADLINKS:
         p = ROOT / rel
@@ -160,7 +171,7 @@ def run(mode: str):
             if entry["needs_change"]:
                 old=entry["data"]
                 first,rest=old.split(b"\n",1)
-                modified=("#!"+str(PYTHON)).encode()+b"\n"+rest
+                modified=("#!"+str(PYTHON)).encode()+entry["trailing"]+b"\n"+rest
                 changes.append(("file",ROOT/rel,old,entry["mode"]))
                 atomic_file(ROOT/rel,modified,entry["mode"])
         for rel,target in links.items():
@@ -170,7 +181,7 @@ def run(mode: str):
         boundaries()
         for rel in LAUNCHERS:
             p=ROOT/rel
-            if not p.read_bytes().startswith(("#!"+str(PYTHON)+"\n").encode()):
+            if not p.read_bytes().startswith(("#!"+str(PYTHON)).encode()):
                 raise RuntimeError("Launcher still resolves to global Python")
         if any(os.path.lexists(ROOT/rel) for rel in DEADLINKS):
             raise RuntimeError("Broken Ferrari vendor links remained")
