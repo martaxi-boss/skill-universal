@@ -23,7 +23,7 @@ Não instalar nada do Ferrari fora de `/srv/projects/skill-universal/`; não mis
 
 O projeto Ferrari deve guardar programas, ferramentas, bibliotecas de aplicação, fornecedores, caches e dados apenas em `/srv/projects/skill-universal/`. Nunca instalar globalmente via APT para o projeto, procurar programas em `/usr/bin` por fallback ou importar dependências de outro projeto. O Ubuntu básico (kernel, loader, bibliotecas essenciais do sistema operativo) é a base comum inevitável.
 
-Antes de desinstalar: preservar backup, identificar serviços/processos/agendamentos/links específicos do Ferrari, desligar e remover **apenas** esses registos, apagar a pasta do Ferrari quando autorizado e confirmar os restantes projetos. Não remover programas globais antigos sem verificar os seus consumidores. A migração física dos executáveis CAD/Blender na VPS ainda precisa de teste real e ZIP.
+Antes de desinstalar: preservar backup, identificar serviços/processos/agendamentos/links específicos do Ferrari, desligar e remover **apenas** esses registos, apagar a pasta do Ferrari quando autorizado e confirmar os restantes projetos. Não remover programas globais antigos sem verificar os seus consumidores. O instalador privado CAD/Blender terminou com `FERRARI_PRIVATE_CAD_INSTALL=PASS` segundo captura apresentada pelo utilizador em 05/11; isto não equivale a certificação final de renderização nem à ativação da release. O próximo teste é `install/vps-private-cad-smoke.sh`, que confirma outputs reais e limpa apenas o seu trabalho temporário dentro da pasta Ferrari. A Skill→VPS→ZIP e o LibreOffice privado continuam pendentes de provas específicas.
 
 ## Usar a Skill
 

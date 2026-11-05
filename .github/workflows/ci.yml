@@ -30,6 +30,7 @@ jobs:
           bash -n install/ferrari-ubuntu.sh
           bash -n install/vps-preflight.sh
           bash -n install/vps-private-cad.sh
+          bash -n install/vps-private-cad-smoke.sh
           bash -n install/install-agent-engines.sh
           bash -n install/vps-delivery.sh
           bash -n install/vps-android-cli-isolated.sh
