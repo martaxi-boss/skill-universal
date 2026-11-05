@@ -4,6 +4,10 @@ set -Eeuo pipefail
 umask 077
 cd "$(dirname "$0")/.."
 ROOT="/srv/projects/skill-universal"
+export PATH="$ROOT/tools/ubuntu-cli/bin:$PATH"
+export LD_LIBRARY_PATH="$ROOT/tools/ubuntu-cli/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export MAGICK_CONFIGURE_PATH="$ROOT/tools/ubuntu-cli/etc/ImageMagick-6"
+export MAGICK_CODER_MODULE_PATH="$ROOT/tools/ubuntu-cli/lib/ImageMagick/coders"
 mkdir -p "$ROOT/.runtime"
 WORK="$(mktemp -d "$ROOT/.runtime/tool-smoke.XXXXXXXX")"
 trap 'rm -rf -- "$WORK"' EXIT
@@ -13,8 +17,8 @@ python3 - "$WORK/catalogue.json" <<'PY'
 import json,sys
 x=json.load(open(sys.argv[1]))
 assert x["selected"]==56
-assert x["registered_actions"]==36
-assert x["callable_actions"]>=36
+assert x["registered_actions"]==40
+assert x["callable_actions"]>=40
 for name in ("pandoc","graphviz","jq","ffmpeg","imagemagick","tesseract","libvips","ripgrep","ansible","wireshark","objdump","strings","pdftotext"):
     p=next(z for z in x["programs"] if z["id"]==name)
     assert p["installed"] and p["actions"],name
@@ -412,7 +416,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 import sys
 root=Path(sys.argv[1])
-template=Path("/usr/share/lmms/projects/templates/default.mpt")
+template=Path("/srv/projects/skill-universal/tools/ubuntu-cli/share/lmms/projects/templates/default.mpt")
 assert template.is_file(),template
 document=ET.parse(template)
 track=document.getroot().find(".//song/trackcontainer/track[@type='0']")
