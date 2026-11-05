@@ -1,6 +1,6 @@
 # Fase 8 — matriz inicial de cobertura funcional real do Motor Ferrari
 
-**Estado:** auditoria inicial da Fase 8, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
+**Estado:** Fase 8 em certificação, com **13 testes funcionais novos e individualmente verificados**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
 
 **Regra permanente:** repositório `martaxi-boss/skill-universal` = pasta exclusiva `/srv/projects/skill-universal/`, sem programas, executores, caches ou dependências de aplicação Ferrari instalados globalmente. Nada de outros projetos, fornecedores partilhados ou novos coordenadores. O Ubuntu conserva as suas bibliotecas de SO.
 
@@ -40,6 +40,28 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
+
+## Provas funcionais individuais verificadas na Fase 8 (13/40)
+
+Estas **13 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. Os restantes 27 ID continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+
+| Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
+|---|---|---|---|
+| `file-mime` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/file` | [#42102487995](https://github.com/martaxi-boss/VPS/actions/runs/42102487995) | application/json confirmado |
+| `graphviz-dot-svg` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/dot` | [#42101994176](https://github.com/martaxi-boss/VPS/actions/runs/42101994176) | SVG real renderizado de grafo DOT |
+| `imagemagick-identify` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/identify` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | PNG 960x1200 |
+| `tesseract-ocr` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/tesseract` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | OCR reconheceu NOVIDADE - 2026 e texto do cartaz |
+| `ffprobe-media-info` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ffprobe` | [#42102960020](https://github.com/martaxi-boss/VPS/actions/runs/42102960020) | entrada e saída WAV de 0.25 segundos reportadas |
+| `ffmpeg-audio-wav` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/ffmpeg` | [#42102960020](https://github.com/martaxi-boss/VPS/actions/runs/42102960020) | WAV PCM válido convertido, duração 0.25 segundos |
+| `jq-format-json` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/jq` | [#42102487995](https://github.com/martaxi-boss/VPS/actions/runs/42102487995) | JSON bem formado com engine=Ferrari |
+| `readelf-header` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/readelf` | [#42103286913](https://github.com/martaxi-boss/VPS/actions/runs/42103286913) | ELF64 relocatable x86-64 identificado |
+| `vips-image-thumbnail` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/vips` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | PNG válido 256x320 |
+| `objdump-file-header` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/objdump` | [#42103286913](https://github.com/martaxi-boss/VPS/actions/runs/42103286913) | formato elf64-x86-64 validado |
+| `strings-file-extract` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/strings` | [#42103286913](https://github.com/martaxi-boss/VPS/actions/runs/42103286913) | marca FERRARI_F8_SAFE_ELF_FIXTURE_2026 extraída |
+| `ripgrep-find-text` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/rg` | [#42102487995](https://github.com/martaxi-boss/VPS/actions/runs/42102487995) | Correspondência de Ferrari na linha 1 |
+| `inkscape-svg-png` | `/srv/projects/skill-universal/tools/ubuntu-cli/bin/inkscape` | [#42102717541](https://github.com/martaxi-boss/VPS/actions/runs/42102717541) | PNG válido de 960x1200 proveniente de SVG |
+
+**Cadeias de produção:** `SVG → Inkscape PNG → {Tesseract OCR, ImageMagick identificar, libvips thumbnail}`; `WAV sintético → FFmpeg WAV → ffprobe` em entrada e saída; `ELF64 sintético não executável → readelf, objdump e strings`; `JSON → file/jq/ripgrep` em três trabalhadores paralelos. Todos os resultados ficaram em `/srv/projects/skill-universal/.runtime/` e nenhum input confidencial foi publicado.
 
 ## Nove candidatos ainda não privados
 
