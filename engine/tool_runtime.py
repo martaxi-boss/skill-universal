@@ -390,6 +390,9 @@ def invoke(action,source,folder,query=None):
         env.pop("PYTHONPATH",None)
         env.pop("PYTHONHOME",None)
         env["PYTHONNOUSERSITE"]="1"
+        env["LD_LIBRARY_PATH"]=str(HOME/"runtimes/python3.12/lib")
+        env["TMPDIR"]=str(outdir)
+        env["HOME"]=str(outdir)
         run_options["env"]=env
         run_options["cwd"]=str(ROOT)
     if x["tool"] in {"calibre","darktable","krita","gimp","scribus","lmms","kdenlive"}:
