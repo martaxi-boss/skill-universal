@@ -75,29 +75,17 @@ def system():
             "gui":bool(os.getenv("DISPLAY") or os.getenv("WAYLAND_DISPLAY"))}
 
 def present(p):
-    if p["id"]=="rea":
-        # Only the Ferrari-owned rea-agents npm tree; never reuse the legacy REA.
-        private=(FERRARI_HOME / ".runtime/npm/rea")
-        modules=private/"node_modules"
-        cli=modules/".bin/rea"
-        return private.is_dir() and not private.is_symlink() and modules.is_dir() and not modules.is_symlink() and cli.is_file() and cli.resolve().is_relative_to(modules.resolve())
-    if p["id"]=="apktool":
-        local=(FERRARI_HOME / "tools/apktool-3.0.3/bin/apktool")
-        return local.is_file() and not local.is_symlink()
-    exe=p.get("binary")
-    if not exe:
-        return False
-    if p["id"]=="ghidra":
-        home=os.getenv("GHIDRA_INSTALL_DIR")
-        local=(FERRARI_HOME / "tools/ghidra-12.2/support/analyzeHeadless")
-        return bool(shutil.which(exe) or (home and (Path(home)/"support/analyzeHeadless").is_file()) or local.is_file())
-    if p["id"]=="jadx":
-        local=(FERRARI_HOME / "tools/jadx-1.5.6/bin/jadx")
-        return bool(shutil.which(exe) or local.is_file())
-    if p["id"]=="ruflo":
-        local=(FERRARI_HOME / ".runtime/npm/ruflo/node_modules/.bin/ruflo")
-        return local.is_file()
-    return shutil.which(exe) is not None
+    """Report only Ferrari-owned executors, never Ubuntu PATH availability."""
+    name=p.get("id")
+    if name in {"blender","openscad","libreoffice"}:
+        from engine import cad_tools
+        try:
+            cad_tools._binary(name)
+            return True
+        except RuntimeError:
+            return False
+    from engine import tool_runtime
+    return tool_runtime.executable(name,p.get("binary")) is not None
 
 def inventory(category=None):
     return [{**p,"binary_found":present(p),"certified":False}

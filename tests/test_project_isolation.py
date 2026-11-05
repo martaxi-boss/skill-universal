@@ -33,6 +33,12 @@ class ProjectIsolationTests(unittest.TestCase):
             with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",Path(folder)):
                 with patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/jq"):
                     self.assertIsNone(tool_runtime.executable("jq","jq"))
+    def test_inventory_never_counts_an_external_path(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch.object(cad_tools,"FERRARI_HOME",Path(folder)):
+                with patch.object(ferrari.shutil,"which",return_value="/usr/bin/blender"):
+                    self.assertFalse(ferrari.present({"id":"blender","binary":"blender"}))
+
     def test_no_global_installs_in_entrypoints(self):
         from pathlib import Path
         root=Path(__file__).resolve().parents[1]
