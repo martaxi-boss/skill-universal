@@ -28,10 +28,12 @@ class GimpNativeExportTests(unittest.TestCase):
             def mock_run(args,**kwargs):
                 self.assertEqual(args[:4],["/usr/bin/gimp-console-2.10","-i","-n","-s"])
                 self.assertFalse(kwargs.get("shell",False))
-                self.assertIn("gimp-file-load",args[5])
-                self.assertIn("gimp-xcf-save",args[5])
-                self.assertIn(chr(92)+chr(34),args[5])
-                self.assertNotIn('image"quoted.png',args[5])
+                self.assertIn("-b",args)
+                batch=args[args.index("-b")+1]
+                self.assertIn("gimp-file-load",batch)
+                self.assertIn("gimp-xcf-save",batch)
+                self.assertIn(chr(92)+chr(34),batch)
+                self.assertNotIn('image"quoted.png',batch)
                 self.assertEqual(args[-1],"(gimp-quit 0)")
                 for key in ("XDG_CONFIG_HOME","XDG_CACHE_HOME","XDG_DATA_HOME"):
                     self.assertTrue(kwargs["env"][key].startswith(str(out)))
