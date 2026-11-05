@@ -18,8 +18,10 @@ import subprocess
 import sys
 
 HOME = Path("/srv/projects/skill-universal")
-ACTIVE = "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
-FALLBACK = "87969badbde0a77c2c181bb9605357d51a4a30c0"
+ACTIVE = sys.argv[1] if len(sys.argv) > 1 else "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
+FALLBACK = sys.argv[2] if len(sys.argv) > 2 else "87969badbde0a77c2c181bb9605357d51a4a30c0"
+if not (re.fullmatch(r"[a-f0-9]{40}", ACTIVE) and re.fullmatch(r"[a-f0-9]{40}", FALLBACK)):
+    raise SystemExit("FERRARI_PHASE6_INVALID_RELEASE_SHA")
 GLOBAL_NAMES = {
     "libreoffice":"libreoffice", "ansible":"ansible", "ytdlp":"yt-dlp",
     "gimp":"gimp", "blender":"blender", "kdenlive":"kdenlive",
