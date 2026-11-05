@@ -1,22 +1,21 @@
-"""VPS deployment script contract: never silently mix central VPS projects."""
+"""Ferrari deploy must not create or reuse global application installs."""
 import unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
 class VpsDeploymentContract(unittest.TestCase):
-    def test_dedicated_local_install(self):
+    def test_legacy_delivery_is_disabled(self):
         s=(ROOT/"install/vps-delivery.sh").read_text()
-        for fragment in ("/srv/projects/skill-universal",
-                         "install/ferrari-ubuntu.sh --profile maximum --headless --apply",
-                         "python3 -m engine.orchestrator", "FERRARI_VPS_INSTALL=",
-                         "sudo -n", "FERRARI_APT_BLOCKED_DISK"):
-            self.assertIn(fragment,s)
-        for forbidden in ("curl | bash", "rm -rf /", "npm install -g", "apt-get upgrade", "reboot"):
-            self.assertNotIn(forbidden,s)
-        self.assertNotIn("$HOME/.local/share/motor-ferrari", s)
+        self.assertIn("BLOCKED_LEGACY_GLOBAL_APT",s)
+        self.assertNotIn("apt-get install",s)
         workflow=(ROOT/".github/workflows/deploy-vps.yml").read_text()
-        self.assertIn("/srv/projects/skill-universal", workflow)
-        self.assertNotIn(".local/share/motor-ferrari", workflow)
+        self.assertIn("/srv/projects/skill-universal",workflow)
+        self.assertNotIn(".local/share/motor-ferrari",workflow)
+    def test_project_only_cad_install(self):
+        s=(ROOT/"install/vps-cad-3d.sh").read_text()
+        self.assertNotIn("apt-get install",s)
+        self.assertNotIn("sudo",s)
+        self.assertIn("FERRARI_PRIVATE_CAD_EXECUTOR",s)
 
 if __name__=="__main__":
     unittest.main()

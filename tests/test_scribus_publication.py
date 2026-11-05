@@ -8,6 +8,14 @@ from unittest.mock import patch
 from engine import tool_runtime
 
 
+def _fake_private_xvfb(root):
+    private=root/"private-cli"
+    (private/"bin").mkdir(parents=True,exist_ok=True)
+    for name in ("xvfb-run","Xvfb"):
+        (private/"bin"/name).write_text("private test fixture")
+    return private
+
+
 class ScribusPublicationTests(unittest.TestCase):
     def test_typed_manifest_and_natural_route(self):
         specs = tool_runtime.specs()
@@ -26,8 +34,9 @@ class ScribusPublicationTests(unittest.TestCase):
             source=root/"publicacao.txt"
             source.write_text("Ferrari: publicacao de teste",encoding="utf-8")
             out=root/"result"
+            private=_fake_private_xvfb(root)
             def run(args,**kwargs):
-                self.assertEqual(args[:6],["/usr/bin/xvfb-run","-a",
+                self.assertEqual(args[:6],[str(private/"bin/xvfb-run"),"-a",
                                           "/usr/bin/scribus","-g","-ns","-py"])
                 self.assertTrue(args[6].endswith("engine/scribus_job.py"))
                 self.assertIs(kwargs["shell"] if "shell" in kwargs else False,False)
@@ -44,7 +53,7 @@ class ScribusPublicationTests(unittest.TestCase):
                     b'<?xml version="1.0"?>\n<SCRIBUSUTF8NEW>'+b"x"*256)
                 return subprocess.CompletedProcess(args,0,b"",b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/scribus"):
-                with patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/xvfb-run"):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",private):
                     with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                         result=tool_runtime.invoke("scribus-text-publication",str(source),str(out))
             self.assertTrue(result["confirmed"])
@@ -56,8 +65,9 @@ class ScribusPublicationTests(unittest.TestCase):
             src=Path(folder)/"input.txt"
             src.write_text("Ferrari",encoding="utf-8")
             dest=Path(folder)/"out"
+            # Test missing Ferrari Xvfb even when the VPS has its private copy.
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/scribus"):
-                with patch.object(tool_runtime.shutil,"which",return_value=None):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",Path(folder)/"missing-private-cli"):
                     with self.assertRaisesRegex(RuntimeError,"Xvfb"):
                         tool_runtime.invoke("scribus-text-publication",str(src),str(dest))
             self.assertFalse((dest/"scribus-publication/publication.pdf").exists())
@@ -67,13 +77,14 @@ class ScribusPublicationTests(unittest.TestCase):
             src=Path(folder)/"input.txt"
             src.write_text("Ferrari",encoding="utf-8")
             dest=Path(folder)/"out"
+            private=_fake_private_xvfb(Path(folder))
             def run(args,**kwargs):
                 folder=dest/"scribus-publication"
                 (folder/"publication.pdf").write_bytes(b"fake pdf"+b"x"*256)
                 (folder/"publication.sla").write_bytes(b"<SCRIBUS>"+b"x"*256)
                 return subprocess.CompletedProcess(args,0,b"",b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/scribus"):
-                with patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/xvfb-run"):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",private):
                     with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                         with self.assertRaisesRegex(RuntimeError,"valid PDF"):
                             tool_runtime.invoke("scribus-text-publication",str(src),str(dest))

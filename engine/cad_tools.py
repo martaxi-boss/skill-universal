@@ -7,12 +7,24 @@ import subprocess
 from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
+FERRARI_HOME = Path("/srv/projects/skill-universal")
+PRIVATE_EXECUTABLES = {
+    "blender": ("tools/blender/blender", "tools/blender/bin/blender"),
+    "openscad": ("tools/openscad/bin/openscad", "tools/openscad/usr/bin/openscad"),
+    "libreoffice": ("tools/libreoffice/program/soffice", "tools/ubuntu-cli/bin/libreoffice"),
+}
 
 def _binary(name):
-    target = shutil.which(name)
-    if not target:
-        raise RuntimeError("Missing Ubuntu program: " + name)
-    return target
+    # Never use /usr/bin or programs owned by another project.
+    if name not in PRIVATE_EXECUTABLES:
+        raise ValueError("Unknown Ferrari executor: " + name)
+    root = FERRARI_HOME.resolve()
+    for rel in PRIVATE_EXECUTABLES[name]:
+        path = FERRARI_HOME / rel
+        if (path.is_file() and os.access(path, os.X_OK)
+                and path.resolve().is_relative_to(root)):
+            return str(path)
+    raise RuntimeError("FERRARI_PRIVATE_EXECUTOR_MISSING=" + name)
 
 def _run(args, *, env=None, timeout=300):
     try:

@@ -10,6 +10,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Prepare project-owned CI fixtures (runner only, never VPS)
+        run: |
+          set -euo pipefail
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/bin
+          for exe in strings file jq; do
+            src="$(command -v "$exe")"
+            sudo install -m 0755 "$src" "/srv/projects/skill-universal/tools/ubuntu-cli/bin/$exe"
+          done
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/share
+          magic="$(find /usr/share/misc /usr/lib/file -maxdepth 2 -name magic.mgc -print -quit 2>/dev/null)"
+          test -n "$magic" && test -f "$magic"
+          sudo cp -L "$magic" /srv/projects/skill-universal/tools/ubuntu-cli/share/magic.mgc
       - name: Unit tests, core and Ferrari
         run: python3 -m unittest discover -s tests -v
       - name: Validate both installers
@@ -17,6 +29,10 @@ jobs:
           bash -n install/install-ubuntu.sh
           bash -n install/ferrari-ubuntu.sh
           bash -n install/vps-preflight.sh
+          bash -n install/vps-private-cad.sh
+          bash -n install/vps-private-cad-smoke.sh
+          bash -n install/vps-private-office.sh
+          bash -n install/vps-isolated-release.sh
           bash -n install/install-agent-engines.sh
           bash -n install/vps-delivery.sh
           bash -n install/vps-android-cli-isolated.sh

@@ -43,6 +43,14 @@ def _is_dir(path):
     return path.is_dir() and not path.is_symlink()
 
 
+def _owned(path, home):
+    """Reject parent-directory symlink escapes without importing programs."""
+    try:
+        return path.resolve(strict=True).is_relative_to(home.resolve(strict=True))
+    except (OSError, RuntimeError):
+        return False
+
+
 def _site_packages(home):
     """Only Ferrari venvs, with fixed nesting and a finite scan budget."""
     roots = [
@@ -50,22 +58,22 @@ def _site_packages(home):
         home / "venv", home / ".venv",
     ]
     parent = home / ".runtime/venvs"
-    if _is_dir(parent):
-        roots.extend(p for p in islice(parent.iterdir(), 24) if _is_dir(p))
+    if _is_dir(parent) and _owned(parent, home):
+        roots.extend(p for p in islice(parent.iterdir(), 24) if _is_dir(p) and _owned(p, home))
     # Ferrari expansion venvs contain one package environment per tool.
     extended = parent / "extended"
-    if _is_dir(extended):
-        roots.extend(p for p in islice(extended.iterdir(), 24) if _is_dir(p))
+    if _is_dir(extended) and _owned(extended, home):
+        roots.extend(p for p in islice(extended.iterdir(), 24) if _is_dir(p) and _owned(p, home))
     for root in roots:
-        if not _is_dir(root):
+        if not _is_dir(root) or not _owned(root, home):
             continue
         for lib in ("lib", "lib64"):
             folder = root / lib
-            if not _is_dir(folder):
+            if not _is_dir(folder) or not _owned(folder, home):
                 continue
             for version in islice(folder.glob("python*"), 12):
                 candidate = version / "site-packages"
-                if _is_dir(candidate):
+                if _is_dir(candidate) and _owned(candidate, home):
                     yield candidate
 
 
@@ -90,7 +98,9 @@ def python_presence(module, home=FERRARI_HOME):
         package = site / module
         file = site / (module + ".py")
         compiled = any(islice(site.glob(module + ".*.so"), 1))
-        if (package.is_dir() and not package.is_symlink()) or (file.is_file() and not file.is_symlink()) or compiled:
+        if (package.is_dir() and not package.is_symlink() and _owned(package, home)
+                or file.is_file() and not file.is_symlink() and _owned(file, home)
+                or compiled and _owned(site, home)):
             return {
                 "scope": "ferrari_venv", "location": str(package if package.is_dir() else file if file.is_file() else site),
                 "verification": "files_present_not_import_tested",
@@ -101,10 +111,10 @@ def python_presence(module, home=FERRARI_HOME):
 def _npm_roots(home, system_roots=SYSTEM_NPM_ROOTS):
     base = Path(home) / ".runtime/npm"
     roots = [base / "node_modules"]
-    if _is_dir(base):
-        roots.extend(p / "node_modules" for p in islice(base.iterdir(), 32) if _is_dir(p))
+    if _is_dir(base) and _owned(base, home):
+        roots.extend(p / "node_modules" for p in islice(base.iterdir(), 32) if _is_dir(p) and _owned(p, home))
     # Ignore system_roots, retained only for callers of the old discovery API.
-    return [p for p in roots if _is_dir(p)]
+    return [p for p in roots if _is_dir(p) and _owned(p, home)]
 
 
 def npm_presence(tool, home=FERRARI_HOME, system_roots=SYSTEM_NPM_ROOTS):
@@ -117,7 +127,7 @@ def npm_presence(tool, home=FERRARI_HOME, system_roots=SYSTEM_NPM_ROOTS):
             continue
         for name in packages:
             manifest = root.joinpath(*name.split("/")) / "package.json"
-            if manifest.is_file() and not manifest.is_symlink():
+            if manifest.is_file() and not manifest.is_symlink() and _owned(manifest, home):
                 return {
                     "scope": "ferrari_npm",
                     "package": name, "location": str(manifest),
@@ -197,9 +207,9 @@ def browser_discovery(home=FERRARI_HOME):
             system[name] = {"path": candidate, "verification": "binary_path_only_not_launched"}
     root = Path(home) / ".runtime/browsers"
     owned = []
-    if _is_dir(root):
+    if _is_dir(root) and _owned(root, home):
         for folder in islice(root.iterdir(), 40):
-            if not _is_dir(folder):
+            if not _is_dir(folder) or not _owned(folder, home):
                 continue
             if not re.fullmatch(r"(chromium|chromium_headless_shell|firefox)-[0-9]+", folder.name):
                 continue
@@ -208,7 +218,7 @@ def browser_discovery(home=FERRARI_HOME):
                              "chrome-headless-shell-linux64/chrome-headless-shell"):
                 # Do not traverse outside the Ferrari browser cache.
                 candidate = folder / relative
-                if candidate.is_file() and not candidate.is_symlink():
+                if candidate.is_file() and not candidate.is_symlink() and _owned(candidate, home):
                     owned.append({"path": str(candidate),
                                   "verification": "ferrari_cache_file_only_not_launched"})
                     break

@@ -12,7 +12,9 @@ class HygieneScope(unittest.TestCase):
         self.assertIn("active=pointer.resolve(strict=True)",s)
         self.assertIn("shutil.rmtree(p)",s)
         self.assertIn("outside_ferrari_touched",s)
-        self.assertIn('fallback_sha="62f862cdf9727842546a244a3e4ec19dd8bc82f4"',s)
+        self.assertIn('fallback_sha="40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"',s)
+        self.assertIn("Certified Ferrari phase-5 fallback missing",s)
+        self.assertIn("Old Ferrari releases currently referenced by processes",s)
         self.assertNotIn("apt-get",s)
         self.assertNotIn("/root",s)
 if __name__=="__main__":

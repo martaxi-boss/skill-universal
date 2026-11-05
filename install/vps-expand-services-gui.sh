@@ -42,26 +42,10 @@ for pkg in "${GUI[@]}"; do
     available+=("$pkg")
   fi
 done
+# Preview candidate packages only; do not install GUI applications via global APT.
 if (("${#available[@]}")); then
-  # Install official Ubuntu APT packages with explicit ownership in the
-  # package manager; none is taken from the other REA's private directories.
-  test "$(df -Pk "$HOME" | awk 'END{print $4}')" -ge 8388608 || {
-    echo 'FERRARI_EXPANSION_GUI_INSUFFICIENT_DISK_8GIB' >&2; exit 3;
-  }
-  sudo -n true
-  sudo -n apt-get -s install --no-install-recommends "${available[@]}" > "$REPORT/gui-apt-simulation.log"
-  if sudo -n env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${available[@]}" > "$REPORT/gui-install.log" 2>&1; then
-    :
-  else
-    echo 'FERRARI_EXPANSION_GUI_APT_FAILED' >&2
-    tail -n 35 "$REPORT/gui-install.log" >&2
-  fi
   for pkg in "${available[@]}"; do
-    if [[ "$(dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null)" == "install ok installed" ]]; then
-      record gui "$pkg" INSTALLED_APT "$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null)"
-    else
-      record gui "$pkg" INSTALL_FAILED
-    fi
+    record gui "$pkg" PRIVATE_INSTALL_REQUIRED "no_global_apt"
   done
 fi
 # Download signed Ubuntu binary packages into Ferrari's own tree, without

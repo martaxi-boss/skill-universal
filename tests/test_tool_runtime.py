@@ -34,10 +34,11 @@ class ToolRuntimeTests(unittest.TestCase):
                 self.assertEqual(kwargs["env"]["HOME"],str(Path(d)/"result"))
                 self.assertEqual(kwargs["env"]["TMPDIR"],str(Path(d)/"result"))
                 return subprocess.CompletedProcess(args,0,b'{"ferrari":true}\\n',b"")
-            with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root):
-                self.assertEqual(tool_runtime.executable("jq","jq"),str(private))
-                with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
-                    result=tool_runtime.invoke("jq-format-json",str(source),str(Path(d)/"result"))
+            with patch.object(tool_runtime,"HOME",Path(d)):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root):
+                    self.assertEqual(tool_runtime.executable("jq","jq"),str(private))
+                    with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
+                        result=tool_runtime.invoke("jq-format-json",str(source),str(Path(d)/"result"))
             self.assertTrue(result["confirmed"])
             self.assertTrue((Path(d)/"result/formatted.json").is_file())
 
@@ -98,8 +99,11 @@ class ToolRuntimeTests(unittest.TestCase):
                 orchestrator.validate_workflow({"version":1,"steps":[step]})
     def test_read_only_python_module_detection(self):
         from importlib.machinery import ModuleSpec
-        with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
-            self.assertIsNone(tool_runtime.python_module_location("opencv"))  # System Python is not private Ferrari
+        # Ignore the host's real Ferrari virtual environments so this test
+        # checks only that a global Python module is never accepted as private.
+        with patch.object(tool_runtime.runtime_discovery,"_site_packages",return_value=[]):
+            with patch("importlib.util.find_spec",return_value=ModuleSpec("cv2",loader=None,origin="/usr/lib/cv2.so")):
+                self.assertIsNone(tool_runtime.python_module_location("opencv"))  # System Python is not private Ferrari
         self.assertIsNone(tool_runtime.python_module_location("not-a-python-package"))
 
     def test_existing_ocrmypdf_adapter_uses_pdf_and_no_shell(self):

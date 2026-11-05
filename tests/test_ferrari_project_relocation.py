@@ -30,9 +30,11 @@ class FerrariPrivateProjectMigrationTests(unittest.TestCase):
             base=Path(td)
             home=base/"home/ubuntu"
             physical=base/"srv/projects/skill-universal"
-            release=physical/"releases"/("a"*40)
-            (release/"engine").mkdir(parents=True)
-            (release/"engine/ferrari.py").write_text("Ferrari")
+            release=physical/"releases"/"146145d5ada9c13e368df18727e4dbf4f5807664"
+            fallback=physical/"releases"/"40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
+            for installed in (release,fallback):
+                (installed/"engine").mkdir(parents=True)
+                (installed/"engine/ferrari.py").write_text("Ferrari")
             (physical/"runtimes").mkdir()
             (physical/"current").symlink_to(release,target_is_directory=True)
             alias=home/".local/share/motor-ferrari"
@@ -42,7 +44,8 @@ class FerrariPrivateProjectMigrationTests(unittest.TestCase):
                  patch.object(h,"PROJECT_ROOT",physical):
                 result=h.clean(apply=False)
             self.assertEqual(result["status"],"PASS")
-            self.assertEqual(result["active"],"a"*40)
+            self.assertEqual(result["active"],release.name)
+            self.assertIn(fallback.name,result["preserved_releases"])
             self.assertEqual(result["removed_releases"],[])
             self.assertEqual(result["outside_ferrari_touched"],False)
 

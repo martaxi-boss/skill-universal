@@ -53,31 +53,9 @@ if (( ${#MISSING[@]} )); then
   printf '  %s\n' "${MISSING[@]}"
 fi
 if (( ! APPLY )); then
-  echo 'DRY RUN. No packages installed. Use --apply to install.'
+  echo 'DRY RUN ONLY. Global --apply is blocked; install executables in the Ferrari project.'
   exit 0
 fi
-# APT candidates verified on the Ubuntu 24.04 runner, not arbitrary later releases.
-if [[ "$VERSION_ID" != "24.04" ]]; then
-  echo "APT install is validated for Ubuntu 24.04 only; stop for new platform review" >&2
-  exit 2
-fi
-if (( ${#MISSING[@]} )); then
-  echo 'Refusing partial install: required curated package candidates missing' >&2
-  exit 3
-fi
-if (( EUID != 0 )); then
-  echo 'sudo required for --apply' >&2
-  exit 2
-fi
-FREE_KIB="$(df -Pk . | awk 'END {print $4}')"
-if (( FREE_KIB < 3145728 )); then
-  echo 'Less than 3 GiB free, cannot safely install.' >&2
-  exit 2
-fi
-if (( ${#AVAILABLE[@]} )); then
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get -s install --no-install-recommends "${AVAILABLE[@]}" >/dev/null
-  apt-get install --no-install-recommends -y "${AVAILABLE[@]}"
-fi
-python3 -m engine.ferrari doctor
-echo 'APT stage completed. REA, Ruflo, JADX and Ghidra need independent installations and tests.'
+# Global package installation would break Ferrari uninstall independence.
+echo 'FERRARI_GLOBAL_APT_INSTALL_FORBIDDEN: install application packages only within /srv/projects/skill-universal' >&2
+exit 4

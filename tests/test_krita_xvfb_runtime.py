@@ -15,8 +15,12 @@ class KritaVirtualDisplayTests(unittest.TestCase):
             src=root/"sample.jpg"
             src.write_bytes(b"\xff\xd8\xff"+b"data")
             dst=root/"result"
+            private=root/"private-cli"
+            (private/"bin").mkdir(parents=True)
+            for name in ("xvfb-run","Xvfb"):
+                (private/"bin"/name).write_text("private fixture")
             def fake(args,**kw):
-                self.assertEqual(args[:3],["/usr/bin/xvfb-run","-a","/usr/bin/krita"])
+                self.assertEqual(args[:3],[str(private/"bin/xvfb-run"),"-a","/usr/bin/krita"])
                 self.assertEqual(args[3],str(src))
                 self.assertIn("--export",args)
                 self.assertEqual(kw["env"]["QT_QPA_PLATFORM"],"xcb")
@@ -25,8 +29,7 @@ class KritaVirtualDisplayTests(unittest.TestCase):
                 (dst/"krita-export.png").write_bytes(b"\x89PNG\r\n\x1a\n"+"Ferrari".encode())
                 return subprocess.CompletedProcess(args,0,b"",b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/krita"):
-                with patch.object(tool_runtime.shutil,"which",
-                                  side_effect=lambda name: f"/usr/bin/{name}" if name in {"xvfb-run","Xvfb"} else None):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",private):
                     with patch.object(tool_runtime.subprocess,"run",side_effect=fake):
                         result=tool_runtime.invoke("krita-image-png",str(src),str(dst))
             self.assertTrue(result["confirmed"])
@@ -37,8 +40,10 @@ class KritaVirtualDisplayTests(unittest.TestCase):
             root=Path(d)
             src=root/"sample.jpg"
             src.write_bytes(b"\xff\xd8\xff")
+            # A private Xvfb exists on the real VPS; force a missing private
+            # executor so this negative test is independent of the host.
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/krita"):
-                with patch.object(tool_runtime.shutil,"which",return_value=None):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root/"missing-private-cli"):
                     with patch.object(tool_runtime.subprocess,"run") as invoke:
                         with self.assertRaisesRegex(RuntimeError,"existing Xvfb virtual display"):
                             tool_runtime.invoke("krita-image-png",str(src),str(root/"out"))

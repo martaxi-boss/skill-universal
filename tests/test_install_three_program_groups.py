@@ -25,8 +25,9 @@ class ExpansionTests(unittest.TestCase):
                     "qgis","audacity","obs-studio","lmms","solvespace",
                     "synfigstudio","openshot-qt","calibre","inkscape"):
             self.assertRegex(script,r"\b"+re.escape(pkg)+r"\b")
-        self.assertIn("apt-get -s install --no-install-recommends",script)
-        self.assertIn("apt-get install -y --no-install-recommends",script)
+        self.assertIn("PRIVATE_INSTALL_REQUIRED",script)
+        self.assertNotIn("apt-get install -y",script)
+        self.assertNotIn("sudo -n apt-get install",script)
         self.assertIn('ROOT="/srv/projects/skill-universal"',script)
         self.assertNotIn("~/.rea",script)
         self.assertNotIn("/opt/rea",script)
@@ -43,8 +44,8 @@ class ExpansionTests(unittest.TestCase):
 
     def test_expansion_called_by_ferrari_release_only(self):
         script=(ROOT/"install/vps-delivery.sh").read_text()
-        self.assertEqual(script.count("bash install/vps-expand-services-gui.sh"),1)
-        self.assertIn("FERRARI_APT_STAGE=COMPLETED",script)
+        self.assertIn("BLOCKED_LEGACY_GLOBAL_APT",script)
+        self.assertNotIn("bash install/vps-expand-services-gui.sh",script)
         self.assertIn("FERRARI_ONLY_HYGIENE", (ROOT/"install/ferrari-hygiene.py").read_text())
 
 if __name__=="__main__":

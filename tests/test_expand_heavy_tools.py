@@ -76,7 +76,9 @@ class HeavyToolsTests(unittest.TestCase):
 
     def test_called_in_ferrari_installer_only(self):
         src=(ROOT/"install/vps-delivery.sh").read_text()
-        self.assertEqual(src.count("bash install/vps-expand-heavy.sh"),1)
+        self.assertIn("BLOCKED_LEGACY_GLOBAL_APT",src)
+        self.assertNotIn("bash install/vps-expand-heavy.sh",src)
+        self.assertIn('ROOT="/srv/projects/skill-universal"',HEAVY.read_text())
 
 if __name__=="__main__":
     unittest.main()

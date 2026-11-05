@@ -1,6 +1,8 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Estado de referência: 05/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. O histórico detalhado continua nos relatórios de docs/ e no Git. O resultado de CI não substitui um teste operacional na VPS.
+**Estado de referência: 05/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. Plano de fecho: [fases 5–10](docs/PLANO_FECHO_FERRARI_20261105.md). O resultado de CI não substitui um teste operacional na VPS.
+
+**Estado prevalecente — Fase 6 CERTIFICADA (05/11):** `current` = `146145d5ada9c13e368df18727e4dbf4f5807664`; fallback F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` (fallback histórico anterior `87969badbde0a77c2c181bb9605357d51a4a30c0`). [Certificado final](docs/CERTIFICACAO_FASE6_20261105.md): [auditoria VPS #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659) **315441 entradas, zero links externos/quebrados/Python global**; **40/40 ações, 7/7 venvs, 47/56 programas detetados**. Higiene e Skill→ZIP PASS. Os 16 APT globais não atribuídos ficam para Fase 9, sem fallback ao Ferrari. Fase 7 não iniciada.
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
@@ -12,8 +14,8 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 
 | Elemento | Prova e âmbito |
 |---|---|
-| **Release certificada do motor** | `87969badbde0a77c2c181bb9605357d51a4a30c0`; GitHub CI [#42030465492](https://github.com/martaxi-boss/skill-universal/actions/runs/42030465492) **SUCCESS**; teste real completo VPS [#42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124) **SUCCESS** |
-| **Release ativa comprovada em 05/11** | **87969badbde0a77c2c181bb9605357d51a4a30c0** em `/srv/projects/skill-universal/current`, verificada no log [VPS #42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124). **Fallback anterior preservado**: `62f862cdf9727842546a244a3e4ec19dd8bc82f4` |
+| **Release atual — Fase 6 CERTIFICADA** | `146145d5ada9c13e368df18727e4dbf4f5807664`; [CI Ferrari #42091895647](https://github.com/martaxi-boss/skill-universal/actions/runs/42091895647) 255 testes PASS; [deploy #42078597765](https://github.com/martaxi-boss/VPS/actions/runs/42078597765), [auditoria #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659) PASS |
+| **VPS read-back + fallback** | `current` validado em [VPS #42088052659](https://github.com/martaxi-boss/VPS/actions/runs/42088052659); fallback F5 `40c0e1cdf31b1fe9589ad8be90e5eac06eec2856` preservado ([certificado F5](docs/CERTIFICACAO_FASE5_20261105.md)) |
 | **Auditoria inicial do isolamento — contexto histórico** | [VPS #42011202485](https://github.com/martaxi-boss/VPS/actions/runs/42011202485) identificou apenas **8 de 40 executores privados**. Esta lacuna **foi corrigida e retestada** em [VPS #42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124); manter a auditoria antiga apenas como comparação, não como estado atual |
 | **Inventário depois da correção — 05/11** | [VPS #42011461022](https://github.com/martaxi-boss/VPS/actions/runs/42011461022): 55/56 candidatos detetados, 40 ações; OpenCV identificado numa venv Docling **privada Ferrari**, sem depender da instalação global de Python para a sua deteção. Penpot continua ausente; `report.json` completed e ZIP PASS |
 | **Ponto 3 — CERTIFICAÇÃO FUNCIONAL (05/11)** | [Matriz e 7 execuções reais pela Skill](docs/CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md): web/browser, documentos, dados, imagem, áudio/vídeo, CAD/IFC/3D, orquestração e REA/Android, com limites por caso testado; sem certificar automaticamente todas as ferramentas |
@@ -25,8 +27,6 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 | REA próprio do Ferrari | **rea-agents@6.8.0**, instalado em .runtime/npm/rea, catálogo com **229 nomes MCP**. Catálogo não significa 229 ferramentas certificadas. Chamada ELF real [#41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e cenário [#41718385142](https://github.com/martaxi-boss/VPS/actions/runs/41718385142) PASS |
 | Hopper privado | **Hopper 6.6.1**, pacote oficial validado e binário isolado em tools/hopper-6.6.1; origem [#41921893982](https://github.com/martaxi-boss/VPS/actions/runs/41921893982), doctor REA [#41922087539](https://github.com/martaxi-boss/VPS/actions/runs/41922087539) PASS. **Versão demo**, sem licença comercial nem certificação de todas as funções |
 | Ferramentas Android | Apktool **3.0.3**; AAPT2, Apksigner, Zipalign, ADB dentro de tools/android-cli-36.0.0, APK sintético testado [#41854398886](https://github.com/martaxi-boss/VPS/actions/runs/41854398886). ADB sem dispositivo físico certificado |
-| Ações tipadas | Última contagem operacional publicada: **40 ações** [#41854771565](https://github.com/martaxi-boss/VPS/actions/runs/41854771565), em 04/11. Inventário novo em 05/11 confirma as 40 como disponíveis para invocação |
-| **Inventário real atualizado — ponto 3 (05/11)** | [Skill→VPS→ZIP #42034776491](https://github.com/martaxi-boss/VPS/actions/runs/42034776491), **SUCCESS**; `inventory.json` verificado: **40 ações registadas e invocáveis**, **55/56** candidatos Ubuntu detetados (Penpot em falta), **83** programas detetados no inventário alargado. Deteção ≠ teste funcional de todas as opções |
 | REAs legados | **REA FINAL e Trial removidos da VPS**; ausência verificada [#41840478411](https://github.com/martaxi-boss/VPS/actions/runs/41840478411). O REA privado do Ferrari permanece e não deve ser apagado |
 | Atalho legado | Após a migração dos launchers, **/home/ubuntu/.local/share/motor-ferrari deixou de ser um symlink de trabalho**. O caminho canónico é /srv/projects/skill-universal. O código correspondente foi integrado no merge 292aeb7d; verificar novamente na VPS antes de qualquer nova remoção |
 
@@ -66,7 +66,7 @@ A lógica, seleção e orquestração pertencem ao Ferrari. Não adicionar coord
 | REA/Engenharia reversa | **PASS parcial** — REA privado analisou ELF e APK sintético; Ghidra/JADX possuem testes concretos anteriores | 229 nomes MCP não equivalem a 229 ferramentas testadas |
 | Android | **PASS parcial** — Apktool 3.0.3 construiu e descodificou APK sintético; ferramentas Android privadas verificadas | ADB e instalação real em telemóvel permanecem sem teste físico |
 
-**Nota de isolamento observada pelo teste de 3D:** os cinco passos do DAG passaram, mas as operações base `cad-stl` e `blender-house` executaram `/usr/bin/openscad` e `/usr/bin/blender`, respetivamente. Não confundir estas operações base com a certificação **40/40 das ações tipadas com executores privados** do ponto 2. A dependência destes dois executáveis do Ubuntu continua documentada; não declarar isolamento físico total de todas as operações base.
+**CAD/3D privado:** OpenSCAD/Blender e Office tiveram prova privada anterior à ativação [CAD](docs/CAD_PRIVADO_TESTE_MANUAL_20261105.md); o deploy e Skill→ZIP foram concluídos na [Fase 5](docs/CERTIFICACAO_FASE5_20261105.md).
 
 **Limites externos não bloqueantes:** dispositivo Android físico, Penpot sem instalação operacional, ComfyUI sem modelos, GUI totalmente interativa, fornecedores pagos e Hopper em modo de demonstração. Estas capacidades não recebem certificação por associação às ferramentas instaladas.
 

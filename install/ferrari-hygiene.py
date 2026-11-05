@@ -52,18 +52,33 @@ def clean(apply=False):
         if not (item/"engine/ferrari.py").is_file():
             continue
         all_dirs.append(item)
-    # Preserve active plus last known-good Ferrari release certified on VPS.
-    # The fallback is private Ferrari code; no provider runtimes or other projects pruned.
-    fallback_sha="62f862cdf9727842546a244a3e4ec19dd8bc82f4"
+    # Preserve the exact two releases certified on the live Ferrari VPS.
+    # Never guess the fallback by mtime: that could delete the known-good F5.
+    fallback_sha="40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
     fallback=release_root/fallback_sha
-    keep={active.name}
-    if fallback in all_dirs:
-        keep.add(fallback_sha)
-    else:
-        others=sorted((p for p in all_dirs if p.name!=active.name),
-                      key=lambda p:p.stat().st_mtime,reverse=True)
-        if others: keep.add(others[0].name)
+    keep={active.name,fallback_sha}
+    if fallback not in all_dirs:
+        raise RuntimeError("Certified Ferrari phase-5 fallback missing: refusing cleanup")
+    if active.name!="146145d5ada9c13e368df18727e4dbf4f5807664":
+        raise RuntimeError("Unexpected Ferrari active SHA: refusing phase-6 hygiene")
     candidates=[p for p in all_dirs if p.name not in keep]
+    # Do not prune release code referenced by a current process.
+    # Only inspect pid cwd/exe/cmdline locally; do not print them or read secrets.
+    used=set()
+    for proc in Path("/proc").iterdir():
+        if not proc.name.isdigit():
+            continue
+        try:
+            refs=[os.readlink(proc/"cwd"),os.readlink(proc/"exe")]
+            refs.extend(arg.decode("utf-8","replace") for arg in
+                        (proc/"cmdline").read_bytes().split(b"\x00")[:9] if arg)
+        except (OSError,PermissionError):
+            continue
+        for p in candidates:
+            if any(str(p) in ref for ref in refs):
+                used.add(p.name)
+    if used:
+        raise RuntimeError("Old Ferrari releases currently referenced by processes: "+str(len(used)))
     def size(p):
         total=0
         for base, dirs, files in os.walk(p,followlinks=False):
@@ -79,6 +94,10 @@ def clean(apply=False):
     # used by the active Ferrari runtime, which lives at root/.runtime/npm.
     removed=[]
     if apply:
+        if not shutil.rmtree.avoids_symlink_attacks:
+            raise RuntimeError("Safe Ferrari release cleanup requires fd-safe rmtree")
+        if pointer.resolve(strict=True) != active or not fallback.is_dir():
+            raise RuntimeError("Ferrari active/fallback changed during cleanup")
         for p in candidates:
             if p == active or p.is_symlink() or p.resolve(strict=True).parent!=releases_real:
                 raise RuntimeError("Unsafe cleanup target")
@@ -116,6 +135,8 @@ def clean(apply=False):
                 raise RuntimeError("Unsafe Ferrari smoke cleanup target")
             shutil.rmtree(p)
             scratch_removed.append(p.name)
+    if pointer.resolve(strict=True)!=active or not fallback.is_dir():
+        raise RuntimeError("Ferrari production release/fallback changed during hygiene")
     after=shutil.disk_usage(root_real).free
     report={
         "mode":"apply" if apply else "preview",

@@ -101,6 +101,15 @@ def specs():
     return result
 
 def executable(tool,binary=None):
+    # CAD and Office are verified Ferrari-owned base executors, not manifest
+    # actions. The previous inventory incorrectly omitted these three even
+    # though their real functional smoke tests passed in the active release.
+    if tool in {"blender","openscad","libreoffice"}:
+        from engine import cad_tools
+        try:
+            return cad_tools._binary(tool)
+        except RuntimeError:
+            return None
     # Ferraris REA is a Ferrari-owned npm installation, never a PATH/system REA.
     pinned=ISOLATED.get(tool)
     if tool=="rea":
@@ -139,14 +148,17 @@ def executable(tool,binary=None):
             return None
         return str(pinned)
     if tool in {"apktool","prometheus","typst","godot","freecad"}:
-        return str(pinned) if pinned.is_file() and not pinned.is_symlink() else None
-    if pinned and pinned.is_file():
+        return (str(pinned) if (pinned.is_file() and
+                pinned.resolve().is_relative_to(HOME.resolve())) else None)
+    if pinned and pinned.is_file() and pinned.resolve().is_relative_to(HOME.resolve()):
         return str(pinned)
     if tool in PRIVATE_CLI and (binary or BINARIES.get(tool) or tool) in PRIVATE_CLI[tool]:
         private=PRIVATE_CLI_ROOT/"bin"/(binary or BINARIES.get(tool) or tool)
-        if private.is_file() and not private.is_symlink() and private.stat().st_mode & 0o111:
+        if (private.is_file() and not private.is_symlink()
+                and private.stat().st_mode & 0o111
+                and private.resolve(strict=True).is_relative_to(HOME.resolve())):
             return str(private)
-    return shutil.which(binary or BINARIES.get(tool) or tool) if (binary or BINARIES.get(tool,tool)) else None
+    return None  # Never fall back to a global PATH executor.
 
 def ferrari_source_presence(tool):
     """Recognize a Ferrari-owned CPU source installation, not a PATH copy."""
@@ -287,8 +299,6 @@ def auto(request,source,folder=None,execute=False,query=None):
 def invoke(action,source,folder,query=None):
     x=specs().get(action)
     if not x:raise ValueError("Unknown executable action")
-    exe=executable(x["tool"],x["binary"])
-    if not exe:raise RuntimeError("Executor not installed: "+x["binary"])
     requires_query="{query}" in x["args"]
     if requires_query and (not isinstance(query,str) or not 1<=len(query.strip())<=200 or "\x00" in query):
         raise ValueError("This action requires a non-empty query of up to 200 characters")
@@ -301,6 +311,9 @@ def invoke(action,source,folder,query=None):
     inp=inp.resolve(strict=True)
     if "*" not in x["extensions"] and inp.suffix.lower() not in x["extensions"]:
         raise ValueError("Input format not supported by "+action)
+    # Validate user input before checking dependencies, including if missing.
+    exe=executable(x["tool"],x["binary"])
+    if not exe:raise RuntimeError("Executor not installed: "+x["binary"])
     outdir=Path(folder).resolve()
     target=outdir/x["artifact"]
     if target.exists() or target.is_symlink():
@@ -505,8 +518,8 @@ def invoke(action,source,folder,query=None):
             # VPS already has Xvfb; run an ephemeral display for this job.
             private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
             private_server=PRIVATE_CLI_ROOT/"bin/Xvfb"
-            xvfb=str(private_xvfb) if private_xvfb.is_file() else shutil.which("xvfb-run")
-            server=str(private_server) if private_server.is_file() else shutil.which("Xvfb")
+            xvfb=str(private_xvfb) if private_xvfb.is_file() else None
+            server=str(private_server) if private_server.is_file() else None
             if not xvfb or not server:
                 raise RuntimeError("Krita requires an existing Xvfb virtual display")
             tmp=private_qt_socket or home/"tmp"
@@ -538,8 +551,8 @@ def invoke(action,source,folder,query=None):
             # ephemeral Xvfb and every writable path inside the Ferrari job.
             private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
             private_server=PRIVATE_CLI_ROOT/"bin/Xvfb"
-            xvfb=str(private_xvfb) if private_xvfb.is_file() else shutil.which("xvfb-run")
-            server=str(private_server) if private_server.is_file() else shutil.which("Xvfb")
+            xvfb=str(private_xvfb) if private_xvfb.is_file() else None
+            server=str(private_server) if private_server.is_file() else None
             if not xvfb or not server:
                 raise RuntimeError("Scribus requires an existing Xvfb virtual display")
             target.mkdir(mode=0o700)
@@ -588,7 +601,7 @@ def invoke(action,source,folder,query=None):
         # Verify actual playable video, not just a successful process exit.
         if target.is_symlink() or not target.is_file() or target.stat().st_size<1024:
             raise RuntimeError("MLT did not produce a real MP4 video")
-        ffprobe=shutil.which("ffprobe")
+        ffprobe=str(PRIVATE_CLI_ROOT/"bin/ffprobe") if (PRIVATE_CLI_ROOT/"bin/ffprobe").is_file() else None
         if not ffprobe:
             raise RuntimeError("FFprobe is required to validate MLT video")
         check=subprocess.run(
