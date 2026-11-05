@@ -4,10 +4,10 @@
   "vps_root": "/srv/projects/skill-universal",
   "active_vps_code_sha": "758e1b435317fa26277b332b75bc47c67910be81",
   "date": "2026-11-05",
-  "status": "phase8_partial_real_evidence_not_full_certification",
+  "status": "phase8_40_of_40_individual_real_evidence_verified",
   "registered_actions": 40,
-  "phase8_new_individual_e2e": 39,
-  "without_phase8_individual_e2e": 1,
+  "phase8_new_individual_e2e": 40,
+  "without_phase8_individual_e2e": 0,
   "sources": {
     "inventory": "https://github.com/martaxi-boss/VPS/actions/runs/42100973198",
     "manifest": "engine/tool_actions.json",
@@ -33,7 +33,8 @@
       42113835768,
       42113866996,
       42114077392,
-      42114234808
+      42114234808,
+      42128892714
     ]
   },
   "policy": "Only downloaded GitHub Actions response ZIP outputs count. No arbitrary global executable fallback or third-party project writes. Historical per-domain proof is separate.",
@@ -707,9 +708,16 @@
       "tool": "adb",
       "registered": true,
       "private_executor_in_f7_inventory": true,
-      "phase8_individual_e2e_verified": false,
-      "evidence": null,
-      "scope_note": "F8 individual installation not verified: requires a reachable, expressly authorized physical Android device. Private adb executable is callable in inventory; no install was attempted and no emulated/mocked result counts as proof."
+      "phase8_individual_e2e_verified": true,
+      "evidence": {
+        "vps_run_id": 42128892714,
+        "url": "https://github.com/martaxi-boss/VPS/actions/runs/42128892714",
+        "executor": "/srv/projects/skill-universal/tools/android-cli-36.0.0/platform-tools/adb",
+        "artifact_basename": "adb-install.txt",
+        "verified_result": "Performing Streamed Install; Success — real authorized Android device; separate uninstall com.example.empty9patch returned Success confirmed in ConnectBot",
+        "input": "Public iBotPeaches/Apktool v3.0.1 empty_9patch.apk (10,294 bytes), package com.example.empty9patch, no requested permissions"
+      },
+      "scope_note": "Ferrari GitHub Actions kind=invoke on real Android physical device, paired and connected via authorized remote SSH forwarding; workflow #42128892714 success, downloaded response ZIP with report.json completed and adb-install.txt Success. Owner subsequently executed 'adb uninstall com.example.empty9patch' and screenshot showed Success. No PINK IPTV update; no global Ferrari installation."
     }
   ]
 }
