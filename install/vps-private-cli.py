@@ -24,7 +24,7 @@ BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings",
             "r2", "vips", "vipsheader", "tshark", "inkscape",
             "binwalk", "ansible-inventory", "ocrmypdf", "ebook-convert",
             "darktable-cli", "krita", "gimp-console-2.10", "scribus",
-            "lmms", "melt", "Xvfb", "xvfb-run")
+            "lmms", "melt", "Xvfb", "xvfb-run", "xauth")
 LIB_PATTERN = re.compile(r"(?:=>\s*)?(/(?:usr/)?lib\S*)\s*\(")
 
 
@@ -247,6 +247,23 @@ def install() -> dict:
         if not private.exists():
             shutil.copytree(root,private)
         assets["lib/ImageMagick"]=str(private)
+    # GUI and MLT load native plugin libraries at runtime. Include the plugin
+    # dependencies inside Ferrari rather than borrowing another project copy.
+    modules=(TARGET/"lib/mlt-7", TARGET/"lib/lmms", TARGET/"lib/gimp/2.0",
+             TARGET/"lib/darktable", TARGET/"lib/qt5/plugins")
+    for folder in modules:
+        if not folder.is_dir() or folder.is_symlink():
+            continue
+        for plugin in folder.rglob("*.so"):
+            if plugin.is_symlink() or not plugin.is_file():
+                continue
+            probe=subprocess.run(["ldd",str(plugin)],capture_output=True,
+                                 text=True,timeout=15,check=False)
+            if "not found" in probe.stdout+probe.stderr:
+                raise RuntimeError("Incomplete Ferrari plugin libraries: "+plugin.name)
+            for match in LIB_PATTERN.finditer(probe.stdout+probe.stderr):
+                dep=Path(match.group(1))
+                copy_one(dep,library_dir/dep.name)
     python_result=private_python()
     python_packages=install_private_python_modules()
     return {"root": str(TARGET), "binaries": sorted(installed),
