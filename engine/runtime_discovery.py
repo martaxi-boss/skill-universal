@@ -1,8 +1,8 @@
 """Bounded, read-only discovery of Ferrari-owned Python, npm and containers.
 
 A module/package/container being present is not a working adapter or a
-functional certification. Only inspect explicit Ferrari roots, system-wide
-package directories, and containers with Ferrari's ownership label.
+functional certification. Only inspect Ferrari-owned Python/npm package directories and containers
+with Ferrari's ownership label. System-wide packages are not Ferrari dependencies.
 Never import third-party modules, execute npm packages, or install anything.
 """
 from __future__ import annotations
@@ -34,7 +34,7 @@ CONTAINER_TOOLS = frozenset({
     "qdrant", "supabase", "medusa", "saleor", "appwrite",
     "gitea", "homeassistant", "immich", "jellyfin",
 })
-SYSTEM_NPM_ROOTS = (Path("/usr/local/lib/node_modules"), Path("/usr/lib/node_modules"))
+SYSTEM_NPM_ROOTS = ()  # No system-global npm discovery in this independent project
 LABEL = "org.motor-ferrari.managed=true"
 TOOL_LABEL = "org.motor-ferrari.tool"
 
@@ -77,11 +77,15 @@ def python_presence(module, home=FERRARI_HOME):
         spec = importlib.util.find_spec(module)
     except (ImportError, ValueError, AttributeError):
         spec = None
-    if spec is not None:
-        return {
-            "scope": "current_python", "location": str(spec.origin or "namespace:" + module),
-            "verification": "module_spec_not_imported",
-        }
+    if spec is not None and isinstance(spec.origin, str):
+        # The Ubuntu system interpreter can resolve globally installed modules.
+        # Treat those as OS packages, never as installed Ferrari modules.
+        origin = Path(spec.origin)
+        if (origin.is_absolute() and origin.resolve().is_relative_to(Path(home).resolve())):
+            return {
+                "scope": "ferrari_python", "location": str(origin),
+                "verification": "private_module_spec_not_imported",
+            }
     for site in _site_packages(Path(home)):
         package = site / module
         file = site / (module + ".py")
@@ -99,7 +103,7 @@ def _npm_roots(home, system_roots=SYSTEM_NPM_ROOTS):
     roots = [base / "node_modules"]
     if _is_dir(base):
         roots.extend(p / "node_modules" for p in islice(base.iterdir(), 32) if _is_dir(p))
-    roots.extend(Path(p) for p in system_roots)
+    # Ignore system_roots, retained only for callers of the old discovery API.
     return [p for p in roots if _is_dir(p)]
 
 
@@ -115,7 +119,7 @@ def npm_presence(tool, home=FERRARI_HOME, system_roots=SYSTEM_NPM_ROOTS):
             manifest = root.joinpath(*name.split("/")) / "package.json"
             if manifest.is_file() and not manifest.is_symlink():
                 return {
-                    "scope": "ferrari_npm" if root == base / "node_modules" or base in root.parents else "system_npm",
+                    "scope": "ferrari_npm",
                     "package": name, "location": str(manifest),
                     "verification": "manifest_present_not_executed",
                 }
@@ -229,9 +233,9 @@ def discover(home=FERRARI_HOME, system_npm_roots=SYSTEM_NPM_ROOTS):
             npm[tool] = evidence
     return {
         "python": {"tools": python, "detected": len(python),
-                   "scope": "current interpreter and Ferrari-owned virtual environments"},
+                   "scope": "Ferrari-owned Python paths and virtual environments only"},
         "npm": {"tools": npm, "detected": len(npm),
-                "scope": "Ferrari-owned and system-global node_modules only"},
+                "scope": "Ferrari-owned node_modules only"},
         "containers": container_discovery(),
         "browsers": browser_discovery(home=home),
         "note": "Read-only presence evidence, not functionality, certification or permission to install.",
