@@ -486,13 +486,14 @@ def invoke(action,source,folder,query=None):
             # Qt local socket names must fit Linux's 108-byte Unix socket limit.
             # An XDG_RUNTIME_DIR nested under the long job path fails with
             # QLocalServer::listen: Unknown error 22.
-            sockets=HOME/".runtime/q"
-            sockets.mkdir(mode=0o700,parents=True,exist_ok=True)
-            if sockets.is_symlink():
-                raise RuntimeError("Unsafe Ferrari Qt runtime directory")
-            private_qt_socket=sockets/("k"+uuid.uuid4().hex[:12])
-            private_qt_socket.mkdir(mode=0o700)
-            env["XDG_RUNTIME_DIR"]=str(private_qt_socket)
+            if Path(exe).parent==PRIVATE_CLI_ROOT/"bin":
+                sockets=HOME/".runtime/q"
+                sockets.mkdir(mode=0o700,parents=True,exist_ok=True)
+                if sockets.is_symlink():
+                    raise RuntimeError("Unsafe Ferrari Qt runtime directory")
+                private_qt_socket=sockets/("k"+uuid.uuid4().hex[:12])
+                private_qt_socket.mkdir(mode=0o700)
+                env["XDG_RUNTIME_DIR"]=str(private_qt_socket)
             # Krita ignores Qt offscreen and requires a display. The Ubuntu
             # VPS already has Xvfb; run an ephemeral display for this job.
             private_xvfb=PRIVATE_CLI_ROOT/"bin/xvfb-run"
