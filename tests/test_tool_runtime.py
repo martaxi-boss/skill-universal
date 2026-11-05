@@ -34,10 +34,11 @@ class ToolRuntimeTests(unittest.TestCase):
                 self.assertEqual(kwargs["env"]["HOME"],str(Path(d)/"result"))
                 self.assertEqual(kwargs["env"]["TMPDIR"],str(Path(d)/"result"))
                 return subprocess.CompletedProcess(args,0,b'{"ferrari":true}\\n',b"")
-            with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root):
-                self.assertEqual(tool_runtime.executable("jq","jq"),str(private))
-                with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
-                    result=tool_runtime.invoke("jq-format-json",str(source),str(Path(d)/"result"))
+            with patch.object(tool_runtime,"HOME",Path(d)):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",root):
+                    self.assertEqual(tool_runtime.executable("jq","jq"),str(private))
+                    with patch.object(tool_runtime.subprocess,"run",side_effect=execute):
+                        result=tool_runtime.invoke("jq-format-json",str(source),str(Path(d)/"result"))
             self.assertTrue(result["confirmed"])
             self.assertTrue((Path(d)/"result/formatted.json").is_file())
 
