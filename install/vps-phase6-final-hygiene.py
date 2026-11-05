@@ -89,16 +89,19 @@ def check_candidates():
         private_header = ("#!"+str(PYTHON)).encode()
         # Debian launchers legitimately include flags such as -Es or -s.
         # Only accept one short interpreter-option token; preserve it exactly.
-        legacy = re.fullmatch(rb"#!/usr/bin/python3(?:\.12)?([ \t]+-[A-Za-z]{1,10})?", shebang)
-        local = re.fullmatch(re.escape(private_header) + rb"([ \t]+-[A-Za-z]{1,10})?", shebang)
+        # Match the interpreter actually observed by the independent
+        # shebang audit; retain any short, printable argument suffix. Also
+        # accept the standard optional space after #! and CRLF endings.
+        legacy = re.fullmatch(rb"#![ \t]*/usr/bin/python3(?:\.12)?([ \t][\x20-\x7e]{0,80})?[ \t\r]*", shebang)
+        local = re.fullmatch(re.escape(private_header) + rb"([ \t][\x20-\x7e]{0,80})?[ \t\r]*", shebang)
         if legacy:
-            trailing = legacy.group(1) or b""
+            trailing = (legacy.group(1) or b"").rstrip(b" \t\r")
             needs_change = True
         elif local:
-            trailing = local.group(1) or b""
+            trailing = (local.group(1) or b"").rstrip(b" \t\r")
             needs_change = False
         else:
-            raise RuntimeError("Unexpected launcher interpreter: " + rel)
+            raise RuntimeError("Unexpected launcher interpreter: " + rel + " header=" + repr(shebang[:100]))
         copied[rel] = {"data":blob,"mode":stat.S_IMODE(p.stat().st_mode),
                        "trailing":trailing,"needs_change":needs_change}
     links = {}
