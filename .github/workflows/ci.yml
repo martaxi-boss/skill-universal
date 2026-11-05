@@ -18,6 +18,10 @@ jobs:
             src="$(command -v "$exe")"
             sudo install -m 0755 "$src" "/srv/projects/skill-universal/tools/ubuntu-cli/bin/$exe"
           done
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/share
+          magic="$(find /usr/share/misc /usr/lib/file -maxdepth 2 -name magic.mgc -print -quit 2>/dev/null)"
+          test -n "$magic" && test -f "$magic"
+          sudo cp -L "$magic" /srv/projects/skill-universal/tools/ubuntu-cli/share/magic.mgc
       - name: Unit tests, core and Ferrari
         run: python3 -m unittest discover -s tests -v
       - name: Validate both installers

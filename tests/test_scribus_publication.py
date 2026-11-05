@@ -83,7 +83,7 @@ class ScribusPublicationTests(unittest.TestCase):
                 (folder/"publication.sla").write_bytes(b"<SCRIBUS>"+b"x"*256)
                 return subprocess.CompletedProcess(args,0,b"",b"")
             with patch.object(tool_runtime,"executable",return_value="/usr/bin/scribus"):
-                with patch.object(tool_runtime.shutil,"which",return_value="/usr/bin/xvfb-run"):
+                with patch.object(tool_runtime,"PRIVATE_CLI_ROOT",private):
                     with patch.object(tool_runtime.subprocess,"run",side_effect=run):
                         with self.assertRaisesRegex(RuntimeError,"valid PDF"):
                             tool_runtime.invoke("scribus-text-publication",str(src),str(dest))

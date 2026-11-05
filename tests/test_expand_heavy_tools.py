@@ -78,7 +78,7 @@ class HeavyToolsTests(unittest.TestCase):
         src=(ROOT/"install/vps-delivery.sh").read_text()
         self.assertIn("BLOCKED_LEGACY_GLOBAL_APT",src)
         self.assertNotIn("bash install/vps-expand-heavy.sh",src)
-        self.assertIn("PRIVATE",HEAVY.read_text().upper())
+        self.assertIn('ROOT="/srv/projects/skill-universal"',HEAVY.read_text())
 
 if __name__=="__main__":
     unittest.main()
