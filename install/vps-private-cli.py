@@ -124,7 +124,7 @@ def install_private_python_modules() -> dict:
            "dateutil","six","defusedxml","tqdm","numpy","cffi",
            "_cffi_backend","idna","certifi","chardet","pypdf",
            "typing_extensions","sortedcontainers","ocrmypdf_plugins",
-           "pdfminer","deprecation","pdf2image","colorama",
+           "pdfminer","deprecation","deprecated","wrapt","olefile","pdf2image","colorama",
            "setuptools","pkg_resources","importlib_metadata","zipp",
            "shellingham","cryptography","pytesseract")
     copied=[]
