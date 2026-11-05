@@ -68,7 +68,7 @@ display_aspect_den="9" frame_rate_num="25" frame_rate_den="1" colorspace="709"/>
         ET.SubElement(pattern,"note",{"key":str(pitch),"pos":str(position),"len":"96","vol":"85","pan":"0"})
     song=work/"song.mmp"
     original.write(song,encoding="utf-8",xml_declaration=True)
-    sources={"darktable-jpeg-tiff":jpg,"krita-image-png":jpg,
+    sources={"darktable-jpeg-tiff":jpg,"krita-image-png":image,
              "gimp-png-xcf":image,"scribus-text-publication":text,
              "lmms-project-wav":song,"kdenlive-mlt-mp4":mlt}
     selected=tuple(sys.argv[2:]) or ACTIONS
