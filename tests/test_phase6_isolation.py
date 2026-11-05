@@ -58,7 +58,7 @@ class PhaseSixPrivateDiscoveryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             home = Path(d)
             data = home / "sample.elf"
-            data.write_bytes(b"\\x7fELF" + b"TEST" * 20)
+            data.write_bytes(b"\x7fELF" + b"TEST" * 20)
             with patch.object(tool_runtime, "executable", return_value=None):
                 with patch("engine.core.shutil.which", return_value="/usr/bin/readelf") as global_binary:
                     with patch("engine.core.subprocess.run") as attempted:
