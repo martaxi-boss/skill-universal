@@ -52,9 +52,9 @@ def clean(apply=False):
         if not (item/"engine/ferrari.py").is_file():
             continue
         all_dirs.append(item)
-    # Preserve active plus last 149-test Ghidra/JADX certified Ferrari release.
+    # Preserve active plus last known-good Ferrari release certified on VPS.
     # The fallback is private Ferrari code; no provider runtimes or other projects pruned.
-    fallback_sha="39267ce692edb8f40bf9621dba29a2f9642528b7"
+    fallback_sha="62f862cdf9727842546a244a3e4ec19dd8bc82f4"
     fallback=release_root/fallback_sha
     keep={active.name}
     if fallback in all_dirs:
