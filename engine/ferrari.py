@@ -287,6 +287,9 @@ def _output(folder,name):
     return p
 
 def _exe(name):
+    private=FERRARI_HOME/"tools/ubuntu-cli/bin"/name
+    if private.is_file() and not private.is_symlink() and os.access(private,os.X_OK):
+        return str(private)
     p=shutil.which(name)
     if not p and name=="jadx":
         candidate=(FERRARI_HOME / "tools/jadx-1.5.6/bin/jadx")
@@ -297,9 +300,17 @@ def _exe(name):
     return p
 
 def _call(args,timeout=240,stdout=None):
+    env=os.environ.copy()
+    own=FERRARI_HOME/"tools/ubuntu-cli"
+    if Path(args[0]).parent==own/"bin":
+        env["LD_LIBRARY_PATH"]=str(own/"lib")
+        env["HOME"]=str(FERRARI_HOME/".runtime")
+        env["TMPDIR"]=str(FERRARI_HOME/".runtime")
+        env["MAGICK_CONFIGURE_PATH"]=str(own/"etc/ImageMagick-6")
+        env["MAGICK_CODER_MODULE_PATH"]=str(own/"lib/ImageMagick/coders")
     try:
         p=subprocess.run(args,shell=False,stdout=stdout if stdout is not None else subprocess.PIPE,
-                         stderr=subprocess.PIPE,timeout=timeout,check=False)
+                         stderr=subprocess.PIPE,timeout=timeout,check=False,env=env)
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("Executor timeout") from exc
     if p.returncode:
