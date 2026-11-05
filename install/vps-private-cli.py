@@ -22,7 +22,9 @@ BINARIES = ("file", "jq", "rg", "readelf", "objdump", "strings",
             "ffmpeg", "ffprobe", "pdfinfo", "pdftotext",
             "pandoc", "dot", "identify", "convert", "tesseract",
             "r2", "vips", "vipsheader", "tshark", "inkscape",
-            "binwalk", "ansible-inventory", "ocrmypdf", "ebook-convert")
+            "binwalk", "ansible-inventory", "ocrmypdf", "ebook-convert",
+            "darktable-cli", "krita", "gimp-console-2.10", "scribus",
+            "lmms", "melt", "Xvfb", "xvfb-run")
 LIB_PATTERN = re.compile(r"(?:=>\s*)?(/(?:usr/)?lib\S*)\s*\(")
 
 
@@ -209,6 +211,18 @@ def install() -> dict:
         "ebook-convert": (("/usr/lib/calibre", "lib/calibre"),
                            ("/usr/share/calibre", "share/calibre")),
         "binwalk": (("/usr/share/binwalk", "share/binwalk"),),
+        "darktable-cli": (("/usr/share/darktable", "share/darktable"),
+                             ("/usr/lib/x86_64-linux-gnu/darktable", "lib/darktable")),
+        "krita": (("/usr/share/krita", "share/krita"),),
+        "gimp-console-2.10": (("/usr/share/gimp", "share/gimp"),
+                              ("/usr/lib/gimp/2.0", "lib/gimp/2.0")),
+        "scribus": (("/usr/share/scribus", "share/scribus"),),
+        "lmms": (("/usr/share/lmms", "share/lmms"),
+                 ("/usr/lib/x86_64-linux-gnu/lmms", "lib/lmms")),
+        "melt": (("/usr/share/mlt-7", "share/mlt-7"),
+                 ("/usr/lib/x86_64-linux-gnu/mlt-7", "lib/mlt-7")),
+        "Xvfb": (("/usr/lib/x86_64-linux-gnu/qt5/plugins", "lib/qt5/plugins"),),
+
     }
     assets = {}
     for tool,entries in private_resources.items():
