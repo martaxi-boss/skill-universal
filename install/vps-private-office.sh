@@ -96,12 +96,12 @@ digest=hashlib.sha256(program.read_bytes()).hexdigest()
 if digest != hashlib.sha256(original.read_bytes()).hexdigest():
     raise RuntimeError("FERRARI_PRIVATE_OFFICE_SOURCE_MISMATCH")
 (target/'source.txt').write_text(
-    'Origin: existing Ubuntu LibreOffice package (read-only, local copy)\\n'
-    'System app files modified: NO\\n'
-    'Project destination: /srv/projects/skill-universal/tools/libreoffice\\n'
-    'SHA256 copied soffice.bin: '+digest+'\\n'
-    'Bootstrap: project-relative (no /usr/lib/libreoffice or /etc/libreoffice)\\n'
-    'Vendor signature: not verified by this local-copy script\\n',
+    'Origin: existing Ubuntu LibreOffice package (read-only, local copy)\n'
+    'System app files modified: NO\n'
+    'Project destination: /srv/projects/skill-universal/tools/libreoffice\n'
+    'SHA256 copied soffice.bin: '+digest+'\n'
+    'Bootstrap: project-relative (no /usr/lib/libreoffice or /etc/libreoffice)\n'
+    'Vendor signature: not verified by this local-copy script\n',
     encoding='utf-8')
 print("FERRARI_PRIVATE_OFFICE_LOCAL_COPY=PASS")
 PYCOPY
