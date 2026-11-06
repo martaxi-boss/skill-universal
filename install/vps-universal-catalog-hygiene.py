@@ -79,7 +79,9 @@ def audit(root: Path, expected_active: str, fallback_sha: str,
     if not _inside_release(active, release_real):
         raise RuntimeError("Active Ferrari release escapes releases/")
     fallback = releases / fallback_sha
-    if not _inside_release(fallback, release_real):
+    if (not _inside_release(fallback, release_real)
+            or not (fallback / "engine/ferrari.py").is_file()
+            or not (fallback / "engine/catalog.json").is_file()):
         raise RuntimeError("Designated fallback absent or unsafe")
 
     catalog_path = active / "engine/catalog.json"
