@@ -144,7 +144,8 @@
       "cost": "open-source",
       "binary": "convert",
       "note": "Edição e composição; não gera fotografia a partir de prompt.",
-      "admission": "free_only_no_paid_fallback"
+      "admission": "free_only_no_paid_fallback",
+      "tool_id": "imagemagick"
     },
     {
       "id": "svg-local",

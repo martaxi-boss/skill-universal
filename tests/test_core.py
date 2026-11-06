@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 from engine.core import execute, environment, inventory, plan, providers
 
 
@@ -21,6 +22,22 @@ class EngineTest(unittest.TestCase):
     def test_provider_secrets_not_exposed(self):
         for p in providers():
             self.assertNotIn('key_value', p)
+
+    def test_local_provider_uses_existing_catalog_tool_id(self):
+        from engine import tool_runtime
+        from engine.core import providers
+        with patch.object(tool_runtime, "executable",
+                          side_effect=lambda tool, binary=None:
+                              "/srv/projects/skill-universal/tools/ubuntu-cli/bin/convert"
+                              if (tool, binary) == ("imagemagick", "convert") else None):
+            entries = {p["id"]: p for p in providers()}
+        self.assertEqual(entries["imagemagick-local"]["tool_id"], "imagemagick")
+        self.assertTrue(entries["imagemagick-local"]["configured"])
+        self.assertTrue(entries["imagemagick-local"]["availability_verified"])
+        self.assertTrue(entries["svg-local"]["configured"])
+        with patch.object(tool_runtime, "executable", return_value=None):
+            absent = {p["id"]: p for p in providers()}
+        self.assertFalse(absent["imagemagick-local"]["configured"])
 
     def test_site_and_creative_outputs(self):
         with tempfile.TemporaryDirectory() as d:

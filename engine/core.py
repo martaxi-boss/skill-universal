@@ -172,8 +172,11 @@ def providers() -> list[dict]:
         elif p["kind"] == "local":
             from engine import tool_runtime
             binary = p.get("binary")
-            ready = (binary is None or
-                     tool_runtime.executable(str(p.get("id", "")).lower(), binary) is not None)
+            tool_id = p.get("tool_id", p["id"])
+            # Map a provider to its EXISTING catalogued executor, not to
+            # a synthetic provider ID. Built-in renderers need no executable.
+            ready = ((p.get("cost") == "built-in") if binary is None else
+                     tool_runtime.executable(tool_id, binary) is not None)
         else:
             ready = False
         out.append({**p, "configured": ready, "availability_verified": False if p["kind"] == "cloud" else ready})
