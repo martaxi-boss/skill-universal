@@ -94,6 +94,21 @@ class CurrentFerrariDocsTests(unittest.TestCase):
                 self.assertIn("42300665770", doc)
                 self.assertIn("QGIS", doc)
 
+    def test_qgis_real_buffer_pass_does_not_claim_ogr_or_hdf5(self):
+        report = (ROOT / "docs/FASE9_QGIS_BUFFER_GEOJSON_CERT_20261106.md").read_text(encoding="utf-8")
+        for marker in ("42304131087", "6 578,316", "libhdf5_cpp.so.320",
+                       "native:buffer", "std::bad_alloc"):
+            self.assertIn(marker, report)
+        for path in ("BOOTSTRAP.md", "README.md",
+                     "skill/motor-universal-linux/SKILL.md",
+                     "skill/motor-universal-linux/references/bootstrap.md"):
+            with self.subTest(path=path):
+                doc = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("42304131087", doc)
+                self.assertIn("QGIS", doc)
+        self.assertIn("OGR", report)
+        self.assertIn("Não", report)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
