@@ -38,34 +38,34 @@ O REA faz parte deste **mesmo catálogo**, com `tools/list` e `tools/call` pelo 
 
 ## Evolução
 
-Para adicionar um programa, registar uma única entrada `tools[].id` (ou atualizar a já existente), com a sua origem, licença, compatibilidade Ubuntu, opções de execução e `requires`. Só criar uma nova ação `actions[]` quando houver adaptador seguro e validado; candidatos continuam candidatos. Não editar os ficheiros históricos removidos; o validador impede a sua recriação como fontes concorrentes.
+Para adicionar um programa, registar ou atualizar a única entrada `tools[].id` no `engine/catalog.json` e, quando existir um adaptador seguro e testado, registar a respetiva interface em `functions[]` do mesmo ficheiro. As vistas `actions[]`, `mcp_capabilities.names` e `base_operations` são derivadas em memória pelo leitor de compatibilidade, nunca catálogos persistentes adicionais. Candidatos continuam candidatos até verificação.
 
 Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no GitHub, por si só, não altera a VPS.
 
 **Estrutura canónica nova (revisão GitHub):** programas `tools[]` (173), funções `functions[]` (272 incluindo REA), dependências `dependencies[]` (3) e fornecedores `providers[]` (2) estão no mesmo ficheiro físico, sob o mesmo motor. A vista `unified_catalog().entries[]` apresenta **450 registos combinados de tipos diferentes**. Não somar estes números como 450 funcionalidades, programas ou testes certificados. `catalog_registry.read_catalog()` reconstrói exclusivamente em memória as interfaces de compatibilidade antigas; não grava outro manifesto nem cria segundo catálogo. Os executores continuam privados do Ferrari.
 
 
-## Vista integral do ÚNICO catálogo — 06/11/2026 (revisão GitHub, VPS por atualizar)
+## Vista integral do ÚNICO catálogo — 06/11/2026 (revisões anteriores identificadas)
 
-- **393 entradas com nomes registados no GitHub:** 173 programas/identificadores Ferrari + 220 capacidades MCP do REA (de 229 anunciadas; nove não admitidas). São tipos de entrada diferentes e não 393 binários instalados. O Penpot, candidato não instalado, foi retirado por decisão do proprietário; o OpenPencil privado continua registado e integrado.
+- **Fotografia histórica anterior ao catálogo completo:** os 393 nomes registados representavam 173 programas + 220 capacidades REA. O catálogo **atual** já agrega as 52 interfaces base/tipadas na lista `functions[]`, mais três dependências e dois fornecedores, totalizando **450 registos distintos**. Penpot permanece excluído, OpenPencil incluído.
 - **Uma única fonte persistente:** engine/catalog.json. Não criar outro inventário fonte, outro catálogo MCP ou outro motor; engine/tool_runtime.py gera a vista de leitura.
 - **Ubuntu 24.04 LTS:** programas incompatíveis ou com licença obrigatoriamente paga são recusados; entradas upstream não verificadas continuam explicitamente como candidatas SEM permissão de execução automática. Não inferir compatibilidade do Ubuntu de um README genérico.
 - **Fornecedores admitidos:** só ImageMagick local (open source) e SVG local (built-in). Seis serviços cloud fechados, embora com tier gratuito, foram retirados por não possuírem substitutos livres integralmente equivalentes. Nenhum fornecedor cloud faz parte do catálogo ativo. As entradas de `nmap` (licença NPSL e substituto Naabu não equivalente em funcionalidades) e `vscode` (distribuição Microsoft não equivalente a Code-OSS/VSCodium) também foram retiradas. Mantêm-se ferramentas originalmente open source como Ghidra, JADX e AOSP. As nove operações externas não admitidas foram excluídas do catálogo Ferrari, sem lista nominal residual; não estão selecionáveis.
 - **Ações tipadas:** 40 adaptadores existentes continuam a usar este mesmo ficheiro. A escolha automática de ações não passa a executar arbitrariamente as 220 subferramentas admitidas do REA: requer contratos de parâmetros corretos e validação específica.
 - **Dependências físicas:** só 3 runtimes comuns estão descritos com identificação reutilizável (Python, Node, Java); Python venv, npm, CLI e contentores privados são inspecionados na mesma vista. Isto não significa que as bibliotecas transitivas de todos os programas estejam completamente inventariadas. A lista detalhada de dependências e compatibilidade ABI continua sujeita à reconciliação física; nada foi reinstalado ou eliminado do Ubuntu.
-- **Via operacional existente:** pedido {"version":1,"id":"novo-id","kind":"inventory"} através de Skill → GitHub → VPS; após ativar a nova release devolve no mesmo response.zip tanto artifacts/inventory.json como artifacts/catalog.json. O validador pinado de pedidos e o SSH não precisam de novo tipo de pedido nem de alterações.
+- **Via operacional existente, confirmada:** `kind=inventory` executado via Skill → GitHub → VPS na [execução real #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715), com `report.json.status=completed` e `response.zip` contendo `artifacts/inventory.json` e `artifacts/catalog.json`. Nenhum novo tipo de pedido, validador ou SSH.
 - **REA vivo:** a vista consulta tools/list de forma só de leitura, sem lançar tools/call nem acionar fornecedores pagos. Reporta "rea_in_sync", "rea_catalog_drift" ou "rea_unavailable"; um nome registado mas não observado não é apresentado como executável.
 - **Fase 9:** oito pacotes APT globais antigos permanecem preservados; não fazer purga por semelhança de nomes nem tocar nos projetos independentes.
 
-**Certificação de catálogo 394 na VPS; remoção nominal PR #109 ainda só no GitHub:** [PR #105](https://github.com/martaxi-boss/skill-universal/pull/105) e [PR #106](https://github.com/martaxi-boss/skill-universal/pull/106) integradas; [VPS #42276080241](https://github.com/martaxi-boss/VPS/actions/runs/42276080241) ativou release privada com rollback e 8/8 serviços; [Skill→ZIP #42276249154](https://github.com/martaxi-boss/VPS/actions/runs/42276249154) devolveu 396 entradas na versão anterior, 220 MCP observadas, 229 anunciadas, 9 bloqueadas, 40 ações disponíveis e ImageMagick/SVG locais ativados. **Não é certificação de 396 operações:** apenas três runtimes centrais têm entradas de dependências partilhadas; bibliotecas transitivas e Fase 9 continuam pendentes.
+**Histórico anterior à ativação universal (catálogo 394 e 396):**
 
-**Sem catálogo de exclusões — GitHub PR #109, CI PASS; VPS pendente:** as nove funções comerciais/demo foram removidas do ficheiro `engine/catalog.json` e da lista pública `tools/list` que o Ferrari apresenta. Não podem ser chamadas por `tools/call`, que usa uma lista estrita das 220 capacidades aprovadas. A origem REA pode continuar a anunciá-las internamente; não modificámos o código do autor nem desinstalámos o REA. As contagens brutas de descoberta são apenas informação de auditoria.
+**Histórico da aprovação e filtragem REA — PR #109,
 
-**Nova política (06/11/2026):** a revisão do catálogo com 393 entradas requer CI e readback na VPS antes de ser declarada ativa. As 69 candidatas originais não foram certificadas ou eliminadas em massa por ausência de evidência; apenas os dois casos acima foram removidos, ficando 67 candidatas. Não remover programas instalados nem dependências sem auditoria de consumidores.
+**Política histórica de seleção (06/11/2026):** a revisão
 
-**Prova da release anterior (394 entradas):** a [VPS #42282896608](https://github.com/martaxi-boss/VPS/actions/runs/42282896608) tem 394 entradas, 40 ações e dois fornecedores locais e mantém a release `952b0a75ba798471b07053677d53791bd078ed56`. A remoção completa das nove referências nominais e a filtragem direta de `tools/list` foram validadas na [CI #42283957948](https://github.com/martaxi-boss/skill-universal/actions/runs/42283957948), revisão GitHub `ca723ad82043075e82ee790d0c2dcafd5badcbee`; **falta deploy protegido** para afirmar que a VPS também possui a filtragem.
+**Prova histórica da release anterior (394 entradas):**
 
-**Decisão Penpot → OpenPencil (06/11/2026):** o Penpot foi retirado do único catálogo por ser uma candidatura pesada a serviço com contentores, não instalada na VPS. O OpenPencil já está integrado no próprio Ferrari, sem instalação do Penpot. No inventário real anterior à revisão ([VPS #42286932312](https://github.com/martaxi-boss/VPS/actions/runs/42286932312)), a seleção original indicou 55/56 presentes e apenas o Penpot em falta. A seleção revista no GitHub passa a 55; a verificação 55/55 da **nova release** depende da sua ativação e readback na VPS.
+**Decisão Penpot → OpenPencil (06/11/2026):**
 
 ## Catálogo universal efetivo — revisão de 06/11/2026
 
@@ -75,9 +75,11 @@ A vista principal `unified_catalog().entries[]` combina **programas + funções 
 
 A matriz canónica atual é: **173 programas, 272 interfaces de função (12 operações base, 40 adaptadores tipados, 220 capacidades MCP do REA), 3 runtimes comuns declarados e 2 fornecedores locais = 450 registos de catálogo.** Alguns programas têm operações nativas ainda não integradas; não são ficticiamente contabilizadas como funções Ferrarri disponíveis. A presença, instalação, capacidade de execução e certificação são níveis distintos.
 
-A migração do JSON para `functions[]` é de **metadata e leitura**. Não muda a ponte GitHub, os pedidos, SSH, Supervisor, serviços VPS ou outros projetos. O deploy só pode acontecer após CI PASS, deploy protegido e `inventory` real com `response.zip` validado.
+A migração do JSON para `functions[]` foi de metadados e leitura. A [implantação protegida #42294843737](https://github.com/martaxi-boss/VPS/actions/runs/42294843737) ativou a revisão com rollback, e a [prova da Skill #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) confirmou as 450 entradas após a higiene. A ponte de pedidos, SSH, Supervisor e outros projetos mantiveram-se sem alterações.
 
 ## Higienização física pós-ativação — Ferrari isolado
+
+**Higiene física comprovada em 06/11/2026:** [#42295330408](https://github.com/martaxi-boss/VPS/actions/runs/42295330408) removeu uma release obsoleta; [pré-visualização #42297058254](https://github.com/martaxi-boss/VPS/actions/runs/42297058254) identificou nove cópias com `.runtime` vazia, cuja inexistência de dados foi confirmada pela [auditoria profunda #42296172655](https://github.com/martaxi-boss/VPS/actions/runs/42296172655); [aplicação #42297182419](https://github.com/martaxi-boss/VPS/actions/runs/42297182419) eliminou as nove (19 251 200 bytes libertados), preservando `current`, fallback e 8/8 serviços protegidos. [Inventário pós-limpeza #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) confirmou novamente o catálogo universal e as ações disponíveis. O histórico GitHub permanece como prova, **não** como outro catálogo operacional.
 
 O GitHub conserva o histórico dos commits antigos, mas o código operacional usa apenas `engine/catalog.json`. O ficheiro `engine/catalog_registry.py` é **leitor do mesmo catálogo**, não um segundo catálogo. Ficheiros obsoletos como `engine/tool_actions.json`, `engine/ubuntu_selection.json`, `engine/providers.json`, `engine/ferrari_registry.json` e `engine/ferrari_expansion.json` não podem ressurgir na release atual.
 
