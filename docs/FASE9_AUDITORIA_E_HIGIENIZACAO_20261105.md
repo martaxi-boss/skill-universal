@@ -51,3 +51,13 @@ Comparação autenticada dos commits locais registados na auditoria da VPS com a
 
 **Decisão:** NO-GO para `git reset --hard`, atualização automática, limpeza de branches ou deploy dos três projetos até confirmar o contrato de release, eventuais alterações locais e testes funcionais. O nome das pastas coincide com os repositórios; isso não demonstra identidade de versões em execução.
 
+
+
+## Verificação complementar de versões e guardas (05–06/11/2026)
+
+- [VPS #42133448972](https://github.com/martaxi-boss/VPS/actions/runs/42133448972), auditoria read-only dos diretórios reais e processos systemd: `pink-iptv` está no branch local `builder/android-shell-002`, SHA `ccccaf1e...` e **6 alterações rastreadas locais**; `iptvpn-bot` está no branch `security/iptvpn-bot-secret-vault-001`, SHA `6d26ea34...` e **6 alterações rastreadas locais**. O SHA do bot é idêntico ao HEAD do branch GitHub do mesmo nome, apesar de divergir de `main`. Não confundir divergência de branches com falta de código no GitHub. **Não aplicar pull/reset nem deploy enquanto as alterações locais não forem preservadas e verificadas**.
+- Referências de recuperação sem alterações na VPS: [PINK branch `reconcile/vps-working-head-20261105`](https://github.com/martaxi-boss/pink-iptv/tree/reconcile/vps-working-head-20261105) e [IPTV VPN Bot branch `reconcile/vps-installed-20261105`](https://github.com/martaxi-boss/iptvpn-bot/tree/reconcile/vps-installed-20261105). São referências a **commits existentes**, não snapshots das seis alterações ainda não commitadas.
+- O processo de limpeza do diretório Hopper antigo executou guardas em [VPS #42133943881](https://github.com/martaxi-boss/VPS/actions/runs/42133943881), que **bloquearam corretamente** com `BLOCKED_OWNER_OR_NONEMPTY`. **Nenhuma remoção comprovada**; a pasta mantém-se preservada. O workflow temporário foi retirado no [commit f9eb11cb](https://github.com/martaxi-boss/VPS/commit/f9eb11cb2a18ac8072186d22536ce84cfc6f2423). Não relaxar as guardas sem novo diagnóstico de propriedade e conteúdo.
+- A auditoria permanente da VPS foi reposta exatamente à versão original pré-F9 no [commit c71a85cd](https://github.com/martaxi-boss/VPS/commit/c71a85cdfb1b139e634197131985a326a757f684) e a execução [#42133850727](https://github.com/martaxi-boss/VPS/actions/runs/42133850727) concluiu **SUCCESS**. Nenhum diagnóstico temporário ficou inserido no workflow habitual.
+
+**Estado:** F9 continua aberta; não há prova de desinstalação dos 16 programas globais nem de captura das alterações locais dos projetos. Manter backups de referência e funcionamento dos serviços até reconciliação validada.
