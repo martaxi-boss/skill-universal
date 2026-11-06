@@ -2,6 +2,8 @@
 
 # Seleção profissional — Motor Ferrari / Ubuntu 24.04
 
+> **Revisão de 06/11/2026:** Penpot retirado da seleção ativa e do catálogo único, por decisão do proprietário, por não ter sido instalado e exigir uma pilha mais pesada de contentores. OpenPencil permanece como integração privada Ferrari. No inventário da release anterior, [#42286932312](https://github.com/martaxi-boss/VPS/actions/runs/42286932312), 55/56 candidatos estavam detetados; a seleção revista tem 55 candidatos. Isto não certifica automaticamente todas as operações.
+
 **Data da auditoria:** 2 de novembro de 2026. **Âmbito:** apenas o projeto independente `martaxi-boss/skill-universal`, sem alterações à VPS nem a outros projetos.
 
 ## Objetivo
@@ -11,15 +13,15 @@ Uma única Skill pessoal recebe orientações de qualquer IA e utiliza **apenas*
 ## Resultados
 
 - **125 projetos públicos** já inventariados no GitHub; *não* são 125 ferramentas instaladas nem aprovadas.
-- **56 selecionados para análise técnica de Ubuntu**, em `engine/ubuntu_selection.json`.
+- **55 atualmente selecionados para análise técnica de Ubuntu**, no único `engine/catalog.json` (originalmente 56, antes de retirar Penpot).
 - **34 candidatos APT confirmados num runner Ubuntu 24.04** (17 aplicações headless + 17 gráficas; a contagem deve ser reconfirmada sempre que a matriz mudar). *APT disponível não significa execução funcional.*
-- **22 candidatos com via Linux upstream**, sujeitos a instalação de versão fixa e testes de dependências/hardware. Inclui FreeCAD AppImage, REA, Ghidra, JADX, Penpot Docker e frameworks web/dados.
+- **21 candidatos com via Linux upstream**, sujeitos a instalação de versão fixa e testes de dependências/hardware. Inclui FreeCAD AppImage, REA, Ghidra, JADX e frameworks web/dados.
 - **Zero ferramentas instaladas ou certificadas na VPS neste processo.**
 
 Fontes verificáveis:
 - [Ubuntu 24.04 APT headless e GUI](https://github.com/martaxi-boss/skill-universal/actions/runs/41527000386)
 - [Pacotes APT adicionais: Inkscape, Audacity, LibreCAD, OpenSCAD, OpenShot; FreeCAD ausente do APT configurado](https://github.com/martaxi-boss/skill-universal/actions/runs/41527450172)
-- [Lista técnica selecionada com licença, dependências e estado](../engine/ubuntu_selection.json)
+- [Lista técnica selecionada com licença, dependências e estado](../engine/catalog.json)
 
 ## Gates obrigatórios, aplicados por programa
 
@@ -35,7 +37,7 @@ Fontes verificáveis:
 | Área | Ferramentas selecionadas, não necessariamente instaladas | Via Ubuntu |
 |---|---|---|
 | Reverse / Android / firmware | REA, Ghidra, JADX, Apktool, Binwalk, radare2 | APT + releases oficiais; Ghidra: JDK 25 |
-| Web e layouts | Next.js, Vite, Tailwind, Bootstrap, Playwright, shadcn/ui, Penpot | Node por projeto; Playwright suporta Ubuntu 24.04; Penpot via Docker |
+| Web e layouts | Next.js, Vite, Tailwind, Bootstrap, Playwright, shadcn/ui | Node por projeto; Playwright suporta Ubuntu 24.04; OpenPencil tem CLI privada Ferrari, fora desta seleção Ubuntu original |
 | Imagens e design | GIMP, Krita, Blender, Inkscape, ImageMagick, libvips | APT/versões Linux; GUI a verificar |
 | Vídeo e áudio | FFmpeg, Kdenlive, Audacity, OBS, faster-whisper, LMMS | APT / Python; GUI e memória |
 | Escritório e PDF | LibreOffice, Pandoc, Tesseract, OCRmyPDF, Docling, Typst, Scribus | APT / Python/CLI; Docling pode usar CPU |
@@ -57,7 +59,7 @@ Fontes verificáveis:
 
 ## Exclusões e pendências de investigação
 
-- Os restantes 69 projetos do catálogo GitHub continuam **não selecionados**; novos candidatos só entram mediante provas acima.
+- A lista histórica de 125 projetos tinha 69 não selecionados inicialmente; Penpot foi agora retirado da candidatura. Novos candidatos só entram mediante provas acima.
 - Programas gráficos e ferramentas de GPU não são automaticamente executáveis numa VPS Ubuntu Server sem display/GPU.
 - Não utilizar cópias adulteradas para contornar pagamentos/licenças como se fossem software livre. É possível usar engenharia reversa legítima para interoperabilidade e alternativas independentes.
 - Repositórios com licenças ambíguas permanecem em revisão, e não entram no plano de instalação automática.
