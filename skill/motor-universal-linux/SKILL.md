@@ -31,6 +31,8 @@ A fonte de verdade atual é o [BOOTSTRAP do repositório](https://github.com/mar
 - **Pendentes fora da certificação 40/40:** 16 pacotes APT globais de Ubuntu ainda presentes, 9 candidatos sem cópia privada detetada, modificações locais não commitadas no PINK IPTV e no IPTV VPN Bot, algumas instalações sem metadados Git diretos. **Não fazer purge, git reset, deploy ou migração automática de outros projetos por mera divergência de SHAs**; alguns são releases ou branches independentes. Preservar a continuidade dos projetos.
 - **Skill cliente:** a CI gera um ZIP da Skill única. Atualizar este ficheiro no GitHub não significa que a versão da Skill atualmente instalada no ChatGPT tenha sido atualizada; exigir prova específica de instalação do pacote.
 
+**OpenPencil no modo web da Skill única:** para importar um HTML e obter FIG/SVG/HTML, manter `kind=operation` e `operation=web-template`, acrescentando `input` com `design.html` em base64. Não criar outra ação nem atualizar o validador da ponte. Ler [references/openpencil.md](references/openpencil.md) para formato, segurança, prova e limites. Sem `input`, `web-template` conserva a geração anterior de páginas.
+
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
