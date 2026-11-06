@@ -74,7 +74,9 @@ jobs:
           assert all(x['certified_on_vps'] is False for x in selected)
           assert len(catalog['actions']) == 40
           assert len(catalog['providers']) == 2
-          assert len(catalog['mcp_capabilities']['excluded_paid_or_demo_names']) == 9
+          assert 'excluded_paid_or_demo_names' not in catalog['mcp_capabilities']
+          assert 'excluded_paid_provider_ids' not in catalog['mcp_capabilities']
+          assert 'excluded_paid_or_demo_mcp_capabilities' not in catalog['counts']
           assert catalog['counts']['mcp_source_advertised'] == 229
           assert len(catalog['mcp_capabilities']['names']) == 220
           assert catalog['counts']['all_catalog_entries'] == 394
