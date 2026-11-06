@@ -42,9 +42,21 @@ AUDITED_EMPTY_RUNTIME = frozenset((
     "fe1bb6e7073fdd8a963963909127cde6d570f253",
 ))
 
+# Top-level names are from the GitHub trees of all nine pinned commits.
+# A newly created file/folder at release root is *not* presumed disposable.
+SOURCE_ROOT_NAMES = frozenset((
+    ".github", "BOOTSTRAP.md", "LICENSE", "README.md",
+    "docs", "engine", "examples", "install", "integrations",
+    "skill", "templates", "tests", ".runtime",
+))
+
 
 def _unsafe_private_state(release: Path) -> str | None:
     """Only the nine fully audited, still-empty .runtime folders are disposable."""
+    if release.name in AUDITED_EMPTY_RUNTIME:
+        for entry in release.iterdir():
+            if entry.name not in SOURCE_ROOT_NAMES or entry.is_symlink():
+                return "unexpected_file_or_symlink_at_release_root"
     for name in STATE_DIRS:
         p = release / name
         if not (p.exists() or p.is_symlink()):
