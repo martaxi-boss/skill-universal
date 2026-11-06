@@ -56,11 +56,11 @@
       "do_not_execute_discovered_code": true,
       "do_not_install_without_explicit_apply": true
     },
-    "count": 56,
+    "count": 55,
     "statistics": {
-      "curated": 56,
+      "curated": 55,
       "apt_candidates": 34,
-      "upstream_linux": 22,
+      "upstream_linux": 21,
       "pending_gui": 0,
       "license_checked_this_release": "openscad GPL-2.0-or-later from upstream AboutDialog"
     }
@@ -75,7 +75,7 @@
     "schema": 2,
     "origin": "Verified GitHub API repository metadata, 2026-11-02. GitHub stars are historical snapshots, not trust or functionality.",
     "notice": "Not installed, Ubuntu compatibility not certified. Licenses reported by GitHub metadata; review upstream license before redistributing.",
-    "count": 73
+    "count": 72
   },
   "provider_policy": "Only Ferrarri-project-owned local open-source or built-in providers compatible with Ubuntu 24.04 LTS. Closed-source cloud/free-tier services are absent from the operative catalog; no paid or remote fallback.",
   "providers": [
@@ -4385,59 +4385,6 @@
       "admission": "ubuntu_reviewed_or_core"
     },
     {
-      "id": "penpot",
-      "category": "design",
-      "ubuntu": {
-        "id": "penpot",
-        "repo": "penpot/penpot",
-        "category": "design",
-        "priority": "advanced",
-        "platform": "Ubuntu 24.04 LTS",
-        "installation_tier": "external_upstream",
-        "selection_status": "upstream_linux_supported_not_host_certified",
-        "installation_candidate": null,
-        "license": "MPL-2.0",
-        "evidence": [
-          {
-            "kind": "upstream_linux_install_or_candidate",
-            "url": "https://help.penpot.app/technical-guide/getting-started/"
-          }
-        ],
-        "runtime_note": "Self-host via Docker Compose, requires resources and a container runtime",
-        "installed_on_vps": false,
-        "certified_on_vps": false,
-        "selected_for_auto_install": false,
-        "license_review_required": false,
-        "eligible_for_ubuntu_preflight": false
-      },
-      "ubuntu_order": 38,
-      "upstream": {
-        "id": "penpot",
-        "repository": "penpot/penpot",
-        "url": "https://github.com/penpot/penpot",
-        "category": "design",
-        "capabilities": [
-          "design_ui"
-        ],
-        "license_status": "github_declared",
-        "license_spdx": "MPL-2.0",
-        "stars_snapshot": 61996,
-        "verified_on": "2026-11-02",
-        "ubuntu_compatibility": "candidate_not_tested",
-        "install_method": "container",
-        "package_candidate": null,
-        "package_ubuntu_verified": false,
-        "resources": "gui",
-        "installed": false,
-        "smoke_tested": false,
-        "priority": "free_software_candidate"
-      },
-      "upstream_order": 50,
-      "upstream_source": "expansion",
-      "ferrari_managed_container": true,
-      "admission": "ubuntu_reviewed_or_core"
-    },
-    {
       "id": "tailwind",
       "category": "web",
       "ubuntu": {
@@ -6821,10 +6768,10 @@
     }
   ],
   "counts": {
-    "unique_tools": 174,
+    "unique_tools": 173,
     "core": 71,
-    "ubuntu_candidates": 56,
-    "upstream_registry": 123,
+    "ubuntu_candidates": 55,
+    "upstream_registry": 122,
     "actions": 40,
     "providers": 2,
     "shared_runtime_definitions": 3,
@@ -6832,9 +6779,9 @@
     "private_cli_groups": 26,
     "python_discovery_modules": 11,
     "npm_package_definitions": 9,
-    "ferrari_managed_container_candidates": 14,
+    "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 394,
+    "all_catalog_entries": 393,
     "mcp_source_advertised": 229
   },
   "admission_policy": {
