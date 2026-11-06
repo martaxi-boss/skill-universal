@@ -75,6 +75,12 @@ class WhisperP3Tests(unittest.TestCase):
                       "2a3a857737d17d974f30d818ebec69ce11929e5c",
                       "memory.max","transcript.txt","subtitles.srt"):
             self.assertIn(token,code,token)
+        self.assertIn('with av.open(str(audio),mode="r") as container:',code)
+        self.assertIn('AudioResampler(format="s16",layout="mono",rate=16000)',code)
+        self.assertIn('samples=np.concatenate(chunks).astype(np.float32)/32768.0',code)
+        self.assertIn('FERRARI_WHISPER_PYAV19_PCM=PASS',code)
+        self.assertIn('            samples,language="en"',code)
+        self.assertNotIn('metadata_errors=',code)
         self.assertNotIn("ffmpeg -i",code)
         self.assertNotIn("pip install",code)
 
