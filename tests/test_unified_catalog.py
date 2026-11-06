@@ -89,7 +89,8 @@ class UnifiedCatalogTests(unittest.TestCase):
         with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
             result = tool_runtime.unified_catalog(inventory_now={"programs": [], "ecosystems": {}})
         self.assertEqual(result["rea"]["status"], "rea_catalog_drift")
-        self.assertEqual(result["rea"]["unexpected_live_names"], ["unapproved_new_tool"])
+        self.assertEqual(result["rea"]["unlisted_source_count"], 1)
+        self.assertNotIn("rea:unapproved_new_tool", [x["id"] for x in result["entries"]])
         self.assertEqual(len(result["rea"]["missing_live_names"]), 219)
         self.assertNotIn("rea:unapproved_new_tool", [x["id"] for x in result["entries"]])
 
@@ -101,30 +102,35 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertTrue(all(not x["selectable"] for x in result["entries"]
                             if x["kind"] == "mcp_capability"))
 
-    def test_commercial_jeb_and_hopper_demo_excluded_even_when_advertised(self):
+    def test_deleted_upstream_names_are_never_in_ferrari_catalog_or_dispatch(self):
         names = self.doc["mcp_capabilities"]["names"]
-        excluded = self.doc["mcp_capabilities"]["excluded_paid_or_demo_names"]
-        self.assertEqual(len(excluded), 9)
-        self.assertTrue(all(name not in names for name in excluded))
+        parent = self.doc["mcp_capabilities"]
+        self.assertEqual(len(names), 220)
+        self.assertNotIn("excluded_paid_or_demo_names", parent)
+        self.assertNotIn("excluded_paid_provider_ids", parent)
+        self.assertNotIn("exclusion_reason", parent)
+        self.assertNotIn("excluded_paid_or_demo_mcp_capabilities", self.doc["counts"])
         self.assertEqual(self.doc["counts"]["mcp_source_advertised"], 229)
-        self.assertEqual(self.doc["counts"]["excluded_paid_or_demo_mcp_capabilities"], 9)
-        advertised = [{"name": name} for name in names + excluded]
+        unlisted = ["unlisted_tool_%d" % i for i in range(9)]
+        advertised = [{"name": name} for name in names + unlisted]
         with patch.object(rea_mcp, "discover_tools", return_value=advertised):
             result = tool_runtime.unified_catalog(
                 inventory_now={"programs": [], "ecosystems": {}})
         self.assertEqual(result["rea"]["status"], "rea_in_sync")
-        self.assertEqual(result["rea"]["excluded_paid_live_names"], sorted(excluded))
+        self.assertEqual(result["rea"]["unlisted_source_count"], 9)
+        self.assertNotIn("excluded_paid_live_names", result["rea"])
+        self.assertNotIn("excluded_paid_or_demo_names", result["rea"])
+        self.assertNotIn("unexpected_live_names", result["rea"])
         self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 220)
         self.assertEqual(result["counts"]["rea_mcp_advertised_raw"], 229)
-        self.assertEqual(result["counts"]["rea_mcp_paid_excluded_now"], 9)
+        self.assertEqual(result["counts"]["rea_mcp_unlisted_source_now"], 9)
         self.assertEqual(result["counts"]["rea_mcp_capabilities"], 220)
-        self.assertFalse(any(item["id"] in {"rea:" + n for n in excluded}
+        self.assertFalse(any(item["id"] in {"rea:" + n for n in unlisted}
                              for item in result["entries"]))
-        for name in excluded:
+        for name in unlisted:
             with self.assertRaisesRegex(ValueError, "not admitted"):
                 rea_mcp.validate_requests([{"method": "tools/call",
                                             "params": {"name": name, "arguments": {}}}])
-        # A valid free function can still use the original REA request path.
         rea_mcp.validate_requests([{"method": "tools/call",
                                     "params": {"name": "inspect_elf_notes", "arguments": {}}}])
 
