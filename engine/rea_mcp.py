@@ -221,3 +221,52 @@ def invoke(requests, dest: Path, source: Path | None = None, *, root: Path | Non
         raise RuntimeError("REA MCP produced empty result")
     return {"confirmed": True, "artifacts": [str(target)],
             "operation": "rea-mcp", "executor": str(cli)}
+
+
+
+def discover_tools(*, root: Path | None = None):
+    """Read the actual REA MCP tools/list for Ferrari's one catalog.
+
+    This is an ephemeral read-only projection. There is no second registry,
+    global REA installation, daemon or independent coordinator.
+    """
+    home = ROOT if root is None else root
+    cli, env = _resources(home)
+    project = home.resolve(strict=True)
+    for rel in (".runtime/rea-config", ".runtime/rea-cache", ".runtime/rea-data"):
+        path = home / rel
+        if path.is_symlink() or not path.resolve(strict=False).is_relative_to(project):
+            raise RuntimeError("Unsafe Ferrari-private REA runtime directory")
+        path.mkdir(parents=True, mode=0o700, exist_ok=True)
+
+    collected = []
+    seen = set()
+    cursors = set()
+    cursor = None
+    for _ in range(32):
+        params = {} if cursor is None else {"cursor": cursor}
+        response = _exchange([str(cli), "mcp"], env,
+                             [{"method": "tools/list", "params": params}])
+        payload = response[0]["response"].get("result")
+        if not isinstance(payload, dict) or not isinstance(payload.get("tools"), list):
+            raise RuntimeError("REA MCP tools/list did not return a tool list")
+        for row in payload["tools"]:
+            if not isinstance(row, dict):
+                raise RuntimeError("REA MCP returned an invalid tool descriptor")
+            name = row.get("name")
+            if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", name):
+                raise RuntimeError("REA MCP returned an invalid tool name")
+            if name in seen:
+                raise RuntimeError("REA MCP tools/list has duplicate names")
+            seen.add(name)
+            collected.append(row)
+            if len(collected) > 4096:
+                raise RuntimeError("REA MCP tools/list exceeds the Ferrari catalog limit")
+        cursor = payload.get("nextCursor")
+        if cursor is None:
+            return collected
+        if (not isinstance(cursor, str) or not cursor or len(cursor) > 1000
+                or cursor in cursors):
+            raise RuntimeError("Invalid or repeated REA MCP pagination cursor")
+        cursors.add(cursor)
+    raise RuntimeError("REA MCP tools/list pagination limit exceeded")

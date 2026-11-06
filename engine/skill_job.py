@@ -129,8 +129,14 @@ def execute(data, outdir):
         dest=target/"artifacts"
         if kind=="inventory":
             dest.mkdir(mode=0o700)
-            (dest/"inventory.json").write_text(json.dumps(tool_runtime.inventory(),ensure_ascii=False,indent=2),encoding="utf-8")
-            response={"confirmed":True,"artifacts":[str(dest/"inventory.json")]}
+            existing=tool_runtime.inventory()
+            inventory_file=dest/"inventory.json"
+            inventory_file.write_text(json.dumps(existing,ensure_ascii=False,indent=2),encoding="utf-8")
+            # Same authorized transport and one Ferrari source catalog. REA
+            # tools/list is read-only; no extra GitHub request type or bridge.
+            catalog_file=dest/"catalog.json"
+            catalog_file.write_text(json.dumps(tool_runtime.unified_catalog(inventory_now=existing),ensure_ascii=False,indent=2),encoding="utf-8")
+            response={"confirmed":True,"artifacts":[str(inventory_file),str(catalog_file)]}
         elif kind=="operation":
             response=ferrari.run(data["operation"],str(dest),source=str(src) if src else None,
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))

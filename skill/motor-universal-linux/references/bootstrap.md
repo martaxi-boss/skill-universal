@@ -46,3 +46,6 @@ O projeto Ferrari deve guardar programas, ferramentas, bibliotecas de aplicaçã
 5. A CI de `martaxi-boss/skill-universal` publica `ferrari-skill-installable` contendo `skill.zip`. Confirmar a instalação da versão atualizada **no cliente ChatGPT** separadamente: uma aprovação da CI não a instala por si.
 
 Todos os pedidos públicos devem usar ficheiros sintéticos/públicos. Base64 não é encriptação: nunca publicar dados privados, tokens ou documentos do cliente no repositório VPS.
+
+
+**Complemento catálogo integral (06/11/2026, condicionado à ativação):** a fonte única engine/catalog.json contém 176 programas base e 229 nomes de capacidades do REA original obtidos pelo tools/list real [#42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831). A vista runtime é uma consulta, não um segundo catálogo: apenas os nomes observados no REA privado são marcados disponíveis. O catálogo integra oito fornecedores locais ou free-tier, mantém dependências privadas e devolve catalog.json junto de inventory.json no mesmo kind=inventory, sem alterar SSH ou o validador pinado. CI e deploy separados ainda são exigidos para afirmar que esta revisão está ativa.

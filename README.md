@@ -34,3 +34,8 @@ O contrato para pedido e resultado está em [references/github-bridge.md](skill/
 **Pendências concretas:** verificar consumidores e funções antes de decidir sobre os **oito pacotes APT globais restantes**; conciliar outras releases sem reset/deploy cruzado; verificar instalação real da Skill atual no ChatGPT (ZIP de CI não atualiza automaticamente). Quotas rígidas universais CPU/RAM e agentes Ruflo autónomos continuam não certificados. [PR #43](https://github.com/martaxi-boss/skill-universal/pull/43) é independente.
 
 **Segurança:** não incluir segredos, ficheiros privados ou dados pessoais em repositórios públicos; base64 não cifra. Nenhuma instalação fora da pasta Ferrari, nenhuma alteração silenciosa à ponte SSH e nenhuma nova Skill paralela.
+
+
+### Catálogo integral (revisão de 06/11/2026)
+
+Uma só fonte: engine/catalog.json. Além dos 176 registos de programas, inclui os 229 nomes MCP efetivamente devolvidos pelo REA original na [VPS #42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831), com projeção dinâmica reconciliada pelo motor. São **405 entradas de tipos diferentes**, não 405 binários instalados. O âmbito de fornecedores foi restringido a 8 opções locais/gratuitas, sem custos automáticos; candidatos Ubuntu não verificados não são executados. Após certificação e deploy, kind=inventory devolve os dois ficheiros inventory.json e catalog.json pelo fluxo GitHub–VPS–ZIP já existente. A fonte permanece em engine/catalog.json; não existe catálogo secundário.

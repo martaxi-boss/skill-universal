@@ -77,21 +77,8 @@
     "notice": "Not installed, Ubuntu compatibility not certified. Licenses reported by GitHub metadata; review upstream license before redistributing.",
     "count": 75
   },
-  "provider_policy": "Free plan != unlimited and != available to every account. No paid fallback without authorization. API keys are never stored in files.",
+  "provider_policy": "Ubuntu-compatible free/open-source or explicitly no-charge-tier candidates only; cloud providers are disabled until explicitly configured and verified for no-cost execution. No paid plans, trials that require a payment method, cost-bearing fallback or automatic charges.",
   "providers": [
-    {
-      "id": "host-model",
-      "category": [
-        "code",
-        "web",
-        "media",
-        "analysis"
-      ],
-      "kind": "host",
-      "cost": "user-plan",
-      "env": null,
-      "note": "Modelo do ChatGPT/Codex/cliente já autenticado, não é gratuito por definição e não fica instalado na VPS."
-    },
     {
       "id": "openrouter-free",
       "category": [
@@ -103,7 +90,8 @@
       "cost": "free-tier",
       "env": "OPENROUTER_API_KEY",
       "url": "https://openrouter.ai/collections/free-models",
-      "note": "Modelos :free; limites de pedidos e disponibilidade. Não escolher modelos pagos sem consentimento."
+      "note": "Modelos :free; limites de pedidos e disponibilidade. Não escolher modelos pagos sem consentimento.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "gemini-free",
@@ -116,7 +104,8 @@
       "cost": "free-tier",
       "env": "GEMINI_API_KEY",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "note": "Só modelos suportados na camada gratuita; condições e uso de dados variam."
+      "note": "Só modelos suportados na camada gratuita; condições e uso de dados variam.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "groq-free",
@@ -129,7 +118,8 @@
       "cost": "free-tier",
       "env": "GROQ_API_KEY",
       "url": "https://console.groq.com/docs/rate-limits",
-      "note": "Quotas, modelo e região dependem da conta; verificar antes de cada execução."
+      "note": "Quotas, modelo e região dependem da conta; verificar antes de cada execução.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "cloudflare-workers-ai",
@@ -142,19 +132,8 @@
       "cost": "free-tier",
       "env": "CLOUDFLARE_API_TOKEN",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
-      "note": "Conta/limites e modelos disponíveis variáveis."
-    },
-    {
-      "id": "huggingface-inference",
-      "category": [
-        "text",
-        "media"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier-conditional",
-      "env": "HF_TOKEN",
-      "url": "https://huggingface.co/docs/inference-providers/pricing",
-      "note": "Acesso gratuito/creditos podem variar; verificar modelo e conta."
+      "note": "Conta/limites e modelos disponíveis variáveis.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "imagemagick-local",
@@ -164,7 +143,8 @@
       "kind": "local",
       "cost": "open-source",
       "binary": "convert",
-      "note": "Edição e composição; não gera fotografia a partir de prompt."
+      "note": "Edição e composição; não gera fotografia a partir de prompt.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "svg-local",
@@ -174,7 +154,8 @@
       "kind": "local",
       "cost": "built-in",
       "binary": null,
-      "note": "Criativos SVG locais sem chamadas pagas; não é geração fotorealista."
+      "note": "Criativos SVG locais sem chamadas pagas; não é geração fotorealista.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "mistral-free",
@@ -187,7 +168,8 @@
       "cost": "free-tier",
       "env": "MISTRAL_API_KEY",
       "url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
-      "note": "Modo Free sem cartão, quotas e modelos selecionados; regras de tratamento de dados aplicam-se."
+      "note": "Modo Free sem cartão, quotas e modelos selecionados; regras de tratamento de dados aplicam-se.",
+      "admission": "free_only_no_paid_fallback"
     },
     {
       "id": "cerebras-free",
@@ -200,34 +182,8 @@
       "cost": "free-tier",
       "env": "CEREBRAS_API_KEY",
       "url": "https://inference-docs.cerebras.ai/support/pricing",
-      "note": "Plano gratis documentado, com limites por modelo/conta; verificar o estado atual."
-    },
-    {
-      "id": "nvidia-nim-dev",
-      "category": [
-        "code",
-        "analysis",
-        "text",
-        "media"
-      ],
-      "kind": "cloud",
-      "cost": "free-developer-prototype",
-      "env": "NVIDIA_API_KEY",
-      "url": "https://docs.api.nvidia.com/nim/docs/product",
-      "note": "Acesso gratuito para prototipagem pelo programa NVIDIA Developer; nao garante uso comercial ilimitado."
-    },
-    {
-      "id": "pollinations",
-      "category": [
-        "text",
-        "media",
-        "speech"
-      ],
-      "kind": "cloud",
-      "cost": "conditional",
-      "env": "POLLINATIONS_API_KEY",
-      "url": "https://gen.pollinations.ai/",
-      "note": "API multimodal com chave; verificar precos, limites e politica atual antes de usar; nao classificado como gratis garantido."
+      "note": "Plano gratis documentado, com limites por modelo/conta; verificar o estado atual.",
+      "admission": "free_only_no_paid_fallback"
     }
   ],
   "actions": [
@@ -1210,7 +1166,8 @@
         "apt": "git",
         "cost": "open-source"
       },
-      "core_order": 0
+      "core_order": 0,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "python",
@@ -1225,7 +1182,8 @@
       "core_order": 1,
       "requires": [
         "python-3.12"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "pip",
@@ -1240,7 +1198,8 @@
       "core_order": 2,
       "requires": [
         "python-3.12"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "venv",
@@ -1255,7 +1214,8 @@
       "core_order": 3,
       "requires": [
         "python-3.12"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "node",
@@ -1271,7 +1231,8 @@
       "core_order": 4,
       "requires": [
         "node-22"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "npm",
@@ -1286,7 +1247,8 @@
       "core_order": 5,
       "requires": [
         "node-22"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "go",
@@ -1298,7 +1260,8 @@
         "apt": "golang-go",
         "cost": "open-source"
       },
-      "core_order": 6
+      "core_order": 6,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "rust",
@@ -1310,7 +1273,8 @@
         "apt": "rustc",
         "cost": "open-source"
       },
-      "core_order": 7
+      "core_order": 7,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "cargo",
@@ -1322,7 +1286,8 @@
         "apt": "cargo",
         "cost": "open-source"
       },
-      "core_order": 8
+      "core_order": 8,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "gcc",
@@ -1334,7 +1299,8 @@
         "apt": "build-essential",
         "cost": "open-source"
       },
-      "core_order": 9
+      "core_order": 9,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "clang",
@@ -1346,7 +1312,8 @@
         "apt": "clang",
         "cost": "open-source"
       },
-      "core_order": 10
+      "core_order": 10,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "cmake",
@@ -1358,7 +1325,8 @@
         "apt": "cmake",
         "cost": "open-source"
       },
-      "core_order": 11
+      "core_order": 11,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "make",
@@ -1370,7 +1338,8 @@
         "apt": "make",
         "cost": "open-source"
       },
-      "core_order": 12
+      "core_order": 12,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "sqlite",
@@ -1382,7 +1351,8 @@
         "apt": "sqlite3",
         "cost": "open-source"
       },
-      "core_order": 13
+      "core_order": 13,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "postgres-client",
@@ -1394,7 +1364,8 @@
         "apt": "postgresql-client",
         "cost": "open-source"
       },
-      "core_order": 14
+      "core_order": 14,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "redis-client",
@@ -1406,7 +1377,8 @@
         "apt": "redis-tools",
         "cost": "open-source"
       },
-      "core_order": 15
+      "core_order": 15,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "jq",
@@ -1421,7 +1393,8 @@
       "core_order": 16,
       "private_cli": [
         "jq"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ripgrep",
@@ -1479,7 +1452,8 @@
       "default_binary": "rg",
       "private_cli": [
         "rg"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "fd",
@@ -1491,7 +1465,8 @@
         "apt": "fd-find",
         "cost": "open-source"
       },
-      "core_order": 18
+      "core_order": 18,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "curl",
@@ -1503,7 +1478,8 @@
         "apt": "curl",
         "cost": "open-source"
       },
-      "core_order": 19
+      "core_order": 19,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "wget",
@@ -1515,7 +1491,8 @@
         "apt": "wget",
         "cost": "open-source"
       },
-      "core_order": 20
+      "core_order": 20,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "unzip",
@@ -1527,7 +1504,8 @@
         "apt": "unzip",
         "cost": "open-source"
       },
-      "core_order": 21
+      "core_order": 21,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "zip",
@@ -1539,7 +1517,8 @@
         "apt": "zip",
         "cost": "open-source"
       },
-      "core_order": 22
+      "core_order": 22,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "docker",
@@ -1552,7 +1531,8 @@
         "cost": "open-source",
         "note": "Instalar apenas por procedimento oficial e autorização de privilégios."
       },
-      "core_order": 23
+      "core_order": 23,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "podman",
@@ -1564,7 +1544,8 @@
         "apt": "podman",
         "cost": "open-source"
       },
-      "core_order": 24
+      "core_order": 24,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "java",
@@ -1579,7 +1560,8 @@
       "core_order": 25,
       "requires": [
         "java-25"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "rea",
@@ -1654,7 +1636,8 @@
       "private_executable": ".runtime/npm/rea/node_modules/.bin/rea",
       "npm_packages": [
         "rea-agents"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "apktool",
@@ -1709,7 +1692,8 @@
       },
       "upstream_order": 3,
       "upstream_source": "registry",
-      "private_executable": "tools/apktool-3.0.3/bin/apktool"
+      "private_executable": "tools/apktool-3.0.3/bin/apktool",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "jadx",
@@ -1772,7 +1756,8 @@
       "private_executable": "tools/jadx-1.5.6/bin/jadx",
       "base_operations": [
         "apk-decompile"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ghidra",
@@ -1832,7 +1817,8 @@
       "requires": [
         "java-25"
       ],
-      "private_executable": "tools/ghidra-12.2/support/analyzeHeadless"
+      "private_executable": "tools/ghidra-12.2/support/analyzeHeadless",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "binwalk",
@@ -1890,7 +1876,8 @@
       "private_cli": [
         "binwalk"
       ],
-      "private_python_script": true
+      "private_python_script": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "unblob",
@@ -1903,7 +1890,8 @@
         "cost": "open-source",
         "source": "https://github.com/onekey-sec/unblob"
       },
-      "core_order": 31
+      "core_order": 31,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "radare2",
@@ -1965,7 +1953,8 @@
       "default_binary": "r2",
       "private_cli": [
         "r2"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "gdb",
@@ -1977,7 +1966,8 @@
         "apt": "gdb",
         "cost": "open-source"
       },
-      "core_order": 33
+      "core_order": 33,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "readelf",
@@ -1992,7 +1982,8 @@
       "core_order": 34,
       "private_cli": [
         "readelf"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "objdump",
@@ -2007,7 +1998,8 @@
       "core_order": 35,
       "private_cli": [
         "objdump"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "strings",
@@ -2025,7 +2017,8 @@
       ],
       "base_operations": [
         "binary-strings"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "strace",
@@ -2037,7 +2030,8 @@
         "apt": "strace",
         "cost": "open-source"
       },
-      "core_order": 37
+      "core_order": 37,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "file",
@@ -2052,7 +2046,8 @@
       "core_order": 38,
       "private_cli": [
         "file"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "yara",
@@ -2064,7 +2059,8 @@
         "apt": "yara",
         "cost": "open-source"
       },
-      "core_order": 39
+      "core_order": 39,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "adb",
@@ -2079,7 +2075,8 @@
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
       "core_order": 40,
-      "private_executable": "tools/android-cli-36.0.0/platform-tools/adb"
+      "private_executable": "tools/android-cli-36.0.0/platform-tools/adb",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "aapt",
@@ -2091,7 +2088,8 @@
         "apt": "aapt",
         "cost": "open-source"
       },
-      "core_order": 41
+      "core_order": 41,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "apksigner",
@@ -2106,7 +2104,8 @@
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
       "core_order": 42,
-      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/apksigner"
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "zipalign",
@@ -2121,7 +2120,8 @@
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
       "core_order": 43,
-      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/zipalign"
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/zipalign",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ffmpeg",
@@ -2186,7 +2186,8 @@
       ],
       "base_operations": [
         "video-thumbnail"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "imagemagick",
@@ -2252,7 +2253,8 @@
       ],
       "base_operations": [
         "image-resize"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "inkscape",
@@ -2295,7 +2297,8 @@
       "ubuntu_order": 34,
       "private_cli": [
         "inkscape"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "gimp",
@@ -2361,7 +2364,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "gimp-console-2.10"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "blender",
@@ -2423,7 +2427,8 @@
       "upstream_source": "registry",
       "base_operations": [
         "blender-house"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "sox",
@@ -2435,7 +2440,8 @@
         "apt": "sox",
         "cost": "open-source"
       },
-      "core_order": 49
+      "core_order": 49,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "espeak",
@@ -2447,7 +2453,8 @@
         "apt": "espeak-ng",
         "cost": "open-source"
       },
-      "core_order": 50
+      "core_order": 50,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "piper",
@@ -2483,7 +2490,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 77,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "comfyui",
@@ -2539,7 +2547,8 @@
       },
       "upstream_order": 38,
       "upstream_source": "registry",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "pandoc",
@@ -2596,7 +2605,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "pandoc"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "libreoffice",
@@ -2658,7 +2668,8 @@
       "upstream_source": "registry",
       "base_operations": [
         "office-pdf"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "pdftotext",
@@ -2677,7 +2688,8 @@
       ],
       "base_operations": [
         "pdf-text"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "tesseract",
@@ -2735,7 +2747,8 @@
       "default_binary": "tesseract",
       "private_cli": [
         "tesseract"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "exiftool",
@@ -2747,7 +2760,8 @@
         "apt": "libimage-exiftool-perl",
         "cost": "open-source"
       },
-      "core_order": 57
+      "core_order": 57,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "graphviz",
@@ -2762,7 +2776,8 @@
       "core_order": 58,
       "private_cli": [
         "dot"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "svg",
@@ -2775,7 +2790,8 @@
         "cost": "built-in",
         "note": "Geração SVG com Python padrão, disponível se o motor funcionar."
       },
-      "core_order": 59
+      "core_order": 59,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "html-templates",
@@ -2788,7 +2804,8 @@
         "cost": "built-in",
         "note": "Template HTML/CSS responsivo incluído neste projeto."
       },
-      "core_order": 60
+      "core_order": 60,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "vite",
@@ -2850,7 +2867,8 @@
       ],
       "npm_packages": [
         "vite"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "astro",
@@ -2881,7 +2899,8 @@
         "priority": "recommended"
       },
       "upstream_order": 13,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "nextjs",
@@ -2939,7 +2958,8 @@
       "upstream_source": "registry",
       "npm_packages": [
         "next"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "tailwindcss",
@@ -2952,7 +2972,8 @@
         "cost": "open-source",
         "source": "https://github.com/tailwindlabs/tailwindcss"
       },
-      "core_order": 64
+      "core_order": 64,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "daisyui",
@@ -2983,7 +3004,8 @@
         "priority": "recommended"
       },
       "upstream_order": 20,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "shadcn-ui",
@@ -2997,7 +3019,8 @@
         "source": "https://github.com/shadcn-ui/ui",
         "note": "Componentes/copiar código, não um motor universal de layouts."
       },
-      "core_order": 66
+      "core_order": 66,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "playwright",
@@ -3057,7 +3080,8 @@
       "npm_packages": [
         "playwright",
         "@playwright/test"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ruflo",
@@ -3120,7 +3144,8 @@
       "private_executable": ".runtime/npm/ruflo/node_modules/.bin/ruflo",
       "npm_packages": [
         "ruflo"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ifcopenshell",
@@ -3138,7 +3163,8 @@
       "base_operations": [
         "ifc-summary"
       ],
-      "python_module": "ifcopenshell"
+      "python_module": "ifcopenshell",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "aapt2",
@@ -3153,7 +3179,8 @@
         "note": "Ferrari-owned Ubuntu Linux Android Build-Tools 36.0.0; inspect compiled APK manifest/resources."
       },
       "core_order": 70,
-      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/aapt2"
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/aapt2",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "libvips",
@@ -3204,7 +3231,8 @@
       "private_cli": [
         "vips",
         "vipsheader"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ocrmypdf",
@@ -3255,7 +3283,8 @@
       "private_cli": [
         "ocrmypdf"
       ],
-      "private_python_script": true
+      "private_python_script": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "opencv",
@@ -3308,7 +3337,8 @@
       "upstream_order": 72,
       "upstream_source": "expansion",
       "default_binary": null,
-      "python_module": "cv2"
+      "python_module": "cv2",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ansible",
@@ -3359,7 +3389,8 @@
       "private_cli": [
         "ansible-inventory"
       ],
-      "private_python_script": true
+      "private_python_script": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "ytdlp",
@@ -3412,7 +3443,8 @@
       "upstream_order": 69,
       "upstream_source": "expansion",
       "default_binary": "yt-dlp",
-      "private_executable": "tools/yt-dlp-2026.10.26/yt-dlp"
+      "private_executable": "tools/yt-dlp-2026.10.26/yt-dlp",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "prometheus",
@@ -3465,7 +3497,8 @@
       "upstream_order": 101,
       "upstream_source": "expansion",
       "private_executable": "tools/ferrari-services/prometheus/usr/bin/prometheus",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "wireshark",
@@ -3520,7 +3553,8 @@
       "default_binary": "tshark",
       "private_cli": [
         "tshark"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "valkey",
@@ -3574,7 +3608,8 @@
       "upstream_source": "expansion",
       "default_binary": "valkey-server",
       "private_executable": "tools/ferrari-services/valkey-server/bin/valkey-server",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "krita",
@@ -3627,7 +3662,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "krita"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "kdenlive",
@@ -3680,7 +3716,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "melt"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "scribus",
@@ -3733,7 +3770,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "scribus"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "darktable",
@@ -3786,7 +3824,8 @@
       "upstream_source": "registry",
       "private_cli": [
         "darktable-cli"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "freecad",
@@ -3842,7 +3881,8 @@
       },
       "upstream_order": 54,
       "upstream_source": "expansion",
-      "private_executable": "tools/freecad-1.1.4/archive.AppImage"
+      "private_executable": "tools/freecad-1.1.4/archive.AppImage",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "openscad",
@@ -3904,7 +3944,8 @@
       "upstream_source": "expansion",
       "base_operations": [
         "cad-stl"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "librecad",
@@ -3960,7 +4001,8 @@
       },
       "upstream_order": 57,
       "upstream_source": "expansion",
-      "private_executable": "tools/librecad-2.2.1.6/squashfs-root/AppRun"
+      "private_executable": "tools/librecad-2.2.1.6/squashfs-root/AppRun",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "qgis",
@@ -4016,7 +4058,8 @@
       },
       "upstream_order": 59,
       "upstream_source": "expansion",
-      "private_executable": "tools/qgis-4.2.3-condaforge/bin/qgis_process"
+      "private_executable": "tools/qgis-4.2.3-condaforge/bin/qgis_process",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "audacity",
@@ -4072,7 +4115,8 @@
       },
       "upstream_order": 65,
       "upstream_source": "expansion",
-      "private_executable": "tools/audacity-4.0.2/squashfs-root/AppRun"
+      "private_executable": "tools/audacity-4.0.2/squashfs-root/AppRun",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "obs",
@@ -4128,7 +4172,8 @@
       },
       "upstream_order": 68,
       "upstream_source": "expansion",
-      "private_executable": "tools/obs-studio-32.2.2/run-obs"
+      "private_executable": "tools/obs-studio-32.2.2/run-obs",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "lmms",
@@ -4186,7 +4231,8 @@
       "upstream_source": "expansion",
       "private_cli": [
         "lmms"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "solvespace",
@@ -4242,7 +4288,8 @@
       },
       "upstream_order": 61,
       "upstream_source": "expansion",
-      "private_executable": "tools/solvespace-3.1-ubuntu24/usr/bin/solvespace"
+      "private_executable": "tools/solvespace-3.1-ubuntu24/usr/bin/solvespace",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "synfig",
@@ -4299,7 +4346,8 @@
       "upstream_order": 62,
       "upstream_source": "expansion",
       "default_binary": "synfigstudio",
-      "private_executable": "tools/synfig-1.5.5/SynfigStudio-1.5.5-2026.03.15-linux64-79bf7.appimage"
+      "private_executable": "tools/synfig-1.5.5/SynfigStudio-1.5.5-2026.03.15-linux64-79bf7.appimage",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "openshot",
@@ -4356,7 +4404,8 @@
       "upstream_order": 71,
       "upstream_source": "expansion",
       "default_binary": "openshot-qt",
-      "private_executable": "tools/openshot-4.1.1/squashfs-root/AppRun"
+      "private_executable": "tools/openshot-4.1.1/squashfs-root/AppRun",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "calibre",
@@ -4415,7 +4464,8 @@
       "private_cli": [
         "ebook-convert"
       ],
-      "private_python_script": true
+      "private_python_script": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "penpot",
@@ -4467,7 +4517,8 @@
       },
       "upstream_order": 50,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "tailwind",
@@ -4516,7 +4567,8 @@
       "upstream_source": "registry",
       "npm_packages": [
         "tailwindcss"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "bootstrap",
@@ -4565,7 +4617,8 @@
       "upstream_source": "registry",
       "npm_packages": [
         "bootstrap"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "shadcn",
@@ -4614,7 +4667,8 @@
       "upstream_source": "registry",
       "npm_packages": [
         "shadcn"
-      ]
+      ],
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "docling",
@@ -4666,7 +4720,8 @@
       },
       "upstream_order": 78,
       "upstream_source": "expansion",
-      "python_module": "docling"
+      "python_module": "docling",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "typst",
@@ -4714,7 +4769,8 @@
       "upstream_order": 37,
       "upstream_source": "registry",
       "private_executable": "tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
-      "python_module": "typst"
+      "python_module": "typst",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "duckdb",
@@ -4766,7 +4822,8 @@
       },
       "upstream_order": 94,
       "upstream_source": "expansion",
-      "python_module": "duckdb"
+      "python_module": "duckdb",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "polars",
@@ -4818,7 +4875,8 @@
       },
       "upstream_order": 95,
       "upstream_source": "expansion",
-      "python_module": "polars"
+      "python_module": "polars",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "streamlit",
@@ -4870,7 +4928,8 @@
       },
       "upstream_order": 91,
       "upstream_source": "expansion",
-      "python_module": "streamlit"
+      "python_module": "streamlit",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "gradio",
@@ -4922,7 +4981,8 @@
       },
       "upstream_order": 92,
       "upstream_source": "expansion",
-      "python_module": "gradio"
+      "python_module": "gradio",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "godot",
@@ -4975,7 +5035,8 @@
       "upstream_order": 58,
       "upstream_source": "expansion",
       "default_binary": "godot",
-      "private_executable": "tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64"
+      "private_executable": "tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "faster-whisper",
@@ -5022,7 +5083,8 @@
       },
       "upstream_order": 42,
       "upstream_source": "registry",
-      "python_module": "faster_whisper"
+      "python_module": "faster_whisper",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "prefect",
@@ -5074,7 +5136,8 @@
       },
       "upstream_order": 119,
       "upstream_source": "expansion",
-      "python_module": "prefect"
+      "python_module": "prefect",
+      "admission": "ubuntu_reviewed_or_core"
     },
     {
       "id": "rizin",
@@ -5096,7 +5159,8 @@
         "priority": "recommended"
       },
       "upstream_order": 5,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "cutter",
@@ -5118,7 +5182,8 @@
         "priority": "recommended"
       },
       "upstream_order": 6,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "imhex",
@@ -5140,7 +5205,8 @@
         "priority": "recommended"
       },
       "upstream_order": 7,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "frida",
@@ -5162,7 +5228,8 @@
         "priority": "recommended"
       },
       "upstream_order": 8,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "angr",
@@ -5184,7 +5251,8 @@
         "priority": "recommended"
       },
       "upstream_order": 9,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "mobsf",
@@ -5206,7 +5274,8 @@
         "priority": "recommended"
       },
       "upstream_order": 11,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "sveltekit",
@@ -5228,7 +5297,8 @@
         "priority": "recommended"
       },
       "upstream_order": 17,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "vue",
@@ -5250,7 +5320,8 @@
         "priority": "recommended"
       },
       "upstream_order": 18,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "puppeteer",
@@ -5272,7 +5343,8 @@
         "priority": "recommended"
       },
       "upstream_order": 22,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "selenium",
@@ -5294,7 +5366,8 @@
         "priority": "recommended"
       },
       "upstream_order": 23,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "invokeai",
@@ -5316,7 +5389,8 @@
         "priority": "optional-heavy"
       },
       "upstream_order": 39,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "ollama",
@@ -5338,7 +5412,8 @@
         "priority": "recommended"
       },
       "upstream_order": 40,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "llamacpp",
@@ -5360,7 +5435,8 @@
         "priority": "recommended"
       },
       "upstream_order": 41,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "langgraph",
@@ -5382,7 +5458,8 @@
         "priority": "recommended"
       },
       "upstream_order": 44,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "mcp-servers",
@@ -5404,7 +5481,8 @@
         "priority": "recommended"
       },
       "upstream_order": 45,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "uv",
@@ -5426,7 +5504,8 @@
         "priority": "recommended"
       },
       "upstream_order": 47,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "ruff",
@@ -5448,7 +5527,8 @@
         "priority": "recommended"
       },
       "upstream_order": 48,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "excalidraw",
@@ -5475,7 +5555,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 51,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "drawio",
@@ -5502,7 +5583,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 52,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "drawdb",
@@ -5529,7 +5611,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 53,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "kicad",
@@ -5556,7 +5639,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 56,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "opendronemap",
@@ -5583,7 +5667,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 60,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "opentoonz",
@@ -5610,7 +5695,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 63,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "natron",
@@ -5637,7 +5723,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 64,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "musescore",
@@ -5664,7 +5751,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 67,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "losslesscut",
@@ -5691,7 +5779,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 70,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "paddleocr",
@@ -5718,7 +5807,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 73,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "diffusers",
@@ -5745,7 +5835,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 74,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "rembg",
@@ -5772,7 +5863,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 75,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "whispercpp",
@@ -5799,7 +5891,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 76,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "unstructured",
@@ -5826,7 +5919,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 79,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "pdfcpu",
@@ -5853,7 +5947,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 80,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "zotero",
@@ -5880,7 +5975,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 82,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "onlyoffice",
@@ -5907,7 +6003,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 83,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "appflowy",
@@ -5934,7 +6031,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 84,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "markitdown",
@@ -5961,7 +6059,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 85,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "medusa",
@@ -5989,7 +6088,8 @@
       },
       "upstream_order": 86,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "saleor",
@@ -6017,7 +6117,8 @@
       },
       "upstream_order": 87,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "payload",
@@ -6044,7 +6145,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 88,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "appwrite",
@@ -6072,7 +6174,8 @@
       },
       "upstream_order": 89,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "supabase",
@@ -6100,7 +6203,8 @@
       },
       "upstream_order": 90,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "dash",
@@ -6127,7 +6231,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 93,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "pandas",
@@ -6154,7 +6259,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 96,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "scikit_learn",
@@ -6181,7 +6287,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 97,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "qdrant",
@@ -6209,7 +6316,8 @@
       },
       "upstream_order": 98,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "grafana",
@@ -6237,7 +6345,8 @@
       },
       "upstream_order": 100,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "opentofu",
@@ -6264,7 +6373,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 102,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "mitmproxy",
@@ -6291,7 +6401,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 103,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "nmap",
@@ -6318,7 +6429,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 105,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "androguard",
@@ -6345,7 +6457,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 106,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "lief",
@@ -6372,7 +6485,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 107,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "capstone",
@@ -6399,7 +6513,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 108,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "gitea",
@@ -6427,7 +6542,8 @@
       },
       "upstream_order": 109,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "neovim",
@@ -6454,7 +6570,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 110,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "helix",
@@ -6481,7 +6598,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 111,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "vscode",
@@ -6508,7 +6626,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 112,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "crewai",
@@ -6535,7 +6654,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 113,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "langchain",
@@ -6562,7 +6682,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 114,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "superset",
@@ -6589,7 +6710,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 115,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "airflow",
@@ -6616,7 +6738,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 116,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "agents_python",
@@ -6643,7 +6766,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 117,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "chroma",
@@ -6670,7 +6794,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 118,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "dask",
@@ -6697,7 +6822,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 120,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "echarts",
@@ -6724,7 +6850,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 121,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "homeassistant",
@@ -6752,7 +6879,8 @@
       },
       "upstream_order": 122,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "immich",
@@ -6780,7 +6908,8 @@
       },
       "upstream_order": 123,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "jellyfin",
@@ -6808,14 +6937,16 @@
       },
       "upstream_order": 124,
       "upstream_source": "expansion",
-      "ferrari_managed_container": true
+      "ferrari_managed_container": true,
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "bpy",
       "category": "animation",
       "origin": "Ferrari runtime discovery",
       "kind": "python-module",
-      "python_module": "bpy"
+      "python_module": "bpy",
+      "admission": "upstream_candidate_unverified"
     },
     {
       "id": "openpencil",
@@ -6824,7 +6955,8 @@
       "kind": "npm-package",
       "npm_packages": [
         "@open-pencil/cli"
-      ]
+      ],
+      "admission": "upstream_candidate_unverified"
     }
   ],
   "counts": {
@@ -6833,12 +6965,261 @@
     "ubuntu_candidates": 56,
     "upstream_registry": 125,
     "actions": 40,
-    "providers": 12,
+    "providers": 8,
     "shared_runtime_definitions": 3,
     "private_executable_paths": 22,
     "private_cli_groups": 26,
     "python_discovery_modules": 11,
     "npm_package_definitions": 9,
-    "ferrari_managed_container_candidates": 14
+    "ferrari_managed_container_candidates": 14,
+    "mcp_capabilities": 229,
+    "all_catalog_entries": 405
+  },
+  "admission_policy": {
+    "platform": "Ubuntu 24.04 LTS",
+    "cost": "no_required_paid_license_or_subscription",
+    "unsupported": "exclude_paid_or_ubuntu_incompatible",
+    "unverified": "candidate_not_executable_until_verified",
+    "other_projects": "never_share_binaries_or_dependencies"
+  },
+  "mcp_capabilities": {
+    "source_tool": "rea",
+    "source_runtime": "rea-agents@6.8.0",
+    "discovery": "tools/list",
+    "invocation": "tools/call",
+    "runtime_transport": "engine/rea_mcp.py",
+    "verified_vps_workflow_run": 42269934831,
+    "scope": "one_catalog_live_reconciled",
+    "names": [
+      "inspect_analysis_settings",
+      "update_analysis_settings",
+      "inspect_desktop_application",
+      "inspect_model_artifact",
+      "inspect_gpu_code_objects",
+      "annotate_native_function",
+      "inspect_native_load_image",
+      "inspect_native_data_type",
+      "inspect_native_instruction",
+      "resolve_native_call_targets",
+      "address_name",
+      "comment",
+      "current_address",
+      "current_procedure",
+      "current_document",
+      "goto_address",
+      "inline_comment",
+      "list_bookmarks",
+      "list_documents",
+      "list_names",
+      "list_procedures",
+      "list_segments",
+      "list_strings",
+      "next_address",
+      "prev_address",
+      "procedure_address",
+      "procedure_assembly",
+      "procedure_callees",
+      "procedure_callers",
+      "procedure_info",
+      "read_function_instructions",
+      "search_bytes",
+      "read_bytes",
+      "address_to_file_offset",
+      "procedure_references",
+      "procedure_pseudo_code",
+      "resolve_containing_procedure",
+      "search_procedures",
+      "search_strings",
+      "set_address_name",
+      "set_addresses_names",
+      "set_bookmark",
+      "set_comment",
+      "set_inline_comment",
+      "unset_bookmark",
+      "xrefs",
+      "trace_native_values",
+      "inspect_native_dispatch_metadata",
+      "get_objc_classes",
+      "get_objc_protocols",
+      "batch_decompile",
+      "decompile_all",
+      "get_call_graph",
+      "analyze_swift_types",
+      "find_xrefs_to_name",
+      "binary_overview",
+      "analyze_function",
+      "inspect_native_api",
+      "trace_feature",
+      "trace_call_path",
+      "trace_native_ui_action",
+      "observe_native_ui",
+      "capture_native_ui_scenario",
+      "observe_native_calls",
+      "inspect_macho",
+      "inspect_signature",
+      "inspect_plist",
+      "list_architectures",
+      "demangle_swift",
+      "inspect_artifact",
+      "extract_artifact",
+      "decode_interface_builder",
+      "inspect_keyed_archive",
+      "inspect_asset_catalog",
+      "trace_dylib_resolution",
+      "inspect_managed_artifact",
+      "inspect_managed_members",
+      "inspect_managed_native_boundaries",
+      "compare_managed_members",
+      "verify_managed_native_boundaries",
+      "import_managed_reconstruction",
+      "project_managed_application_graph",
+      "inspect_with_objdump",
+      "execute_rizin_command",
+      "list_frida_devices",
+      "list_frida_processes",
+      "start_frida_session",
+      "load_frida_script",
+      "resume_frida_session",
+      "unload_frida_script",
+      "frida_session_status",
+      "close_frida_session",
+      "instrument_with_frida",
+      "list_cutter_sessions",
+      "cutter_command",
+      "start_gdb_session",
+      "gdb_console",
+      "gdb_session_status",
+      "close_gdb_session",
+      "start_rizin_debug_session",
+      "rizin_debug_command",
+      "rizin_debug_session_status",
+      "close_rizin_debug_session",
+      "inspect_packet_capture",
+      "inspect_packet_fields",
+      "decode_signal_recording",
+      "inspect_signal_decoders",
+      "inspect_android_package",
+      "search_android_classes",
+      "inspect_android_class",
+      "inspect_android_method",
+      "trace_android_references",
+      "inspect_jeb_client",
+      "open_jeb_project",
+      "list_jeb_units",
+      "decompile_jeb_item",
+      "inspect_byte_entropy",
+      "inspect_binary_layout",
+      "inspect_analysis_view",
+      "inspect_pe_resources",
+      "inspect_native_exports",
+      "inspect_devicetree",
+      "inspect_elf_notes",
+      "inspect_apple_ips",
+      "inspect_kernel_module",
+      "inspect_pe_load_config",
+      "inspect_pe_certificates",
+      "inspect_pe_imports",
+      "inspect_go_binary",
+      "inspect_il2cpp_metadata",
+      "inspect_rust_binary",
+      "inspect_python_pyc",
+      "inspect_erlang_beam",
+      "compare_wasm_interfaces",
+      "inspect_wasm_artifact",
+      "inspect_apk_signature",
+      "inspect_evm_interface",
+      "inspect_sqlite_database",
+      "inspect_recorded_crash",
+      "inspect_firmware_regions",
+      "extract_firmware",
+      "trace_web_module_imports",
+      "trace_web_source_location",
+      "observe_web_execution",
+      "inspect_web_event_listeners",
+      "inspect_web_network_capture",
+      "recover_javascript_sources",
+      "inspect_adb_client",
+      "list_adb_devices",
+      "inspect_adb_device",
+      "list_adb_packages",
+      "pull_adb_package",
+      "read_adb_logcat",
+      "inspect_adb_package",
+      "pull_adb_file",
+      "push_adb_file",
+      "capture_adb_screen",
+      "list_adb_processes",
+      "list_adb_directory",
+      "list_adb_features",
+      "list_adb_services",
+      "inspect_adb_display",
+      "inspect_adb_window",
+      "read_adb_setting",
+      "collect_adb_bugreport",
+      "resolve_adb_packages",
+      "install_adb_package",
+      "uninstall_adb_package",
+      "start_adb_app",
+      "start_adb_activity",
+      "stop_adb_app",
+      "inspect_pcap_client",
+      "inspect_pcap_capture",
+      "identify_flutter_build",
+      "inspect_dart_aot",
+      "inspect_apktool_client",
+      "decode_android_resources",
+      "export_web_scripts",
+      "list_browser_targets",
+      "inspect_web_page",
+      "analyze_web_bundle",
+      "observe_web_session",
+      "discover_webmcp_tools",
+      "compare_web_captures",
+      "capture_web_screenshot",
+      "compare_web_screenshots",
+      "capture_browser_scenario",
+      "inspect_electron_fuses",
+      "list_electron_targets",
+      "inspect_electron_page",
+      "analyze_javascript_application",
+      "reconcile_javascript_runtime",
+      "capture_electron_scenario",
+      "list_javascript_runtime_targets",
+      "observe_javascript_runtime",
+      "trace_application_feature",
+      "trace_javascript_semantics",
+      "compare_application_versions",
+      "compare_source_to_bundle",
+      "compare_javascript_export_shapes",
+      "build_reconstruction_obligation_ledger",
+      "evaluate_reconstruction_coverage",
+      "export_environment_bundle",
+      "project_android_application_graph",
+      "project_apple_application_graph",
+      "project_harmony_application_graph",
+      "open_bundle_resources",
+      "open_binary",
+      "close_binary",
+      "binary_session",
+      "export_evidence_bundle",
+      "import_evidence_bundle",
+      "get_evidence_bundle",
+      "capture_process_scenario",
+      "compare_process_captures",
+      "compare_artifacts",
+      "compare_functions",
+      "match_native_functions",
+      "compare_bundles",
+      "find_changed_behavior",
+      "build_call_path",
+      "correlate_static_and_runtime",
+      "verify_reconstruction",
+      "list_unknowns",
+      "record_unknown",
+      "update_unknown",
+      "verify_unknown_resolution",
+      "get_navigation_context",
+      "inspect_address_context"
+    ]
   }
 }
