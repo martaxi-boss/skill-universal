@@ -34,7 +34,7 @@ A Skill está em [skill/motor-universal-linux/](skill/motor-universal-linux/); a
 
 O contrato para pedido e resultado está em [references/github-bridge.md](skill/motor-universal-linux/references/github-bridge.md). Inventário, ações tipadas, seleção automática, planos e REA MCP são suportados, mas cada nova capacidade requer testes GitHub, VPS e ZIP reais.
 
-**Pendências concretas:** certificar funções ainda não testadas (GUI, QGIS/providers, CAD, áudio, vídeo), investigar bibliotecas globais transitivas sem afetar o Ubuntu, conciliar alterações locais dos outros projetos sem reset/deploy cruzado e confirmar a atualização da Skill instalada no ChatGPT. O Ferrari operacional, catálogo e as 40 ações não dependem destas operações administrativas. [F9](docs/FASE9_HIGIENE_APT_FINAL_20261106.md).
+**Certificação funcional (06/11):** [VPS #42304131087](https://github.com/martaxi-boss/VPS/actions/runs/42304131087) **PASS** do QGIS `native:buffer` em polígono sintético (5 000 → 6 578,316 m² após buffer 5m), GeoJSON validado independentemente. **Não passaram/ficaram fora:** fornecedor OGR/PDAL opcional (erro C++ e `libhdf5_cpp.so.320` em falta), GUI, CAD/áudio/vídeo e isolamento integral de bibliotecas. Os projetos PINK/bot continuam sem resets/deploy cruzado; a Skill instalada no ChatGPT pode ser anterior. [Relatório](docs/FASE9_QGIS_BUFFER_GEOJSON_CERT_20261106.md).
 
 **Segurança:** não incluir segredos, ficheiros privados ou dados pessoais em repositórios públicos; base64 não cifra. Nenhuma instalação fora da pasta Ferrari, nenhuma alteração silenciosa à ponte SSH e nenhuma nova Skill paralela.
 

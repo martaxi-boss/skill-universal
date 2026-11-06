@@ -23,7 +23,7 @@ O GitHub e a release ativa não contêm segundo catálogo REA ou ficheiros JSON 
 ## Limites que impedem declarar o Ferrari funcionalmente 100%
 
 - **GUI e edição real:** arranque de seis aplicações em Xvfb temporário foi observado; não equivale a certificar desenho/edição/som/vídeo/gravação/transmissões. Há ensaios sintéticos 2D CAD e QGIS certificados nos âmbitos citados no [relatório F9 original](FASE9_AUDITORIA_E_HIGIENIZACAO_20261105.md), mas não todos os formatos/funções.
-- **QGIS/provedores opcionais:** a presença privada foi testada, porém o histórico identificou uma biblioteca opcional HDF5 em falta numa rota de inicialização. Não declarar todos os fornecedores ou modos GUI verdes.
+- **QGIS — prova funcional posterior (06/11):** [VPS #42304131087](https://github.com/martaxi-boss/VPS/actions/runs/42304131087) **PASS real** de `native:buffer` 5m, polígono sintético 5 000 → 6 578,316 m² e exportação GeoJSON validada por cálculo independente. O fornecedor PDAL opcional continua a procurar `libhdf5_cpp.so.320`; leitura OGR anterior abortou com `std::bad_alloc`. Não declarar todos os fornecedores nem modos GUI certificados. [Relatório detalhado](FASE9_QGIS_BUFFER_GEOJSON_CERT_20261106.md).
 - **Dependências transitivas do Ubuntu:** as três dependências centrais do catálogo não são inventário exaustivo de todas as bibliotecas; a ausência dos nomes APT de topo não autoriza remoção de pacotes auxiliares do sistema.
 - **Outros projetos:** versões, worktrees e alterações locais do PINK e do IPTV VPN Bot já foram preservadas em auditorias anteriores; não fazer reset/deploy cruzado para simular alinhamento.
 - **Skill instalada no ChatGPT:** GitHub e pacote ZIP atualizado não provam que a cópia atualmente instalada no cliente tenha sido substituída.
