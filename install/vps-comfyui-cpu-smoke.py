@@ -16,7 +16,7 @@ import time
 ROOT = Path("/srv/projects/skill-universal")
 COMFY = ROOT / "tools/comfyui-v0.43.0"
 VENV = ROOT / ".runtime/venvs/extended/comfyui"
-MODEL = COMFY / "models/diffusers/segmind-tiny-sd-3d25de3"
+MODEL = COMFY / "models/diffusers/sd15-fp16-f03de327"
 OUTPUT = ROOT / ".runtime/comfyui-proof-20261106"
 
 def main() -> int:
@@ -80,14 +80,14 @@ def main() -> int:
     positive=nodes.CLIPTextEncode().encode(clip, "A small blue sailboat on a calm lake, daylight")[0]
     negative=nodes.CLIPTextEncode().encode(clip,"blurry, distorted, text")[0]
     latent=nodes.EmptyLatentImage().generate(256,256,1)[0]
-    sample=nodes.KSampler().sample(model,1337,4,4.0,"euler","normal",
+    sample=nodes.KSampler().sample(model,1337,3,4.0,"euler","normal",
                                   positive,negative,latent,denoise=1.0)[0]
     pixels=nodes.VAEDecode().decode(vae,sample)[0]
     arr=np.clip(pixels[0].cpu().numpy()*255.0,0,255).astype(np.uint8)
     if arr.shape[:2]!=(256,256) or arr.std()<1.5:
         raise RuntimeError("FERRARI_COMFY_IMAGE_INVALID_OR_CONSTANT")
     OUTPUT.mkdir(mode=0o700,parents=True)
-    png=OUTPUT/"comfyui-tiny-sd-proof.png"
+    png=OUTPUT/"comfyui-sd15-proof.png"
     Image.fromarray(arr).save(png)
     with Image.open(png) as img:
         img.verify()
@@ -95,15 +95,15 @@ def main() -> int:
     sha=hashlib.sha256(png.read_bytes()).hexdigest()
     result={
         "status":"completed",
-        "source":"segmind/tiny-sd",
-        "source_revision":"3d25de3e8d5aacf94ce91176f204e6d11d120315",
+        "source":"stable-diffusion-v1-5/stable-diffusion-v1-5",
+        "source_revision":"f03de327dd89b501a01da37fc5240cf4fdba85a1",
         "model_format":"safetensors",
         "engine":"ComfyUI-v0.43.0",
         "device":"cpu",
         "image":"comfyui-tiny-sd-proof.png",
         "size":[256,256],
         "seed":1337,
-        "steps":4,
+        "steps":3,
         "sha256":sha,
         "elapsed_seconds":round(time.monotonic()-t0,2),
         "peak_rss_mib":round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024,1),
