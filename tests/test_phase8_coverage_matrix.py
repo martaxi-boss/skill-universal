@@ -36,7 +36,7 @@ class FerrariPhase8Coverage(unittest.TestCase):
     def test_private_counts_and_missing_tools_are_explicit(self):
         s=DOC.read_text(encoding="utf-8")
         for marker in ("47/56","29","18","9/56","108 registos",
-                       "Não detetado privado","não declara a Fase 8 concluída",
+                       "Não detetado privado","Fase 8 CERTIFICADA",
                        "/srv/projects/skill-universal/"):
             self.assertIn(marker,s)
         for name in ("ytdlp","librecad","qgis","audacity","obs","solvespace",
