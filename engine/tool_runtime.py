@@ -10,7 +10,7 @@ import json
 import importlib.util
 import os
 from pathlib import Path
-from engine import runtime_discovery
+from engine import runtime_discovery, catalog_registry
 import re
 import shutil
 import subprocess
@@ -25,7 +25,7 @@ HOME=Path("/srv/projects/skill-universal")
 # runtime declarations. Python dictionaries below are generated views, not
 # independent registries. No global executable fallback is allowed.
 CATALOG_PATH=ROOT/"engine/catalog.json"
-_CATALOG=json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+_CATALOG=catalog_registry.read_catalog(CATALOG_PATH)
 if _CATALOG.get("schema")!=2:
     raise ValueError("Unsupported Ferrari catalog schema")
 BINARIES={t["id"]:t["default_binary"] for t in _CATALOG["tools"]
@@ -49,7 +49,7 @@ def python_module_location(tool):
 
 def specs():
     # The Ferrari has one authoritative catalog for tools, actions and dependencies.
-    doc=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    doc=catalog_registry.read_catalog()
     selected={x["id"] for x in doc["tools"] if "ubuntu" in x}
     legacy={x["id"] for x in doc["tools"] if "core" in x}
     if doc.get("schema")!=2 or not isinstance(doc.get("actions"),list):
@@ -201,7 +201,7 @@ def shared_dependencies(catalog):
 
 
 def inventory():
-    catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    catalog=catalog_registry.read_catalog()
     selected=[x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),
         key=lambda x:x["ubuntu_order"])]
@@ -287,7 +287,7 @@ def unified_catalog(*, inventory_now=None):
     or invokes an REA tools/call operation.
     """
     from engine import core, rea_mcp
-    doc = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    doc = catalog_registry.read_catalog(CATALOG_PATH)
     if doc.get("schema") != 2:
         raise ValueError("Unsupported Ferrari catalog schema")
     if doc.get("admission_policy", {}).get("platform") != "Ubuntu 24.04 LTS":
