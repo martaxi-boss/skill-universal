@@ -65,6 +65,8 @@ class ComfyModelTests(unittest.TestCase):
         self.assertIn("cpu",code)
         self.assertIn("DiffusersLoader",code)
         self.assertIn("KSampler",code)
+        self.assertIn("comfy.options.enable_args_parsing()",code)
+        self.assertLess(code.index("comfy.options.enable_args_parsing()"),code.index("    import nodes"))
         self.assertIn("VAEDecode",code)
         self.assertIn("OUTPUT.mkdir",code)
         self.assertIn("comfyui-tiny-sd-proof.png",code)
