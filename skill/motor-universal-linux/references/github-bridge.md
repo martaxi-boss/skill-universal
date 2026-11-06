@@ -40,7 +40,9 @@ Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" n
 
 **A versão com kind=plan está demonstrada remotamente:** [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416). Para operações simples, ver [Skill #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249), inventário com ZIP PASS. Consultar engine/ferrari.py e engine/catalog.json para capacidades exatas, em vez de uma lista de ações antiga neste documento.
 
-## REA original MCP através da mesma Skill Ferrari
+## Funções REA dentro do único catálogo universal do Ferrari
+
+O REA é um executor como os restantes: as funções autorizadas de `rea-agents@6.8.0` aparecem na mesma lista `functions[]` que as operações de todos os outros programas, e na vista integral `unified_catalog().entries[]` com as dependências e fornecedores. `kind=rea-mcp` mantém-se apenas como protocolo técnico de invocação, não como segundo catálogo ou motor.
 
 A release histórica Ferrari **0a1a4c190a7d33752d6dc3f4418ed44735c8a7dd** passou 197 testes [#41786521407](https://github.com/martaxi-boss/VPS/actions/runs/41786521407). A release ativa atual deve ser lida na VPS, sem presumir que é esse commit. A Skill mantém suporte certificado a pedidos `kind=rea-mcp`, encaminhando `tools/list` e `tools/call` diretamente para o REA original privado, sem usar o projeto REA antigo ou outra Skill. [Catálogo real #41713808747](https://github.com/martaxi-boss/VPS/actions/runs/41713808747), [ELF #41717389118](https://github.com/martaxi-boss/VPS/actions/runs/41717389118) e [Apktool #41717684160](https://github.com/martaxi-boss/VPS/actions/runs/41717684160) — todos PASS com ZIP. Os nomes disponíveis são descobertos no servidor original; **não existe uma lista fixa de duas funções**. O fluxo e o ZIP mantêm-se iguais.
 

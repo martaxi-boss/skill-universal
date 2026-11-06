@@ -38,7 +38,10 @@ ROUTES.update({
  "productivity": ("notas", "gestao de projeto", "produtividade", "documentacao"),
 })
 LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
-OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf","ifc-summary","vite-build")
+# Operation IDs are also read from the same canonical universal registry;
+# never maintain a separate Ferrari operation allowlist in Python source.
+OPS = tuple(item["name"] for item in json.loads(REGISTRY.read_text(encoding="utf-8"))["functions"]
+            if item["kind"] == "operation")
 
 def registry():
     """Discover upstream entries from the Ferrari's only tool catalog.
@@ -46,7 +49,8 @@ def registry():
     An upstream candidate is NOT an installed or working program.  Preserve
     the original curated/source order, and never merge duplicate tool IDs.
     """
-    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    from engine import catalog_registry
+    catalog = catalog_registry.read_catalog(REGISTRY)
     if catalog.get("schema") != 2:
         raise ValueError("Unsupported Ferrari tool catalog")
     items = []
@@ -123,7 +127,8 @@ def doctor():
 
 def ubuntu_selection():
     """Only curated Ubuntu evidence; unreviewed discovery stays out of planning."""
-    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    from engine import catalog_registry
+    catalog = catalog_registry.read_catalog(REGISTRY)
     manifest = dict(catalog["ubuntu_metadata"])
     manifest["tools"] = [x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),

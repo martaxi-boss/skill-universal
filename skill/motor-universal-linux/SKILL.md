@@ -9,6 +9,8 @@ description: Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de c
 
 **UMA ÚNICA SKILL UNIVERSAL Ferrari; um motor e orquestrador próprios na VPS.** A IA anfitriã interpreta e orienta; o motor seleciona e executa ferramentas. Nunca substituir por Project Leader, pelo REA antigo, Ruflo ou outro coordenador. Não adicionar lógica à ponte SSH.
 
+**CATÁLOGO UNIVERSAL ÚNICO:** toda a informação do Ferrari está no mesmo `engine/catalog.json`: 173 programas, 272 interfaces de função integradas (REA incluído sem catálogo próprio), três dependências declaradas e dois fornecedores locais, num total de 450 registos de tipos diferentes. `engine/catalog_registry.py` constrói apenas vistas temporárias de compatibilidade; `unified_catalog().entries[]` é a vista integral de leitura. O GitHub e o cliente instalado podem ter versões diferentes; só o deploy e o inventário real certificam a VPS.
+
 Ler [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) para o estado atual, instalações e pendências. Se só houver o pacote ZIP, ler references/bootstrap.md; a fonte GitHub prevalece sempre que acessível.
 
 ## Estado operacional certificado — 06/11/2026

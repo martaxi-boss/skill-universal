@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from engine import catalog_registry
 import re
 import selectors
 import signal
@@ -44,7 +45,7 @@ def validate_requests(value):
             # Only tools admitted in the SINGLE Ferrari catalog may run.
             # This also blocks newly advertised or demo-only REA operations.
             if allowed_names is None:
-                manifest = json.loads((Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+                manifest = catalog_registry.read_catalog()
                 allowed_names = set(manifest["mcp_capabilities"]["names"])
             if name not in allowed_names:
                 raise ValueError("REA MCP tool not admitted by Ferrari single catalog")
@@ -223,7 +224,7 @@ def invoke(requests, dest: Path, source: Path | None = None, *, root: Path | Non
     # tools/list is a Ferrari-facing endpoint too: never disclose unlisted
     # upstream REA tool descriptors to callers or ZIP artifacts.
     if any(request["method"] == "tools/list" for request in bound):
-        catalog = json.loads((Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+        catalog = catalog_registry.read_catalog()
         approved = set(catalog["mcp_capabilities"]["names"])
         for entry in responses:
             if entry.get("method") != "tools/list":

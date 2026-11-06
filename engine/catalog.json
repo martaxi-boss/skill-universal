@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "platform": "Ubuntu 24.04 LTS",
-  "description": "One authoritative Ferrari catalog: tools, program paths, Ubuntu candidates, approved actions, providers, shared runtimes and Python/npm/container discovery declarations. Availability is verified separately.",
+  "description": "One Ferrari universal catalog of programs, ALL integrated functions (REA, typed actions and base operations in one flat functions[]), dependencies and providers. Each item has a kind, owner and runtime status; candidate is not installed or certified.",
   "ownership": {
     "project": "skill-universal",
     "home": "/srv/projects/skill-universal",
@@ -101,975 +101,6 @@
       "binary": null,
       "note": "Criativos SVG locais sem chamadas pagas; não é geração fotorealista.",
       "admission": "free_only_no_paid_fallback"
-    }
-  ],
-  "actions": [
-    {
-      "id": "file-mime",
-      "tool": "file",
-      "binary": "file",
-      "category": "dev",
-      "keywords": [
-        "ficheiro",
-        "tipo",
-        "formato",
-        "mime"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "mime.txt",
-      "args": [
-        "--brief",
-        "--mime-type",
-        "{input}"
-      ]
-    },
-    {
-      "id": "pandoc-md-docx",
-      "tool": "pandoc",
-      "binary": "pandoc",
-      "category": "docs",
-      "keywords": [
-        "word",
-        "docx",
-        "markdown",
-        "documento"
-      ],
-      "extensions": [
-        ".md",
-        ".markdown"
-      ],
-      "mode": "file",
-      "artifact": "document.docx",
-      "args": [
-        "-f",
-        "markdown",
-        "-t",
-        "docx",
-        "-o",
-        "{output}",
-        "{input}"
-      ]
-    },
-    {
-      "id": "graphviz-dot-svg",
-      "tool": "graphviz",
-      "binary": "dot",
-      "category": "diagrams",
-      "keywords": [
-        "fluxograma",
-        "diagrama",
-        "grafo",
-        "esquema"
-      ],
-      "extensions": [
-        ".dot",
-        ".gv"
-      ],
-      "mode": "file",
-      "artifact": "diagram.svg",
-      "args": [
-        "-Tsvg",
-        "-o",
-        "{output}",
-        "{input}"
-      ]
-    },
-    {
-      "id": "imagemagick-identify",
-      "tool": "imagemagick",
-      "binary": "identify",
-      "category": "creative",
-      "keywords": [
-        "dimensoes",
-        "tamanho",
-        "imagem",
-        "metadados",
-        "fotografia"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".webp",
-        ".tif",
-        ".tiff"
-      ],
-      "mode": "stdout",
-      "artifact": "image-info.txt",
-      "args": [
-        "-format",
-        "%m %wx%h\n",
-        "{input}"
-      ]
-    },
-    {
-      "id": "tesseract-ocr",
-      "tool": "tesseract",
-      "binary": "tesseract",
-      "category": "docs",
-      "keywords": [
-        "ocr",
-        "reconhecer texto",
-        "ler imagem",
-        "extrair texto",
-        "digitalizacao"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".tif",
-        ".tiff"
-      ],
-      "mode": "stdout",
-      "artifact": "recognized.txt",
-      "args": [
-        "{input}",
-        "stdout"
-      ]
-    },
-    {
-      "id": "ffprobe-media-info",
-      "tool": "ffmpeg",
-      "binary": "ffprobe",
-      "category": "media",
-      "keywords": [
-        "metadados",
-        "video",
-        "audio",
-        "duracao",
-        "codec",
-        "informacoes"
-      ],
-      "extensions": [
-        ".mp4",
-        ".mov",
-        ".mkv",
-        ".mp3",
-        ".wav",
-        ".flac",
-        ".webm"
-      ],
-      "mode": "stdout",
-      "artifact": "media-info.json",
-      "args": [
-        "-v",
-        "error",
-        "-show_entries",
-        "format=duration,size,format_name",
-        "-of",
-        "json",
-        "{input}"
-      ]
-    },
-    {
-      "id": "ffmpeg-audio-wav",
-      "tool": "ffmpeg",
-      "binary": "ffmpeg",
-      "category": "audio",
-      "keywords": [
-        "wav",
-        "converter audio",
-        "extrair audio",
-        "pcm"
-      ],
-      "extensions": [
-        ".mp3",
-        ".flac",
-        ".m4a",
-        ".ogg",
-        ".wav"
-      ],
-      "mode": "file",
-      "artifact": "audio.wav",
-      "args": [
-        "-nostdin",
-        "-hide_banner",
-        "-loglevel",
-        "error",
-        "-n",
-        "-i",
-        "{input}",
-        "-vn",
-        "-c:a",
-        "pcm_s16le",
-        "{output}"
-      ]
-    },
-    {
-      "id": "jq-format-json",
-      "tool": "jq",
-      "binary": "jq",
-      "category": "data",
-      "keywords": [
-        "json",
-        "formatar",
-        "validar",
-        "dados",
-        "estruturar"
-      ],
-      "extensions": [
-        ".json"
-      ],
-      "mode": "stdout",
-      "artifact": "formatted.json",
-      "args": [
-        ".",
-        "{input}"
-      ]
-    },
-    {
-      "id": "binwalk-scan",
-      "tool": "binwalk",
-      "binary": "binwalk",
-      "category": "reverse",
-      "keywords": [
-        "firmware",
-        "assinaturas",
-        "binwalk",
-        "binario",
-        "inspecionar"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "signatures.txt",
-      "args": [
-        "{input}"
-      ]
-    },
-    {
-      "id": "readelf-header",
-      "tool": "readelf",
-      "binary": "readelf",
-      "category": "reverse",
-      "keywords": [
-        "elf",
-        "executavel",
-        "binario",
-        "cabecalho"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "elf-header.txt",
-      "args": [
-        "-h",
-        "{input}"
-      ]
-    },
-    {
-      "id": "pdfinfo-report",
-      "tool": "pdftotext",
-      "binary": "pdfinfo",
-      "category": "docs",
-      "keywords": [
-        "pdf",
-        "metadados",
-        "paginas",
-        "informacoes"
-      ],
-      "extensions": [
-        ".pdf"
-      ],
-      "mode": "stdout",
-      "artifact": "pdf-info.txt",
-      "args": [
-        "{input}"
-      ]
-    },
-    {
-      "id": "radare2-binary-info",
-      "tool": "radare2",
-      "binary": "r2",
-      "category": "reverse",
-      "keywords": [
-        "radare2",
-        "binario",
-        "cabecalho",
-        "arquitetura",
-        "executavel"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "binary-info.txt",
-      "args": [
-        "-2",
-        "-q",
-        "-c",
-        "iI",
-        "{input}"
-      ]
-    },
-    {
-      "id": "vips-image-thumbnail",
-      "tool": "libvips",
-      "binary": "vips",
-      "category": "creative",
-      "keywords": [
-        "miniatura vips",
-        "reduzir imagem",
-        "thumbnail vips"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".tif",
-        ".tiff",
-        ".webp"
-      ],
-      "mode": "file",
-      "artifact": "thumbnail.png",
-      "args": [
-        "thumbnail",
-        "{input}",
-        "{output}",
-        "320"
-      ]
-    },
-    {
-      "id": "vips-image-inspect",
-      "tool": "libvips",
-      "binary": "vipsheader",
-      "category": "creative",
-      "keywords": [
-        "vipsheader",
-        "libvips",
-        "cabecalho imagem"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".tif",
-        ".tiff",
-        ".webp"
-      ],
-      "mode": "stdout",
-      "artifact": "image-header.txt",
-      "args": [
-        "{input}"
-      ]
-    },
-    {
-      "id": "imagemagick-webp",
-      "tool": "imagemagick",
-      "binary": "convert",
-      "category": "creative",
-      "keywords": [
-        "imagem para webp",
-        "converter imagem webp",
-        "otimizar webp"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".tif",
-        ".tiff"
-      ],
-      "mode": "file",
-      "artifact": "converted.webp",
-      "args": [
-        "{input}",
-        "-auto-orient",
-        "-resize",
-        "1280x1280>",
-        "{output}"
-      ]
-    },
-    {
-      "id": "pdftotext-layout",
-      "tool": "pdftotext",
-      "binary": "pdftotext",
-      "category": "docs",
-      "keywords": [
-        "texto pdf",
-        "extrair pdf",
-        "converter pdf texto"
-      ],
-      "extensions": [
-        ".pdf"
-      ],
-      "mode": "stdout",
-      "artifact": "extracted.txt",
-      "args": [
-        "-layout",
-        "{input}",
-        "-"
-      ]
-    },
-    {
-      "id": "objdump-file-header",
-      "tool": "objdump",
-      "binary": "objdump",
-      "category": "reverse",
-      "keywords": [
-        "objdump",
-        "formato binario",
-        "cabecalho executavel"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "object-header.txt",
-      "args": [
-        "-f",
-        "{input}"
-      ]
-    },
-    {
-      "id": "strings-file-extract",
-      "tool": "strings",
-      "binary": "strings",
-      "category": "reverse",
-      "keywords": [
-        "strings binario",
-        "extrair strings",
-        "texto do executavel"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "strings.txt",
-      "args": [
-        "-a",
-        "-n",
-        "6",
-        "{input}"
-      ]
-    },
-    {
-      "id": "ripgrep-find-text",
-      "tool": "ripgrep",
-      "binary": "rg",
-      "category": "dev",
-      "keywords": [
-        "procurar texto",
-        "pesquisar texto",
-        "encontrar expressao",
-        "ripgrep"
-      ],
-      "extensions": [
-        ".txt",
-        ".md",
-        ".markdown",
-        ".log",
-        ".json",
-        ".yaml",
-        ".yml",
-        ".py",
-        ".js",
-        ".ts",
-        ".html",
-        ".xml",
-        ".csv",
-        ".ini"
-      ],
-      "mode": "stdout",
-      "artifact": "matches.txt",
-      "args": [
-        "--no-heading",
-        "--line-number",
-        "-F",
-        "--",
-        "{query}",
-        "{input}"
-      ]
-    },
-    {
-      "id": "ansible-inventory-json",
-      "tool": "ansible",
-      "binary": "ansible-inventory",
-      "category": "automation",
-      "keywords": [
-        "inventario ansible",
-        "ansible inventario",
-        "inventario hosts"
-      ],
-      "extensions": [
-        ".ini",
-        ".yaml",
-        ".yml"
-      ],
-      "mode": "stdout",
-      "artifact": "hosts.json",
-      "args": [
-        "-i",
-        "{input}",
-        "--list"
-      ]
-    },
-    {
-      "id": "tshark-pcap-summary",
-      "tool": "wireshark",
-      "binary": "tshark",
-      "category": "reverse",
-      "keywords": [
-        "analisar pcap",
-        "resumo de captura",
-        "tshark",
-        "trafego pcap"
-      ],
-      "extensions": [
-        ".pcap",
-        ".pcapng"
-      ],
-      "mode": "stdout",
-      "artifact": "traffic-summary.txt",
-      "args": [
-        "-r",
-        "{input}",
-        "-q",
-        "-z",
-        "io,stat,0"
-      ]
-    },
-    {
-      "id": "ocrmypdf-searchable-pdf",
-      "tool": "ocrmypdf",
-      "binary": "ocrmypdf",
-      "category": "docs",
-      "keywords": [
-        "pdf pesquisavel",
-        "ocr pdf",
-        "digitalizar pdf",
-        "ocrmypdf",
-        "texto pesquisavel"
-      ],
-      "extensions": [
-        ".pdf"
-      ],
-      "mode": "file",
-      "artifact": "searchable.pdf",
-      "args": [
-        "--skip-text",
-        "--output-type",
-        "pdf",
-        "--optimize",
-        "0",
-        "--jobs",
-        "1",
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "apktool-decode-resources",
-      "tool": "apktool",
-      "binary": "apktool",
-      "category": "reverse",
-      "keywords": [
-        "apktool",
-        "recursos apk",
-        "manifesto android",
-        "descodificar apk",
-        "recursos android"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "directory",
-      "artifact": "apktool-decoded",
-      "args": [
-        "d",
-        "-o",
-        "{output}",
-        "{input}"
-      ]
-    },
-    {
-      "id": "rea-elf-notes",
-      "tool": "rea",
-      "binary": "rea",
-      "category": "reverse",
-      "keywords": [
-        "rea elf",
-        "notas elf",
-        "gnu build id",
-        "inspecionar elf rea",
-        "elf notes"
-      ],
-      "extensions": [
-        "*"
-      ],
-      "mode": "stdout",
-      "artifact": "rea-elf-notes.json",
-      "args": [
-        "inspect-elf-notes",
-        "{input}",
-        "--json"
-      ]
-    },
-    {
-      "id": "rea-android-resources",
-      "tool": "rea",
-      "binary": "rea",
-      "category": "reverse",
-      "keywords": [
-        "rea android",
-        "rea recursos apk",
-        "analisar recursos android",
-        "rea apk",
-        "analisar manifesto rea"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "stdout",
-      "artifact": "rea-android-resources.json",
-      "args": [
-        "decode-android-resources",
-        "{input}",
-        "--json"
-      ]
-    },
-    {
-      "id": "inkscape-svg-png",
-      "tool": "inkscape",
-      "binary": "inkscape",
-      "category": "creative",
-      "keywords": [
-        "inkscape svg para png",
-        "exportar svg png",
-        "vector para png"
-      ],
-      "extensions": [
-        ".svg"
-      ],
-      "mode": "file",
-      "artifact": "inkscape.png",
-      "args": [
-        "--export-filename",
-        "{output}",
-        "--export-width",
-        "960",
-        "{input}"
-      ]
-    },
-    {
-      "id": "typst-compile-pdf",
-      "tool": "typst",
-      "binary": "typst",
-      "category": "docs",
-      "keywords": [
-        "compilar typst",
-        "typst pdf",
-        "converter typst pdf"
-      ],
-      "extensions": [
-        ".typ"
-      ],
-      "mode": "file",
-      "artifact": "typst-document.pdf",
-      "args": [
-        "compile",
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "duckdb-csv-profile",
-      "tool": "duckdb",
-      "binary": "python",
-      "category": "data",
-      "keywords": [
-        "duckdb csv",
-        "perfil csv duckdb",
-        "analisar csv com duckdb"
-      ],
-      "extensions": [
-        ".csv"
-      ],
-      "mode": "file",
-      "artifact": "duckdb-profile.json",
-      "args": [
-        "-m",
-        "engine.data_profiles",
-        "duckdb",
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "polars-csv-profile",
-      "tool": "polars",
-      "binary": "python",
-      "category": "data",
-      "keywords": [
-        "polars csv",
-        "perfil csv polars",
-        "analisar csv com polars"
-      ],
-      "extensions": [
-        ".csv"
-      ],
-      "mode": "file",
-      "artifact": "polars-profile.json",
-      "args": [
-        "-m",
-        "engine.data_profiles",
-        "polars",
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "calibre-md-epub",
-      "tool": "calibre",
-      "binary": "ebook-convert",
-      "category": "docs",
-      "keywords": [
-        "calibre epub",
-        "converter markdown para epub",
-        "criar epub calibre",
-        "epub"
-      ],
-      "extensions": [
-        ".md",
-        ".markdown"
-      ],
-      "mode": "file",
-      "artifact": "calibre-book.epub",
-      "args": [
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "darktable-jpeg-tiff",
-      "tool": "darktable",
-      "binary": "darktable-cli",
-      "category": "creative",
-      "keywords": [
-        "darktable jpeg para tiff",
-        "exportar foto tiff darktable",
-        "darktable fotografia tiff"
-      ],
-      "extensions": [
-        ".jpg",
-        ".jpeg"
-      ],
-      "mode": "file",
-      "artifact": "darktable-export.tif",
-      "args": [
-        "{input}",
-        "{output}",
-        "--apply-custom-presets",
-        "false"
-      ]
-    },
-    {
-      "id": "krita-image-png",
-      "tool": "krita",
-      "binary": "krita",
-      "category": "creative",
-      "keywords": [
-        "krita para png",
-        "exportar imagem krita",
-        "krita converter png"
-      ],
-      "extensions": [
-        ".png",
-        ".jpg",
-        ".jpeg",
-        ".kra"
-      ],
-      "mode": "file",
-      "artifact": "krita-export.png",
-      "args": [
-        "{input}",
-        "--export",
-        "--export-filename",
-        "{output}"
-      ]
-    },
-    {
-      "id": "gimp-png-xcf",
-      "tool": "gimp",
-      "binary": "gimp-console-2.10",
-      "category": "creative",
-      "keywords": [
-        "gimp png xcf",
-        "converter imagem xcf",
-        "gimp formato editavel"
-      ],
-      "extensions": [
-        ".png"
-      ],
-      "mode": "file",
-      "artifact": "gimp-editable.xcf",
-      "args": [
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "scribus-text-publication",
-      "tool": "scribus",
-      "binary": "scribus",
-      "category": "docs",
-      "keywords": [
-        "scribus texto pdf",
-        "criar publicacao scribus",
-        "documento editavel scribus"
-      ],
-      "extensions": [
-        ".txt"
-      ],
-      "mode": "directory",
-      "artifact": "scribus-publication",
-      "args": [
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "lmms-project-wav",
-      "tool": "lmms",
-      "binary": "lmms",
-      "category": "audio",
-      "keywords": [
-        "lmms para wav",
-        "renderizar projeto lmms",
-        "exportar lmms wav"
-      ],
-      "extensions": [
-        ".mmp",
-        ".mmpz"
-      ],
-      "mode": "file",
-      "artifact": "lmms-render.wav",
-      "args": [
-        "render",
-        "{input}",
-        "-o",
-        "{output}",
-        "-f",
-        "wav"
-      ]
-    },
-    {
-      "id": "kdenlive-mlt-mp4",
-      "tool": "kdenlive",
-      "binary": "melt",
-      "category": "media",
-      "keywords": [
-        "kdenlive mlt para mp4",
-        "renderizar projeto mlt",
-        "converter mlt em video mp4"
-      ],
-      "extensions": [
-        ".mlt",
-        ".kdenlive"
-      ],
-      "mode": "file",
-      "artifact": "mlt-video.mp4",
-      "args": [
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "android-apksigner-verify",
-      "tool": "apksigner",
-      "binary": "apksigner",
-      "category": "reverse",
-      "keywords": [
-        "apksigner assinatura apk",
-        "verificar assinatura android",
-        "certificado apk",
-        "assinatura digital apk"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "stdout",
-      "artifact": "apk-signature.txt",
-      "args": [
-        "verify",
-        "--verbose",
-        "--print-certs",
-        "{input}"
-      ]
-    },
-    {
-      "id": "android-aapt2-manifest",
-      "tool": "aapt2",
-      "binary": "aapt2",
-      "category": "reverse",
-      "keywords": [
-        "aapt2 manifesto",
-        "manifesto binario android",
-        "inspecionar xmltree apk",
-        "recursos binarios aapt2"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "stdout",
-      "artifact": "apk-manifest-tree.txt",
-      "args": [
-        "dump",
-        "xmltree",
-        "--file",
-        "AndroidManifest.xml",
-        "{input}"
-      ]
-    },
-    {
-      "id": "android-zipalign-apk",
-      "tool": "zipalign",
-      "binary": "zipalign",
-      "category": "reverse",
-      "keywords": [
-        "zipalign apk",
-        "alinhar apk android",
-        "preparar apk para assinatura"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "file",
-      "artifact": "aligned.apk",
-      "args": [
-        "-f",
-        "-p",
-        "4",
-        "{input}",
-        "{output}"
-      ]
-    },
-    {
-      "id": "android-adb-install-apk",
-      "tool": "adb",
-      "binary": "adb",
-      "category": "mobile",
-      "keywords": [
-        "adb instalar apk",
-        "instalar apk dispositivo android",
-        "instalar no telemovel android"
-      ],
-      "extensions": [
-        ".apk"
-      ],
-      "mode": "stdout",
-      "artifact": "adb-install.txt",
-      "args": [
-        "install",
-        "-r",
-        "{input}"
-      ]
     }
   ],
   "tools": [
@@ -1671,9 +702,6 @@
         "java-25"
       ],
       "private_executable": "tools/jadx-1.5.6/bin/jadx",
-      "base_operations": [
-        "apk-decompile"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -1932,9 +960,6 @@
       "private_cli": [
         "strings"
       ],
-      "base_operations": [
-        "binary-strings"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -2101,9 +1126,6 @@
         "ffmpeg",
         "ffprobe"
       ],
-      "base_operations": [
-        "video-thumbnail"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -2167,9 +1189,6 @@
       "private_cli": [
         "identify",
         "convert"
-      ],
-      "base_operations": [
-        "image-resize"
       ],
       "admission": "ubuntu_reviewed_or_core"
     },
@@ -2342,9 +1361,6 @@
       },
       "upstream_order": 26,
       "upstream_source": "registry",
-      "base_operations": [
-        "blender-house"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -2583,9 +1599,6 @@
       },
       "upstream_order": 33,
       "upstream_source": "registry",
-      "base_operations": [
-        "office-pdf"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -2602,9 +1615,6 @@
       "private_cli": [
         "pdfinfo",
         "pdftotext"
-      ],
-      "base_operations": [
-        "pdf-text"
       ],
       "admission": "ubuntu_reviewed_or_core"
     },
@@ -2779,9 +1789,6 @@
       },
       "upstream_order": 14,
       "upstream_source": "registry",
-      "base_operations": [
-        "vite-build"
-      ],
       "npm_packages": [
         "vite"
       ],
@@ -3077,9 +2084,6 @@
         "note": "Ferrari-only Python venv; semantic IFC inventory via isolated IfcOpenShell (LGPL-3.0-or-later). Not a geometric/structural validation."
       },
       "core_order": 69,
-      "base_operations": [
-        "ifc-summary"
-      ],
       "python_module": "ifcopenshell",
       "admission": "ubuntu_reviewed_or_core"
     },
@@ -3859,9 +2863,6 @@
       },
       "upstream_order": 55,
       "upstream_source": "expansion",
-      "base_operations": [
-        "cad-stl"
-      ],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -6781,8 +5782,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 393,
-    "mcp_source_advertised": 229
+    "all_catalog_entries": 450,
+    "mcp_source_advertised": 229,
+    "functions": 272,
+    "functions_base_operations": 12,
+    "functions_typed_actions": 40,
+    "functions_mcp": 220,
+    "all_universal_entries": 450
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -6799,228 +5805,3988 @@
     "runtime_transport": "engine/rea_mcp.py",
     "verified_vps_workflow_run": 42269934831,
     "scope": "only_approved_names_exposed_to_ferrari",
-    "names": [
-      "inspect_analysis_settings",
-      "update_analysis_settings",
-      "inspect_desktop_application",
-      "inspect_model_artifact",
-      "inspect_gpu_code_objects",
-      "annotate_native_function",
-      "inspect_native_load_image",
-      "inspect_native_data_type",
-      "inspect_native_instruction",
-      "resolve_native_call_targets",
-      "address_name",
-      "comment",
-      "inline_comment",
-      "list_documents",
-      "list_names",
-      "list_procedures",
-      "list_segments",
-      "list_strings",
-      "next_address",
-      "prev_address",
-      "procedure_address",
-      "procedure_assembly",
-      "procedure_callees",
-      "procedure_callers",
-      "procedure_info",
-      "read_function_instructions",
-      "search_bytes",
-      "read_bytes",
-      "address_to_file_offset",
-      "procedure_references",
-      "procedure_pseudo_code",
-      "resolve_containing_procedure",
-      "search_procedures",
-      "search_strings",
-      "set_address_name",
-      "set_addresses_names",
-      "set_bookmark",
-      "set_comment",
-      "set_inline_comment",
-      "unset_bookmark",
-      "xrefs",
-      "trace_native_values",
-      "inspect_native_dispatch_metadata",
-      "get_objc_classes",
-      "get_objc_protocols",
-      "batch_decompile",
-      "decompile_all",
-      "get_call_graph",
-      "analyze_swift_types",
-      "find_xrefs_to_name",
-      "binary_overview",
-      "analyze_function",
-      "inspect_native_api",
-      "trace_feature",
-      "trace_call_path",
-      "trace_native_ui_action",
-      "observe_native_ui",
-      "capture_native_ui_scenario",
-      "observe_native_calls",
-      "inspect_macho",
-      "inspect_signature",
-      "inspect_plist",
-      "list_architectures",
-      "demangle_swift",
-      "inspect_artifact",
-      "extract_artifact",
-      "decode_interface_builder",
-      "inspect_keyed_archive",
-      "inspect_asset_catalog",
-      "trace_dylib_resolution",
-      "inspect_managed_artifact",
-      "inspect_managed_members",
-      "inspect_managed_native_boundaries",
-      "compare_managed_members",
-      "verify_managed_native_boundaries",
-      "import_managed_reconstruction",
-      "project_managed_application_graph",
-      "inspect_with_objdump",
-      "execute_rizin_command",
-      "list_frida_devices",
-      "list_frida_processes",
-      "start_frida_session",
-      "load_frida_script",
-      "resume_frida_session",
-      "unload_frida_script",
-      "frida_session_status",
-      "close_frida_session",
-      "instrument_with_frida",
-      "list_cutter_sessions",
-      "cutter_command",
-      "start_gdb_session",
-      "gdb_console",
-      "gdb_session_status",
-      "close_gdb_session",
-      "start_rizin_debug_session",
-      "rizin_debug_command",
-      "rizin_debug_session_status",
-      "close_rizin_debug_session",
-      "inspect_packet_capture",
-      "inspect_packet_fields",
-      "decode_signal_recording",
-      "inspect_signal_decoders",
-      "inspect_android_package",
-      "search_android_classes",
-      "inspect_android_class",
-      "inspect_android_method",
-      "trace_android_references",
-      "inspect_byte_entropy",
-      "inspect_binary_layout",
-      "inspect_analysis_view",
-      "inspect_pe_resources",
-      "inspect_native_exports",
-      "inspect_devicetree",
-      "inspect_elf_notes",
-      "inspect_apple_ips",
-      "inspect_kernel_module",
-      "inspect_pe_load_config",
-      "inspect_pe_certificates",
-      "inspect_pe_imports",
-      "inspect_go_binary",
-      "inspect_il2cpp_metadata",
-      "inspect_rust_binary",
-      "inspect_python_pyc",
-      "inspect_erlang_beam",
-      "compare_wasm_interfaces",
-      "inspect_wasm_artifact",
-      "inspect_apk_signature",
-      "inspect_evm_interface",
-      "inspect_sqlite_database",
-      "inspect_recorded_crash",
-      "inspect_firmware_regions",
-      "extract_firmware",
-      "trace_web_module_imports",
-      "trace_web_source_location",
-      "observe_web_execution",
-      "inspect_web_event_listeners",
-      "inspect_web_network_capture",
-      "recover_javascript_sources",
-      "inspect_adb_client",
-      "list_adb_devices",
-      "inspect_adb_device",
-      "list_adb_packages",
-      "pull_adb_package",
-      "read_adb_logcat",
-      "inspect_adb_package",
-      "pull_adb_file",
-      "push_adb_file",
-      "capture_adb_screen",
-      "list_adb_processes",
-      "list_adb_directory",
-      "list_adb_features",
-      "list_adb_services",
-      "inspect_adb_display",
-      "inspect_adb_window",
-      "read_adb_setting",
-      "collect_adb_bugreport",
-      "resolve_adb_packages",
-      "install_adb_package",
-      "uninstall_adb_package",
-      "start_adb_app",
-      "start_adb_activity",
-      "stop_adb_app",
-      "inspect_pcap_client",
-      "inspect_pcap_capture",
-      "identify_flutter_build",
-      "inspect_dart_aot",
-      "inspect_apktool_client",
-      "decode_android_resources",
-      "export_web_scripts",
-      "list_browser_targets",
-      "inspect_web_page",
-      "analyze_web_bundle",
-      "observe_web_session",
-      "discover_webmcp_tools",
-      "compare_web_captures",
-      "capture_web_screenshot",
-      "compare_web_screenshots",
-      "capture_browser_scenario",
-      "inspect_electron_fuses",
-      "list_electron_targets",
-      "inspect_electron_page",
-      "analyze_javascript_application",
-      "reconcile_javascript_runtime",
-      "capture_electron_scenario",
-      "list_javascript_runtime_targets",
-      "observe_javascript_runtime",
-      "trace_application_feature",
-      "trace_javascript_semantics",
-      "compare_application_versions",
-      "compare_source_to_bundle",
-      "compare_javascript_export_shapes",
-      "build_reconstruction_obligation_ledger",
-      "evaluate_reconstruction_coverage",
-      "export_environment_bundle",
-      "project_android_application_graph",
-      "project_apple_application_graph",
-      "project_harmony_application_graph",
-      "open_bundle_resources",
-      "open_binary",
-      "close_binary",
-      "binary_session",
-      "export_evidence_bundle",
-      "import_evidence_bundle",
-      "get_evidence_bundle",
-      "capture_process_scenario",
-      "compare_process_captures",
-      "compare_artifacts",
-      "compare_functions",
-      "match_native_functions",
-      "compare_bundles",
-      "find_changed_behavior",
-      "build_call_path",
-      "correlate_static_and_runtime",
-      "verify_reconstruction",
-      "list_unknowns",
-      "record_unknown",
-      "update_unknown",
-      "verify_unknown_resolution",
-      "get_navigation_context",
-      "inspect_address_context"
-    ],
     "note": "Ferrari exposes ONLY the approved MCP names in this catalog. Upstream REA discovery may advertise other capabilities; no unlisted function is returned or callable by Ferrari."
-  }
+  },
+  "functions": [
+    {
+      "id": "invoke:ffmpeg-audio-wav",
+      "name": "ffmpeg-audio-wav",
+      "kind": "invoke",
+      "program": "ffmpeg",
+      "category": "audio",
+      "invocation": {
+        "kind": "invoke",
+        "action": "ffmpeg-audio-wav"
+      },
+      "binary": "ffmpeg",
+      "keywords": [
+        "wav",
+        "converter audio",
+        "extrair audio",
+        "pcm"
+      ],
+      "extensions": [
+        ".mp3",
+        ".flac",
+        ".m4a",
+        ".ogg",
+        ".wav"
+      ],
+      "mode": "file",
+      "artifact": "audio.wav",
+      "args": [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-n",
+        "-i",
+        "{input}",
+        "-vn",
+        "-c:a",
+        "pcm_s16le",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:lmms-project-wav",
+      "name": "lmms-project-wav",
+      "kind": "invoke",
+      "program": "lmms",
+      "category": "audio",
+      "invocation": {
+        "kind": "invoke",
+        "action": "lmms-project-wav"
+      },
+      "binary": "lmms",
+      "keywords": [
+        "lmms para wav",
+        "renderizar projeto lmms",
+        "exportar lmms wav"
+      ],
+      "extensions": [
+        ".mmp",
+        ".mmpz"
+      ],
+      "mode": "file",
+      "artifact": "lmms-render.wav",
+      "args": [
+        "render",
+        "{input}",
+        "-o",
+        "{output}",
+        "-f",
+        "wav"
+      ]
+    },
+    {
+      "id": "invoke:ansible-inventory-json",
+      "name": "ansible-inventory-json",
+      "kind": "invoke",
+      "program": "ansible",
+      "category": "automation",
+      "invocation": {
+        "kind": "invoke",
+        "action": "ansible-inventory-json"
+      },
+      "binary": "ansible-inventory",
+      "keywords": [
+        "inventario ansible",
+        "ansible inventario",
+        "inventario hosts"
+      ],
+      "extensions": [
+        ".ini",
+        ".yaml",
+        ".yml"
+      ],
+      "mode": "stdout",
+      "artifact": "hosts.json",
+      "args": [
+        "-i",
+        "{input}",
+        "--list"
+      ]
+    },
+    {
+      "id": "operation:cad-stl",
+      "name": "cad-stl",
+      "kind": "operation",
+      "program": "openscad",
+      "category": "cad",
+      "invocation": {
+        "kind": "operation",
+        "operation": "cad-stl"
+      }
+    },
+    {
+      "id": "operation:ifc-summary",
+      "name": "ifc-summary",
+      "kind": "operation",
+      "program": "ifcopenshell",
+      "category": "cad",
+      "invocation": {
+        "kind": "operation",
+        "operation": "ifc-summary"
+      }
+    },
+    {
+      "id": "invoke:darktable-jpeg-tiff",
+      "name": "darktable-jpeg-tiff",
+      "kind": "invoke",
+      "program": "darktable",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "darktable-jpeg-tiff"
+      },
+      "binary": "darktable-cli",
+      "keywords": [
+        "darktable jpeg para tiff",
+        "exportar foto tiff darktable",
+        "darktable fotografia tiff"
+      ],
+      "extensions": [
+        ".jpg",
+        ".jpeg"
+      ],
+      "mode": "file",
+      "artifact": "darktable-export.tif",
+      "args": [
+        "{input}",
+        "{output}",
+        "--apply-custom-presets",
+        "false"
+      ]
+    },
+    {
+      "id": "invoke:gimp-png-xcf",
+      "name": "gimp-png-xcf",
+      "kind": "invoke",
+      "program": "gimp",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "gimp-png-xcf"
+      },
+      "binary": "gimp-console-2.10",
+      "keywords": [
+        "gimp png xcf",
+        "converter imagem xcf",
+        "gimp formato editavel"
+      ],
+      "extensions": [
+        ".png"
+      ],
+      "mode": "file",
+      "artifact": "gimp-editable.xcf",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:imagemagick-identify",
+      "name": "imagemagick-identify",
+      "kind": "invoke",
+      "program": "imagemagick",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "imagemagick-identify"
+      },
+      "binary": "identify",
+      "keywords": [
+        "dimensoes",
+        "tamanho",
+        "imagem",
+        "metadados",
+        "fotografia"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "stdout",
+      "artifact": "image-info.txt",
+      "args": [
+        "-format",
+        "%m %wx%h\n",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:imagemagick-webp",
+      "name": "imagemagick-webp",
+      "kind": "invoke",
+      "program": "imagemagick",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "imagemagick-webp"
+      },
+      "binary": "convert",
+      "keywords": [
+        "imagem para webp",
+        "converter imagem webp",
+        "otimizar webp"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "file",
+      "artifact": "converted.webp",
+      "args": [
+        "{input}",
+        "-auto-orient",
+        "-resize",
+        "1280x1280>",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:inkscape-svg-png",
+      "name": "inkscape-svg-png",
+      "kind": "invoke",
+      "program": "inkscape",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "inkscape-svg-png"
+      },
+      "binary": "inkscape",
+      "keywords": [
+        "inkscape svg para png",
+        "exportar svg png",
+        "vector para png"
+      ],
+      "extensions": [
+        ".svg"
+      ],
+      "mode": "file",
+      "artifact": "inkscape.png",
+      "args": [
+        "--export-filename",
+        "{output}",
+        "--export-width",
+        "960",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:krita-image-png",
+      "name": "krita-image-png",
+      "kind": "invoke",
+      "program": "krita",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "krita-image-png"
+      },
+      "binary": "krita",
+      "keywords": [
+        "krita para png",
+        "exportar imagem krita",
+        "krita converter png"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".kra"
+      ],
+      "mode": "file",
+      "artifact": "krita-export.png",
+      "args": [
+        "{input}",
+        "--export",
+        "--export-filename",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:vips-image-inspect",
+      "name": "vips-image-inspect",
+      "kind": "invoke",
+      "program": "libvips",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "vips-image-inspect"
+      },
+      "binary": "vipsheader",
+      "keywords": [
+        "vipsheader",
+        "libvips",
+        "cabecalho imagem"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff",
+        ".webp"
+      ],
+      "mode": "stdout",
+      "artifact": "image-header.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:vips-image-thumbnail",
+      "name": "vips-image-thumbnail",
+      "kind": "invoke",
+      "program": "libvips",
+      "category": "creative",
+      "invocation": {
+        "kind": "invoke",
+        "action": "vips-image-thumbnail"
+      },
+      "binary": "vips",
+      "keywords": [
+        "miniatura vips",
+        "reduzir imagem",
+        "thumbnail vips"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff",
+        ".webp"
+      ],
+      "mode": "file",
+      "artifact": "thumbnail.png",
+      "args": [
+        "thumbnail",
+        "{input}",
+        "{output}",
+        "320"
+      ]
+    },
+    {
+      "id": "invoke:duckdb-csv-profile",
+      "name": "duckdb-csv-profile",
+      "kind": "invoke",
+      "program": "duckdb",
+      "category": "data",
+      "invocation": {
+        "kind": "invoke",
+        "action": "duckdb-csv-profile"
+      },
+      "binary": "python",
+      "keywords": [
+        "duckdb csv",
+        "perfil csv duckdb",
+        "analisar csv com duckdb"
+      ],
+      "extensions": [
+        ".csv"
+      ],
+      "mode": "file",
+      "artifact": "duckdb-profile.json",
+      "args": [
+        "-m",
+        "engine.data_profiles",
+        "duckdb",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:jq-format-json",
+      "name": "jq-format-json",
+      "kind": "invoke",
+      "program": "jq",
+      "category": "data",
+      "invocation": {
+        "kind": "invoke",
+        "action": "jq-format-json"
+      },
+      "binary": "jq",
+      "keywords": [
+        "json",
+        "formatar",
+        "validar",
+        "dados",
+        "estruturar"
+      ],
+      "extensions": [
+        ".json"
+      ],
+      "mode": "stdout",
+      "artifact": "formatted.json",
+      "args": [
+        ".",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:polars-csv-profile",
+      "name": "polars-csv-profile",
+      "kind": "invoke",
+      "program": "polars",
+      "category": "data",
+      "invocation": {
+        "kind": "invoke",
+        "action": "polars-csv-profile"
+      },
+      "binary": "python",
+      "keywords": [
+        "polars csv",
+        "perfil csv polars",
+        "analisar csv com polars"
+      ],
+      "extensions": [
+        ".csv"
+      ],
+      "mode": "file",
+      "artifact": "polars-profile.json",
+      "args": [
+        "-m",
+        "engine.data_profiles",
+        "polars",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:file-mime",
+      "name": "file-mime",
+      "kind": "invoke",
+      "program": "file",
+      "category": "dev",
+      "invocation": {
+        "kind": "invoke",
+        "action": "file-mime"
+      },
+      "binary": "file",
+      "keywords": [
+        "ficheiro",
+        "tipo",
+        "formato",
+        "mime"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "mime.txt",
+      "args": [
+        "--brief",
+        "--mime-type",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:ripgrep-find-text",
+      "name": "ripgrep-find-text",
+      "kind": "invoke",
+      "program": "ripgrep",
+      "category": "dev",
+      "invocation": {
+        "kind": "invoke",
+        "action": "ripgrep-find-text"
+      },
+      "binary": "rg",
+      "keywords": [
+        "procurar texto",
+        "pesquisar texto",
+        "encontrar expressao",
+        "ripgrep"
+      ],
+      "extensions": [
+        ".txt",
+        ".md",
+        ".markdown",
+        ".log",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".py",
+        ".js",
+        ".ts",
+        ".html",
+        ".xml",
+        ".csv",
+        ".ini"
+      ],
+      "mode": "stdout",
+      "artifact": "matches.txt",
+      "args": [
+        "--no-heading",
+        "--line-number",
+        "-F",
+        "--",
+        "{query}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:graphviz-dot-svg",
+      "name": "graphviz-dot-svg",
+      "kind": "invoke",
+      "program": "graphviz",
+      "category": "diagrams",
+      "invocation": {
+        "kind": "invoke",
+        "action": "graphviz-dot-svg"
+      },
+      "binary": "dot",
+      "keywords": [
+        "fluxograma",
+        "diagrama",
+        "grafo",
+        "esquema"
+      ],
+      "extensions": [
+        ".dot",
+        ".gv"
+      ],
+      "mode": "file",
+      "artifact": "diagram.svg",
+      "args": [
+        "-Tsvg",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:calibre-md-epub",
+      "name": "calibre-md-epub",
+      "kind": "invoke",
+      "program": "calibre",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "calibre-md-epub"
+      },
+      "binary": "ebook-convert",
+      "keywords": [
+        "calibre epub",
+        "converter markdown para epub",
+        "criar epub calibre",
+        "epub"
+      ],
+      "extensions": [
+        ".md",
+        ".markdown"
+      ],
+      "mode": "file",
+      "artifact": "calibre-book.epub",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:ocrmypdf-searchable-pdf",
+      "name": "ocrmypdf-searchable-pdf",
+      "kind": "invoke",
+      "program": "ocrmypdf",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "ocrmypdf-searchable-pdf"
+      },
+      "binary": "ocrmypdf",
+      "keywords": [
+        "pdf pesquisavel",
+        "ocr pdf",
+        "digitalizar pdf",
+        "ocrmypdf",
+        "texto pesquisavel"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "file",
+      "artifact": "searchable.pdf",
+      "args": [
+        "--skip-text",
+        "--output-type",
+        "pdf",
+        "--optimize",
+        "0",
+        "--jobs",
+        "1",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:pandoc-md-docx",
+      "name": "pandoc-md-docx",
+      "kind": "invoke",
+      "program": "pandoc",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "pandoc-md-docx"
+      },
+      "binary": "pandoc",
+      "keywords": [
+        "word",
+        "docx",
+        "markdown",
+        "documento"
+      ],
+      "extensions": [
+        ".md",
+        ".markdown"
+      ],
+      "mode": "file",
+      "artifact": "document.docx",
+      "args": [
+        "-f",
+        "markdown",
+        "-t",
+        "docx",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:pdfinfo-report",
+      "name": "pdfinfo-report",
+      "kind": "invoke",
+      "program": "pdftotext",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "pdfinfo-report"
+      },
+      "binary": "pdfinfo",
+      "keywords": [
+        "pdf",
+        "metadados",
+        "paginas",
+        "informacoes"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "stdout",
+      "artifact": "pdf-info.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:pdftotext-layout",
+      "name": "pdftotext-layout",
+      "kind": "invoke",
+      "program": "pdftotext",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "pdftotext-layout"
+      },
+      "binary": "pdftotext",
+      "keywords": [
+        "texto pdf",
+        "extrair pdf",
+        "converter pdf texto"
+      ],
+      "extensions": [
+        ".pdf"
+      ],
+      "mode": "stdout",
+      "artifact": "extracted.txt",
+      "args": [
+        "-layout",
+        "{input}",
+        "-"
+      ]
+    },
+    {
+      "id": "invoke:scribus-text-publication",
+      "name": "scribus-text-publication",
+      "kind": "invoke",
+      "program": "scribus",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "scribus-text-publication"
+      },
+      "binary": "scribus",
+      "keywords": [
+        "scribus texto pdf",
+        "criar publicacao scribus",
+        "documento editavel scribus"
+      ],
+      "extensions": [
+        ".txt"
+      ],
+      "mode": "directory",
+      "artifact": "scribus-publication",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:tesseract-ocr",
+      "name": "tesseract-ocr",
+      "kind": "invoke",
+      "program": "tesseract",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "tesseract-ocr"
+      },
+      "binary": "tesseract",
+      "keywords": [
+        "ocr",
+        "reconhecer texto",
+        "ler imagem",
+        "extrair texto",
+        "digitalizacao"
+      ],
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff"
+      ],
+      "mode": "stdout",
+      "artifact": "recognized.txt",
+      "args": [
+        "{input}",
+        "stdout"
+      ]
+    },
+    {
+      "id": "invoke:typst-compile-pdf",
+      "name": "typst-compile-pdf",
+      "kind": "invoke",
+      "program": "typst",
+      "category": "docs",
+      "invocation": {
+        "kind": "invoke",
+        "action": "typst-compile-pdf"
+      },
+      "binary": "typst",
+      "keywords": [
+        "compilar typst",
+        "typst pdf",
+        "converter typst pdf"
+      ],
+      "extensions": [
+        ".typ"
+      ],
+      "mode": "file",
+      "artifact": "typst-document.pdf",
+      "args": [
+        "compile",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "operation:office-pdf",
+      "name": "office-pdf",
+      "kind": "operation",
+      "program": "libreoffice",
+      "category": "docs",
+      "invocation": {
+        "kind": "operation",
+        "operation": "office-pdf"
+      }
+    },
+    {
+      "id": "operation:pdf-text",
+      "name": "pdf-text",
+      "kind": "operation",
+      "program": "pdftotext",
+      "category": "docs",
+      "invocation": {
+        "kind": "operation",
+        "operation": "pdf-text"
+      }
+    },
+    {
+      "id": "invoke:ffprobe-media-info",
+      "name": "ffprobe-media-info",
+      "kind": "invoke",
+      "program": "ffmpeg",
+      "category": "media",
+      "invocation": {
+        "kind": "invoke",
+        "action": "ffprobe-media-info"
+      },
+      "binary": "ffprobe",
+      "keywords": [
+        "metadados",
+        "video",
+        "audio",
+        "duracao",
+        "codec",
+        "informacoes"
+      ],
+      "extensions": [
+        ".mp4",
+        ".mov",
+        ".mkv",
+        ".mp3",
+        ".wav",
+        ".flac",
+        ".webm"
+      ],
+      "mode": "stdout",
+      "artifact": "media-info.json",
+      "args": [
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration,size,format_name",
+        "-of",
+        "json",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:kdenlive-mlt-mp4",
+      "name": "kdenlive-mlt-mp4",
+      "kind": "invoke",
+      "program": "kdenlive",
+      "category": "media",
+      "invocation": {
+        "kind": "invoke",
+        "action": "kdenlive-mlt-mp4"
+      },
+      "binary": "melt",
+      "keywords": [
+        "kdenlive mlt para mp4",
+        "renderizar projeto mlt",
+        "converter mlt em video mp4"
+      ],
+      "extensions": [
+        ".mlt",
+        ".kdenlive"
+      ],
+      "mode": "file",
+      "artifact": "mlt-video.mp4",
+      "args": [
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "operation:blender-house",
+      "name": "blender-house",
+      "kind": "operation",
+      "program": "blender",
+      "category": "media",
+      "invocation": {
+        "kind": "operation",
+        "operation": "blender-house"
+      }
+    },
+    {
+      "id": "operation:image-resize",
+      "name": "image-resize",
+      "kind": "operation",
+      "program": "imagemagick",
+      "category": "media",
+      "invocation": {
+        "kind": "operation",
+        "operation": "image-resize"
+      }
+    },
+    {
+      "id": "operation:svg-poster",
+      "name": "svg-poster",
+      "kind": "operation",
+      "program": "svg",
+      "category": "media",
+      "invocation": {
+        "kind": "operation",
+        "operation": "svg-poster"
+      }
+    },
+    {
+      "id": "operation:video-thumbnail",
+      "name": "video-thumbnail",
+      "kind": "operation",
+      "program": "ffmpeg",
+      "category": "media",
+      "invocation": {
+        "kind": "operation",
+        "operation": "video-thumbnail"
+      }
+    },
+    {
+      "id": "invoke:android-adb-install-apk",
+      "name": "android-adb-install-apk",
+      "kind": "invoke",
+      "program": "adb",
+      "category": "mobile",
+      "invocation": {
+        "kind": "invoke",
+        "action": "android-adb-install-apk"
+      },
+      "binary": "adb",
+      "keywords": [
+        "adb instalar apk",
+        "instalar apk dispositivo android",
+        "instalar no telemovel android"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "adb-install.txt",
+      "args": [
+        "install",
+        "-r",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:android-aapt2-manifest",
+      "name": "android-aapt2-manifest",
+      "kind": "invoke",
+      "program": "aapt2",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "android-aapt2-manifest"
+      },
+      "binary": "aapt2",
+      "keywords": [
+        "aapt2 manifesto",
+        "manifesto binario android",
+        "inspecionar xmltree apk",
+        "recursos binarios aapt2"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "apk-manifest-tree.txt",
+      "args": [
+        "dump",
+        "xmltree",
+        "--file",
+        "AndroidManifest.xml",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:android-apksigner-verify",
+      "name": "android-apksigner-verify",
+      "kind": "invoke",
+      "program": "apksigner",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "android-apksigner-verify"
+      },
+      "binary": "apksigner",
+      "keywords": [
+        "apksigner assinatura apk",
+        "verificar assinatura android",
+        "certificado apk",
+        "assinatura digital apk"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "apk-signature.txt",
+      "args": [
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:android-zipalign-apk",
+      "name": "android-zipalign-apk",
+      "kind": "invoke",
+      "program": "zipalign",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "android-zipalign-apk"
+      },
+      "binary": "zipalign",
+      "keywords": [
+        "zipalign apk",
+        "alinhar apk android",
+        "preparar apk para assinatura"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "file",
+      "artifact": "aligned.apk",
+      "args": [
+        "-f",
+        "-p",
+        "4",
+        "{input}",
+        "{output}"
+      ]
+    },
+    {
+      "id": "invoke:apktool-decode-resources",
+      "name": "apktool-decode-resources",
+      "kind": "invoke",
+      "program": "apktool",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "apktool-decode-resources"
+      },
+      "binary": "apktool",
+      "keywords": [
+        "apktool",
+        "recursos apk",
+        "manifesto android",
+        "descodificar apk",
+        "recursos android"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "directory",
+      "artifact": "apktool-decoded",
+      "args": [
+        "d",
+        "-o",
+        "{output}",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:binwalk-scan",
+      "name": "binwalk-scan",
+      "kind": "invoke",
+      "program": "binwalk",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "binwalk-scan"
+      },
+      "binary": "binwalk",
+      "keywords": [
+        "firmware",
+        "assinaturas",
+        "binwalk",
+        "binario",
+        "inspecionar"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "signatures.txt",
+      "args": [
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:objdump-file-header",
+      "name": "objdump-file-header",
+      "kind": "invoke",
+      "program": "objdump",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "objdump-file-header"
+      },
+      "binary": "objdump",
+      "keywords": [
+        "objdump",
+        "formato binario",
+        "cabecalho executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "object-header.txt",
+      "args": [
+        "-f",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:radare2-binary-info",
+      "name": "radare2-binary-info",
+      "kind": "invoke",
+      "program": "radare2",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "radare2-binary-info"
+      },
+      "binary": "r2",
+      "keywords": [
+        "radare2",
+        "binario",
+        "cabecalho",
+        "arquitetura",
+        "executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "binary-info.txt",
+      "args": [
+        "-2",
+        "-q",
+        "-c",
+        "iI",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:rea-android-resources",
+      "name": "rea-android-resources",
+      "kind": "invoke",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "rea-android-resources"
+      },
+      "binary": "rea",
+      "keywords": [
+        "rea android",
+        "rea recursos apk",
+        "analisar recursos android",
+        "rea apk",
+        "analisar manifesto rea"
+      ],
+      "extensions": [
+        ".apk"
+      ],
+      "mode": "stdout",
+      "artifact": "rea-android-resources.json",
+      "args": [
+        "decode-android-resources",
+        "{input}",
+        "--json"
+      ]
+    },
+    {
+      "id": "invoke:rea-elf-notes",
+      "name": "rea-elf-notes",
+      "kind": "invoke",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "rea-elf-notes"
+      },
+      "binary": "rea",
+      "keywords": [
+        "rea elf",
+        "notas elf",
+        "gnu build id",
+        "inspecionar elf rea",
+        "elf notes"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "rea-elf-notes.json",
+      "args": [
+        "inspect-elf-notes",
+        "{input}",
+        "--json"
+      ]
+    },
+    {
+      "id": "invoke:readelf-header",
+      "name": "readelf-header",
+      "kind": "invoke",
+      "program": "readelf",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "readelf-header"
+      },
+      "binary": "readelf",
+      "keywords": [
+        "elf",
+        "executavel",
+        "binario",
+        "cabecalho"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "elf-header.txt",
+      "args": [
+        "-h",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:strings-file-extract",
+      "name": "strings-file-extract",
+      "kind": "invoke",
+      "program": "strings",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "strings-file-extract"
+      },
+      "binary": "strings",
+      "keywords": [
+        "strings binario",
+        "extrair strings",
+        "texto do executavel"
+      ],
+      "extensions": [
+        "*"
+      ],
+      "mode": "stdout",
+      "artifact": "strings.txt",
+      "args": [
+        "-a",
+        "-n",
+        "6",
+        "{input}"
+      ]
+    },
+    {
+      "id": "invoke:tshark-pcap-summary",
+      "name": "tshark-pcap-summary",
+      "kind": "invoke",
+      "program": "wireshark",
+      "category": "reverse",
+      "invocation": {
+        "kind": "invoke",
+        "action": "tshark-pcap-summary"
+      },
+      "binary": "tshark",
+      "keywords": [
+        "analisar pcap",
+        "resumo de captura",
+        "tshark",
+        "trafego pcap"
+      ],
+      "extensions": [
+        ".pcap",
+        ".pcapng"
+      ],
+      "mode": "stdout",
+      "artifact": "traffic-summary.txt",
+      "args": [
+        "-r",
+        "{input}",
+        "-q",
+        "-z",
+        "io,stat,0"
+      ]
+    },
+    {
+      "id": "operation:apk-decompile",
+      "name": "apk-decompile",
+      "kind": "operation",
+      "program": "jadx",
+      "category": "reverse",
+      "invocation": {
+        "kind": "operation",
+        "operation": "apk-decompile"
+      }
+    },
+    {
+      "id": "operation:binary-strings",
+      "name": "binary-strings",
+      "kind": "operation",
+      "program": "strings",
+      "category": "reverse",
+      "invocation": {
+        "kind": "operation",
+        "operation": "binary-strings"
+      }
+    },
+    {
+      "id": "rea:address_name",
+      "name": "address_name",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "address_name"
+      }
+    },
+    {
+      "id": "rea:address_to_file_offset",
+      "name": "address_to_file_offset",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "address_to_file_offset"
+      }
+    },
+    {
+      "id": "rea:analyze_function",
+      "name": "analyze_function",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "analyze_function"
+      }
+    },
+    {
+      "id": "rea:analyze_javascript_application",
+      "name": "analyze_javascript_application",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "analyze_javascript_application"
+      }
+    },
+    {
+      "id": "rea:analyze_swift_types",
+      "name": "analyze_swift_types",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "analyze_swift_types"
+      }
+    },
+    {
+      "id": "rea:analyze_web_bundle",
+      "name": "analyze_web_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "analyze_web_bundle"
+      }
+    },
+    {
+      "id": "rea:annotate_native_function",
+      "name": "annotate_native_function",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "annotate_native_function"
+      }
+    },
+    {
+      "id": "rea:batch_decompile",
+      "name": "batch_decompile",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "batch_decompile"
+      }
+    },
+    {
+      "id": "rea:binary_overview",
+      "name": "binary_overview",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "binary_overview"
+      }
+    },
+    {
+      "id": "rea:binary_session",
+      "name": "binary_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "binary_session"
+      }
+    },
+    {
+      "id": "rea:build_call_path",
+      "name": "build_call_path",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "build_call_path"
+      }
+    },
+    {
+      "id": "rea:build_reconstruction_obligation_ledger",
+      "name": "build_reconstruction_obligation_ledger",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "build_reconstruction_obligation_ledger"
+      }
+    },
+    {
+      "id": "rea:capture_adb_screen",
+      "name": "capture_adb_screen",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_adb_screen"
+      }
+    },
+    {
+      "id": "rea:capture_browser_scenario",
+      "name": "capture_browser_scenario",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_browser_scenario"
+      }
+    },
+    {
+      "id": "rea:capture_electron_scenario",
+      "name": "capture_electron_scenario",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_electron_scenario"
+      }
+    },
+    {
+      "id": "rea:capture_native_ui_scenario",
+      "name": "capture_native_ui_scenario",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_native_ui_scenario"
+      }
+    },
+    {
+      "id": "rea:capture_process_scenario",
+      "name": "capture_process_scenario",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_process_scenario"
+      }
+    },
+    {
+      "id": "rea:capture_web_screenshot",
+      "name": "capture_web_screenshot",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "capture_web_screenshot"
+      }
+    },
+    {
+      "id": "rea:close_binary",
+      "name": "close_binary",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "close_binary"
+      }
+    },
+    {
+      "id": "rea:close_frida_session",
+      "name": "close_frida_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "close_frida_session"
+      }
+    },
+    {
+      "id": "rea:close_gdb_session",
+      "name": "close_gdb_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "close_gdb_session"
+      }
+    },
+    {
+      "id": "rea:close_rizin_debug_session",
+      "name": "close_rizin_debug_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "close_rizin_debug_session"
+      }
+    },
+    {
+      "id": "rea:collect_adb_bugreport",
+      "name": "collect_adb_bugreport",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "collect_adb_bugreport"
+      }
+    },
+    {
+      "id": "rea:comment",
+      "name": "comment",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "comment"
+      }
+    },
+    {
+      "id": "rea:compare_application_versions",
+      "name": "compare_application_versions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_application_versions"
+      }
+    },
+    {
+      "id": "rea:compare_artifacts",
+      "name": "compare_artifacts",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_artifacts"
+      }
+    },
+    {
+      "id": "rea:compare_bundles",
+      "name": "compare_bundles",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_bundles"
+      }
+    },
+    {
+      "id": "rea:compare_functions",
+      "name": "compare_functions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_functions"
+      }
+    },
+    {
+      "id": "rea:compare_javascript_export_shapes",
+      "name": "compare_javascript_export_shapes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_javascript_export_shapes"
+      }
+    },
+    {
+      "id": "rea:compare_managed_members",
+      "name": "compare_managed_members",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_managed_members"
+      }
+    },
+    {
+      "id": "rea:compare_process_captures",
+      "name": "compare_process_captures",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_process_captures"
+      }
+    },
+    {
+      "id": "rea:compare_source_to_bundle",
+      "name": "compare_source_to_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_source_to_bundle"
+      }
+    },
+    {
+      "id": "rea:compare_wasm_interfaces",
+      "name": "compare_wasm_interfaces",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_wasm_interfaces"
+      }
+    },
+    {
+      "id": "rea:compare_web_captures",
+      "name": "compare_web_captures",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_web_captures"
+      }
+    },
+    {
+      "id": "rea:compare_web_screenshots",
+      "name": "compare_web_screenshots",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "compare_web_screenshots"
+      }
+    },
+    {
+      "id": "rea:correlate_static_and_runtime",
+      "name": "correlate_static_and_runtime",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "correlate_static_and_runtime"
+      }
+    },
+    {
+      "id": "rea:cutter_command",
+      "name": "cutter_command",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "cutter_command"
+      }
+    },
+    {
+      "id": "rea:decode_android_resources",
+      "name": "decode_android_resources",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "decode_android_resources"
+      }
+    },
+    {
+      "id": "rea:decode_interface_builder",
+      "name": "decode_interface_builder",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "decode_interface_builder"
+      }
+    },
+    {
+      "id": "rea:decode_signal_recording",
+      "name": "decode_signal_recording",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "decode_signal_recording"
+      }
+    },
+    {
+      "id": "rea:decompile_all",
+      "name": "decompile_all",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "decompile_all"
+      }
+    },
+    {
+      "id": "rea:demangle_swift",
+      "name": "demangle_swift",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "demangle_swift"
+      }
+    },
+    {
+      "id": "rea:discover_webmcp_tools",
+      "name": "discover_webmcp_tools",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "discover_webmcp_tools"
+      }
+    },
+    {
+      "id": "rea:evaluate_reconstruction_coverage",
+      "name": "evaluate_reconstruction_coverage",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "evaluate_reconstruction_coverage"
+      }
+    },
+    {
+      "id": "rea:execute_rizin_command",
+      "name": "execute_rizin_command",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "execute_rizin_command"
+      }
+    },
+    {
+      "id": "rea:export_environment_bundle",
+      "name": "export_environment_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "export_environment_bundle"
+      }
+    },
+    {
+      "id": "rea:export_evidence_bundle",
+      "name": "export_evidence_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "export_evidence_bundle"
+      }
+    },
+    {
+      "id": "rea:export_web_scripts",
+      "name": "export_web_scripts",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "export_web_scripts"
+      }
+    },
+    {
+      "id": "rea:extract_artifact",
+      "name": "extract_artifact",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "extract_artifact"
+      }
+    },
+    {
+      "id": "rea:extract_firmware",
+      "name": "extract_firmware",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "extract_firmware"
+      }
+    },
+    {
+      "id": "rea:find_changed_behavior",
+      "name": "find_changed_behavior",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "find_changed_behavior"
+      }
+    },
+    {
+      "id": "rea:find_xrefs_to_name",
+      "name": "find_xrefs_to_name",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "find_xrefs_to_name"
+      }
+    },
+    {
+      "id": "rea:frida_session_status",
+      "name": "frida_session_status",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "frida_session_status"
+      }
+    },
+    {
+      "id": "rea:gdb_console",
+      "name": "gdb_console",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "gdb_console"
+      }
+    },
+    {
+      "id": "rea:gdb_session_status",
+      "name": "gdb_session_status",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "gdb_session_status"
+      }
+    },
+    {
+      "id": "rea:get_call_graph",
+      "name": "get_call_graph",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "get_call_graph"
+      }
+    },
+    {
+      "id": "rea:get_evidence_bundle",
+      "name": "get_evidence_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "get_evidence_bundle"
+      }
+    },
+    {
+      "id": "rea:get_navigation_context",
+      "name": "get_navigation_context",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "get_navigation_context"
+      }
+    },
+    {
+      "id": "rea:get_objc_classes",
+      "name": "get_objc_classes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "get_objc_classes"
+      }
+    },
+    {
+      "id": "rea:get_objc_protocols",
+      "name": "get_objc_protocols",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "get_objc_protocols"
+      }
+    },
+    {
+      "id": "rea:identify_flutter_build",
+      "name": "identify_flutter_build",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "identify_flutter_build"
+      }
+    },
+    {
+      "id": "rea:import_evidence_bundle",
+      "name": "import_evidence_bundle",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "import_evidence_bundle"
+      }
+    },
+    {
+      "id": "rea:import_managed_reconstruction",
+      "name": "import_managed_reconstruction",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "import_managed_reconstruction"
+      }
+    },
+    {
+      "id": "rea:inline_comment",
+      "name": "inline_comment",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inline_comment"
+      }
+    },
+    {
+      "id": "rea:inspect_adb_client",
+      "name": "inspect_adb_client",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_adb_client"
+      }
+    },
+    {
+      "id": "rea:inspect_adb_device",
+      "name": "inspect_adb_device",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_adb_device"
+      }
+    },
+    {
+      "id": "rea:inspect_adb_display",
+      "name": "inspect_adb_display",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_adb_display"
+      }
+    },
+    {
+      "id": "rea:inspect_adb_package",
+      "name": "inspect_adb_package",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_adb_package"
+      }
+    },
+    {
+      "id": "rea:inspect_adb_window",
+      "name": "inspect_adb_window",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_adb_window"
+      }
+    },
+    {
+      "id": "rea:inspect_address_context",
+      "name": "inspect_address_context",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_address_context"
+      }
+    },
+    {
+      "id": "rea:inspect_analysis_settings",
+      "name": "inspect_analysis_settings",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_analysis_settings"
+      }
+    },
+    {
+      "id": "rea:inspect_analysis_view",
+      "name": "inspect_analysis_view",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_analysis_view"
+      }
+    },
+    {
+      "id": "rea:inspect_android_class",
+      "name": "inspect_android_class",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_android_class"
+      }
+    },
+    {
+      "id": "rea:inspect_android_method",
+      "name": "inspect_android_method",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_android_method"
+      }
+    },
+    {
+      "id": "rea:inspect_android_package",
+      "name": "inspect_android_package",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_android_package"
+      }
+    },
+    {
+      "id": "rea:inspect_apk_signature",
+      "name": "inspect_apk_signature",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_apk_signature"
+      }
+    },
+    {
+      "id": "rea:inspect_apktool_client",
+      "name": "inspect_apktool_client",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_apktool_client"
+      }
+    },
+    {
+      "id": "rea:inspect_apple_ips",
+      "name": "inspect_apple_ips",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_apple_ips"
+      }
+    },
+    {
+      "id": "rea:inspect_artifact",
+      "name": "inspect_artifact",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_artifact"
+      }
+    },
+    {
+      "id": "rea:inspect_asset_catalog",
+      "name": "inspect_asset_catalog",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_asset_catalog"
+      }
+    },
+    {
+      "id": "rea:inspect_binary_layout",
+      "name": "inspect_binary_layout",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_binary_layout"
+      }
+    },
+    {
+      "id": "rea:inspect_byte_entropy",
+      "name": "inspect_byte_entropy",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_byte_entropy"
+      }
+    },
+    {
+      "id": "rea:inspect_dart_aot",
+      "name": "inspect_dart_aot",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_dart_aot"
+      }
+    },
+    {
+      "id": "rea:inspect_desktop_application",
+      "name": "inspect_desktop_application",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_desktop_application"
+      }
+    },
+    {
+      "id": "rea:inspect_devicetree",
+      "name": "inspect_devicetree",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_devicetree"
+      }
+    },
+    {
+      "id": "rea:inspect_electron_fuses",
+      "name": "inspect_electron_fuses",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_electron_fuses"
+      }
+    },
+    {
+      "id": "rea:inspect_electron_page",
+      "name": "inspect_electron_page",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_electron_page"
+      }
+    },
+    {
+      "id": "rea:inspect_elf_notes",
+      "name": "inspect_elf_notes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_elf_notes"
+      }
+    },
+    {
+      "id": "rea:inspect_erlang_beam",
+      "name": "inspect_erlang_beam",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_erlang_beam"
+      }
+    },
+    {
+      "id": "rea:inspect_evm_interface",
+      "name": "inspect_evm_interface",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_evm_interface"
+      }
+    },
+    {
+      "id": "rea:inspect_firmware_regions",
+      "name": "inspect_firmware_regions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_firmware_regions"
+      }
+    },
+    {
+      "id": "rea:inspect_go_binary",
+      "name": "inspect_go_binary",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_go_binary"
+      }
+    },
+    {
+      "id": "rea:inspect_gpu_code_objects",
+      "name": "inspect_gpu_code_objects",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_gpu_code_objects"
+      }
+    },
+    {
+      "id": "rea:inspect_il2cpp_metadata",
+      "name": "inspect_il2cpp_metadata",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_il2cpp_metadata"
+      }
+    },
+    {
+      "id": "rea:inspect_kernel_module",
+      "name": "inspect_kernel_module",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_kernel_module"
+      }
+    },
+    {
+      "id": "rea:inspect_keyed_archive",
+      "name": "inspect_keyed_archive",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_keyed_archive"
+      }
+    },
+    {
+      "id": "rea:inspect_macho",
+      "name": "inspect_macho",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_macho"
+      }
+    },
+    {
+      "id": "rea:inspect_managed_artifact",
+      "name": "inspect_managed_artifact",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_managed_artifact"
+      }
+    },
+    {
+      "id": "rea:inspect_managed_members",
+      "name": "inspect_managed_members",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_managed_members"
+      }
+    },
+    {
+      "id": "rea:inspect_managed_native_boundaries",
+      "name": "inspect_managed_native_boundaries",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_managed_native_boundaries"
+      }
+    },
+    {
+      "id": "rea:inspect_model_artifact",
+      "name": "inspect_model_artifact",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_model_artifact"
+      }
+    },
+    {
+      "id": "rea:inspect_native_api",
+      "name": "inspect_native_api",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_api"
+      }
+    },
+    {
+      "id": "rea:inspect_native_data_type",
+      "name": "inspect_native_data_type",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_data_type"
+      }
+    },
+    {
+      "id": "rea:inspect_native_dispatch_metadata",
+      "name": "inspect_native_dispatch_metadata",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_dispatch_metadata"
+      }
+    },
+    {
+      "id": "rea:inspect_native_exports",
+      "name": "inspect_native_exports",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_exports"
+      }
+    },
+    {
+      "id": "rea:inspect_native_instruction",
+      "name": "inspect_native_instruction",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_instruction"
+      }
+    },
+    {
+      "id": "rea:inspect_native_load_image",
+      "name": "inspect_native_load_image",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_native_load_image"
+      }
+    },
+    {
+      "id": "rea:inspect_packet_capture",
+      "name": "inspect_packet_capture",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_packet_capture"
+      }
+    },
+    {
+      "id": "rea:inspect_packet_fields",
+      "name": "inspect_packet_fields",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_packet_fields"
+      }
+    },
+    {
+      "id": "rea:inspect_pcap_capture",
+      "name": "inspect_pcap_capture",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pcap_capture"
+      }
+    },
+    {
+      "id": "rea:inspect_pcap_client",
+      "name": "inspect_pcap_client",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pcap_client"
+      }
+    },
+    {
+      "id": "rea:inspect_pe_certificates",
+      "name": "inspect_pe_certificates",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pe_certificates"
+      }
+    },
+    {
+      "id": "rea:inspect_pe_imports",
+      "name": "inspect_pe_imports",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pe_imports"
+      }
+    },
+    {
+      "id": "rea:inspect_pe_load_config",
+      "name": "inspect_pe_load_config",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pe_load_config"
+      }
+    },
+    {
+      "id": "rea:inspect_pe_resources",
+      "name": "inspect_pe_resources",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_pe_resources"
+      }
+    },
+    {
+      "id": "rea:inspect_plist",
+      "name": "inspect_plist",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_plist"
+      }
+    },
+    {
+      "id": "rea:inspect_python_pyc",
+      "name": "inspect_python_pyc",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_python_pyc"
+      }
+    },
+    {
+      "id": "rea:inspect_recorded_crash",
+      "name": "inspect_recorded_crash",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_recorded_crash"
+      }
+    },
+    {
+      "id": "rea:inspect_rust_binary",
+      "name": "inspect_rust_binary",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_rust_binary"
+      }
+    },
+    {
+      "id": "rea:inspect_signal_decoders",
+      "name": "inspect_signal_decoders",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_signal_decoders"
+      }
+    },
+    {
+      "id": "rea:inspect_signature",
+      "name": "inspect_signature",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_signature"
+      }
+    },
+    {
+      "id": "rea:inspect_sqlite_database",
+      "name": "inspect_sqlite_database",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_sqlite_database"
+      }
+    },
+    {
+      "id": "rea:inspect_wasm_artifact",
+      "name": "inspect_wasm_artifact",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_wasm_artifact"
+      }
+    },
+    {
+      "id": "rea:inspect_web_event_listeners",
+      "name": "inspect_web_event_listeners",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_web_event_listeners"
+      }
+    },
+    {
+      "id": "rea:inspect_web_network_capture",
+      "name": "inspect_web_network_capture",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_web_network_capture"
+      }
+    },
+    {
+      "id": "rea:inspect_web_page",
+      "name": "inspect_web_page",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_web_page"
+      }
+    },
+    {
+      "id": "rea:inspect_with_objdump",
+      "name": "inspect_with_objdump",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "inspect_with_objdump"
+      }
+    },
+    {
+      "id": "rea:install_adb_package",
+      "name": "install_adb_package",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "install_adb_package"
+      }
+    },
+    {
+      "id": "rea:instrument_with_frida",
+      "name": "instrument_with_frida",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "instrument_with_frida"
+      }
+    },
+    {
+      "id": "rea:list_adb_devices",
+      "name": "list_adb_devices",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_devices"
+      }
+    },
+    {
+      "id": "rea:list_adb_directory",
+      "name": "list_adb_directory",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_directory"
+      }
+    },
+    {
+      "id": "rea:list_adb_features",
+      "name": "list_adb_features",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_features"
+      }
+    },
+    {
+      "id": "rea:list_adb_packages",
+      "name": "list_adb_packages",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_packages"
+      }
+    },
+    {
+      "id": "rea:list_adb_processes",
+      "name": "list_adb_processes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_processes"
+      }
+    },
+    {
+      "id": "rea:list_adb_services",
+      "name": "list_adb_services",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_adb_services"
+      }
+    },
+    {
+      "id": "rea:list_architectures",
+      "name": "list_architectures",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_architectures"
+      }
+    },
+    {
+      "id": "rea:list_browser_targets",
+      "name": "list_browser_targets",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_browser_targets"
+      }
+    },
+    {
+      "id": "rea:list_cutter_sessions",
+      "name": "list_cutter_sessions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_cutter_sessions"
+      }
+    },
+    {
+      "id": "rea:list_documents",
+      "name": "list_documents",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_documents"
+      }
+    },
+    {
+      "id": "rea:list_electron_targets",
+      "name": "list_electron_targets",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_electron_targets"
+      }
+    },
+    {
+      "id": "rea:list_frida_devices",
+      "name": "list_frida_devices",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_frida_devices"
+      }
+    },
+    {
+      "id": "rea:list_frida_processes",
+      "name": "list_frida_processes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_frida_processes"
+      }
+    },
+    {
+      "id": "rea:list_javascript_runtime_targets",
+      "name": "list_javascript_runtime_targets",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_javascript_runtime_targets"
+      }
+    },
+    {
+      "id": "rea:list_names",
+      "name": "list_names",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_names"
+      }
+    },
+    {
+      "id": "rea:list_procedures",
+      "name": "list_procedures",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_procedures"
+      }
+    },
+    {
+      "id": "rea:list_segments",
+      "name": "list_segments",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_segments"
+      }
+    },
+    {
+      "id": "rea:list_strings",
+      "name": "list_strings",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_strings"
+      }
+    },
+    {
+      "id": "rea:list_unknowns",
+      "name": "list_unknowns",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "list_unknowns"
+      }
+    },
+    {
+      "id": "rea:load_frida_script",
+      "name": "load_frida_script",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "load_frida_script"
+      }
+    },
+    {
+      "id": "rea:match_native_functions",
+      "name": "match_native_functions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "match_native_functions"
+      }
+    },
+    {
+      "id": "rea:next_address",
+      "name": "next_address",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "next_address"
+      }
+    },
+    {
+      "id": "rea:observe_javascript_runtime",
+      "name": "observe_javascript_runtime",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "observe_javascript_runtime"
+      }
+    },
+    {
+      "id": "rea:observe_native_calls",
+      "name": "observe_native_calls",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "observe_native_calls"
+      }
+    },
+    {
+      "id": "rea:observe_native_ui",
+      "name": "observe_native_ui",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "observe_native_ui"
+      }
+    },
+    {
+      "id": "rea:observe_web_execution",
+      "name": "observe_web_execution",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "observe_web_execution"
+      }
+    },
+    {
+      "id": "rea:observe_web_session",
+      "name": "observe_web_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "observe_web_session"
+      }
+    },
+    {
+      "id": "rea:open_binary",
+      "name": "open_binary",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "open_binary"
+      }
+    },
+    {
+      "id": "rea:open_bundle_resources",
+      "name": "open_bundle_resources",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "open_bundle_resources"
+      }
+    },
+    {
+      "id": "rea:prev_address",
+      "name": "prev_address",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "prev_address"
+      }
+    },
+    {
+      "id": "rea:procedure_address",
+      "name": "procedure_address",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_address"
+      }
+    },
+    {
+      "id": "rea:procedure_assembly",
+      "name": "procedure_assembly",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_assembly"
+      }
+    },
+    {
+      "id": "rea:procedure_callees",
+      "name": "procedure_callees",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_callees"
+      }
+    },
+    {
+      "id": "rea:procedure_callers",
+      "name": "procedure_callers",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_callers"
+      }
+    },
+    {
+      "id": "rea:procedure_info",
+      "name": "procedure_info",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_info"
+      }
+    },
+    {
+      "id": "rea:procedure_pseudo_code",
+      "name": "procedure_pseudo_code",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_pseudo_code"
+      }
+    },
+    {
+      "id": "rea:procedure_references",
+      "name": "procedure_references",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "procedure_references"
+      }
+    },
+    {
+      "id": "rea:project_android_application_graph",
+      "name": "project_android_application_graph",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "project_android_application_graph"
+      }
+    },
+    {
+      "id": "rea:project_apple_application_graph",
+      "name": "project_apple_application_graph",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "project_apple_application_graph"
+      }
+    },
+    {
+      "id": "rea:project_harmony_application_graph",
+      "name": "project_harmony_application_graph",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "project_harmony_application_graph"
+      }
+    },
+    {
+      "id": "rea:project_managed_application_graph",
+      "name": "project_managed_application_graph",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "project_managed_application_graph"
+      }
+    },
+    {
+      "id": "rea:pull_adb_file",
+      "name": "pull_adb_file",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "pull_adb_file"
+      }
+    },
+    {
+      "id": "rea:pull_adb_package",
+      "name": "pull_adb_package",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "pull_adb_package"
+      }
+    },
+    {
+      "id": "rea:push_adb_file",
+      "name": "push_adb_file",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "push_adb_file"
+      }
+    },
+    {
+      "id": "rea:read_adb_logcat",
+      "name": "read_adb_logcat",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "read_adb_logcat"
+      }
+    },
+    {
+      "id": "rea:read_adb_setting",
+      "name": "read_adb_setting",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "read_adb_setting"
+      }
+    },
+    {
+      "id": "rea:read_bytes",
+      "name": "read_bytes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "read_bytes"
+      }
+    },
+    {
+      "id": "rea:read_function_instructions",
+      "name": "read_function_instructions",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "read_function_instructions"
+      }
+    },
+    {
+      "id": "rea:reconcile_javascript_runtime",
+      "name": "reconcile_javascript_runtime",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "reconcile_javascript_runtime"
+      }
+    },
+    {
+      "id": "rea:record_unknown",
+      "name": "record_unknown",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "record_unknown"
+      }
+    },
+    {
+      "id": "rea:recover_javascript_sources",
+      "name": "recover_javascript_sources",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "recover_javascript_sources"
+      }
+    },
+    {
+      "id": "rea:resolve_adb_packages",
+      "name": "resolve_adb_packages",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "resolve_adb_packages"
+      }
+    },
+    {
+      "id": "rea:resolve_containing_procedure",
+      "name": "resolve_containing_procedure",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "resolve_containing_procedure"
+      }
+    },
+    {
+      "id": "rea:resolve_native_call_targets",
+      "name": "resolve_native_call_targets",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "resolve_native_call_targets"
+      }
+    },
+    {
+      "id": "rea:resume_frida_session",
+      "name": "resume_frida_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "resume_frida_session"
+      }
+    },
+    {
+      "id": "rea:rizin_debug_command",
+      "name": "rizin_debug_command",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "rizin_debug_command"
+      }
+    },
+    {
+      "id": "rea:rizin_debug_session_status",
+      "name": "rizin_debug_session_status",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "rizin_debug_session_status"
+      }
+    },
+    {
+      "id": "rea:search_android_classes",
+      "name": "search_android_classes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "search_android_classes"
+      }
+    },
+    {
+      "id": "rea:search_bytes",
+      "name": "search_bytes",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "search_bytes"
+      }
+    },
+    {
+      "id": "rea:search_procedures",
+      "name": "search_procedures",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "search_procedures"
+      }
+    },
+    {
+      "id": "rea:search_strings",
+      "name": "search_strings",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "search_strings"
+      }
+    },
+    {
+      "id": "rea:set_address_name",
+      "name": "set_address_name",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "set_address_name"
+      }
+    },
+    {
+      "id": "rea:set_addresses_names",
+      "name": "set_addresses_names",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "set_addresses_names"
+      }
+    },
+    {
+      "id": "rea:set_bookmark",
+      "name": "set_bookmark",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "set_bookmark"
+      }
+    },
+    {
+      "id": "rea:set_comment",
+      "name": "set_comment",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "set_comment"
+      }
+    },
+    {
+      "id": "rea:set_inline_comment",
+      "name": "set_inline_comment",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "set_inline_comment"
+      }
+    },
+    {
+      "id": "rea:start_adb_activity",
+      "name": "start_adb_activity",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "start_adb_activity"
+      }
+    },
+    {
+      "id": "rea:start_adb_app",
+      "name": "start_adb_app",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "start_adb_app"
+      }
+    },
+    {
+      "id": "rea:start_frida_session",
+      "name": "start_frida_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "start_frida_session"
+      }
+    },
+    {
+      "id": "rea:start_gdb_session",
+      "name": "start_gdb_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "start_gdb_session"
+      }
+    },
+    {
+      "id": "rea:start_rizin_debug_session",
+      "name": "start_rizin_debug_session",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "start_rizin_debug_session"
+      }
+    },
+    {
+      "id": "rea:stop_adb_app",
+      "name": "stop_adb_app",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "stop_adb_app"
+      }
+    },
+    {
+      "id": "rea:trace_android_references",
+      "name": "trace_android_references",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_android_references"
+      }
+    },
+    {
+      "id": "rea:trace_application_feature",
+      "name": "trace_application_feature",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_application_feature"
+      }
+    },
+    {
+      "id": "rea:trace_call_path",
+      "name": "trace_call_path",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_call_path"
+      }
+    },
+    {
+      "id": "rea:trace_dylib_resolution",
+      "name": "trace_dylib_resolution",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_dylib_resolution"
+      }
+    },
+    {
+      "id": "rea:trace_feature",
+      "name": "trace_feature",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_feature"
+      }
+    },
+    {
+      "id": "rea:trace_javascript_semantics",
+      "name": "trace_javascript_semantics",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_javascript_semantics"
+      }
+    },
+    {
+      "id": "rea:trace_native_ui_action",
+      "name": "trace_native_ui_action",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_native_ui_action"
+      }
+    },
+    {
+      "id": "rea:trace_native_values",
+      "name": "trace_native_values",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_native_values"
+      }
+    },
+    {
+      "id": "rea:trace_web_module_imports",
+      "name": "trace_web_module_imports",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_web_module_imports"
+      }
+    },
+    {
+      "id": "rea:trace_web_source_location",
+      "name": "trace_web_source_location",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "trace_web_source_location"
+      }
+    },
+    {
+      "id": "rea:uninstall_adb_package",
+      "name": "uninstall_adb_package",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "uninstall_adb_package"
+      }
+    },
+    {
+      "id": "rea:unload_frida_script",
+      "name": "unload_frida_script",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "unload_frida_script"
+      }
+    },
+    {
+      "id": "rea:unset_bookmark",
+      "name": "unset_bookmark",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "unset_bookmark"
+      }
+    },
+    {
+      "id": "rea:update_analysis_settings",
+      "name": "update_analysis_settings",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "update_analysis_settings"
+      }
+    },
+    {
+      "id": "rea:update_unknown",
+      "name": "update_unknown",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "update_unknown"
+      }
+    },
+    {
+      "id": "rea:verify_managed_native_boundaries",
+      "name": "verify_managed_native_boundaries",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "verify_managed_native_boundaries"
+      }
+    },
+    {
+      "id": "rea:verify_reconstruction",
+      "name": "verify_reconstruction",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "verify_reconstruction"
+      }
+    },
+    {
+      "id": "rea:verify_unknown_resolution",
+      "name": "verify_unknown_resolution",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "verify_unknown_resolution"
+      }
+    },
+    {
+      "id": "rea:xrefs",
+      "name": "xrefs",
+      "kind": "mcp_capability",
+      "program": "rea",
+      "category": "reverse",
+      "invocation": {
+        "kind": "rea-mcp",
+        "method": "tools/call",
+        "name": "xrefs"
+      }
+    },
+    {
+      "id": "operation:vite-build",
+      "name": "vite-build",
+      "kind": "operation",
+      "program": "vite",
+      "category": "web",
+      "invocation": {
+        "kind": "operation",
+        "operation": "vite-build"
+      }
+    },
+    {
+      "id": "operation:web-template",
+      "name": "web-template",
+      "kind": "operation",
+      "program": "html-templates",
+      "category": "web",
+      "invocation": {
+        "kind": "operation",
+        "operation": "web-template"
+      }
+    }
+  ],
+  "functions_schema": 1
 }

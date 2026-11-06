@@ -2,13 +2,14 @@
 import json
 from pathlib import Path
 import unittest
+from engine import catalog_registry
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 class RufloP4SafetyTests(unittest.TestCase):
     def test_ruflo_not_automatically_exposed_as_typed_action(self):
-        catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+        catalog=catalog_registry.read_catalog()
         self.assertIsInstance(catalog["actions"],list)
         self.assertTrue(catalog["actions"])
         unsafe=[a for a in catalog["actions"] if

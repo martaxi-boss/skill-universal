@@ -10,7 +10,7 @@ import json
 import importlib.util
 import os
 from pathlib import Path
-from engine import runtime_discovery
+from engine import runtime_discovery, catalog_registry
 import re
 import shutil
 import subprocess
@@ -25,7 +25,7 @@ HOME=Path("/srv/projects/skill-universal")
 # runtime declarations. Python dictionaries below are generated views, not
 # independent registries. No global executable fallback is allowed.
 CATALOG_PATH=ROOT/"engine/catalog.json"
-_CATALOG=json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+_CATALOG=catalog_registry.read_catalog(CATALOG_PATH)
 if _CATALOG.get("schema")!=2:
     raise ValueError("Unsupported Ferrari catalog schema")
 BINARIES={t["id"]:t["default_binary"] for t in _CATALOG["tools"]
@@ -49,7 +49,7 @@ def python_module_location(tool):
 
 def specs():
     # The Ferrari has one authoritative catalog for tools, actions and dependencies.
-    doc=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    doc=catalog_registry.read_catalog()
     selected={x["id"] for x in doc["tools"] if "ubuntu" in x}
     legacy={x["id"] for x in doc["tools"] if "core" in x}
     if doc.get("schema")!=2 or not isinstance(doc.get("actions"),list):
@@ -201,7 +201,7 @@ def shared_dependencies(catalog):
 
 
 def inventory():
-    catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    catalog=catalog_registry.read_catalog()
     selected=[x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),
         key=lambda x:x["ubuntu_order"])]
@@ -226,16 +226,19 @@ def inventory():
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
         from engine import professional_tools
-        available=(professional_tools.bim_available() if tool=="ifcopenshell" else
+        # Built-in Ferrari functions are executors even without an ELF binary.
+        builtin = entry.get("cost") == "built-in" and tool in {"svg", "html-templates"}
+        available=(True if builtin else
+                   professional_tools.bim_available() if tool=="ifcopenshell" else
                    professional_tools.vite_available() if tool=="vite" else bool(path))
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
-        present=bool(path or evidence)
+        present=bool(path or evidence or builtin)
         state=("callable" if callable_ops or base_ops else
                "installed_unintegrated" if present else "not_detected")
         detection=("executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
-                   "ferrari_cpu_source" if source_evidence else None)
+                   "ferrari_cpu_source" if source_evidence else "ferrari_builtin" if builtin else None)
         return {"id":tool,"category":entry["category"],"source":source,"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,
@@ -273,7 +276,7 @@ def inventory():
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
             "shared_dependencies":shared_dependencies(catalog),
-            "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
+            "note":"Read-only Ferrari-private program discovery. Functions share one universal catalog; distinct execution routes retain validation. Discovery is not certification."}
 
 def unified_catalog(*, inventory_now=None):
     """One authoritative catalog view: Ferrari programs + live REA MCP capabilities.
@@ -284,7 +287,7 @@ def unified_catalog(*, inventory_now=None):
     or invokes an REA tools/call operation.
     """
     from engine import core, rea_mcp
-    doc = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    doc = catalog_registry.read_catalog(CATALOG_PATH)
     if doc.get("schema") != 2:
         raise ValueError("Unsupported Ferrari catalog schema")
     if doc.get("admission_policy", {}).get("platform") != "Ubuntu 24.04 LTS":
@@ -371,6 +374,91 @@ def unified_catalog(*, inventory_now=None):
          "available": bool(executable(a["tool"], a["binary"]))}
         for a in doc["actions"]
     ]
+    # A SINGLE flat function index for the entire Ferrari. Every entry is
+    # derived from the same engine/catalog.json: no second registry, REA
+    # coordinator or extra execution route. The program remains metadata.
+    from engine import ferrari as ferrari_engine
+    owners = {}
+    for program in doc["tools"]:
+        for operation in program.get("base_operations", []):
+            if operation in owners:
+                raise ValueError("Duplicate Ferrari base operation in single catalog")
+            owners[operation] = program
+    if set(owners) != set(ferrari_engine.OPS):
+        raise ValueError("Ferrari base operations missing from the single catalog")
+
+    functions = []
+    for operation in sorted(owners):
+        program = owners[operation]
+        live = presence.get(program["id"])
+        builtin = program.get("core", {}).get("cost") == "built-in"
+        available = builtin or bool(live and operation in live.get("base_operations", []))
+        functions.append({
+            "id": "operation:" + operation, "name": operation,
+            "kind": "base_operation", "program": program["id"],
+            "category": program["category"],
+            "invocation": {"kind": "operation", "operation": operation},
+            "selectable": available,
+            "status": ("builtin_implemented" if builtin else
+                       "private_executor_detected" if available else
+                       "registered_not_available"),
+        })
+    detected_actions = {a["id"]: a["available"] for a in actions}
+    for spec in doc["actions"]:
+        available = detected_actions[spec["id"]]
+        functions.append({
+            "id": "invoke:" + spec["id"], "name": spec["id"],
+            "kind": "typed_action", "program": spec["tool"],
+            "category": spec["category"], "keywords": spec["keywords"],
+            "extensions": spec["extensions"],
+            "invocation": {"kind": "invoke", "action": spec["id"]},
+            "selectable": available,
+            "status": ("private_executor_detected" if available else
+                       "registered_not_available"),
+        })
+    for entry in entries:
+        if entry["kind"] != "mcp_capability":
+            continue
+        functions.append({
+            "id": entry["id"], "name": entry["name"],
+            "kind": "mcp_capability", "program": "rea",
+            "category": "reverse", "title": entry["title"],
+            "description": entry["description"],
+            "inputSchema": entry["inputSchema"],
+            "invocation": {"kind": "rea-mcp", "method": "tools/call",
+                           "name": entry["name"]},
+            "selectable": entry["selectable"], "status": entry["status"],
+            "installed_separately": False,
+        })
+    # The public view is grouped by domain, not by favored program.
+    functions.sort(key=lambda item: (item["category"], item["id"]))
+    if len({item["id"] for item in functions}) != len(functions):
+        raise ValueError("Duplicate Ferrari function ID")
+
+    # THE ONE UNIVERSAL CATALOG: programs, every integrated function,
+    # dependencies and suppliers share the SAME entries[] index. REA is
+    # represented by ordinary function records with program="rea".
+    program_entries = [item for item in entries if item["kind"] == "program"]
+    dependency_entries = [
+        {"id": "dependency:" + item["id"], "name": item["id"],
+         "kind": "dependency", "category": "runtime", "program": None,
+         "version": item["version"], "path": item["path"],
+         "required_by": item["required_by"], "status": item["status"],
+         "selectable": False, "installed": item["present"]}
+        for item in shared_dependencies(doc)
+    ]
+    provider_entries = [
+        {"id": "provider:" + item["id"], "name": item["id"],
+         "kind": "provider", "category": item["category"],
+         "program": item.get("tool_id"), "cost": item["cost"],
+         "admission": item["admission"], "selectable": False,
+         "status": "approved_local_provider_not_a_function"}
+        for item in doc["providers"]
+    ]
+    entries = program_entries + functions + dependency_entries + provider_entries
+    entries.sort(key=lambda item: (str(item["kind"]), str(item["id"])))
+    if len({item["id"] for item in entries}) != len(entries):
+        raise ValueError("Duplicate Ferrari universal catalog ID")
     counts = {
         "programs": len(doc["tools"]), "rea_mcp_capabilities": len(expected),
         "all_catalog_entries": len(entries),
@@ -381,6 +469,11 @@ def unified_catalog(*, inventory_now=None):
         "programs_callable_now": sum(1 for p in entries if p["kind"] == "program" and p["selectable"]),
         "actions_registered": len(actions),
         "actions_available_now": sum(1 for a in actions if a["available"]),
+        "functions_registered": len(functions),
+        "functions_selectable_now": sum(bool(f["selectable"]) for f in functions),
+        "functions_from_base_operations": len(owners),
+        "functions_from_typed_actions": len(actions),
+        "functions_from_rea_mcp": len(expected),
         "no_cost_providers": len(providers_now),
         "shared_dependency_definitions": len(doc["dependencies"]),
     }
@@ -394,11 +487,11 @@ def unified_catalog(*, inventory_now=None):
             "unlisted_source_count": unlisted_live_count,
             "missing_live_names": missing,
             "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
-        "entries": entries, "actions": actions,
+        "entries": entries, "actions": actions, "functions": functions,
         "dependencies": shared_dependencies(doc),
         "providers": providers_now,
         "private_ecosystems": inventory_now["ecosystems"],
-        "note": "Catalog entry != installed binary != functional certification. REA MCP entries are live abilities of the one Ferrari-private REA server, not independent program installations. Unverified Ubuntu candidates and cloud accounts are never silently executed.",
+        "note": "SINGLE universal entries[] catalog: programs, functions (REA included as regular program), dependencies and providers. Supplementary functions/actions/REA status are derived views, NOT separate catalogs. Registered/selected != end-to-end certified; programs without integrated functions are not invented.",
     }
 
 

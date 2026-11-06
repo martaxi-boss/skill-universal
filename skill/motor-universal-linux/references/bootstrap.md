@@ -4,6 +4,10 @@
 
 **Estado revisto em 06/11/2026.** Este ficheiro acompanha **uma Skill Universal Ferrari**, única e independente. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
 
+## Catálogo universal em revisão no GitHub
+
+A [PR #112](https://github.com/martaxi-boss/skill-universal/pull/112) consolida **173 programas, 272 funções (12 base + 40 tipadas + 220 REA), 3 dependências e 2 fornecedores locais = 450 registos** em um só `engine/catalog.json`. A lista `functions[]` é comum a todos os programas; REA não tem catálogo separado. `unified_catalog().entries[]` é a vista integral. Isto é revisão de código, **não** prova de deploy VPS, cuja release tem de ser observada.
+
 ## Arquitetura e projeto
 
 **Catálogo canónico:** `engine/catalog.json` (schema 2); 174 ferramentas lógicas + 220 capacidades REA permitidas, 40 ações, 2 fornecedores locais e 3 runtimes privados. A origem REA ainda anuncia 229 ferramentas, mas a interface Ferrari da PR #109 expõe apenas as 220 aprovadas e não mantém nomes das nove restantes. As primeiras versões de catálogo e [PR #100](https://github.com/martaxi-boss/skill-universal/pull/100) são evidência histórica.
