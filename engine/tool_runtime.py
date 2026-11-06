@@ -275,6 +275,120 @@ def inventory():
             "shared_dependencies":shared_dependencies(catalog),
             "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
+def unified_catalog():
+    """One authoritative catalog view: Ferrari programs + live REA MCP capabilities.
+
+    The only persistent source is engine/catalog.json. REA tool descriptors are
+    checked against the names in THAT file and the live tools/list response.
+    Reading the catalog never installs programs, enables paid cloud services
+    or invokes an REA tools/call operation.
+    """
+    from engine import core, rea_mcp
+    doc = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    if doc.get("schema") != 2:
+        raise ValueError("Unsupported Ferrari catalog schema")
+    if doc.get("admission_policy", {}).get("platform") != "Ubuntu 24.04 LTS":
+        raise ValueError("Ferrari catalog requires Ubuntu 24.04 LTS")
+    if any(p.get("cost") not in {"free-tier", "open-source", "built-in"}
+           for p in doc["providers"]):
+        raise ValueError("Paid or unverified-cost Ferrari provider is forbidden")
+    for item in doc["tools"]:
+        if (item.get("ubuntu") and
+                item["ubuntu"].get("platform") != "Ubuntu 24.04 LTS"):
+            raise ValueError("Non-Ubuntu Ferrari tool forbidden")
+        if item.get("core", {}).get("cost") not in (
+                None, "open-source", "free-to-use-android-sdk-license", "built-in"):
+            raise ValueError("Paid Ferrari executable forbidden")
+        if item.get("admission") not in {
+                "ubuntu_reviewed_or_core", "upstream_candidate_unverified"}:
+            raise ValueError("Ferrari tool has no admission state")
+
+    parent = doc.get("mcp_capabilities", {})
+    if (parent.get("source_tool") != "rea"
+            or parent.get("discovery") != "tools/list"
+            or parent.get("invocation") != "tools/call"):
+        raise ValueError("REA MCP catalog must use the original Ferrari transport")
+    expected = parent.get("names", [])
+    if (not isinstance(expected, list) or not expected
+            or any(not isinstance(name, str) or
+                   not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", name)
+                   for name in expected) or len(expected) != len(set(expected))):
+        raise ValueError("Invalid REA capability names in Ferrari catalog")
+
+    observed = {}
+    mcp_error = None
+    try:
+        found = rea_mcp.discover_tools()
+        observed = {x["name"]: x for x in found}
+    except (ValueError, OSError, RuntimeError) as exc:
+        mcp_error = str(exc)[:240]
+    inventory_now = inventory()
+    presence = {p["id"]: p for p in inventory_now["programs"]}
+    entries = []
+    for item in doc["tools"]:
+        state = presence.get(item["id"])
+        eligible = item["admission"] == "ubuntu_reviewed_or_core"
+        entries.append({
+            "id": item["id"], "kind": "program", "category": item["category"],
+            "admission": item["admission"], "selectable": eligible and bool(state and state["status"] == "callable"),
+            "installed": bool(state and state["installed"]),
+            "status": (state["status"] if state else "candidate_not_preflighted"),
+            "path": state["path"] if state else None,
+            "actions": (state["actions"] if state else []),
+            "base_operations": (state["base_operations"] if state else []),
+        })
+    for name in expected:
+        tool = observed.get(name)
+        entries.append({
+            "id": "rea:" + name, "kind": "mcp_capability", "parent": "rea",
+            "name": name, "source": "rea-agents@6.8.0", "method": "tools/call",
+            "status": ("live_discovered" if tool is not None else
+                       "rea_not_available" if mcp_error else "not_in_live_server"),
+            "selectable": tool is not None,
+            "title": tool.get("title", name) if tool else name,
+            "description": tool.get("description", "") if tool else "",
+            "annotations": tool.get("annotations", {}) if tool else {},
+            "inputSchema": tool.get("inputSchema", {}) if tool else {},
+            "installed_separately": False,
+        })
+    unexpected = sorted(set(observed) - set(expected))
+    missing = sorted(set(expected) - set(observed)) if mcp_error is None else []
+    status = ("rea_unavailable" if mcp_error else
+              "rea_catalog_drift" if unexpected or missing else "rea_in_sync")
+    from engine import core as core_module
+    providers_now = core_module.providers()
+    actions = [
+        {"id": a["id"], "tool": a["tool"], "category": a["category"],
+         "available": bool(executable(a["tool"], a["binary"]))}
+        for a in doc["actions"]
+    ]
+    counts = {
+        "programs": len(doc["tools"]), "rea_mcp_capabilities": len(expected),
+        "all_catalog_entries": len(entries),
+        "rea_mcp_discovered_now": len(observed),
+        "programs_installed_now": sum(1 for p in entries if p["kind"] == "program" and p["installed"]),
+        "programs_callable_now": sum(1 for p in entries if p["kind"] == "program" and p["selectable"]),
+        "actions_registered": len(actions),
+        "actions_available_now": sum(1 for a in actions if a["available"]),
+        "no_cost_providers": len(providers_now),
+        "shared_dependency_definitions": len(doc["dependencies"]),
+    }
+    if counts["all_catalog_entries"] != doc["counts"].get("all_catalog_entries"):
+        raise ValueError("Ferrari unified catalog count mismatch")
+    return {
+        "source": "engine/catalog.json", "schema": doc["schema"],
+        "platform": doc["platform"], "admission_policy": doc["admission_policy"],
+        "counts": counts, "rea": {
+            "status": status, "error": mcp_error, "unexpected_live_names": unexpected,
+            "missing_live_names": missing, "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
+        "entries": entries, "actions": actions,
+        "dependencies": shared_dependencies(doc),
+        "providers": providers_now,
+        "private_ecosystems": inventory_now["ecosystems"],
+        "note": "Catalog entry != installed binary != functional certification. REA MCP entries are live abilities of the one Ferrari-private REA server, not independent program installations. Unverified Ubuntu candidates and cloud accounts are never silently executed.",
+    }
+
+
 def normalize(value):
     return "".join(x for x in unicodedata.normalize("NFKD",value.lower()) if not unicodedata.combining(x))
 
