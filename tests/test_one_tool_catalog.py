@@ -20,8 +20,8 @@ class OneToolCatalogTests(unittest.TestCase):
     def test_single_source_of_truth_with_original_evidence_preserved(self):
         doc = self.data
         self.assertEqual(doc["schema"], 2)
-        self.assertEqual(doc["counts"]["unique_tools"], 174)
-        self.assertEqual(len(doc["tools"]), 174)
+        self.assertEqual(doc["counts"]["unique_tools"], 176)
+        self.assertEqual(len(doc["tools"]), 176)
         self.assertEqual(len(doc["actions"]), 40)
         self.assertEqual(len(doc["providers"]), 12)
         self.assertEqual(len([t for t in doc["tools"] if "core" in t]), 71)
@@ -46,6 +46,30 @@ class OneToolCatalogTests(unittest.TestCase):
                             and not d["compatibility_certified"]
                             for d in inv["shared_dependencies"]))
         self.assertTrue(any(p["id"] == "rea" for p in inv["programs"]))
+
+    def test_private_paths_and_ecosystem_discovery_use_same_catalog(self):
+        from engine import runtime_discovery
+        doc = self.data
+        programs = {t["id"]:t for t in doc["tools"]}
+        self.assertEqual(len(tool_runtime.ISOLATED), 22)
+        self.assertEqual(len(tool_runtime.PRIVATE_CLI), 26)
+        self.assertEqual(len(tool_runtime.BINARIES), 14)
+        self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 10)
+        self.assertEqual(len(runtime_discovery.PYTHON_MODULES), 11)
+        self.assertEqual(len(runtime_discovery.NPM_PACKAGES), 9)
+        self.assertEqual(len(runtime_discovery.CONTAINER_TOOLS), 14)
+        for name, path in tool_runtime.ISOLATED.items():
+            self.assertEqual(path, tool_runtime.HOME / programs[name]["private_executable"])
+            self.assertFalse(Path(programs[name]["private_executable"]).is_absolute())
+            self.assertNotIn("..", Path(programs[name]["private_executable"]).parts)
+        for name, aliases in tool_runtime.PRIVATE_CLI.items():
+            self.assertEqual(list(aliases), programs[name]["private_cli"])
+        for name, package in runtime_discovery.PYTHON_MODULES.items():
+            self.assertEqual(package, programs[name]["python_module"])
+        for name, packages in runtime_discovery.NPM_PACKAGES.items():
+            self.assertEqual(list(packages), programs[name]["npm_packages"])
+        self.assertIn("openpencil", programs)
+        self.assertIn("bpy", programs)
 
     def test_no_five_obsolete_metadata_sources(self):
         for name in LEGACY:
