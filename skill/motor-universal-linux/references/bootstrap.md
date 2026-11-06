@@ -1,16 +1,16 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**VPS certificada em 06/11/2026:** release `952b0a75ba798471b07053677d53791bd078ed56` ([#42282896608](https://github.com/martaxi-boss/VPS/actions/runs/42282896608) PASS), 394 entradas (174 programas + 220 funções REA), 40 ações e dois fornecedores locais; 8/8 serviços protegidos. **Código novo só no GitHub** `ca723ad82043075e82ee790d0c2dcafd5badcbee` ([CI #42283957948](https://github.com/martaxi-boss/skill-universal/actions/runs/42283957948) PASS) elimina a antiga lista com nove nomes e filtra a resposta REA de `tools/list`. Esta filtragem ainda aguarda deploy na VPS. A Skill instalada no ChatGPT não é atualizada automaticamente.
+**Estado real em 06/11/2026:** [VPS #42291834474](https://github.com/martaxi-boss/VPS/actions/runs/42291834474) PASS, `report.json` completed e ZIP verificado: **394 entradas antigas** (174 programas + 220 funções REA), 55/56 selecionados detetados e 40/40 ações disponíveis. **Nova versão GitHub** `5913ba9a`, [PR #112](https://github.com/martaxi-boss/skill-universal/pull/112) integrada, [CI #42291799588](https://github.com/martaxi-boss/skill-universal/actions/runs/42291799588) PASS: **450 registos** no único catálogo; deploy VPS ainda pendente. O cliente ChatGPT não se atualiza automaticamente.
 
 **Estado revisto em 06/11/2026.** Este ficheiro acompanha **uma Skill Universal Ferrari**, única e independente. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
 
-## Catálogo universal em revisão no GitHub
+## Catálogo universal integrado no GitHub
 
-A [PR #112](https://github.com/martaxi-boss/skill-universal/pull/112) consolida **173 programas, 272 funções (12 base + 40 tipadas + 220 REA), 3 dependências e 2 fornecedores locais = 450 registos** em um só `engine/catalog.json`. A lista `functions[]` é comum a todos os programas; REA não tem catálogo separado. `unified_catalog().entries[]` é a vista integral. Isto é revisão de código, **não** prova de deploy VPS, cuja release tem de ser observada.
+A [PR #112](https://github.com/martaxi-boss/skill-universal/pull/112), integrada, consolida **173 programas, 272 funções (12 base + 40 tipadas + 220 REA), 3 dependências e 2 fornecedores locais = 450 registos** em um só `engine/catalog.json`. A lista `functions[]` é comum a todos os programas; REA não tem catálogo separado. `unified_catalog().entries[]` é a vista integral. É código validado, **não** prova de deploy na VPS; a execução real #42291834474 ainda devolveu 394 entradas antigas.
 
 ## Arquitetura e projeto
 
-**Catálogo canónico:** `engine/catalog.json` (schema 2); 174 ferramentas lógicas + 220 capacidades REA permitidas, 40 ações, 2 fornecedores locais e 3 runtimes privados. A origem REA ainda anuncia 229 ferramentas, mas a interface Ferrari da PR #109 expõe apenas as 220 aprovadas e não mantém nomes das nove restantes. As primeiras versões de catálogo e [PR #100](https://github.com/martaxi-boss/skill-universal/pull/100) são evidência histórica.
+**Catálogo canónico no GitHub:** `engine/catalog.json` (schema 2), fonte única de **173 programas, 272 funções, 3 dependências e 2 fornecedores**. As 220 funções REA fazem parte de `functions[]`, com as 52 interfaces dos restantes programas. A origem REA pode anunciar 229 nomes, mas o Ferrari só admite os 220 aprovados. [PR #109](https://github.com/martaxi-boss/skill-universal/pull/109) e [PR #100](https://github.com/martaxi-boss/skill-universal/pull/100) são provas históricas.
 
 ChatGPT/Codex interpreta o pedido → Skill Ferrari → GitHub autenticado `martaxi-boss/VPS` → workflow Ferrari existente → SSH existente → `/srv/projects/skill-universal/current` → motor/fornecedores/executores privados → `report.json` e `response.zip`.
 
