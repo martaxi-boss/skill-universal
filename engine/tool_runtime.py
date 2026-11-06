@@ -316,12 +316,8 @@ def unified_catalog(*, inventory_now=None):
                    for name in expected) or len(expected) != len(set(expected))):
         raise ValueError("Invalid REA capability names in Ferrari catalog")
 
-    excluded = parent.get("excluded_paid_or_demo_names", [])
-    if (not isinstance(excluded, list) or len(excluded) != len(set(excluded))
-            or set(excluded) & set(expected) or
-            any(not isinstance(name, str) or
-                not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", name) for name in excluded)):
-        raise ValueError("Invalid REA commercial/demo exclusion list")
+    # The approved allowlist is the entire Ferrari REA catalog. No static
+    # registry of rejected/non-open-source capabilities is retained.
     observed = {}
     mcp_error = None
     try:
@@ -358,12 +354,16 @@ def unified_catalog(*, inventory_now=None):
             "inputSchema": tool.get("inputSchema", {}) if tool else {},
             "installed_separately": False,
         })
-    # Recognize paid-only tools without admitting or executing them.
-    excluded_paid = sorted(set(observed) & set(excluded))
-    unexpected = sorted(set(observed) - set(expected) - set(excluded))
+    # The original REA may announce other endpoints. They never become
+    # Ferrari catalog entries, nor may they be called through the facade.
+    unlisted_live_count = len(set(observed) - set(expected))
     missing = sorted(set(expected) - set(observed)) if mcp_error is None else []
+    source_size = doc.get("counts", {}).get("mcp_source_advertised")
+    source_changed = bool(
+        unlisted_live_count and source_size is not None and
+        len(observed) != source_size)
     status = ("rea_unavailable" if mcp_error else
-              "rea_catalog_drift" if unexpected or missing else "rea_in_sync")
+              "rea_catalog_drift" if missing or source_changed else "rea_in_sync")
     from engine import core as core_module
     providers_now = core_module.providers()
     actions = [
@@ -376,7 +376,7 @@ def unified_catalog(*, inventory_now=None):
         "all_catalog_entries": len(entries),
         "rea_mcp_discovered_now": sum(name in observed for name in expected),
         "rea_mcp_advertised_raw": len(observed),
-        "rea_mcp_paid_excluded_now": len(excluded_paid),
+        "rea_mcp_unlisted_source_now": unlisted_live_count,
         "programs_installed_now": sum(1 for p in entries if p["kind"] == "program" and p["installed"]),
         "programs_callable_now": sum(1 for p in entries if p["kind"] == "program" and p["selectable"]),
         "actions_registered": len(actions),
@@ -391,9 +391,9 @@ def unified_catalog(*, inventory_now=None):
         "platform": doc["platform"], "admission_policy": doc["admission_policy"],
         "counts": counts, "rea": {
             "status": status, "error": mcp_error,
-            "excluded_paid_live_names": excluded_paid, "excluded_paid_or_demo_names": excluded,
-            "unexpected_live_names": unexpected,
-            "missing_live_names": missing, "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
+            "unlisted_source_count": unlisted_live_count,
+            "missing_live_names": missing,
+            "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
         "entries": entries, "actions": actions,
         "dependencies": shared_dependencies(doc),
         "providers": providers_now,

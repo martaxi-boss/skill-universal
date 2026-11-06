@@ -220,6 +220,21 @@ def invoke(requests, dest: Path, source: Path | None = None, *, root: Path | Non
         source = source.resolve()
     bound = _bind_input(requests, source)
     responses = _exchange([str(cli), "mcp"], env, bound)
+    # tools/list is a Ferrari-facing endpoint too: never disclose unlisted
+    # upstream REA tool descriptors to callers or ZIP artifacts.
+    if any(request["method"] == "tools/list" for request in bound):
+        catalog = json.loads((Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+        approved = set(catalog["mcp_capabilities"]["names"])
+        for entry in responses:
+            if entry.get("method") != "tools/list":
+                continue
+            reply = entry.get("response")
+            result = reply.get("result") if isinstance(reply, dict) else None
+            tools = result.get("tools") if isinstance(result, dict) else None
+            if not isinstance(tools, list):
+                raise RuntimeError("REA tools/list returned an invalid tool list")
+            result["tools"] = [tool for tool in tools
+                               if isinstance(tool, dict) and tool.get("name") in approved]
     target.write_text(json.dumps({"engine": "motor-ferrari-ubuntu",
                                   "executor": "rea-original-private-mcp",
                                   "responses": responses},

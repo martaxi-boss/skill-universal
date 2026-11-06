@@ -52,7 +52,7 @@ class FerrariReaMcpTests(unittest.TestCase):
                 self.assertEqual(requests[1]["params"]["arguments"]["path"].rsplit("/",1)[-1],"sample.elf")
                 return [
                     {"method":"tools/list","name":None,
-                     "response":{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"inspect_elf_notes"}]}}},
+                     "response":{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"inspect_elf_notes"},{"name":"upstream_unsupported_test"}]}}},
                     {"method":"tools/call","name":"inspect_elf_notes",
                      "response":{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"PASS"}]}}}]
             with patch.object(rea_mcp,"ROOT",root),                  patch.object(rea_mcp,"_resources",return_value=(root/"rea",{"PATH":"/usr/bin"})),                  patch.object(rea_mcp,"_exchange",side_effect=fake_exchange):
@@ -65,6 +65,9 @@ class FerrariReaMcpTests(unittest.TestCase):
                 data=json.loads(z.read("artifacts/rea-mcp-result.json"))
                 self.assertEqual(len(data["responses"]),2)
                 self.assertEqual(data["executor"],"rea-original-private-mcp")
+                listed=data["responses"][0]["response"]["result"]["tools"]
+                self.assertEqual([t["name"] for t in listed], ["inspect_elf_notes"])
+                self.assertNotIn("upstream_unsupported_test", json.dumps(data))
 
     def test_missing_private_providers_refuses_legacy_fallback(self):
         with tempfile.TemporaryDirectory() as tmp:
