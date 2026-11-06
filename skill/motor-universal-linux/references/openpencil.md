@@ -17,12 +17,12 @@ Exemplo de pedido válido, usando HTML sintético (base64 completo gerado da str
   "layout": "store",
   "input": {
     "name": "design.html",
-    "content_base64": "PCFkb2N0eXBlIGh0bWw+PGh0bWj48Ym9keT48aDE+RmVycmFyaTwvaDE+PC9ib2R5PjwvaHRtbD4="
+    "content_base64": "PCFkb2N0eXBlIGh0bWw+PGh0bWw+PGJvZHk+PGgxPkZlcnJhcmk8L2gxPjwvYm9keT48L2h0bWw+"
   }
 }
 ```
 
-O exemplo em base64 acima ilustra a estrutura: antes de um pedido real, gerar o base64 a partir do HTML completo pretendido. Validar localmente o ficheiro e não publicar conteúdo privado.
+O exemplo em base64 acima codifica uma página HTML sintética completa; para o pedido real, gerar o base64 a partir do HTML pretendido. Validar localmente o ficheiro e não publicar conteúdo privado.
 
 ## Executor e saída
 
