@@ -50,12 +50,14 @@ def confined(path: Path, *, require_exists: bool = False) -> None:
 def preflight() -> None:
     if not ROOT.is_dir() or ROOT.is_symlink() or ROOT.stat().st_uid != os.getuid():
         raise RuntimeError("FERRARI_COMFY_PROJECT_OWNER_OR_FOLDER_MISMATCH")
-    for p in (COMFY, VENV, COMFY / "main.py", VENV / "bin/python"):
+    for p in (COMFY, VENV, COMFY / "main.py"):
         confined(p, require_exists=True)
         if not p.exists():
             raise RuntimeError("FERRARI_COMFY_PRIVATE_ENV_MISSING")
-    if not (VENV/"bin/python").is_file():
-        raise RuntimeError("FERRARI_COMFY_PYTHON_MISSING")
+    # Python venv bin/python can be an internal symlink to a Ferrari-owned runtime.
+    py = VENV / "bin/python"
+    if not py.is_file() or not py.resolve(strict=True).is_relative_to(ROOT.resolve(strict=True)):
+        raise RuntimeError("FERRARI_COMFY_PRIVATE_PYTHON_MISSING")
     disk = shutil.disk_usage(ROOT).free
     mem = {}
     for line in Path("/proc/meminfo").read_text().splitlines():
