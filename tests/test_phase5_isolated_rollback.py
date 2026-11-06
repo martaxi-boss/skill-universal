@@ -15,7 +15,7 @@ import tempfile
 import unittest
 
 EXPECTED_ACTIVE_SHA = "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
-EXPECTED_SCRIPT_BLOB = "e64669da13afd55dce3f0d6c368aa17ebec2561c"
+EXPECTED_SCRIPT_BLOB = "2b1f7703b96a963af01af02bc9617e7554b85a98"
 LIVE_ROOT = os.environ.get("FERRARI_PHASE5_LIVE_ROOT")
 ROOT = (Path(LIVE_ROOT) if LIVE_ROOT else Path(__file__).resolve().parents[1]).resolve()
 SCRIPT = (ROOT / "current/install/vps-isolated-release.sh"

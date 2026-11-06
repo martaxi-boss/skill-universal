@@ -16,25 +16,24 @@ import shutil
 import subprocess
 
 FERRARI_HOME = Path("/srv/projects/skill-universal")
+# Generated views from the SAME Ferrari tool catalog as the executable
+# router. The discovery engine reads no second source or external project.
+_DISCOVERY_CATALOG = json.loads(
+    (Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+if _DISCOVERY_CATALOG.get("schema") != 2:
+    raise ValueError("Unsupported Ferrari tool catalog schema")
 PYTHON_MODULES = {
-    "opencv": "cv2", "duckdb": "duckdb", "polars": "polars",
-    "streamlit": "streamlit", "gradio": "gradio", "prefect": "prefect",
-    "docling": "docling", "faster-whisper": "faster_whisper",
-    "ifcopenshell": "ifcopenshell", "bpy": "bpy", "typst":"typst",
+    t["id"]:t["python_module"] for t in _DISCOVERY_CATALOG["tools"]
+    if "python_module" in t
 }
 NPM_PACKAGES = {
-    "rea": ("rea-agents",), "ruflo": ("ruflo",),
-    "openpencil": ("@open-pencil/cli",),
-    "nextjs": ("next",), "vite": ("vite",),
-    "tailwind": ("tailwindcss",), "bootstrap": ("bootstrap",),
-    "playwright": ("playwright", "@playwright/test"),
-    "shadcn": ("shadcn",),
+    t["id"]:tuple(t["npm_packages"]) for t in _DISCOVERY_CATALOG["tools"]
+    if "npm_packages" in t
 }
-CONTAINER_TOOLS = frozenset({
-    "penpot", "comfyui", "grafana", "prometheus", "valkey",
-    "qdrant", "supabase", "medusa", "saleor", "appwrite",
-    "gitea", "homeassistant", "immich", "jellyfin",
-})
+CONTAINER_TOOLS = frozenset(
+    t["id"] for t in _DISCOVERY_CATALOG["tools"]
+    if t.get("ferrari_managed_container")
+)
 SYSTEM_NPM_ROOTS = ()  # No system-global npm discovery in this independent project
 LABEL = "org.motor-ferrari.managed=true"
 TOOL_LABEL = "org.motor-ferrari.tool"

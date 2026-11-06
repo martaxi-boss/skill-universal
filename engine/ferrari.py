@@ -14,7 +14,7 @@ from engine import core
 
 ROOT = Path(__file__).resolve().parent.parent
 FERRARI_HOME = Path("/srv/projects/skill-universal")
-REGISTRY = ROOT / "engine" / "ferrari_registry.json"
+REGISTRY = ROOT / "engine" / "catalog.json"
 ROUTES = {
  "reverse": ("apk","dex","descompil","decompil","engenharia reversa","firmware","binario","executavel"),
  "web": ("website","web","site","landing","loja","frontend","html","layout","pagina"),
@@ -41,22 +41,34 @@ LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio"
 OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf","ifc-summary","vite-build")
 
 def registry():
-    """Merge checked GitHub repositories without claiming installation or license validation."""
-    items = json.loads(REGISTRY.read_text(encoding="utf-8"))["projects"]
-    expansion = ROOT / "engine" / "ferrari_expansion.json"
-    if expansion.is_file():
-        for source in json.loads(expansion.read_text(encoding="utf-8"))["projects"]:
-            extra = dict(source)
-            extra["binary"] = None
-            extra["apt"] = source.get("package_candidate") if source.get("install_method") == "apt" and source.get("license_status") == "github_declared" else None  # Runtime apt-cache must verify Ubuntu candidate.
-            extra["gui"] = source.get("resources") == "gui"
-            extra["requires_gpu"] = source.get("resources") == "gpu"
-            extra["stars_snapshot"] = int(source["stars_snapshot"])
-            extra["installation"] = source["install_method"] + "-candidate"
-            extra["license"] = source.get("license_spdx") or "REVIEW_REQUIRED"
-            items.append(extra)
+    """Discover upstream entries from the Ferrari's only tool catalog.
+
+    An upstream candidate is NOT an installed or working program.  Preserve
+    the original curated/source order, and never merge duplicate tool IDs.
+    """
+    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    if catalog.get("schema") != 2:
+        raise ValueError("Unsupported Ferrari tool catalog")
+    items = []
+    for tool in sorted(
+        (x for x in catalog["tools"] if "upstream" in x),
+        key=lambda x: x["upstream_order"]
+    ):
+        source = dict(tool["upstream"])
+        if tool.get("upstream_source") == "expansion":
+            source["binary"] = None
+            source["apt"] = (source.get("package_candidate")
+                             if source.get("install_method") == "apt"
+                             and source.get("license_status") == "github_declared"
+                             else None)
+            source["gui"] = source.get("resources") == "gui"
+            source["requires_gpu"] = source.get("resources") == "gpu"
+            source["stars_snapshot"] = int(source["stars_snapshot"])
+            source["installation"] = source["install_method"] + "-candidate"
+            source["license"] = source.get("license_spdx") or "REVIEW_REQUIRED"
+        items.append(source)
     if len({p["id"] for p in items}) != len(items):
-        raise ValueError("Duplicate tools")
+        raise ValueError("Duplicate upstream tools")
     return items
 
 def system():
@@ -111,7 +123,11 @@ def doctor():
 
 def ubuntu_selection():
     """Only curated Ubuntu evidence; unreviewed discovery stays out of planning."""
-    manifest = json.loads((ROOT / "engine" / "ubuntu_selection.json").read_text(encoding="utf-8"))
+    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    manifest = dict(catalog["ubuntu_metadata"])
+    manifest["tools"] = [x["ubuntu"] for x in sorted(
+        (x for x in catalog["tools"] if "ubuntu" in x),
+        key=lambda x:x["ubuntu_order"])]
     if manifest.get("platform") != "Ubuntu 24.04":
         raise ValueError("Curated platform must be Ubuntu 24.04")
     ids = [p["id"] for p in manifest["tools"]]

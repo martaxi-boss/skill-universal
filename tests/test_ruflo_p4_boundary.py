@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class RufloP4SafetyTests(unittest.TestCase):
     def test_ruflo_not_automatically_exposed_as_typed_action(self):
-        catalog=json.loads((ROOT/"engine/tool_actions.json").read_text(encoding="utf-8"))
+        catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
         self.assertIsInstance(catalog["actions"],list)
         self.assertTrue(catalog["actions"])
         unsafe=[a for a in catalog["actions"] if

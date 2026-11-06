@@ -26,10 +26,11 @@ class BootstrapTests(unittest.TestCase):
         self.assertIn("uma skill universal", ref.read_text(encoding="utf-8").lower())
 
     def test_selection_is_not_installed_state(self):
-        data = json.loads((ROOT / "engine/ubuntu_selection.json").read_text(encoding="utf-8"))
-        self.assertEqual(data["count"], len(data["tools"]))
-        self.assertTrue(all(not tool["certified_on_vps"] for tool in data["tools"]))
-        self.assertTrue(all(not tool["installed_on_vps"] for tool in data["tools"]))
+        catalog = json.loads((ROOT / "engine/catalog.json").read_text(encoding="utf-8"))
+        selected = [tool["ubuntu"] for tool in catalog["tools"] if "ubuntu" in tool]
+        self.assertEqual(catalog["ubuntu_metadata"]["count"], len(selected))
+        self.assertTrue(all(not tool["certified_on_vps"] for tool in selected))
+        self.assertTrue(all(not tool["installed_on_vps"] for tool in selected))
 
 if __name__ == "__main__":
     unittest.main()

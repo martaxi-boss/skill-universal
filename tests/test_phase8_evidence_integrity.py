@@ -7,7 +7,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 MATRIX = ROOT / "docs/FASE8_MATRIZ_COBERTURA_20261105.md"
 EVIDENCE = ROOT / "docs/FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json"
-MANIFEST = ROOT / "engine/tool_actions.json"
+MANIFEST = ROOT / "engine/catalog.json"
 PRIVATE_ROOT = "/srv/projects/skill-universal/"
 
 
