@@ -57,7 +57,14 @@ doc = json.loads(output.read_text(encoding="utf-8"))
 assert doc.get("type") == "FeatureCollection", "GeoJSON export not a FeatureCollection"
 features = doc.get("features", [])
 assert len(features) == 1, "Buffer did not generate one feature"
-geom = QgsGeometry.fromJson(json.dumps(features[0]["geometry"]).encode("utf-8"))
+# QGIS 4.2.3 has no QgsGeometry.fromJson() static helper.
+# Reload through the REAL OGR/GeoJSON vector provider instead; this also
+# verifies the exported file can be consumed by another QGIS provider.
+reloaded = QgsVectorLayer(str(output), "ferrari-buffer-readback", "ogr")
+assert reloaded.isValid(), "Real GeoJSON OGR provider failed to reopen the buffer"
+actual = list(reloaded.getFeatures())
+assert len(actual) == 1, "Real GeoJSON provider returned wrong feature count"
+geom = actual[0].geometry()
 assert not geom.isEmpty() and geom.isGeosValid(), "Buffered polygon invalid"
 area = geom.area()
 assert 6500.0 < area < 7500.0, ("Unexpected 5m buffer area", area)
@@ -67,6 +74,7 @@ report = {
     "buffer_distance_m": 5.0,
     "buffer_area_m2": round(area, 3),
     "geojson_export_and_reparse": True,
+    "ogr_provider_geojson_readback": True,
     "feature_count": 1,
     "gui_certified": False,
     "all_qgis_providers_certified": False,
@@ -173,6 +181,7 @@ def certify() -> dict:
                 payload = json.loads(output.read_text(encoding="utf-8"))
                 if (payload.get("native_buffer_algorithm_executed") is not True
                         or payload.get("geojson_export_and_reparse") is not True
+                        or payload.get("ogr_provider_geojson_readback") is not True
                         or payload.get("feature_count") != 1
                         or not (work / "buffer-5m.geojson").is_file()):
                     payload = None
