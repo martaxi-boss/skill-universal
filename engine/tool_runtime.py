@@ -315,6 +315,12 @@ def unified_catalog(*, inventory_now=None):
                    for name in expected) or len(expected) != len(set(expected))):
         raise ValueError("Invalid REA capability names in Ferrari catalog")
 
+    excluded = parent.get("excluded_paid_or_demo_names", [])
+    if (not isinstance(excluded, list) or len(excluded) != len(set(excluded))
+            or any(not isinstance(name, str) or
+                   not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", name) for name in excluded)
+            or set(excluded) & set(expected)):
+        raise ValueError("Invalid excluded REA MCP names in the single catalog")
     observed = {}
     mcp_error = None
     try:
@@ -351,7 +357,8 @@ def unified_catalog(*, inventory_now=None):
             "inputSchema": tool.get("inputSchema", {}) if tool else {},
             "installed_separately": False,
         })
-    unexpected = sorted(set(observed) - set(expected))
+    # Paid JEB and trial-only Hopper endpoints are recognized but never admitted.
+    unexpected = sorted(set(observed) - set(expected) - set(excluded))
     missing = sorted(set(expected) - set(observed)) if mcp_error is None else []
     status = ("rea_unavailable" if mcp_error else
               "rea_catalog_drift" if unexpected or missing else "rea_in_sync")
@@ -365,7 +372,9 @@ def unified_catalog(*, inventory_now=None):
     counts = {
         "programs": len(doc["tools"]), "rea_mcp_capabilities": len(expected),
         "all_catalog_entries": len(entries),
-        "rea_mcp_discovered_now": len(observed),
+        "rea_mcp_discovered_now": sum(name in observed for name in expected),
+        "rea_mcp_advertised_raw": len(observed),
+        "rea_excluded_paid_observed": sum(name in observed for name in excluded),
         "programs_installed_now": sum(1 for p in entries if p["kind"] == "program" and p["installed"]),
         "programs_callable_now": sum(1 for p in entries if p["kind"] == "program" and p["selectable"]),
         "actions_registered": len(actions),
@@ -380,7 +389,9 @@ def unified_catalog(*, inventory_now=None):
         "platform": doc["platform"], "admission_policy": doc["admission_policy"],
         "counts": counts, "rea": {
             "status": status, "error": mcp_error, "unexpected_live_names": unexpected,
-            "missing_live_names": missing, "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
+            "missing_live_names": missing,
+            "excluded_paid_or_demo_names": excluded,
+            "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
         "entries": entries, "actions": actions,
         "dependencies": shared_dependencies(doc),
         "providers": providers_now,
