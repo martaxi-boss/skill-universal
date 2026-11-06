@@ -104,7 +104,10 @@ class QgisIsolatedTests(unittest.TestCase):
             (p/"bin/python").write_text("#!/bin/sh\n")
             def fake_execute(cmd,**kw):
                 if cmd[0]==str(process):
-                    return SimpleNamespace(returncode=0,stdout="QGIS 4.2.3\n",stderr="")
+                    return SimpleNamespace(returncode=0,stdout=(
+                        "native:buffer\nnative:centroids\nnative:clip\nnative:dissolve\n"
+                        "native:mergevectorlayers\nnative:reprojectlayer\n" if "list" in cmd
+                        else "QGIS 4.2.3\n"),stderr="")
                 if cmd[0]==str(p/"bin/python"):
                     return SimpleNamespace(returncode=0,stdout="F9_PRIVATE_QGIS_PYTHON_IMPORT=PASS\n",stderr="")
                 return SimpleNamespace(returncode=0,stdout="libqgis_core.so => "+str(p)+"/lib/libqgis_core.so\n",stderr="")
@@ -116,6 +119,34 @@ class QgisIsolatedTests(unittest.TestCase):
             self.assertTrue(result["cli_version_certified"])
             self.assertFalse(result["gui_runtime_certified"])
             self.assertTrue(result["private_qgis_libraries_loaded"])
+
+    def test_qgis_processing_remains_certified_if_optional_pyqgis_missing(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)
+            (p/"bin").mkdir()
+            process=p/"bin/qgis_process"
+            process.write_text("#!/bin/sh\n")
+            process.chmod(0o700)
+            (p/"bin/python").write_text("#!/bin/sh\n")
+            def fake_execute(cmd,**kwargs):
+                if cmd[0]==str(p/"bin/python"):
+                    return SimpleNamespace(returncode=1,stdout="",stderr="No module named qgis")
+                if cmd[0]==str(process):
+                    out=("native:buffer\nnative:centroids\nnative:clip\n"
+                         "native:dissolve\nnative:merge\nnative:reproject\n") if "list" in cmd else "QGIS 4.2.3\n"
+                    return SimpleNamespace(returncode=0,stdout=out,stderr="")
+                return SimpleNamespace(returncode=0,
+                    stdout="libqgis_core.so => "+str(p)+"/lib/libqgis_core.so\n",stderr="")
+            with patch.object(m,"TARGET",p),patch.object(m,"PREFIX_BIN",process),\
+                 patch.object(m,"qgis_package",return_value={"license":"GPL-2.0"}),\
+                 patch.object(m,"env",return_value={}),\
+                 patch.object(m,"execute",side_effect=fake_execute):
+                result=m.smoke()
+            self.assertTrue(result["cli_version_certified"])
+            self.assertTrue(result["native_processing_catalog_certified"])
+            self.assertFalse(result["python_qgis_import_certified"])
+            self.assertFalse(result["gui_runtime_certified"])
+
 
 if __name__=="__main__":
     unittest.main()
