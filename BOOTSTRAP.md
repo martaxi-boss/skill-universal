@@ -8,7 +8,7 @@
 
 **Ponto 3 faster-whisper — CPU PASS (06/11):** tiny MIT multilingue privado SHA256 PASS; [VPS #42170510453](https://github.com/martaxi-boss/VPS/actions/runs/42170510453) transcreveu áudio inglês de 11 s para TXT/SRT/JSON em 2,24 s, pico 265 MiB, cgroup 2 GiB. [Prova](docs/FASTER_WHISPER_PONTO3_CPU.md); PyAV 19 compatibilizado sem novas dependências. Release e ponte intactas; português/Skill cliente no fecho.
 
-**Histórico F7 (05/11):** release `758e1b435317fa26277b332b75bc47c67910be81`, F6 fallback `146145d5ada9c13e368df18727e4dbf4f5807664`. [DAG #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995) PASS; 274 testes, 40/40 ações, 7/7 venvs, 47/56 candidatos. Ruflo multiagentes, quotas duras e F9–F10 continuam pendentes.
+**Histórico F7 (05/11):** release `758e1b435317fa26277b332b75bc47c67910be81`, F6 fallback `146145d5ada9c13e368df18727e4dbf4f5807664`, registo anterior `87969badbde0a77c2c181bb9605357d51a4a30c0`. [DAG #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995) PASS; 274 testes, 40/40 ações, 7/7 venvs, 47/56 candidatos. Ruflo multiagentes, quotas duras e F9–F10 continuam pendentes.
 
 **Fase 8 (05/11): CERTIFICADA 40/40 ações.** ADB Android físico testou instalar e remover APK sintética [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714) PASS, sem tocar em PINK. [Fecho F8](docs/FASE8_FECHO_20261105.md); sem APT global.
 
