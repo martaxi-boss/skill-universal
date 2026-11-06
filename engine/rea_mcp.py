@@ -24,6 +24,7 @@ METHODS = frozenset(("tools/list", "tools/call"))
 def validate_requests(value):
     if not isinstance(value, list) or not value or len(value) > 30:
         raise ValueError("REA MCP requests must be a nonempty list of at most 30 entries")
+    admitted_names = None
     for item in value:
         if not isinstance(item, dict) or set(item) - {"method", "params"}:
             raise ValueError("Invalid REA MCP request fields")
@@ -40,6 +41,13 @@ def validate_requests(value):
                 raise ValueError("Invalid REA MCP tool name")
             if not isinstance(params["arguments"], dict):
                 raise ValueError("REA MCP tool arguments must be JSON object")
+            # Dispatch only names admitted in the SINGLE Ferrari catalog.
+            # The underlying REA server can advertise optional commercial tools.
+            if admitted_names is None:
+                doc = json.loads((Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+                admitted_names = set(doc["mcp_capabilities"]["names"])
+            if name not in admitted_names:
+                raise ValueError("REA MCP tool not admitted by Ferrari single catalog")
         elif set(params) - {"cursor"}:
             raise ValueError("Invalid tools/list params")
         elif "cursor" in params and (not isinstance(params["cursor"], str)
@@ -98,9 +106,9 @@ def _resources(root: Path):
     })
     # Do not inherit external Hopper paths from the VPS environment.
     env.pop("HOPPER_LAUNCHER_PATH", None)
-    hopper = _private_hopper_launcher(root)
-    if hopper is not None:
-        env["HOPPER_LAUNCHER_PATH"] = hopper
+    # Hopper demo has paid full-function licensing and is deliberately not
+    # enabled as an automatic REA provider in Ferrari's free-only policy.
+    # The existing files remain untouched for safe cross-project isolation.
     return cli, env
 
 
