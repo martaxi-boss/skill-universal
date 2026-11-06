@@ -14,12 +14,12 @@
 
 | Registo lógico no catálogo | Quantidade | Significado |
 | --- | ---: | --- |
-| Ferramentas distintas (união sem duplicados) | 176 | Inclui candidatos ainda não instalados |
+| Ferramentas distintas (união sem duplicados) | 174 | Inclui candidatos ainda não instalados |
 | Ferramentas da base histórica | 71 | Metadados preservados |
 | Candidatos Ubuntu selecionados | 56 | Metadados de compatibilidade, sem assumir instalação |
-| Projetos de origem/repositórios | 125 | Descoberta de upstreams, não binários instalados |
+| Projetos de origem/repositórios | 123 | Descoberta de upstreams, não binários instalados |
 | Ações tipadas do Ferrari | 40 | Adaptadores existentes, sem aumentar permissões |
-| Fornecedores admitidos sem custo obrigatório | 8 | 2 locais e 6 cloud free-tier, sujeitos a configuração/verificação; 4 fornecedores sem garantia de gratuitidade retirados |
+| Fornecedores open source locais admitidos | 2 | ImageMagick e SVG; seis clouds fechadas retiradas, sem substituição funcional idêntica |
 | Runtimes partilhados inicialmente identificados | 3 | Python 3.12, Node 22 e JDK 25; presença e compatibilidade reportadas separadamente |
 | Executáveis privados com caminho registado | 22 | Caminhos definidos no mesmo catálogo, sem fallback global |
 | Grupos de comandos CLI privados | 26 | Alias e comandos agrupados numa única fonte |
@@ -45,16 +45,18 @@ Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no 
 
 ## Vista integral do ÚNICO catálogo — 06/11/2026
 
-- **396 entradas com nomes registados:** 176 programas/identificadores Ferrari + 220 capacidades MCP do REA original (de 229 anunciadas; 9 bloqueadas). São tipos de entrada diferentes e não 396 binários instalados.
+- **394 entradas com nomes registados:** 174 programas/identificadores Ferrari + 220 capacidades MCP do REA original (de 229 anunciadas; 9 bloqueadas). São tipos de entrada diferentes e não 394 binários instalados.
 - **Uma única fonte persistente:** engine/catalog.json. Não criar outro inventário fonte, outro catálogo MCP ou outro motor; engine/tool_runtime.py gera a vista de leitura.
 - **Ubuntu 24.04 LTS:** programas incompatíveis ou com licença obrigatoriamente paga são recusados; entradas upstream não verificadas continuam explicitamente como candidatas SEM permissão de execução automática. Não inferir compatibilidade do Ubuntu de um README genérico.
-- **Fornecedores admitidos:** apenas opções locais livres e candidatos cloud declarados free-tier sem ativação de modalidade paga. Os antigos host-model, huggingface-inference, nvidia-nim-dev e pollinations foram retirados dos fornecedores admitidos porque não havia garantia suficiente de ausência de custo obrigatório. Não são apagados do histórico Git. Nenhum fornecedor cloud é ligado ou cobrado automaticamente.
+- **Fornecedores admitidos:** só ImageMagick local (open source) e SVG local (built-in). Seis serviços cloud fechados, embora com tier gratuito, foram retirados por não possuírem substitutos livres integralmente equivalentes. Nenhum fornecedor cloud faz parte do catálogo ativo. As entradas de `nmap` (licença NPSL e substituto Naabu não equivalente em funcionalidades) e `vscode` (distribuição Microsoft não equivalente a Code-OSS/VSCodium) também foram retiradas. Mantêm-se ferramentas originalmente open source como Ghidra, JADX e AOSP. As nove operações JEB/Hopper continuam apenas na lista de exclusão, nunca como capacidades selecionáveis.
 - **Ações tipadas:** 40 adaptadores existentes continuam a usar este mesmo ficheiro. A escolha automática de ações não passa a executar arbitrariamente as 220 subferramentas admitidas do REA: requer contratos de parâmetros corretos e validação específica.
 - **Dependências físicas:** só 3 runtimes comuns estão descritos com identificação reutilizável (Python, Node, Java); Python venv, npm, CLI e contentores privados são inspecionados na mesma vista. Isto não significa que as bibliotecas transitivas de todos os programas estejam completamente inventariadas. A lista detalhada de dependências e compatibilidade ABI continua sujeita à reconciliação física; nada foi reinstalado ou eliminado do Ubuntu.
 - **Via operacional existente:** pedido {"version":1,"id":"novo-id","kind":"inventory"} através de Skill → GitHub → VPS; após ativar a nova release devolve no mesmo response.zip tanto artifacts/inventory.json como artifacts/catalog.json. O validador pinado de pedidos e o SSH não precisam de novo tipo de pedido nem de alterações.
 - **REA vivo:** a vista consulta tools/list de forma só de leitura, sem lançar tools/call nem acionar fornecedores pagos. Reporta "rea_in_sync", "rea_catalog_drift" ou "rea_unavailable"; um nome registado mas não observado não é apresentado como executável.
 - **Fase 9:** oito pacotes APT globais antigos permanecem preservados; não fazer purga por semelhança de nomes nem tocar nos projetos independentes.
 
-**Porta de certificação — CONCLUÍDA para catálogo e transporte:** [PR #105](https://github.com/martaxi-boss/skill-universal/pull/105) e [PR #106](https://github.com/martaxi-boss/skill-universal/pull/106) integradas; [VPS #42276080241](https://github.com/martaxi-boss/VPS/actions/runs/42276080241) ativou release privada com rollback e 8/8 serviços; [Skill→ZIP #42276249154](https://github.com/martaxi-boss/VPS/actions/runs/42276249154) devolveu 396 entradas, 220 MCP observadas, 229 anunciadas, 9 bloqueadas, 40 ações disponíveis e ImageMagick/SVG locais ativados. **Não é certificação de 396 operações:** apenas três runtimes centrais têm entradas de dependências partilhadas; bibliotecas transitivas e Fase 9 continuam pendentes.
+**Certificação histórica da release 396 — NÃO certifica a nova limpeza 394:** [PR #105](https://github.com/martaxi-boss/skill-universal/pull/105) e [PR #106](https://github.com/martaxi-boss/skill-universal/pull/106) integradas; [VPS #42276080241](https://github.com/martaxi-boss/VPS/actions/runs/42276080241) ativou release privada com rollback e 8/8 serviços; [Skill→ZIP #42276249154](https://github.com/martaxi-boss/VPS/actions/runs/42276249154) devolveu 396 entradas na versão anterior, 220 MCP observadas, 229 anunciadas, 9 bloqueadas, 40 ações disponíveis e ImageMagick/SVG locais ativados. **Não é certificação de 396 operações:** apenas três runtimes centrais têm entradas de dependências partilhadas; bibliotecas transitivas e Fase 9 continuam pendentes.
 
 **Exclusões comerciais/demo:** `inspect_jeb_client`, `open_jeb_project`, `list_jeb_units`, `decompile_jeb_item` (JEB comercial) e `current_address`, `current_procedure`, `current_document`, `goto_address`, `list_bookmarks` (GUI do Hopper demo). Estas nove operações continuam publicadas na fonte original do REA, mas NÃO são admitidas pelo Ferrari. O motor recusa as nove em `tools/call`, ignora-as como exclusões esperadas no `tools/list` e não ativa o fornecedor Hopper demo. A instalação REA permanece intacta; não houve remoção física de outro projeto.
+
+**Nova política (06/11/2026):** a revisão do catálogo com 394 entradas requer CI e readback na VPS antes de ser declarada ativa. As 69 candidatas originais não foram certificadas ou eliminadas em massa por ausência de evidência; apenas os dois casos acima foram removidos, ficando 67 candidatas. Não remover programas instalados nem dependências sem auditoria de consumidores.
