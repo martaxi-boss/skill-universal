@@ -1,6 +1,6 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
-**Estado verificado em 06/11/2026:** release ativa Ferrari `f1f3b03525adec7018d7d629243e7b0fbb7f5087`; F7 anterior `758e1b435317fa26277b332b75bc47c67910be81` preservada como rollback. [Ativação #42145587073](https://github.com/martaxi-boss/VPS/actions/runs/42145587073) e [OpenPencil→ZIP real #42145727316](https://github.com/martaxi-boss/VPS/actions/runs/42145727316) PASS. O validador da Skill permanece pinado em `292aeb7d10eecef8c3ca84760cd579e84e4b97f3`; nenhuma alteração na ponte ou no SSH. Fases anteriores F6/F7 e DAG conservam as provas históricas. Consultar [BOOTSTRAP](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md).
+**Estado verificado em 06/11/2026, 17h50 UTC:** release Ferrari ativa `7776a34e667d76ae0e980e65449d2b2cc67c2059`, fallback `fe1bb6e7073fdd8a963963909127cde6d570f253` preservado ([ativação VPS #42263466893](https://github.com/martaxi-boss/VPS/actions/runs/42263466893)). O único catálogo é `engine/catalog.json` (176 ferramentas lógicas, 40 ações tipadas, REA MCP descoberto dinamicamente). A ponte original `martaxi-boss/VPS` continua a validar pedidos com a revisão **pinada** `0b50e1d403deff8f3ccb421edd0b41c397d66b9b` e a executar a release ativa na VPS: [Skill→ZIP #42263667753](https://github.com/martaxi-boss/VPS/actions/runs/42263667753) e [novo inventário #42265187873](https://github.com/martaxi-boss/VPS/actions/runs/42265187873) PASS. O pin histórico `f1f3b03525adec7018d7d629243e7b0fbb7f5087` já não é o do validador. **Não alterar pin/SSH nem confundir GitHub HEAD com release ativa.** Consultar [BOOTSTRAP](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md).
 
 **Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
@@ -38,7 +38,7 @@ Plano com duas etapas dependentes, processado pelo orquestrador **Ferrari já ex
 
 Um plano com ficheiro de entrada pode usar input codificado de topo e "$input" no passo apropriado; para consumir um resultado anterior, depends_on e input_from. Não aceitar caminhos absolutos da VPS ou scripts arbitrários vindos do utilizador.
 
-**A versão com kind=plan está demonstrada remotamente:** [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416). Para operações simples, ver [Skill #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249), inventário com ZIP PASS. Consultar engine/ferrari.py e engine/tool_actions.json para capacidades exatas, em vez de uma lista de ações antiga neste documento.
+**A versão com kind=plan está demonstrada remotamente:** [run #41620077416](https://github.com/martaxi-boss/VPS/actions/runs/41620077416). Para operações simples, ver [Skill #41672372249](https://github.com/martaxi-boss/VPS/actions/runs/41672372249), inventário com ZIP PASS. Consultar engine/ferrari.py e engine/catalog.json para capacidades exatas, em vez de uma lista de ações antiga neste documento.
 
 ## REA original MCP através da mesma Skill Ferrari
 
