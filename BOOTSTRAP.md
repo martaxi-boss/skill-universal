@@ -2,11 +2,13 @@
 
 **Estado de referência: 06/11/2026 UTC.** Fonte canónica do estado e dos limites; números e versões têm de ser associados à execução que os mediu. Plano de fecho: [fases 5–10](docs/PLANO_FECHO_FERRARI_20261105.md). O resultado de CI não substitui um teste operacional na VPS.
 
-**Ponto 1 OpenPencil — FECHADO (06/11):** release `a266b25e06a9c8acf1fdc940d22b99070cd17ded` ativa; [VPS #42145587073](https://github.com/martaxi-boss/VPS/actions/runs/42145587073) 293 testes, 40/40; [Skill→ZIP #42145727316](https://github.com/martaxi-boss/VPS/actions/runs/42145727316) HTML→FIG/SVG/HTML PASS. Cliente ChatGPT no fecho geral.
+**Ponto 1 — OpenPencil (06/11):** release `a266b25e06a9c8acf1fdc940d22b99070cd17ded` ativa; [Skill→ZIP #42145727316](https://github.com/martaxi-boss/VPS/actions/runs/42145727316) FIG/SVG/HTML PASS. Cliente ChatGPT atualiza-se no fecho geral.
 
-**Ponto 2 ComfyUI — CPU PASS (06/11):** SD 1.5 SafeTensors privado; [VPS #42149365272](https://github.com/martaxi-boss/VPS/actions/runs/42149365272) gerou PNG real 256×256 em 91,25 s, cgroup 5 GiB/150% CPU, sem GPU. [Higiene #42149831403](https://github.com/martaxi-boss/VPS/actions/runs/42149831403) removeu TinySD incompatível (1,06 GB); [detalhes](docs/COMFYUI_PONTO2_CPU.md). Cliente ChatGPT no fecho geral.
+**Ponto 2 — ComfyUI CPU (06/11):** [PNG real #42149365272](https://github.com/martaxi-boss/VPS/actions/runs/42149365272) 256×256 PASS; [higiene #42149831403](https://github.com/martaxi-boss/VPS/actions/runs/42149831403) retirou TinySD incompatível. [Prova](docs/COMFYUI_PONTO2_CPU.md).
 
-**Ponto 3 faster-whisper — CPU PASS (06/11):** tiny MIT multilingue privado SHA256 PASS; [VPS #42170510453](https://github.com/martaxi-boss/VPS/actions/runs/42170510453) transcreveu áudio inglês de 11 s para TXT/SRT/JSON em 2,24 s, pico 265 MiB, cgroup 2 GiB. [Prova](docs/FASTER_WHISPER_PONTO3_CPU.md); PyAV 19 compatibilizado sem novas dependências. Release e ponte intactas; português/Skill cliente no fecho.
+**Ponto 3 — faster-whisper CPU (06/11):** [ASR #42170510453](https://github.com/martaxi-boss/VPS/actions/runs/42170510453) áudio inglês 11 s → TXT/SRT/JSON PASS em 2,24 s, tiny MIT privado. [Prova](docs/FASTER_WHISPER_PONTO3_CPU.md).
+
+**Ponto 4 — Ruflo (06/11):** CLI MIT 3.71 privado [#42186639714](https://github.com/martaxi-boss/VPS/actions/runs/42186639714) PASS; rota/memória local [#42187084139](https://github.com/martaxi-boss/VPS/actions/runs/42187084139) PASS, mas memória iniciou daemon; [auditoria #42187338181](https://github.com/martaxi-boss/VPS/actions/runs/42187338181) confirmou zero processos Ruflo ativos. **Multiagentes NÃO certificados; Ruflo opcional**, sem segundo coordenador. [Detalhes](docs/RUFLO_PONTO4_20261106.md).
 
 **Histórico F7 (05/11):** release `758e1b435317fa26277b332b75bc47c67910be81`, F6 fallback `146145d5ada9c13e368df18727e4dbf4f5807664`, registo anterior `87969badbde0a77c2c181bb9605357d51a4a30c0`. [DAG #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995) PASS; 274 testes, 40/40 ações, 7/7 venvs, 47/56 candidatos. Ruflo multiagentes, quotas duras e F9–F10 continuam pendentes.
 
