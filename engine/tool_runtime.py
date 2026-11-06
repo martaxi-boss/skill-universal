@@ -80,9 +80,10 @@ def python_module_location(tool):
     return evidence["location"] if evidence else None
 
 def specs():
-    doc=json.loads((ROOT/"engine/tool_actions.json").read_text(encoding="utf-8"))
-    selected={x["id"] for x in json.loads((ROOT/"engine/ubuntu_selection.json").read_text())["tools"]}
-    legacy={x["id"] for x in json.loads((ROOT/"engine/catalog.json").read_text())["tools"]}
+    # The Ferrari has one authoritative catalog for tools, actions and dependencies.
+    doc=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    selected={x["id"] for x in doc["tools"] if "ubuntu" in x}
+    legacy={x["id"] for x in doc["tools"] if "core" in x}
     if doc.get("schema")!=1 or not isinstance(doc.get("actions"),list):
         raise ValueError("Invalid action manifest")
     result={}
@@ -198,8 +199,13 @@ def ferrari_source_presence(tool):
             "version":"v0.43.0","model_inference_tested":False}
 
 def inventory():
-    selected=json.loads((ROOT/"engine/ubuntu_selection.json").read_text())["tools"]
-    helpers=json.loads((ROOT/"engine/catalog.json").read_text())["tools"]
+    catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
+    selected=[x["ubuntu"] for x in sorted(
+        (x for x in catalog["tools"] if "ubuntu" in x),
+        key=lambda x:x["ubuntu_order"])]
+    helpers=[x["core"] for x in sorted(
+        (x for x in catalog["tools"] if "core" in x),
+        key=lambda x:x["core_order"])]
     defined=specs()
     ecosystems=runtime_discovery.discover()
     python=ecosystems["python"]["tools"]
