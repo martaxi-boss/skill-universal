@@ -4,7 +4,7 @@
 
 ## Arquitetura e projeto
 
-**Catálogo canónico:** `engine/catalog.json` (schema 2); 176 ferramentas lógicas, 40 ações tipadas, 12 fornecedores, três runtimes privados com estado distinto de presença/compatibilidade. REA `tools/list`/`tools/call` é dinâmico, não 229 instalações declaradas. [PR #100](https://github.com/martaxi-boss/skill-universal/pull/100) e [CI #42263227877](https://github.com/martaxi-boss/skill-universal/actions/runs/42263227877) PASS.
+**Catálogo canónico:** `engine/catalog.json` (schema 2); 176 ferramentas lógicas, 40 ações tipadas, oito fornecedores gratuitos/admitidos, três runtimes privados com estado distinto de presença/compatibilidade. REA `tools/list`/`tools/call` é dinâmico, não 229 instalações declaradas. [PR #100](https://github.com/martaxi-boss/skill-universal/pull/100) e [CI #42263227877](https://github.com/martaxi-boss/skill-universal/actions/runs/42263227877) PASS.
 
 ChatGPT/Codex interpreta o pedido → Skill Ferrari → GitHub autenticado `martaxi-boss/VPS` → workflow Ferrari existente → SSH existente → `/srv/projects/skill-universal/current` → motor/fornecedores/executores privados → `report.json` e `response.zip`.
 
@@ -48,4 +48,4 @@ O projeto Ferrari deve guardar programas, ferramentas, bibliotecas de aplicaçã
 Todos os pedidos públicos devem usar ficheiros sintéticos/públicos. Base64 não é encriptação: nunca publicar dados privados, tokens ou documentos do cliente no repositório VPS.
 
 
-**Complemento catálogo integral (06/11/2026, condicionado à ativação):** a fonte única engine/catalog.json contém 176 programas base e 229 nomes de capacidades do REA original obtidos pelo tools/list real [#42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831). A vista runtime é uma consulta, não um segundo catálogo: apenas os nomes observados no REA privado são marcados disponíveis. O catálogo integra oito fornecedores locais ou free-tier, mantém dependências privadas e devolve catalog.json junto de inventory.json no mesmo kind=inventory, sem alterar SSH ou o validador pinado. CI e deploy separados ainda são exigidos para afirmar que esta revisão está ativa.
+**Complemento catálogo integral (06/11/2026, condicionado à ativação):** a fonte única engine/catalog.json contém 176 programas base e 220 nomes de capacidades REA admitidas dos 229 obtidos pelo tools/list real (9 JEB/Hopper demo excluídos) [#42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831). A vista runtime é uma consulta, não um segundo catálogo: apenas os nomes observados no REA privado são marcados disponíveis. O catálogo integra oito fornecedores locais ou free-tier, mantém dependências privadas e devolve catalog.json junto de inventory.json no mesmo kind=inventory, sem alterar SSH ou o validador pinado. CI e deploy separados ainda são exigidos para afirmar que esta revisão está ativa.
