@@ -76,7 +76,7 @@ class F9FinalAptAuditTests(unittest.TestCase):
         def present(argv,timeout=40):
             if argv[:2]==["dpkg","-s"]:
                 return SimpleNamespace(returncode=0,
-                                       stdout="Package: yt-dlp\\nStatus: install ok installed\\n")
+                                       stdout="Status: install ok installed")
             if argv[:2]==["dpkg-query","-W"]:
                 return SimpleNamespace(returncode=0,stdout="install ok installed")
             raise AssertionError(argv)
