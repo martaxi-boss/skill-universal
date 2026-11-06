@@ -80,23 +80,24 @@ def check(key: str) -> dict:
     require(archive.is_file() and not archive.is_symlink(), "F9_GUI_ARCHIVE_MISSING:" + key)
     require(archive.stat().st_size == a["size"] and hash_file(archive) == a["sha256"],
             "F9_GUI_ARCHIVE_DIGEST_MISMATCH:" + key)
-    run = home / "squashfs-root" / "AppRun"
-    require(run.is_file() and os.access(run, os.X_OK), "F9_GUI_APPRUN_NOT_EXECUTABLE:" + key)
+    run = (archive if key == "synfig" else home / "squashfs-root" / "AppRun")
+    require(run.is_file() and os.access(run, os.X_OK), "F9_GUI_EXECUTOR_NOT_EXECUTABLE:" + key)
     require(run.resolve(strict=True).is_relative_to(home.resolve(strict=True)),
-            "F9_GUI_APPRUN_ESCAPED:" + key)
+            "F9_GUI_EXECUTOR_ESCAPED:" + key)
     manifest = home / "manifest.json"
     require(manifest.is_file() and not manifest.is_symlink() and manifest.stat().st_size < 4096,
             "F9_GUI_MANIFEST_MISSING:" + key)
     doc = json.loads(manifest.read_text(encoding="utf-8"))
     require(doc == {"key": key, "version": a["version"], "url": url(key),
                     "sha256": a["sha256"], "bytes": a["size"],
-                    "certification": "download_sha256_and_appimage_extraction_only",
+                    "certification": ("download_sha256_only_type1" if key == "synfig"
+                                      else "download_sha256_and_appimage_extraction_only"),
                     "gui_runtime_certified": False},
             "F9_GUI_MANIFEST_MISMATCH:" + key)
     return {"status": "private_appimage_verified", "tool": key,
             "appimage_bytes": a["size"], "appimage_sha256": a["sha256"],
             "private_path": str(run), "gui_runtime_certified": False,
-            "global_apt_changed": False}
+            "extraction_verified": key != "synfig", "global_apt_changed": False}
 
 def fetch(key: str, to: Path) -> None:
     a = ASSETS[key]
@@ -128,26 +129,34 @@ def install(key: str) -> dict:
         pkg.mkdir(mode=0o700)
         archive = pkg / a["filename"]
         fetch(key, archive)
-        # Extract on the project's private filesystem, no host FUSE mount.
-        env = os.environ.copy()
-        env.update({"HOME": str(staging), "TMPDIR": str(staging),
-                    "XDG_CACHE_HOME": str(staging), "QT_QPA_PLATFORM": "offscreen"})
-        try:
-            result = subprocess.run([str(archive), "--appimage-extract"], cwd=pkg,
-                                    env=env, capture_output=True, text=True, timeout=240,
-                                    check=False)
-        except subprocess.TimeoutExpired as exc:
-            raise RuntimeError("F9_GUI_APPIMAGE_EXTRACT_TIMEOUT:" + key) from exc
-        require(result.returncode == 0, "F9_GUI_APPIMAGE_EXTRACT_FAILED:" + key +
-                ":" + (result.stderr or result.stdout)[-200:])
-        apprun = pkg / "squashfs-root" / "AppRun"
-        require(apprun.is_file() and os.access(apprun, os.X_OK),
-                "F9_GUI_EXTRACTED_APPRUN_MISSING:" + key)
-        require(apprun.resolve(strict=True).is_relative_to(pkg.resolve(strict=True)),
-                "F9_GUI_EXTRACTED_APPRUN_ESCAPED:" + key)
+        # Synfig's official Type-1 AppImage does not support --appimage-extract:
+        # that option launches the GTK app, which fails on a headless VPS.
+        # Keep the original verified executable without claiming GUI certification.
+        if key == "synfig":
+            require(archive.open("rb").read(4) == b"\x7fELF",
+                    "F9_GUI_TYPE1_NOT_ELF:" + key)
+        else:
+            # Extract on the project's private filesystem, no host FUSE mount.
+            env = os.environ.copy()
+            env.update({"HOME": str(staging), "TMPDIR": str(staging),
+                        "XDG_CACHE_HOME": str(staging), "QT_QPA_PLATFORM": "offscreen"})
+            try:
+                result = subprocess.run([str(archive), "--appimage-extract"], cwd=pkg,
+                                        env=env, capture_output=True, text=True, timeout=240,
+                                        check=False)
+            except subprocess.TimeoutExpired as exc:
+                raise RuntimeError("F9_GUI_APPIMAGE_EXTRACT_TIMEOUT:" + key) from exc
+            require(result.returncode == 0, "F9_GUI_APPIMAGE_EXTRACT_FAILED:" + key +
+                    ":" + (result.stderr or result.stdout)[-200:])
+            apprun = pkg / "squashfs-root" / "AppRun"
+            require(apprun.is_file() and os.access(apprun, os.X_OK),
+                    "F9_GUI_EXTRACTED_APPRUN_MISSING:" + key)
+            require(apprun.resolve(strict=True).is_relative_to(pkg.resolve(strict=True)),
+                    "F9_GUI_EXTRACTED_APPRUN_ESCAPED:" + key)
         data = {"key": key, "version": a["version"], "url": url(key),
                 "sha256": a["sha256"], "bytes": a["size"],
-                "certification": "download_sha256_and_appimage_extraction_only",
+                "certification": ("download_sha256_only_type1" if key == "synfig"
+                                  else "download_sha256_and_appimage_extraction_only"),
                 "gui_runtime_certified": False}
         (pkg / "manifest.json").write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
         require(not target.exists() and not target.is_symlink(), "F9_GUI_CONCURRENT_TARGET:" + key)

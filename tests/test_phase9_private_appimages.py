@@ -136,6 +136,33 @@ class FerrariPhase9AppimageTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "MANIFEST_MISMATCH"):
                     mod.check("librecad")
 
+    def test_synfig_type1_records_hash_only_without_extraction_claim(self):
+        payload = b"\x7fELFfake-type1-appimage"
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "skill-universal"
+            tools, runtime = root / "tools", root / ".runtime"
+            tools.mkdir(parents=True)
+            runtime.mkdir()
+            a = {**mod.ASSETS["synfig"], "size": len(payload),
+                 "sha256": hashlib.sha256(payload).hexdigest()}
+            def fake_fetch(key, dst):
+                dst.write_bytes(payload)
+                dst.chmod(0o700)
+            with patch.object(mod, "ROOT", root), patch.object(mod, "TOOLS", tools), \
+                 patch.object(mod, "RUNTIME", runtime), patch.object(mod, "guard"), \
+                 patch.dict(mod.ASSETS, {"synfig": a}), \
+                 patch.object(mod, "fetch", side_effect=fake_fetch), \
+                 patch.object(mod.subprocess, "run") as extraction:
+                result = mod.install("synfig")
+                self.assertEqual(result["status"], "private_appimage_verified")
+                self.assertFalse(result["extraction_verified"])
+                self.assertFalse(result["gui_runtime_certified"])
+                self.assertTrue(result["private_path"].endswith(a["filename"]))
+                extraction.assert_not_called()
+                self.assertEqual(mod.check("synfig"), result)
+                self.assertEqual(list(runtime.iterdir()), [])
+
+
 
 if __name__ == "__main__":
     unittest.main()
