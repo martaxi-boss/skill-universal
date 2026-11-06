@@ -87,8 +87,9 @@ exe = (payload / data["obs_relative_exe"]).resolve(strict=True)
 if not exe.is_file() or not exe.is_relative_to(payload.resolve(strict=True)):
     raise SystemExit("F9_OBS_EXECUTABLE_ESCAPED")
 env = os.environ.copy()
-dirs = ("opt/obs-studio/lib", "opt/obs-studio/lib64", "usr/lib",
-        "usr/lib/x86_64-linux-gnu", "usr/local/lib")
+dirs = ("usr/local/lib/x86_64-linux-gnu", "opt/obs-studio/lib",
+        "opt/obs-studio/lib64", "usr/lib", "usr/lib/x86_64-linux-gnu",
+        "usr/local/lib")
 local = [str(payload / p) for p in dirs if (payload / p).is_dir()]
 if local:
     env["LD_LIBRARY_PATH"] = ":".join(local)
@@ -120,6 +121,7 @@ def check() -> dict:
     return {"status": "private_obs_package_verified", "package_sha256": SHA256,
             "version": VERSION, "private_path": str(launcher),
             "cli_version_tested": bool(info.get("cli_version_tested", False)),
+            "private_libobs_linked": bool(info.get("private_libobs_linked", False)),
             "gui_runtime_certified": False,
             "websocket_studio_certified": False,
             "dependency_isolation_certified": False,
