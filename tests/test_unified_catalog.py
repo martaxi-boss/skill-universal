@@ -194,7 +194,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(result["source"], "engine/catalog.json")
 
     def test_base_operations_require_an_owner_in_same_catalog(self):
-        modified = copy.deepcopy(self.doc)
+        modified = json.loads((ROOT / "engine/catalog.json").read_text(encoding="utf-8"))
         modified["functions"] = [
             item for item in modified["functions"] if item["id"] != "operation:svg-poster"
         ]
@@ -216,7 +216,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         fake_inventory = {"selected": 55, "registered_actions": 40, "programs": [],
                           "ecosystems": {}, "shared_dependencies": []}
         fake_catalog = {"source": "engine/catalog.json",
-                        "counts": {"all_catalog_entries": 393}}
+                        "counts": {"all_catalog_entries": 450}}
         with tempfile.TemporaryDirectory() as td:
             output = Path(td) / "job"
             with patch.object(tool_runtime, "inventory", return_value=fake_inventory):
