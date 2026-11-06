@@ -1,12 +1,12 @@
 # Motor Ferrari — Skill Universal Ubuntu
 
-**Estado revisto em 05/11/2026.** Uma única Skill e um único motor/orquestrador Ubuntu privado. O ChatGPT ou Codex interpreta pedidos; o Ferrari seleciona os executores reais, trabalha na VPS e devolve um relatório e ZIP. Não confundir com Engenharia Reversa antiga, Project Leader ou os outros projetos.
+**Estado revisto em 06/11/2026.** Uma única Skill e um único motor/orquestrador Ubuntu privado. O ChatGPT ou Codex interpreta pedidos; o Ferrari seleciona os executores reais, trabalha na VPS e devolve um relatório e ZIP. Não confundir com Engenharia Reversa antiga, Project Leader ou os outros projetos.
 
 **[BOOTSTRAP canónico, provas e pendências](BOOTSTRAP.md)** — ponto de verdade atual. Os relatórios de docs/ e commits antigos descrevem datas históricas e não substituem uma auditoria recente.
 
 ## Estado confirmado
 
-- **Ferrari Fase 7 ativo na VPS:** release `758e1b435317fa26277b332b75bc47c67910be81`, fallback F6 `146145d5ada9c13e368df18727e4dbf4f5807664`, ambas dentro de `/srv/projects/skill-universal/`. [Ativação #42098645092](https://github.com/martaxi-boss/VPS/actions/runs/42098645092), [DAG persistente #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995), [Skill→ZIP #42099036932](https://github.com/martaxi-boss/VPS/actions/runs/42099036932) e [saúde #42099108182](https://github.com/martaxi-boss/VPS/actions/runs/42099108182): **PASS**, 40/40 ações privadas. [Certificado F7](docs/CERTIFICACAO_FASE7_20261105.md) e [desinstalação isolada](docs/DESINSTALACAO_ISOLADA_FERRARI.md).
+- **Release ativa Ferrari — 06/11:** `a266b25e06a9c8acf1fdc940d22b99070cd17ded`, anterior F7 `758e1b435317fa26277b332b75bc47c67910be81` preservada para rollback. [VPS #42145587073](https://github.com/martaxi-boss/VPS/actions/runs/42145587073) 293 testes e 40/40; [Skill→ZIP #42145727316](https://github.com/martaxi-boss/VPS/actions/runs/42145727316) HTML→FIG/SVG/HTML PASS. Fases F7 e F8 anteriores mantêm as respetivas certificações históricas.
 
 - **Código Ferrari histórico:** commit **b2869e334d9d68a0c988905e71ce0badec6ba359**, anterior às atualizações,  CI [#41922781312](https://github.com/martaxi-boss/skill-universal/actions/runs/41922781312) SUCCESS. Inclui o integrador do Hopper oficial 6.6.1.
 - **VPS isolada:** /srv/projects/skill-universal/, com .runtime/, runtimes/, tools/, releases/ e current dentro do projeto. O antigo link /home/ubuntu/.local/share/motor-ferrari foi retirado após migração dos launchers (merge 292aeb7d). A revisão exata de current deve ser lida na VPS.
