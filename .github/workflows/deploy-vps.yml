@@ -30,6 +30,16 @@ jobs:
       - name: Validate code on Ubuntu runner
         run: |
           set -euo pipefail
+          # Same isolated test fixtures as ci.yml: only on the disposable GitHub runner.
+          # No fixture, package or dependency is installed globally on the VPS.
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/bin
+          for exe in strings file jq; do
+            sudo install -m 0755 "$(command -v "$exe")" "/srv/projects/skill-universal/tools/ubuntu-cli/bin/$exe"
+          done
+          sudo install -d -m 0755 /srv/projects/skill-universal/tools/ubuntu-cli/share
+          magic="$(find /usr/share/misc /usr/lib/file -maxdepth 2 -name magic.mgc -print -quit 2>/dev/null)"
+          test -n "$magic" && test -f "$magic"
+          sudo cp -L "$magic" /srv/projects/skill-universal/tools/ubuntu-cli/share/magic.mgc
           python3 -m unittest discover -s tests -v
           bash -n install/vps-preflight.sh
           bash -n install/ferrari-ubuntu.sh
