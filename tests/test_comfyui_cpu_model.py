@@ -59,6 +59,22 @@ class ComfyModelTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 state["download"]("../../secret",Path(d)/"evil",expected_sha=None,expected_size=None)
 
+    def test_standard_sd15_unet_compatible_model_is_pinned(self):
+        file=ROOT/"install/vps-comfyui-sd15-fp16-model.py"
+        source=file.read_text()
+        compile(source,str(file),"exec")
+        self.assertIn("f03de327dd89b501a01da37fc5240cf4fdba85a1",source)
+        self.assertIn("c83908253f9a64d08c25fc90874c9c8aef9a329ce1ca5fb909d73b0c83d1ea21",source)
+        self.assertIn("77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",source)
+        self.assertIn("4fbcf0ebe55a0984f5a5e00d8c4521d52359af7229bb4d81890039d2aa16dd7c",source)
+        self.assertIn("models/diffusers",source)
+        self.assertNotIn("apt-get",source)
+        self.assertNotIn("pip install",source)
+        self.assertNotIn("pickle",source.lower().replace("pickle weights",""))
+        smoke=SMOKE.read_text()
+        self.assertIn('sd15-fp16-f03de327',smoke)
+        self.assertNotIn('segmind-tiny-sd-3d25de3',smoke)
+
     def test_cpu_smoke_requires_cgroup_and_real_model_png(self):
         code=SMOKE.read_text()
         self.assertIn("memory.max",code)
@@ -69,7 +85,7 @@ class ComfyModelTests(unittest.TestCase):
         self.assertLess(code.index("comfy.options.enable_args_parsing()"),code.index("    import nodes"))
         self.assertIn("VAEDecode",code)
         self.assertIn("OUTPUT.mkdir",code)
-        self.assertIn("comfyui-tiny-sd-proof.png",code)
+        self.assertIn("comfyui-sd15-proof.png",code)
         self.assertNotIn("pip install",code)
         compile(code,str(SMOKE),"exec")
 
