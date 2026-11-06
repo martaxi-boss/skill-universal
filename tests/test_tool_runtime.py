@@ -6,9 +6,9 @@ from unittest.mock import patch
 from engine import tool_runtime, orchestrator
 
 class ToolRuntimeTests(unittest.TestCase):
-    def test_56_selected_and_25_action_specs(self):
+    def test_55_selected_and_40_action_specs(self):
         x=tool_runtime.inventory()
-        self.assertEqual(x["selected"],56)
+        self.assertEqual(x["selected"],55)
         self.assertEqual(x["registered_actions"],40)
         self.assertEqual(len(x["programs"]),len(set(p["id"] for p in x["programs"])))
         self.assertTrue(any(p["id"]=="rea" for p in x["programs"]))
