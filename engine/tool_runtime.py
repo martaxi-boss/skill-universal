@@ -351,7 +351,10 @@ def unified_catalog(*, inventory_now=None):
             "inputSchema": tool.get("inputSchema", {}) if tool else {},
             "installed_separately": False,
         })
-    unexpected = sorted(set(observed) - set(expected))
+    excluded_paid = sorted(name for name in observed if any(
+        provider_id in name.split("_")
+        for provider_id in parent.get("excluded_paid_provider_ids", [])))
+    unexpected = sorted(set(observed) - set(expected) - set(excluded_paid))
     missing = sorted(set(expected) - set(observed)) if mcp_error is None else []
     status = ("rea_unavailable" if mcp_error else
               "rea_catalog_drift" if unexpected or missing else "rea_in_sync")
@@ -366,6 +369,7 @@ def unified_catalog(*, inventory_now=None):
         "programs": len(doc["tools"]), "rea_mcp_capabilities": len(expected),
         "all_catalog_entries": len(entries),
         "rea_mcp_discovered_now": len(observed),
+        "rea_mcp_paid_excluded_now": len(excluded_paid),
         "programs_installed_now": sum(1 for p in entries if p["kind"] == "program" and p["installed"]),
         "programs_callable_now": sum(1 for p in entries if p["kind"] == "program" and p["selectable"]),
         "actions_registered": len(actions),
@@ -379,7 +383,8 @@ def unified_catalog(*, inventory_now=None):
         "source": "engine/catalog.json", "schema": doc["schema"],
         "platform": doc["platform"], "admission_policy": doc["admission_policy"],
         "counts": counts, "rea": {
-            "status": status, "error": mcp_error, "unexpected_live_names": unexpected,
+            "status": status, "error": mcp_error, "excluded_paid_live_names": excluded_paid,
+            "unexpected_live_names": unexpected,
             "missing_live_names": missing, "verified_vps_workflow_run": parent.get("verified_vps_workflow_run")},
         "entries": entries, "actions": actions,
         "dependencies": shared_dependencies(doc),
