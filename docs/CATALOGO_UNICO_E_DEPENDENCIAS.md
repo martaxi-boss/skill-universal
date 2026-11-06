@@ -45,7 +45,7 @@ Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no 
 
 ## Vista integral do ÚNICO catálogo — 06/11/2026
 
-- **405 entradas com nomes registados:** 176 programas/identificadores Ferrari + 229 capacidades MCP do REA original. São tipos de entrada diferentes e não 405 binários instalados.
+- **401 entradas com nomes registados:** 176 programas/identificadores Ferrari + 229 capacidades MCP do REA original. São tipos de entrada diferentes e não 401 binários instalados.
 - **Uma única fonte persistente:** engine/catalog.json. Não criar outro inventário fonte, outro catálogo MCP ou outro motor; engine/tool_runtime.py gera a vista de leitura.
 - **Ubuntu 24.04 LTS:** programas incompatíveis ou com licença obrigatoriamente paga são recusados; entradas upstream não verificadas continuam explicitamente como candidatas SEM permissão de execução automática. Não inferir compatibilidade do Ubuntu de um README genérico.
 - **Fornecedores admitidos:** apenas opções locais livres e candidatos cloud declarados free-tier sem ativação de modalidade paga. Os antigos host-model, huggingface-inference, nvidia-nim-dev e pollinations foram retirados dos fornecedores admitidos porque não havia garantia suficiente de ausência de custo obrigatório. Não são apagados do histórico Git. Nenhum fornecedor cloud é ligado ou cobrado automaticamente.
@@ -55,4 +55,6 @@ Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no 
 - **REA vivo:** a vista consulta tools/list de forma só de leitura, sem lançar tools/call nem acionar fornecedores pagos. Reporta "rea_in_sync", "rea_catalog_drift" ou "rea_unavailable"; um nome registado mas não observado não é apresentado como executável.
 - **Fase 9:** oito pacotes APT globais antigos permanecem preservados; não fazer purga por semelhança de nomes nem tocar nos projetos independentes.
 
-**Porta de certificação:** PR CI PASS → release protegida na VPS com fallback → pedido real kind=inventory → confirmar 405 entradas, 229 MCP descobertas e 40 ações disponíveis, sem serviços externos afetados. Antes destas três provas, este texto descreve a implementação no GitHub, não a VPS ativa.
+**Porta de certificação:** PR CI PASS → release protegida na VPS com fallback → pedido real kind=inventory → confirmar 401 entradas, 229 MCP descobertas e 40 ações disponíveis, sem serviços externos afetados. Antes destas três provas, este texto descreve a implementação no GitHub, não a VPS ativa.
+
+**Exclusões comerciais verificadas:** `inspect_jeb_client`, `open_jeb_project`, `list_jeb_units` e `decompile_jeb_item`. O JEB é comercial; estas quatro capacidades do REA permanecem visíveis na fonte REA original, mas NÃO pertencem à seleção admitida pelo Ferrari. O motor recusa chamadas diretas a estes nomes e ignora-os como divergência esperada durante `tools/list`. Isto não altera ou remove a instalação REA existente.
