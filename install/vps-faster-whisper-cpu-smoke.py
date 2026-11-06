@@ -109,8 +109,30 @@ def main() -> int:
             cpu_threads=2,num_workers=1,local_files_only=True,
         )
         print("FERRARI_WHISPER_PRIVATE_MODEL_LOADED=PASS",flush=True)
+        # faster-whisper 1.2.1 requests an obsolete PyAV open() keyword;
+        # the Ferrari-private PyAV 19.0.2 decodes without it. Pass an
+        # in-memory PCM numpy array so transcribe() skips its old decoder.
+        import av
+        import numpy as np
+        from av.audio.resampler import AudioResampler
+        chunks=[]
+        with av.open(str(audio),mode="r") as container:
+            resampler=AudioResampler(format="s16",layout="mono",rate=16000)
+            for frame in container.decode(audio=0):
+                for chunk in resampler.resample(frame):
+                    chunks.append(chunk.to_ndarray().reshape(-1))
+            for chunk in resampler.resample(None):
+                chunks.append(chunk.to_ndarray().reshape(-1))
+        if not chunks:
+            raise RuntimeError("FERRARI_WHISPER_PYAV_DECODE_EMPTY")
+        samples=np.concatenate(chunks).astype(np.float32)/32768.0
+        if samples.ndim!=1 or samples.size<16000 or not np.isfinite(samples).all():
+            raise RuntimeError("FERRARI_WHISPER_PCM_INVALID")
+        if float(np.abs(samples).max())<0.005:
+            raise RuntimeError("FERRARI_WHISPER_PCM_SILENT")
+        print("FERRARI_WHISPER_PYAV19_PCM=PASS samples="+str(samples.size),flush=True)
         segments,info=model.transcribe(
-            str(audio),language="en",beam_size=1,
+            samples,language="en",beam_size=1,
             condition_on_previous_text=False,vad_filter=False,
             temperature=0.0,
         )
