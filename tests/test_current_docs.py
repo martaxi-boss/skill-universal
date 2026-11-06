@@ -109,6 +109,22 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn("OGR", report)
         self.assertIn("Não", report)
 
+    def test_librecad_private_dxf_pdf_certificate_is_not_gui_certification(self):
+        report = (ROOT / "docs/FASE9_LIBRECAD_DXF_PDF_CERT_20261106.md").read_text(encoding="utf-8")
+        for value in ("42310428893", "42311158545", "1 614", "pdfinfo",
+                      "Xvfb", "GUI", "25544619"):
+            self.assertIn(value, report)
+        for path in ("BOOTSTRAP.md", "README.md",
+                     "skill/motor-universal-linux/SKILL.md",
+                     "skill/motor-universal-linux/references/bootstrap.md"):
+            with self.subTest(path=path):
+                content = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("42311158545", content)
+                self.assertIn("LibreCAD", content)
+        script = (ROOT / "install/vps-f9-librecad-dxf2pdf-certify.py").read_text(encoding="utf-8")
+        self.assertIn('"gui_editing_certified": False', script)
+        self.assertIn('"preexisting_xvfb_qa_display": True', script)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
