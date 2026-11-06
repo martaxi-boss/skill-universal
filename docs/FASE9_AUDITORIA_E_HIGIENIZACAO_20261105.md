@@ -71,3 +71,10 @@ Comparação autenticada dos commits locais registados na auditoria da VPS com a
 - O workflow temporário de limpeza foi eliminado de `martaxi-boss/VPS` após PASS, no [commit 919a2e37](https://github.com/martaxi-boss/VPS/commit/919a2e37d74e40b7687e46686a44a0b5853c9d9c). O inventário normal foi restituído à versão sem código de diagnóstico no [commit 8b499556](https://github.com/martaxi-boss/VPS/commit/8b4995567499c24847306fc723e43f46f9885cf7).
 
 **Pendências F9 preservadas:** 16 pacotes APT de aplicações ainda globais, dos quais oito sem executor privado certificado; seis alterações locais rastreadas em `pink-iptv` e outras seis em `iptvpn-bot` ainda não preservadas em commits; prova de origem/release para as instalações sem Git worktree. É deliberado não resolver estes problemas com `apt purge` global ou `git reset --hard` sem alternativas, testes de consumidores e rollback. Não declarar a Fase 9 concluída.
+
+
+## Pós-verificação independente após higiene (06/11/2026)
+
+- [VPS read-only #42134629602](https://github.com/martaxi-boss/VPS/actions/runs/42134629602): workflow original de inventário **SUCCESS** após retirar código de diagnóstico e limpar as seis pastas vazias Hopper; `df -hT /` = **72G total, 30G usados, 42G livres**. Serviços `pink-iptv-backend`, `pink-vpn`, `fadego-staging`, `lowcost-europa`, `pm2-iptvpn-bot`, `pm2-telegram-robot-leads`, `nginx` e `postgresql@16-main` constam entre os ativos.
+- [Ferrari Skill → GitHub Actions → VPS → ZIP #42134719562](https://github.com/martaxi-boss/VPS/actions/runs/42134719562): execução **SUCCESS**; `report.json.status=completed`; `artifacts/inventory.json` verificado após descarga. Resultado: **40 ações registadas / 40 invocáveis, 47/56 candidatos privados detetados, 9 não detetados**. Nenhuma regressão de deteção observada após a limpeza.
+- **Critério F9 ainda não satisfeito:** programas APT globais de aplicação ainda presentes; alterações locais não commitadas no PINK e IPTV VPN Bot; algumas instalações sem worktree Git exigem prova de proveniência via releases. Nenhum `git reset`, deploy cruzado ou `apt purge` foi executado para contornar o bloqueio.
