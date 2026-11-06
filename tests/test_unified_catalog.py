@@ -144,6 +144,48 @@ class UnifiedCatalogTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Paid, cloud or closed-source"):
                     tool_runtime.unified_catalog(inventory_now={"programs": [], "ecosystems": {}})
 
+    def test_one_function_index_covers_every_integrated_ferrari_executor(self):
+        """REA is not a privileged category: everything is one typed index."""
+        fake_live = [{"name": name, "inputSchema": {"type": "object"}}
+                     for name in self.doc["mcp_capabilities"]["names"]]
+        with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
+            result = tool_runtime.unified_catalog(
+                inventory_now={"programs": [], "ecosystems": {}})
+        functions = result["functions"]
+        self.assertEqual(len(functions), 272)
+        self.assertEqual(result["counts"]["functions_registered"], 272)
+        self.assertEqual(result["counts"]["functions_from_base_operations"], 12)
+        self.assertEqual(result["counts"]["functions_from_typed_actions"], 40)
+        self.assertEqual(result["counts"]["functions_from_rea_mcp"], 220)
+        self.assertEqual(len({item["id"] for item in functions}), len(functions))
+        self.assertEqual(functions, sorted(functions,
+                          key=lambda item: (item["category"], item["id"])))
+        index = {item["id"]: item for item in functions}
+        self.assertEqual(index["operation:web-template"]["program"], "html-templates")
+        self.assertEqual(index["operation:svg-poster"]["program"], "svg")
+        self.assertEqual(index["invoke:ffmpeg-audio-wav"]["program"], "ffmpeg")
+        self.assertEqual(index["invoke:pandoc-md-docx"]["program"], "pandoc")
+        self.assertEqual(index["rea:inspect_elf_notes"]["program"], "rea")
+        self.assertTrue(index["operation:svg-poster"]["selectable"])
+        self.assertEqual({item["invocation"]["kind"] for item in functions},
+                         {"operation", "invoke", "rea-mcp"})
+        self.assertNotIn("certified", index["rea:inspect_elf_notes"])
+        self.assertEqual(result["source"], "engine/catalog.json")
+
+    def test_base_operations_require_an_owner_in_same_catalog(self):
+        modified = copy.deepcopy(self.doc)
+        svg = next(item for item in modified["tools"] if item["id"] == "svg")
+        svg.pop("base_operations")
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "catalog.json"
+            path.write_text(json.dumps(modified), encoding="utf-8")
+            with patch.object(tool_runtime, "CATALOG_PATH", path):
+                with patch.object(rea_mcp, "discover_tools", return_value=[]):
+                    with self.assertRaisesRegex(ValueError,
+                                                "base operations missing"):
+                        tool_runtime.unified_catalog(
+                            inventory_now={"programs": [], "ecosystems": {}})
+
     def test_existing_inventory_request_produces_unified_zip_no_new_bridge(self):
         self.assertIsNone(skill_job.validate_job(
             {"version": 1, "id": "catalog-read-001", "kind": "inventory"}))
