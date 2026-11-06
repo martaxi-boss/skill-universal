@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import unittest
 
-from engine import core, ferrari, tool_runtime
+from engine import catalog_registry, core, ferrari, tool_runtime
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "engine/catalog.json"
@@ -15,7 +15,7 @@ LEGACY = (
 class OneToolCatalogTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = json.loads(CATALOG.read_text(encoding="utf-8"))
+        cls.data = catalog_registry.read_catalog(CATALOG)
 
     def test_single_source_of_truth_with_original_evidence_preserved(self):
         doc = self.data
