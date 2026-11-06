@@ -202,11 +202,9 @@ def install()->dict:
     fs=os.statvfs(RUNTIME)
     require(fs.f_bavail*fs.f_frsize >= 3*1024**3,
             "F9_SIDECAR_INSUFFICIENT_PRIVATE_DISK")
-    created=False
     try:
         env=private_env()
         result=execute(conda_command(False),env,900)
-        created=SIDECAR.is_dir()
         require(result.returncode==0,
                 "F9_SIDECAR_PRIVATE_INSTALL_FAILED:"+
                 (result.stderr or result.stdout)[-320:])
@@ -228,7 +226,7 @@ def install()->dict:
         return check()
     except BaseException:
         # Rollback ONLY this new uniquely named prefix, no package/global cleanups.
-        if (created and SIDECAR.is_dir() and not SIDECAR.is_symlink()
+        if (SIDECAR.is_dir() and not SIDECAR.is_symlink()
                 and SIDECAR.resolve(strict=True).is_relative_to(TOOLS.resolve(strict=True))):
             shutil.rmtree(SIDECAR)
         raise
