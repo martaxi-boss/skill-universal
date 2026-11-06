@@ -22,6 +22,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def load_json(filename: str) -> dict:
+    if filename == "catalog.json":
+        from engine import catalog_registry
+        return catalog_registry.read_catalog()
     with (ROOT / "engine" / filename).open(encoding="utf-8") as f:
         return json.load(f)
 
