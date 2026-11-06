@@ -106,3 +106,22 @@ Comparação autenticada dos commits locais registados na auditoria da VPS com a
 **Higiene deste ponto:** retirar do GitHub, após a prova, apenas o workflow temporário `ferrari-p5-audit-once-20261106.yml` e os dois JSON sintéticos desta auditoria. O workflow normal de pedidos e o pin de SSH permanecem intactos. Não houve resíduos privados conhecidos a remover na VPS. 
 
 **Veredito P5:** alinhamento e isolamento **Ferrari-only verificados**; higiene sem resíduos de ensaio e sem regressões. **Fase 9 transversal ainda não encerrada**, precisamente porque faltam a classificação de consumidores dos 16 APT, um possível resíduo de transporte legado e as alterações locais de projetos alheios. Não confundir prudência com uma certificação de desinstalação ou com 100% da VPS higienizada.
+
+
+## Atualização certificada — 06/11/2026, após a F9 original
+
+Esta secção substitui as fotografias históricas acima; não interpretar afirmações antigas de «16/16 APT instalados» como estado atual.
+
+- [Auditoria de consumidores #42223369203](https://github.com/martaxi-boss/VPS/actions/runs/42223369203): 16 pacotes globais iniciais, 8/8 serviços ativos, oito projetos identificados e release Ferrari privada `f1f3b03525adec7018d7d629243e7b0fbb7f5087`.
+- [Simulação de remoção #42223857600](https://github.com/martaxi-boss/VPS/actions/runs/42223857600): o APT removeria exatamente `ansible`, `blender`, `calibre`, `darktable`, `gimp`, `kdenlive`, `libreoffice` e `openscad`, sem outros nomes. Os executores privados foram validados pelo motor (não confundir contagem de caminhos à mão com o catálogo real).
+- [Backup privado #42225749103](https://github.com/martaxi-boss/VPS/actions/runs/42225749103): oito pacotes originais com versão e SHA256 preservados dentro de `/srv/projects/skill-universal/.runtime/phase9-apt-eight-rollback-20261106`; nenhum pacote removido nesta etapa.
+- [Remoção controlada #42225950692](https://github.com/martaxi-boss/VPS/actions/runs/42225950692): **oito pacotes globais efetivamente retirados**, 40 ações Ferrari e 8/8 serviços preservados; sem `apt autoremove` e sem alterações aos outros projetos.
+- [Preservação das 12 alterações locais #42226572746](https://github.com/martaxi-boss/VPS/actions/runs/42226572746): seis no PINK IPTV e seis no IPTV VPN Bot; backups dentro do seu próprio Git local. Não foram feitos `git reset`, `merge` nem publicadas diferenças no repositório público.
+- [Backup dos legados #42227038594](https://github.com/martaxi-boss/VPS/actions/runs/42227038594) e [remoção #42227814089](https://github.com/martaxi-boss/VPS/actions/runs/42227814089): três raízes externas `/root/.cursor`, `/root/.vscode` e `/home/ubuntu/.local/share/rea-github-transport` eliminadas após verificação de proprietários/processos; arquivo mantido em `/srv/projects/VPS/.runtime/f9-legacy-snapshot-20261106`.
+- [Leitura independente final #42228102427](https://github.com/martaxi-boss/VPS/actions/runs/42228102427): **PASS**, 8/8 serviços ativos, oito projetos, oito APT restantes, três resíduos ausentes, Ferrari `f1f3b035` ativo, ambos os projetos com seis alterações locais intactas; 40,08 GiB livres. REA e Ruflo privados detetados.
+
+**Os oito APT restantes**, sem substituição privada certificada, são `yt-dlp`, `librecad`, `qgis`, `audacity`, `obs-studio`, `solvespace`, `synfigstudio` e `openshot-qt`. Não têm consumidores diretos em execução nem referências nos ficheiros textuais pesquisados no momento da leitura; isso não prova ausência de consumidores indiretos, nem autoriza apagar capacidades. Instalar, testar e só depois purgar de modo controlado.
+
+**GitHub/VPS:** nomes das oito pastas coincidem com o inventário esperado. `pink-iptv` e `iptvpn-bot` têm `origin` correspondente ao nome e worktree local alterada (6/6). As outras seis pastas não apresentam todas um Git worktree normal: comprovar proveniência por manifestos/release antes de exigir `git pull` ou alterar serviços. Não enviar patches de produção sensíveis para GitHub público.
+
+**Estado real: F9 PARCIAL, NÃO 100% CONCLUÍDA.** Restam as oito migrações e a reconciliação segura dos projetos; a higienização efetuada está certificada e os backups preservados por projeto.
