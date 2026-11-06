@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import re
 import unittest
+from engine import catalog_registry
 
 ROOT = Path(__file__).resolve().parents[1]
 MATRIX = ROOT / "docs/FASE8_MATRIZ_COBERTURA_20261105.md"
@@ -14,7 +15,7 @@ PRIVATE_ROOT = "/srv/projects/skill-universal/"
 class FerrariF8EvidenceIntegrity(unittest.TestCase):
     def setUp(self):
         self.data = json.loads(EVIDENCE.read_text(encoding="utf-8"))
-        self.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        self.manifest = catalog_registry.read_catalog(MANIFEST)
         self.matrix = MATRIX.read_text(encoding="utf-8")
 
     def test_exact_manifest_and_statuses(self):
