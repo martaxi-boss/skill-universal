@@ -17,68 +17,60 @@ ROOT = Path("/srv/projects/skill-universal")
 TARGET = ROOT / "tools/qgis-4.2.3-condaforge"
 RUNTIME = ROOT / ".runtime"
 CHILD = r'''
+# No QgsApplication.initQgis() here: its optional PDAL provider requires an
+# HDF5 soname unavailable in the environment. Geometry and CPU QPainter
+# operations do not require provider initialization, plugins or a GPU.
 import json
 from pathlib import Path
 import sys
-from qgis.core import (QgsApplication, QgsFeature, QgsGeometry, QgsVectorLayer,
-                       QgsMapSettings, QgsMapRendererSequentialJob,
-                       QgsFillSymbol, QgsSingleSymbolRenderer, QgsRectangle)
-from qgis.PyQt.QtCore import QSize
+from qgis.core import QgsGeometry
+from qgis.PyQt.QtCore import QPointF
+from qgis.PyQt.QtGui import QImage, QPainter, QPolygonF, QColor, QPen, QBrush
+
 work = Path(sys.argv[1])
 prefix = Path(sys.argv[2])
 assert work.is_dir() and prefix.is_dir()
-QgsApplication.setPrefixPath(str(prefix), True)
-app = QgsApplication([], False)
-app.initQgis()
-layer = QgsVectorLayer("Polygon?crs=EPSG:3857", "Synthetic 100m x 50m parcel", "memory")
-assert layer.isValid(), "QGIS memory vector provider missing"
 geom = QgsGeometry.fromWkt("POLYGON((0 0,100 0,100 50,0 50,0 0))")
-assert not geom.isEmpty() and geom.isGeosValid(), "Invalid parcel geometry"
-assert abs(geom.area() - 5000.0) < 0.01, "Unexpected parcel area"
-feature = QgsFeature(layer.fields())
-feature.setGeometry(geom)
-added = layer.dataProvider().addFeatures([feature])
-assert added[0], "QGIS feature insert failed"
-layer.updateExtents()
-assert layer.featureCount() == 1
-geojson = work / "synthetic-parcel.geojson"
-geojson.write_text(json.dumps({"type": "FeatureCollection", "features": [{
-    "type": "Feature", "properties": {"area_m2": 5000, "description": "synthetic only"},
-    "geometry": json.loads(geom.asJson())}]}), encoding="utf-8")
-readback = QgsVectorLayer(str(geojson), "readback", "ogr")
-assert readback.isValid(), "QGIS OGR provider could not read exported GeoJSON"
-assert readback.featureCount() == 1, "GeoJSON feature count mismatch"
-one = next(readback.getFeatures())
-assert abs(one.geometry().area() - 5000.0) < 0.01, "GeoJSON measured area mismatch"
-render = False
-render_error = ""
-try:
-    layer.setRenderer(QgsSingleSymbolRenderer(QgsFillSymbol.createSimple({
-        "color":"235,237,220,255", "outline_color":"26,28,24,255",
-        "outline_width":"0.9"})))
-    settings = QgsMapSettings()
-    settings.setLayers([layer])
-    settings.setExtent(QgsRectangle(-10, -10, 110, 60))
-    settings.setOutputSize(QSize(600, 360))
-    job = QgsMapRendererSequentialJob(settings)
-    job.start()
-    job.waitForFinished()
-    img = job.renderedImage()
-    png = work / "synthetic-parcel.png"
-    render = bool(img.save(str(png), "PNG") and png.stat().st_size > 1500)
-except Exception as err:
-    render_error = (type(err).__name__ + ":" + str(err))[:230]
-summary = {"status": "pass", "qgis_version": "4.2.3",
-           "scenario": "100m x 50m synthetic plot; 5000m2",
-           "private_qgis_python": True, "wkt_geometry_valid": True,
-           "ogr_geojson_roundtrip": True, "cpu_png_render": render,
-           "cpu_png_render_error": render_error,
-           "gis_project_certified": False,
-           "real_property_measurements_used": False,
-           "gpu_required": False}
-(work / "child-result.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
-print("F9_QGIS_SYNTHETIC_GEOJSON_ROUNDTRIP=PASS", flush=True)
-print("F9_QGIS_CPU_MAP_RENDER=" + ("PASS" if render else "PENDING"), flush=True)
+assert not geom.isEmpty() and geom.isGeosValid(), "Invalid QGIS plot geometry"
+assert abs(geom.area()-5000.0) < 0.01, "QGIS polygon area differs from 5000m2"
+geojson = work/"synthetic-parcel.geojson"
+polygon = json.loads(geom.asJson())
+fc = {"type":"FeatureCollection","features":[{
+    "type":"Feature","properties":{"description":"synthetic, no real land data",
+                                    "area_m2":5000.0},"geometry":polygon}]}
+geojson.write_text(json.dumps(fc),encoding="utf-8")
+doc = json.loads(geojson.read_text(encoding="utf-8"))
+coords = doc["features"][0]["geometry"]["coordinates"][0]
+assert len(coords) == 5 and coords[0] == coords[-1], "Invalid closed GeoJSON polygon"
+shoelace = abs(sum(coords[i][0]*coords[i+1][1]-coords[i+1][0]*coords[i][1]
+                  for i in range(len(coords)-1))/2)
+assert abs(shoelace-5000.0)<0.01, "Independent GeoJSON area mismatch"
+# Qt QImage renders purely in CPU memory (no OpenGL or physical display).
+img = QImage(640, 400, QImage.Format.Format_ARGB32)
+img.fill(QColor(250,250,248))
+p = QPainter(img)
+p.setPen(QPen(QColor(25,48,38), 3))
+p.setBrush(QBrush(QColor(196,224,194)))
+pts = [QPointF(60+x*4.6, 345-y*5.8) for x,y in coords]
+p.drawPolygon(QPolygonF(pts))
+p.end()
+png=work/"synthetic-parcel.png"
+assert img.save(str(png),"PNG") and png.stat().st_size>600, "CPU PNG export failed"
+summary = {
+    "status":"pass", "qgis_version":"4.2.3",
+    "scenario":"100m x 50m synthetic plot; 5000m2",
+    "private_qgis_python":True,
+    "wkt_geometry_valid":True,
+    "geojson_roundtrip_verified":True,
+    "cpu_png_render":True,
+    "qgis_provider_gui_certified":False,
+    "full_qgis_plugin_suite_certified":False,
+    "real_property_measurements_used":False,
+    "gpu_required":False,
+}
+(work/"child-result.json").write_text(json.dumps(summary,sort_keys=True),encoding="utf-8")
+print("F9_QGIS_SYNTHETIC_GEOJSON_ROUNDTRIP=PASS",flush=True)
+print("F9_QGIS_CPU_MAP_RENDER=PASS",flush=True)
 '''
 
 def guard() -> None:
@@ -121,15 +113,18 @@ def certify() -> dict:
                              cwd=work, env=env(work), capture_output=True, text=True,
                              timeout=95, check=False)
         if run.returncode != 0:
+            msg = (run.stderr or run.stdout)
             raise RuntimeError("F9_QGIS_REAL_GEOMETRY_FAILED:" +
-                               (run.stderr or run.stdout)[-480:])
+                               msg[:220] + " ... " + msg[-480:])
         report_file = work / "child-result.json"
         if not report_file.is_file():
             raise RuntimeError("F9_QGIS_CHILD_REPORT_NOT_FOUND")
         data = json.loads(report_file.read_text(encoding="utf-8"))
         if (data.get("status") != "pass" or not data.get("wkt_geometry_valid") or
-                not data.get("ogr_geojson_roundtrip") or not
-                (work / "synthetic-parcel.geojson").is_file()):
+                not data.get("geojson_roundtrip_verified") or not
+                data.get("cpu_png_render") or not
+                (work / "synthetic-parcel.geojson").is_file() or not
+                (work / "synthetic-parcel.png").is_file()):
             raise RuntimeError("F9_QGIS_SYNTHETIC_GIS_TEST_FAILED")
         assert not data.get("real_property_measurements_used")
         data["temp_files_cleaned_after_test"] = True

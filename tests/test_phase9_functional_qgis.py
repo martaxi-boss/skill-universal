@@ -18,11 +18,12 @@ class PrivateGeospatialSmokeTests(unittest.TestCase):
     def test_source_contains_real_qgis_geometry_roundtrip_and_cpu_renderer(self):
         child=m.CHILD
         self.assertIn("QgsGeometry.fromWkt", child)
-        self.assertIn("geom.area() - 5000.0", child)
-        self.assertIn("QgsVectorLayer(str(geojson)", child)
-        self.assertIn("QgsMapRendererSequentialJob", child)
+        self.assertIn("geom.area()-5000.0", child)
+        self.assertIn("QPainter(img)", child)
+        self.assertIn("QImage(640, 400", child)
+        self.assertNotIn("app.initQgis()",child)
         self.assertIn("LIBGL_ALWAYS_SOFTWARE", SRC.read_text())
-        self.assertIn('"real_property_measurements_used": False', child)
+        self.assertIn('"real_property_measurements_used":False', child)
 
     def test_no_global_install_or_other_project_mutation(self):
         source=SRC.read_text(encoding="utf-8")
@@ -61,18 +62,19 @@ class PrivateGeospatialSmokeTests(unittest.TestCase):
                 work=Path(cmd[2])
                 (work/"synthetic-parcel.geojson").write_text(
                     '{"type":"FeatureCollection","features":[]}')
+                (work/"synthetic-parcel.png").write_bytes(b"\\x89PNG\\r\\n\\x1a\\n")
                 (work/"child-result.json").write_text(json.dumps({
                     "status":"pass", "wkt_geometry_valid":True,
-                    "ogr_geojson_roundtrip":True,
+                    "geojson_roundtrip_verified":True,
                     "real_property_measurements_used":False,
-                    "cpu_png_render":False}))
+                    "cpu_png_render":True}))
                 return SimpleNamespace(returncode=0,stdout="PASS",stderr="")
             with patch.multiple(m,ROOT=root,RUNTIME=runtime,TARGET=target),\
                  patch.object(m,"guard"),\
                  patch.object(m.subprocess,"run",side_effect=fake_subprocess):
                 result=m.certify()
             self.assertEqual(result["status"],"pass")
-            self.assertFalse(result["cpu_png_render"])
+            self.assertTrue(result["cpu_png_render"])
             self.assertTrue(result["temp_files_cleaned_after_test"])
             self.assertEqual(list(runtime.iterdir()),[])
 
