@@ -280,7 +280,7 @@ def unified_catalog(*, inventory_now=None):
 
     The only persistent source is engine/catalog.json. REA tool descriptors are
     checked against the names in THAT file and the live tools/list response.
-    Reading the catalog never installs programs, enables paid cloud services
+    Reading the catalog never installs programs, enables cloud services
     or invokes an REA tools/call operation.
     """
     from engine import core, rea_mcp
@@ -289,9 +289,10 @@ def unified_catalog(*, inventory_now=None):
         raise ValueError("Unsupported Ferrari catalog schema")
     if doc.get("admission_policy", {}).get("platform") != "Ubuntu 24.04 LTS":
         raise ValueError("Ferrari catalog requires Ubuntu 24.04 LTS")
-    if any(p.get("cost") not in {"free-tier", "open-source", "built-in"}
+    if any(p.get("kind") != "local" or
+           p.get("cost") not in {"open-source", "built-in"}
            for p in doc["providers"]):
-        raise ValueError("Paid or unverified-cost Ferrari provider is forbidden")
+        raise ValueError("Paid, cloud or closed-source Ferrari provider is forbidden")
     for item in doc["tools"]:
         if (item.get("ubuntu") and
                 item["ubuntu"].get("platform") != "Ubuntu 24.04 LTS"):
