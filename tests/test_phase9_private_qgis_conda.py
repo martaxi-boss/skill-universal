@@ -34,6 +34,8 @@ class QgisIsolatedTests(unittest.TestCase):
         self.assertIn("conda-forge",spec)
         self.assertIn("qgis=4.2.3",spec)
         self.assertIn("python=3.12",spec)
+        # Single overridden channel is sufficient; 2.10 fails on --strict-channel-priority.
+        self.assertNotIn("--strict-channel-priority",spec)
         self.assertNotIn("defaults",spec)
 
     def test_preview_conda_only_and_download_budget(self):
