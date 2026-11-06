@@ -182,7 +182,7 @@ def main() -> int:
         print(json.dumps({"status": "BLOCKED", "reason": str(exc)}), file=sys.stderr)
         return 2
     print(json.dumps(report, sort_keys=True, indent=2))
-    print("FERRARI_UNIVERSAL_HYGIENE=" + ("APPLY_PASS" if args.apply else "PREVIEW_PASS"))
+    print("FERRARI_UNIVERSAL_HYGIENE=" + ("APPLY_PASS" if args.apply else "PREVIEW_PASS"), file=sys.stderr)
     return 0
 
 
