@@ -1,6 +1,6 @@
 # Ferrari — catálogo único e reutilização de dependências
 
-**Fonte única de informação sobre ferramentas:** `engine/catalog.json` (schema 2).
+**Fonte persistente ÚNICA de todo o Ferrari:** `engine/catalog.json` (schema 2 + `functions_schema=1`). O índice universal de leitura `entries[]` contém todos os tipos de registo juntos, incluindo REA sem catálogo separado.
 
 ## Hierarquia
 
@@ -26,7 +26,7 @@
 | Descoberta de módulos Python / pacotes npm | 11 / 9 | Inclui `bpy` e OpenPencil; não significa execução certificada |
 | Candidatos a contentores privados | 13 | Presença a verificar sem usar contentores alheios |
 
-O REA faz parte deste **mesmo catálogo**, com `tools/list` e `tools/call` pelo adaptador original `engine/rea_mcp.py`. A lista de **229 nomes distintos** foi obtida do REA privado real em [VPS #42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831). Foram admitidos **220 nomes** no **mesmo** `engine/catalog.json` sob `mcp_capabilities.names`. As nove funções proprietárias/demo restantes foram **eliminadas inteiramente do catálogo Ferrari**, incluindo a antiga lista de bloqueio nominal. O servidor REA original não é alterado, mas a interface do Ferrari devolve somente as 220 funções autorizadas, tanto no inventário como em `tools/list`; `tools/call` só aceita estas 220. Isto não equivale a 229 executáveis instalados separadamente nem certifica 220 funções. Na VPS, o Ferrari confronta os nomes com o `tools/list` vivo e só marca como disponíveis os que correspondem. Sem REA privado, nenhum é dado como disponível.
+O REA faz parte deste **mesmo catálogo**, com `tools/list` e `tools/call` pelo adaptador original `engine/rea_mcp.py`. A lista de **229 nomes distintos** foi obtida do REA privado real em [VPS #42269934831](https://github.com/martaxi-boss/VPS/actions/runs/42269934831). Foram admitidas **220 funções REA** como registos individuais na **mesma lista universal `functions[]`** que contém as funções de todos os outros programas. `mcp_capabilities` guarda somente metadados do transporte REA, sem lista própria de nomes. As interfaces legadas `tools/list` e `tools/call` recebem uma vista de leitura derivada deste catálogo único. As nove funções proprietárias/demo restantes foram **eliminadas inteiramente do catálogo Ferrari**, incluindo a antiga lista de bloqueio nominal. O servidor REA original não é alterado, mas a interface do Ferrari devolve somente as 220 funções autorizadas, tanto no inventário como em `tools/list`; `tools/call` só aceita estas 220. Isto não equivale a 229 executáveis instalados separadamente nem certifica 220 funções. Na VPS, o Ferrari confronta os nomes com o `tools/list` vivo e só marca como disponíveis os que correspondem. Sem REA privado, nenhum é dado como disponível.
 
 ## Política de dependências
 
@@ -41,6 +41,8 @@ O REA faz parte deste **mesmo catálogo**, com `tools/list` e `tools/call` pelo 
 Para adicionar um programa, registar uma única entrada `tools[].id` (ou atualizar a já existente), com a sua origem, licença, compatibilidade Ubuntu, opções de execução e `requires`. Só criar uma nova ação `actions[]` quando houver adaptador seguro e validado; candidatos continuam candidatos. Não editar os ficheiros históricos removidos; o validador impede a sua recriação como fontes concorrentes.
 
 Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no GitHub, por si só, não altera a VPS.
+
+**Estrutura canónica nova (revisão GitHub):** programas `tools[]` (173), funções `functions[]` (272 incluindo REA), dependências `dependencies[]` (3) e fornecedores `providers[]` (2) estão no mesmo ficheiro físico, sob o mesmo motor. A vista `unified_catalog().entries[]` apresenta **450 registos combinados de tipos diferentes**. Não somar estes números como 450 funcionalidades, programas ou testes certificados. `catalog_registry.read_catalog()` reconstrói exclusivamente em memória as interfaces de compatibilidade antigas; não grava outro manifesto nem cria segundo catálogo. Os executores continuam privados do Ferrari.
 
 
 ## Vista integral do ÚNICO catálogo — 06/11/2026 (revisão GitHub, VPS por atualizar)
@@ -65,14 +67,12 @@ Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no 
 
 **Decisão Penpot → OpenPencil (06/11/2026):** o Penpot foi retirado do único catálogo por ser uma candidatura pesada a serviço com contentores, não instalada na VPS. O OpenPencil já está integrado no próprio Ferrari, sem instalação do Penpot. No inventário real anterior à revisão ([VPS #42286932312](https://github.com/martaxi-boss/VPS/actions/runs/42286932312)), a seleção original indicou 55/56 presentes e apenas o Penpot em falta. A seleção revista no GitHub passa a 55; a verificação 55/55 da **nova release** depende da sua ativação e readback na VPS.
 
-## Vista universal de FUNÇÕES (correção de 06/11/2026)
+## Catálogo universal efetivo — revisão de 06/11/2026
 
-O proprietário exige **uma única lista de funções, sem tratar as do REA como catálogo separado**. A fonte persistente continua a ser exclusivamente `engine/catalog.json`, com as relações entre programas, operações base, ações tipadas e capacidades MCP. Não foi criado outro catálogo, skill, coordenador ou transporte.
+Esta revisão unifica **todo o catálogo**, não apenas as funções. Existe somente uma origem persistente: `engine/catalog.json`. Os executores continuam a usar o mesmo motor Ferrari. O REA não possui lista de funções independente; todas as suas capacidades aprovadas são registos de `functions[]` com `program: rea`, tal como as funções do FFmpeg, Blender, OpenPencil e restantes aplicações usam o identificador do respetivo executor.
 
-A vista de leitura `engine.tool_runtime.unified_catalog()` expõe agora `functions[]` como **lista única e plana**, ordenada por domínio e ID. Cada função inclui `id`, `name`, `program`, `category`, `kind`, `invocation`, `status` e `selectable`. O motor continua a respeitar o contrato de execução de cada função: `kind=operation`, `kind=invoke` ou `kind=rea-mcp`. A associação ao programa é apenas metadado, não uma separação em catálogos.
+A vista principal `unified_catalog().entries[]` combina **programas + funções + dependências + fornecedores**. Os campos `kind`, `category`, `program`, `status`, `installed` e `selectable` (quando aplicáveis) permitem filtrar qualquer tipo de registo sem criar outro catálogo por tema. Os subcampos `functions`, `actions` e `rea` do relatório são vistas derivadas ou diagnósticos de compatibilidade, nunca fontes persistentes alternativas.
 
-**Contagem de interfaces já integradas:** 12 operações base Ferrari + 40 ações tipadas Ferrari + 220 ferramentas REA admitidas = **272 entradas de funções registadas**. Esta é uma contagem de interfaces, não de funcionalidades únicas nem de trabalhos certificados; duas interfaces podem invocar capacidades semelhantes. As 173 entradas de programas são fornecedores/candidatos e **não** outras 173 funções. A antiga soma de 393 (173 programas + 220 nomes REA) permanece como contagem histórica de entradas de tipos diferentes e não como total de funções.
+A matriz canónica atual é: **173 programas, 272 interfaces de função (12 operações base, 40 adaptadores tipados, 220 capacidades MCP do REA), 3 runtimes comuns declarados e 2 fornecedores locais = 450 registos de catálogo.** Alguns programas têm operações nativas ainda não integradas; não são ficticiamente contabilizadas como funções Ferrarri disponíveis. A presença, instalação, capacidade de execução e certificação são níveis distintos.
 
-As operações internas `web-template` e `svg-poster` foram associadas, no catálogo, aos programas já existentes `html-templates` e `svg`, respetivamente. Não se inventou outro executor. `functions[]` é **derivado na leitura** das definições existentes, para evitar manter duas listas persistentes ou nomes duplicados.
-
-**Cobertura honesta:** as funções nativas internas de cada um dos 173 programas que ainda não estão integradas via operação, ação ou MCP não são anunciadas como funções Ferrari utilizáveis. Para as acrescentar, descobrir e validar uma interface real e registá-la no mesmo catálogo. Binário presente ou nome conhecido não é teste funcional PASS. O estado na VPS só fica confirmado quando a nova revisão for implantada, pedido `inventory` devolvido pela Skill e `artifacts/catalog.json` verificado; CI isolada não substitui essa prova.
+A migração do JSON para `functions[]` é de **metadata e leitura**. Não muda a ponte GitHub, os pedidos, SSH, Supervisor, serviços VPS ou outros projetos. O deploy só pode acontecer após CI PASS, deploy protegido e `inventory` real com `response.zip` validado.
