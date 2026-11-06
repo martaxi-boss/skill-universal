@@ -14,13 +14,17 @@
 
 | Registo lógico no catálogo | Quantidade | Significado |
 | --- | ---: | --- |
-| Ferramentas distintas (união sem duplicados) | 174 | Inclui candidatos ainda não instalados |
+| Ferramentas distintas (união sem duplicados) | 176 | Inclui candidatos ainda não instalados |
 | Ferramentas da base histórica | 71 | Metadados preservados |
 | Candidatos Ubuntu selecionados | 56 | Metadados de compatibilidade, sem assumir instalação |
 | Projetos de origem/repositórios | 125 | Descoberta de upstreams, não binários instalados |
 | Ações tipadas do Ferrari | 40 | Adaptadores existentes, sem aumentar permissões |
 | Fornecedores declarados | 12 | Serviços locais e cloud, sem assumir configuração |
 | Runtimes partilhados inicialmente identificados | 3 | Python 3.12, Node 22 e JDK 25; presença e compatibilidade reportadas separadamente |
+| Executáveis privados com caminho registado | 22 | Caminhos definidos no mesmo catálogo, sem fallback global |
+| Grupos de comandos CLI privados | 26 | Alias e comandos agrupados numa única fonte |
+| Descoberta de módulos Python / pacotes npm | 11 / 9 | Inclui `bpy` e OpenPencil; não significa execução certificada |
+| Candidatos a contentores privados | 14 | Presença a verificar sem usar contentores alheios |
 
 O REA faz parte deste **mesmo catálogo**, com `tools/list` e `tools/call` pelo adaptador original `engine/rea_mcp.py`. As subferramentas MCP são descobertas em tempo de execução; **não** se declaram 229 instalações locais fictícias nem se cria um segundo catálogo ou coordenador.
 
