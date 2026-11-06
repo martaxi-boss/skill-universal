@@ -62,6 +62,13 @@ def main() -> int:
     import numpy as np
     from PIL import Image
     torch.set_num_threads(2)
+    # ComfyUI main.py enables CLI parsing before importing nodes; standalone
+    # direct-node jobs must do the same or model_management assumes CUDA.
+    import comfy.options
+    comfy.options.enable_args_parsing()
+    import comfy.cli_args
+    if not comfy.cli_args.args.cpu:
+        raise RuntimeError("FERRARI_COMFY_CPU_MODE_ARG_MISSING")
     import nodes
     print("FERRARI_COMFY_CPU_TORCH="+torch.__version__,flush=True)
     if torch.cuda.is_available():
