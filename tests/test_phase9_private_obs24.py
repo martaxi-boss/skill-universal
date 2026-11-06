@@ -111,6 +111,39 @@ class FerrariObsPrivateTests(unittest.TestCase):
                 self.assertFalse(target.exists())
                 self.assertEqual(list(runtime.iterdir()), [])
 
+    def test_launcher_prioritizes_bundled_libobs_over_host(self):
+        script=mod.launcher_source()
+        self.assertIn('usr/local/lib/x86_64-linux-gnu',script)
+        self.assertIn('env["LD_LIBRARY_PATH"] = ":".join(local)',script)
+        self.assertLess(script.index("usr/local/lib/x86_64-linux-gnu"),
+                        script.index("opt/obs-studio/lib"))
+
+    def test_refuses_to_replace_unknown_private_launcher(self):
+        payload=b"synthetic-package"
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)/"obs-studio-32.2.2"
+            root.mkdir()
+            (root/mod.FILENAME).write_bytes(payload)
+            exe=root/"payload/usr/local/bin/obs"
+            exe.parent.mkdir(parents=True)
+            exe.write_text("#!/bin/sh\n")
+            exe.chmod(0o700)
+            libs=root/"payload/usr/local/lib/x86_64-linux-gnu"
+            libs.mkdir(parents=True)
+            (libs/"libobs.so.30").write_bytes(b"private")
+            original="unsafe unrecognized launcher"
+            (root/"run-obs").write_text(original)
+            manifest={"source":mod.URL,"sha256":hashlib.sha256(payload).hexdigest(),
+                      "version":mod.VERSION,"bytes":len(payload),
+                      "obs_relative_exe":"usr/local/bin/obs"}
+            (root/"manifest.json").write_text(json.dumps(manifest))
+            with patch.multiple(mod,TARGET=root,SIZE=len(payload),
+                                SHA256=hashlib.sha256(payload).hexdigest()),\
+                 patch.object(mod,"guard"):
+                with self.assertRaisesRegex(RuntimeError,"UNKNOWN_LAUNCHER"):
+                    mod.repair_launcher()
+            self.assertEqual((root/"run-obs").read_text(),original)
+
 
 if __name__ == "__main__":
     unittest.main()
