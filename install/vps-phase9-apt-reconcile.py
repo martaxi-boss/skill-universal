@@ -178,8 +178,9 @@ def backup():
             for path in stage.iterdir():
                 if not path.is_file() or path.is_symlink() or not path.name.endswith(".deb"):
                     continue
-                q=command(["dpkg-deb","-f",str(path),"Package","Version"],timeout=12)
-                if q.returncode==0 and q.stdout.splitlines()[:2]==[pkg,versions[pkg]]:
+                q=command(["dpkg-deb","-f",str(path),"Package"],timeout=12)
+                v=command(["dpkg-deb","-f",str(path),"Version"],timeout=12)
+                if q.returncode==0 and v.returncode==0 and q.stdout.strip()==pkg and v.stdout.strip()==versions[pkg]:
                     matches.append(path)
             require(len(matches)==1,"F9_APT_ROLLBACK_ARCHIVE_AMBIGUOUS:"+pkg)
             path=matches[0]
@@ -224,8 +225,9 @@ def load_backup():
                 and p.resolve().parent==BACKUP.resolve()
                 and digest(p)==item["sha256"],
                 "F9_ROLLBACK_ARCHIVE_DAMAGED:"+pkg)
-        q=command(["dpkg-deb","-f",str(p),"Package","Version"],timeout=12)
-        require(q.returncode==0 and q.stdout.splitlines()[:2]==[pkg,item["version"]],
+        q=command(["dpkg-deb","-f",str(p),"Package"],timeout=12)
+        v=command(["dpkg-deb","-f",str(p),"Version"],timeout=12)
+        require(q.returncode==0 and v.returncode==0 and q.stdout.strip()==pkg and v.stdout.strip()==item["version"],
                 "F9_ROLLBACK_ARCHIVE_CONTENT_MISMATCH")
     return data
 
