@@ -41,6 +41,10 @@ class OneToolCatalogTests(unittest.TestCase):
         inv = tool_runtime.inventory()
         self.assertEqual(inv["registered_actions"], 40)
         self.assertEqual(inv["selected"], 56)
+        self.assertEqual(len(inv["shared_dependencies"]), 3)
+        self.assertTrue(all(d["status"] in {"present_unverified","not_detected"}
+                            and not d["compatibility_certified"]
+                            for d in inv["shared_dependencies"]))
         self.assertTrue(any(p["id"] == "rea" for p in inv["programs"]))
 
     def test_no_five_obsolete_metadata_sources(self):
@@ -73,6 +77,27 @@ class OneToolCatalogTests(unittest.TestCase):
         self.assertEqual(programs["rea"]["requires"], programs["ruflo"]["requires"])
         self.assertEqual(programs["ghidra"]["requires"], programs["jadx"]["requires"])
         self.assertTrue(doc["dependency_policy"]["never_share_with_other_projects"])
+
+    def test_reused_private_dependency_rejects_path_escape(self):
+        from unittest.mock import patch
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as folder:
+            base = Path(folder) / "skill-universal"
+            base.mkdir()
+            with patch.object(tool_runtime, "HOME", base):
+                good = {"dependencies": [{
+                    "id":"node-22","reuse_key":"node22",
+                    "version":"22","relative_path":"runtimes/node/bin/node"
+                }], "tools":[{"id":"rea","requires":["node-22"]},
+                              {"id":"ruflo","requires":["node-22"]}]}
+                data = tool_runtime.shared_dependencies(good)
+                self.assertEqual(len(data), 1)
+                self.assertEqual(data[0]["required_by"], ["rea", "ruflo"])
+                bad = {"dependencies":[{**good["dependencies"][0],
+                                         "relative_path":"../other/node"}],
+                       "tools":good["tools"]}
+                with self.assertRaisesRegex(ValueError,"Unsafe Ferrari"):
+                    tool_runtime.shared_dependencies(bad)
 
     def test_original_rea_is_dynamic_and_no_second_engine(self):
         rea = next(t for t in self.data["tools"] if t["id"] == "rea")
