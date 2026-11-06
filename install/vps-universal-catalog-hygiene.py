@@ -26,6 +26,51 @@ LEGACY_FILES = (
 STATE_DIRS = frozenset((".runtime", "runtimes", "tools", "data",
                         "backups", "results", "outputs", "secrets"))
 
+# Each of these exact old source snapshots was measured in live read-only
+# GitHub Actions #42296172655: its ONLY stateful directory was an EMPTY .runtime,
+# with zero files, zero nested directories, zero symlinks and zero data bytes.
+# All other state-bearing directories remain hard blockers to source deletion.
+AUDITED_EMPTY_RUNTIME = frozenset((
+    "0b50e1d403deff8f3ccb421edd0b41c397d66b9b",
+    "146145d5ada9c13e368df18727e4dbf4f5807664",
+    "758e1b435317fa26277b332b75bc47c67910be81",
+    "7776a34e667d76ae0e980e65449d2b2cc67c2059",
+    "9d0deb5d9cd919d8bf468e8cfb501c056a64c664",
+    "a266b25e06a9c8acf1fdc940d22b99070cd17ded",
+    "decdb5a38b0bf0e2ce66c6351a45b2d2e8e294c2",
+    "f1f3b03525adec7018d7d629243e7b0fbb7f5087",
+    "fe1bb6e7073fdd8a963963909127cde6d570f253",
+))
+
+
+def _unsafe_private_state(release: Path) -> str | None:
+    """Only the nine fully audited, still-empty .runtime folders are disposable."""
+    for name in STATE_DIRS:
+        p = release / name
+        if not (p.exists() or p.is_symlink()):
+            continue
+        if name == ".runtime" and release.name in AUDITED_EMPTY_RUNTIME:
+            # Critical: re-evaluate emptiness when applying, not just at preview.
+            if p.is_dir() and not p.is_symlink() and not any(p.iterdir()):
+                continue
+            return "audited_runtime_now_nonempty_or_unsafe"
+        return "unverified_stateful_directory_present"
+    return None
+
+
+def _protected_release_pointers(root: Path, releases: Path) -> set[str]:
+    protected: set[str] = set()
+    for p in root.iterdir():
+        if p.is_symlink() and p.name != "current":
+            try:
+                target = p.resolve(strict=True)
+            except (OSError, RuntimeError):
+                continue
+            if target.parent == releases:
+                protected.add(target.name)
+    return protected
+
+
 
 def _inside_release(path: Path, parent: Path) -> bool:
     return (not path.is_symlink() and path.is_dir()
@@ -116,20 +161,13 @@ def audit(root: Path, expected_active: str, fallback_sha: str,
         if not (p / "engine/ferrari.py").is_file() or not (p / "engine/catalog.json").is_file():
             skipped.append({"release": p.name, "reason": "unrecognized_release"})
             continue
-        if any((p / name).exists() or (p / name).is_symlink() for name in STATE_DIRS):
-            skipped.append({"release": p.name, "reason": "stateful_directory_present"})
+        reason = _unsafe_private_state(p)
+        if reason:
+            skipped.append({"release": p.name, "reason": reason})
             continue
         candidates.append(p)
-    # Respect extra Ferrari pointers referencing a source snapshot.
-    protected_links: set[str] = set()
-    for p in root.iterdir():
-        if p.is_symlink() and p.name != "current":
-            try:
-                target = p.resolve(strict=True)
-            except (OSError, RuntimeError):
-                continue
-            if target.parent == release_real:
-                protected_links.add(target.name)
+    # Respect any source snapshot still referenced by a Ferrari-specific pointer.
+    protected_links = _protected_release_pointers(root, release_real)
     used = _live_process_references(candidates)
     blocked = protected_links | used
     permitted = sorted((p for p in candidates if p.name not in blocked),
@@ -149,8 +187,12 @@ def audit(root: Path, expected_active: str, fallback_sha: str,
             # Every target must stay a direct child and be unreferenced at deletion time.
             if active != current.resolve(strict=True) or not _inside_release(p, release_real):
                 raise RuntimeError("Ferrari cleanup path changed")
+            if _unsafe_private_state(p):
+                raise RuntimeError("Ferrari source gained private state after preview")
             if p.name in _live_process_references([p]):
                 raise RuntimeError("Ferrari release became active in a process")
+            if p.name in _protected_release_pointers(root, release_real):
+                raise RuntimeError("Ferrari release became referenced by an auxiliary pointer")
             shutil.rmtree(p)
             removed.append(p.name)
     after = shutil.disk_usage(root).free
