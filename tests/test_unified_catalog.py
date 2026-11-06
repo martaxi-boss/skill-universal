@@ -21,18 +21,18 @@ class UnifiedCatalogTests(unittest.TestCase):
         names = self.doc["mcp_capabilities"]["names"]
         self.assertEqual(len(names), 220)
         self.assertEqual(len(set(names)), len(names))
-        self.assertEqual(self.doc["counts"]["unique_tools"], 176)
+        self.assertEqual(self.doc["counts"]["unique_tools"], 174)
         self.assertEqual(self.doc["counts"]["mcp_capabilities"], 220)
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 396)
-        self.assertEqual(len(self.doc["tools"]) + len(names), 396)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 394)
+        self.assertEqual(len(self.doc["tools"]) + len(names), 394)
         self.assertEqual(self.doc["mcp_capabilities"]["discovery"], "tools/list")
         self.assertEqual(self.doc["mcp_capabilities"]["invocation"], "tools/call")
         self.assertEqual(self.doc["mcp_capabilities"]["verified_vps_workflow_run"], 42269934831)
         self.assertFalse(any(name.startswith("rea:") for name in names))
 
     def test_free_only_ubuntu_admission_and_one_dependency_registry(self):
-        self.assertEqual(len(self.doc["providers"]), 8)
-        self.assertTrue(all(p["cost"] in {"free-tier", "open-source", "built-in"}
+        self.assertEqual(len(self.doc["providers"]), 2)
+        self.assertTrue(all(p["cost"] in {"open-source", "built-in"}
                             and p["admission"] == "free_only_no_paid_fallback"
                             for p in self.doc["providers"]))
         names = {p["id"] for p in self.doc["providers"]}
@@ -44,6 +44,29 @@ class UnifiedCatalogTests(unittest.TestCase):
             "ubuntu_reviewed_or_core", "upstream_candidate_unverified"}
                             for t in self.doc["tools"]))
 
+    def test_non_equivalent_closed_entries_stay_out(self):
+        program_ids = {t["id"] for t in self.doc["tools"]}
+        provider_ids = {p["id"] for p in self.doc["providers"]}
+        self.assertFalse({"nmap", "vscode"} & program_ids)
+        self.assertEqual(provider_ids, {"imagemagick-local", "svg-local"})
+        self.assertEqual(self.doc["counts"]["upstream_registry"], 123)
+        self.assertEqual(self.doc["expansion_metadata"]["count"], 73)
+        self.assertEqual(self.doc["admission_policy"]["cost"],
+                         "local_open_source_or_builtin_only_no_cloud_providers")
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 394)
+
+    def test_closed_cloud_provider_fails_closed_even_with_free_tier(self):
+        modified = copy.deepcopy(self.doc)
+        modified["providers"].append({
+            "id": "closed-cloud", "kind": "cloud", "cost": "free-tier",
+        })
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "catalog.json"
+            path.write_text(json.dumps(modified), encoding="utf-8")
+            with patch.object(tool_runtime, "CATALOG_PATH", path):
+                with self.assertRaisesRegex(ValueError, "cloud or closed-source"):
+                    tool_runtime.unified_catalog(inventory_now={"programs": [], "ecosystems": {}})
+
     def test_unified_runtime_real_name_reconciliation(self):
         names = self.doc["mcp_capabilities"]["names"]
         fake_live = [{"name": name, "title": name, "inputSchema": {"type": "object"},
@@ -52,9 +75,9 @@ class UnifiedCatalogTests(unittest.TestCase):
         with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
             result = tool_runtime.unified_catalog(inventory_now=seed)
         self.assertEqual(result["rea"]["status"], "rea_in_sync")
-        self.assertEqual(result["counts"]["all_catalog_entries"], 396)
+        self.assertEqual(result["counts"]["all_catalog_entries"], 394)
         self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 220)
-        self.assertEqual(result["counts"]["no_cost_providers"], 8)
+        self.assertEqual(result["counts"]["no_cost_providers"], 2)
         self.assertEqual(sum(x["kind"] == "mcp_capability" for x in result["entries"]), 220)
         self.assertTrue(all(x["selectable"] for x in result["entries"]
                             if x["kind"] == "mcp_capability"))
@@ -112,7 +135,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             path = Path(td) / "catalog.json"
             path.write_text(json.dumps(modified), encoding="utf-8")
             with patch.object(tool_runtime, "CATALOG_PATH", path):
-                with self.assertRaisesRegex(ValueError, "Paid or unverified-cost"):
+                with self.assertRaisesRegex(ValueError, "Paid, cloud or closed-source"):
                     tool_runtime.unified_catalog(inventory_now={"programs": [], "ecosystems": {}})
 
     def test_existing_inventory_request_produces_unified_zip_no_new_bridge(self):
@@ -121,7 +144,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         fake_inventory = {"selected": 56, "registered_actions": 40, "programs": [],
                           "ecosystems": {}, "shared_dependencies": []}
         fake_catalog = {"source": "engine/catalog.json",
-                        "counts": {"all_catalog_entries": 396}}
+                        "counts": {"all_catalog_entries": 394}}
         with tempfile.TemporaryDirectory() as td:
             output = Path(td) / "job"
             with patch.object(tool_runtime, "inventory", return_value=fake_inventory):
@@ -133,7 +156,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             with zipfile.ZipFile(output / "response.zip") as archive:
                 self.assertIn("artifacts/inventory.json", archive.namelist())
                 self.assertIn("artifacts/catalog.json", archive.namelist())
-                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 396)
+                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 394)
 
     def test_rea_live_discovery_requires_private_paths_and_no_duplicates(self):
         with tempfile.TemporaryDirectory() as td:
