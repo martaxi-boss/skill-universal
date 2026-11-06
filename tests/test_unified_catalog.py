@@ -7,7 +7,7 @@ import unittest
 import zipfile
 from unittest.mock import patch
 
-from engine import rea_mcp, skill_job, tool_runtime
+from engine import catalog_registry, rea_mcp, skill_job, tool_runtime
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class UnifiedCatalogTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.doc = json.loads((ROOT / "engine/catalog.json").read_text(encoding="utf-8"))
+        cls.doc = catalog_registry.read_catalog()
 
     def test_all_real_rea_names_appear_once_in_same_authoritative_file(self):
         names = self.doc["mcp_capabilities"]["names"]
@@ -23,12 +23,31 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(len(set(names)), len(names))
         self.assertEqual(self.doc["counts"]["unique_tools"], 173)
         self.assertEqual(self.doc["counts"]["mcp_capabilities"], 220)
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 393)
-        self.assertEqual(len(self.doc["tools"]) + len(names), 393)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 450)
+        self.assertEqual(len(self.doc["tools"]) + len(self.doc["functions"]) +
+                         len(self.doc["providers"]) + len(self.doc["dependencies"]), 450)
         self.assertEqual(self.doc["mcp_capabilities"]["discovery"], "tools/list")
         self.assertEqual(self.doc["mcp_capabilities"]["invocation"], "tools/call")
         self.assertEqual(self.doc["mcp_capabilities"]["verified_vps_workflow_run"], 42269934831)
         self.assertFalse(any(name.startswith("rea:") for name in names))
+
+    def test_one_persisted_universal_function_registry_without_rea_partition(self):
+        """All programs use exactly one root functions list in one JSON file."""
+        raw = json.loads((ROOT / "engine/catalog.json").read_text(encoding="utf-8"))
+        self.assertEqual(raw["functions_schema"], 1)
+        self.assertNotIn("actions", raw)
+        self.assertNotIn("names", raw["mcp_capabilities"])
+        self.assertTrue(all("base_operations" not in tool for tool in raw["tools"]))
+        self.assertEqual(len(raw["functions"]), 272)
+        self.assertEqual(len({f["id"] for f in raw["functions"]}), 272)
+        self.assertEqual(len(raw["tools"]) + len(raw["functions"]) +
+                         len(raw["dependencies"]) + len(raw["providers"]), 450)
+        self.assertEqual({f["kind"] for f in raw["functions"]},
+                         {"operation", "invoke", "mcp_capability"})
+        self.assertEqual({f["program"] for f in raw["functions"]
+                          if f["kind"] == "mcp_capability"}, {"rea"})
+        self.assertEqual(len(self.doc["actions"]), 40)
+        self.assertEqual(len(self.doc["mcp_capabilities"]["names"]), 220)
 
     def test_free_only_ubuntu_admission_and_one_dependency_registry(self):
         self.assertEqual(len(self.doc["providers"]), 2)
@@ -53,13 +72,14 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(self.doc["expansion_metadata"]["count"], 72)
         self.assertEqual(self.doc["admission_policy"]["cost"],
                          "local_open_source_or_builtin_only_no_cloud_providers")
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 393)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 450)
 
     def test_closed_cloud_provider_fails_closed_even_with_free_tier(self):
         modified = copy.deepcopy(self.doc)
         modified["providers"].append({
             "id": "closed-cloud", "kind": "cloud", "cost": "free-tier",
         })
+        modified["counts"]["all_catalog_entries"] += 1
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "catalog.json"
             path.write_text(json.dumps(modified), encoding="utf-8")
@@ -75,7 +95,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
             result = tool_runtime.unified_catalog(inventory_now=seed)
         self.assertEqual(result["rea"]["status"], "rea_in_sync")
-        self.assertEqual(result["counts"]["all_catalog_entries"], 393)
+        self.assertEqual(result["counts"]["all_catalog_entries"], 450)
         self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 220)
         self.assertEqual(result["counts"]["no_cost_providers"], 2)
         self.assertEqual(sum(x["kind"] == "mcp_capability" for x in result["entries"]), 220)
@@ -137,6 +157,7 @@ class UnifiedCatalogTests(unittest.TestCase):
     def test_paid_provider_fails_closed_before_rea_discovery(self):
         modified = copy.deepcopy(self.doc)
         modified["providers"].append({"id": "new-paid", "kind": "cloud", "cost": "paid"})
+        modified["counts"]["all_catalog_entries"] += 1
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "catalog.json"
             path.write_text(json.dumps(modified), encoding="utf-8")
@@ -174,8 +195,11 @@ class UnifiedCatalogTests(unittest.TestCase):
 
     def test_base_operations_require_an_owner_in_same_catalog(self):
         modified = copy.deepcopy(self.doc)
-        svg = next(item for item in modified["tools"] if item["id"] == "svg")
-        svg.pop("base_operations")
+        modified["functions"] = [
+            item for item in modified["functions"] if item["id"] != "operation:svg-poster"
+        ]
+        modified["counts"]["functions"] -= 1
+        modified["counts"]["all_catalog_entries"] -= 1
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "catalog.json"
             path.write_text(json.dumps(modified), encoding="utf-8")
@@ -204,7 +228,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             with zipfile.ZipFile(output / "response.zip") as archive:
                 self.assertIn("artifacts/inventory.json", archive.namelist())
                 self.assertIn("artifacts/catalog.json", archive.namelist())
-                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 393)
+                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 450)
 
     def test_rea_live_discovery_requires_private_paths_and_no_duplicates(self):
         with tempfile.TemporaryDirectory() as td:
