@@ -57,13 +57,13 @@ Apenas a release com CI e VPS reais PASS deve ser marcada ativa; alteração no 
 - **REA vivo:** a vista consulta tools/list de forma só de leitura, sem lançar tools/call nem acionar fornecedores pagos. Reporta "rea_in_sync", "rea_catalog_drift" ou "rea_unavailable"; um nome registado mas não observado não é apresentado como executável.
 - **Fase 9:** oito pacotes APT globais antigos permanecem preservados; não fazer purga por semelhança de nomes nem tocar nos projetos independentes.
 
-**Histórico anterior à ativação universal (catálogo 394 e 396):**
+**Histórico anterior à ativação universal (catálogo 394 e 396):** [PR #105](https://github.com/martaxi-boss/skill-universal/pull/105) e [PR #106](https://github.com/martaxi-boss/skill-universal/pull/106) integradas; [VPS #42276080241](https://github.com/martaxi-boss/VPS/actions/runs/42276080241) ativou release privada com rollback e 8/8 serviços; [Skill→ZIP #42276249154](https://github.com/martaxi-boss/VPS/actions/runs/42276249154) devolveu 396 entradas na versão anterior, 220 MCP observadas, 229 anunciadas, 9 bloqueadas, 40 ações disponíveis e ImageMagick/SVG locais ativados. **Não é certificação de 396 operações:** apenas três runtimes centrais têm entradas de dependências partilhadas; bibliotecas transitivas e Fase 9 continuam pendentes.
 
-**Histórico da aprovação e filtragem REA — PR #109,
+**Histórico da aprovação e filtragem REA — PR #109, as nove funções comerciais/demo foram removidas do ficheiro `engine/catalog.json` e da lista pública `tools/list` que o Ferrari apresenta. Não podem ser chamadas por `tools/call`, que usa uma lista estrita das 220 capacidades aprovadas. A origem REA pode continuar a anunciá-las internamente; não modificámos o código do autor nem desinstalámos o REA. As contagens brutas de descoberta são apenas informação de auditoria.
 
-**Política histórica de seleção (06/11/2026):** a revisão
+**Política histórica de seleção (06/11/2026):** a revisão do catálogo com 393 entradas requer CI e readback na VPS antes de ser declarada ativa. As 69 candidatas originais não foram certificadas ou eliminadas em massa por ausência de evidência; apenas os dois casos acima foram removidos, ficando 67 candidatas. Não remover programas instalados nem dependências sem auditoria de consumidores.
 
-**Prova histórica da release anterior (394 entradas):**
+**Prova histórica da release anterior (394 entradas):** a [VPS #42282896608](https://github.com/martaxi-boss/VPS/actions/runs/42282896608) tem 394 entradas, 40 ações e dois fornecedores locais e mantém a release `952b0a75ba798471b07053677d53791bd078ed56`. A remoção completa das nove referências nominais e a filtragem direta de `tools/list` foram validadas na [CI #42283957948](https://github.com/martaxi-boss/skill-universal/actions/runs/42283957948), revisão GitHub `ca723ad82043075e82ee790d0c2dcafd5badcbee`; **falta deploy protegido** para afirmar que a VPS também possui a filtragem.
 
 **Decisão Penpot → OpenPencil (06/11/2026):**
 
