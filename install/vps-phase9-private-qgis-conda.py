@@ -108,7 +108,6 @@ def env() -> dict:
        "MAMBA_ROOT_PREFIX":str(MAMBA_ROOT),
        "CONDA_PKGS_DIRS":str(MAMBA_ROOT/"pkgs"),
        "MAMBA_NO_BANNER":"1",
-       "MAMBA_CHANNEL_PRIORITY":"strict",
        "MAMBA_ROOT_ENVIRONMENT":str(MAMBA_ROOT),
        "TMPDIR":str(MAMBA_ROOT/"tmp"),
        "QT_QPA_PLATFORM":"offscreen",
@@ -129,7 +128,7 @@ def execute(cmd: list[str],timeout: int=90,environment: dict|None=None) -> subpr
 def conda_args(dry_run: bool) -> list[str]:
     cmd=[str(MAMBA),"--no-rc","create","--yes","--prefix",str(TARGET),
          "--override-channels","--channel","conda-forge",
-         "--strict-channel-priority","qgis="+VERSION,"python=3.12"]
+         "qgis="+VERSION,"python=3.12"]
     if dry_run:
         cmd+=["--dry-run","--json"]
     return cmd
