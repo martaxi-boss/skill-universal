@@ -57,7 +57,7 @@ doc = json.loads(output.read_text(encoding="utf-8"))
 assert doc.get("type") == "FeatureCollection", "GeoJSON export not a FeatureCollection"
 features = doc.get("features", [])
 assert len(features) == 1, "Buffer did not generate one feature"
-geom = QgsGeometry.fromJson(json.dumps(features[0]["geometry"]))
+geom = QgsGeometry.fromJson(json.dumps(features[0]["geometry"]).encode("utf-8"))
 assert not geom.isEmpty() and geom.isGeosValid(), "Buffered polygon invalid"
 area = geom.area()
 assert 6500.0 < area < 7500.0, ("Unexpected 5m buffer area", area)
