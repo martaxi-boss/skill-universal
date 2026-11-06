@@ -226,16 +226,19 @@ def inventory():
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
         from engine import professional_tools
-        available=(professional_tools.bim_available() if tool=="ifcopenshell" else
+        # Built-in Ferrari functions are executors even without an ELF binary.
+        builtin = entry.get("cost") == "built-in" and tool in {"svg", "html-templates"}
+        available=(True if builtin else
+                   professional_tools.bim_available() if tool=="ifcopenshell" else
                    professional_tools.vite_available() if tool=="vite" else bool(path))
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
-        present=bool(path or evidence)
+        present=bool(path or evidence or builtin)
         state=("callable" if callable_ops or base_ops else
                "installed_unintegrated" if present else "not_detected")
         detection=("executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
-                   "ferrari_cpu_source" if source_evidence else None)
+                   "ferrari_cpu_source" if source_evidence else "ferrari_builtin" if builtin else None)
         return {"id":tool,"category":entry["category"],"source":source,"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,
