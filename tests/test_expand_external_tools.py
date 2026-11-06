@@ -1,4 +1,4 @@
-"""Inventory contracts for the 16 additional external Ferrari programs."""
+"""Inventory contracts for the remaining 15 selected external Ferrari programs."""
 from pathlib import Path
 import unittest
 from engine import ferrari
@@ -7,11 +7,11 @@ ROOT=Path(__file__).resolve().parents[1]
 SCRIPT=ROOT/"install/vps-expand-external.sh"
 
 class ExternalProgramsTests(unittest.TestCase):
-    def test_group_has_exactly_sixteen_selection_candidates(self):
+    def test_group_has_exactly_fifteen_selection_candidates(self):
         selected=[x for x in ferrari.ubuntu_selection() if x["curated_tier"]=="external_upstream" and x["id"] not in {"ghidra","jadx","rea","ruflo","vite","playwright"}]
-        self.assertEqual(len(selected),16)
+        self.assertEqual(len(selected),15)
         self.assertEqual({x["id"] for x in selected},
-            {"freecad","penpot","comfyui","nextjs","tailwind","bootstrap",
+            {"freecad","comfyui","nextjs","tailwind","bootstrap",
              "shadcn","docling","typst","duckdb","polars","streamlit",
              "gradio","godot","faster-whisper","prefect"})
 
@@ -21,7 +21,7 @@ class ExternalProgramsTests(unittest.TestCase):
         self.assertIn('NODE="$ROOT/runtimes/node-22.23.4/bin/node"',src)
         self.assertIn('dir="$ROOT/.runtime/venvs/extended/$tool"',src)
         self.assertIn('root="$ROOT/.runtime/npm/$tool"',src)
-        self.assertIn("PENDING_CONTAINER_DEPLOYMENT",src)
+        self.assertNotIn("record penpot",src)
         self.assertIn("PENDING_CPU_RUNTIME",src)
         for forbidden in ("npm install -g","pip install --break-system-packages",
                           "systemctl start","docker run","rm -rf /root/rea"):
@@ -118,8 +118,9 @@ class ExternalProgramsTests(unittest.TestCase):
         src=SCRIPT.read_text()
         for pkg in ("nextjs","tailwind","bootstrap","shadcn","duckdb","polars",
                     "streamlit","gradio","typst","faster-whisper","prefect",
-                    "docling","freecad","godot","penpot","comfyui"):
+                    "docling","freecad","godot","comfyui"):
             self.assertIn(pkg,src)
+        self.assertNotIn("record penpot",src)
         self.assertIn("FERRARI_EXTERNAL_INSTALLED=",src)
         self.assertIn("FERRARI_EXTERNAL_PENDING=",src)
 

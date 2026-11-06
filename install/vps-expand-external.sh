@@ -152,10 +152,8 @@ install_binary freecad 1.1.4 \
   "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.4/FreeCAD_1.1.4-Linux-x86_64-py311.AppImage" \
   "f6dc6ba676e5ac96a565ebc8d657232f94c6158e85b4352141bd1a46f6b43434" AppImage freecad
 
-# Two server/heavy upstreams require their own verified packaging and runtime.
-# Never treat a source checkout as an installed Penpot service or a GPU
-# candidate as a working ComfyUI on this 4-CPU Ubuntu VPS.
-record penpot PENDING_CONTAINER_DEPLOYMENT
+# ComfyUI CPU remains a specialized optional runtime with its own installer.
+# Do not claim full model/GPU functionality from a source checkout alone.
 record comfyui PENDING_CPU_RUNTIME
 
 python3 - "$TSV" "$OUT/external.json" <<'PY'

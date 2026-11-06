@@ -8,7 +8,7 @@ from engine import ferrari
 class FerrariTests(unittest.TestCase):
     def test_registry(self):
         x=ferrari.registry()
-        self.assertGreaterEqual(len(x),123)
+        self.assertGreaterEqual(len(x),122)
         self.assertEqual(len(set(i["id"] for i in x)),len(x))
     def test_plan(self):
         x=ferrari.plan("Quero descompilar um APK")
@@ -27,13 +27,20 @@ class FerrariTests(unittest.TestCase):
             plan=ferrari.plan(message)
             self.assertEqual(plan["route"],expected)
             self.assertFalse(plan["executed"])
-            self.assertGreaterEqual(plan["catalogued_total"],123)
-    def test_new_upstreams_are_not_installed_by_assumption(self):
-        expanded=[x for x in ferrari.registry() if x["id"]=="penpot"]
-        self.assertEqual(len(expanded),1)
-        self.assertIsNone(expanded[0]["apt"])
-        self.assertFalse(ferrari.present(expanded[0]))
-        self.assertTrue(any(x["id"]=="penpot" for x in ferrari.plan("desenhar um wireframe web")["selected"]))
+            self.assertGreaterEqual(plan["catalogued_total"],122)
+    def test_penpot_retired_and_openpencil_kept(self):
+        import json
+        catalog = json.loads(
+            (Path(__file__).resolve().parents[1] / "engine/catalog.json")
+            .read_text(encoding="utf-8"))
+        ids = {item["id"] for item in catalog["tools"]}
+        self.assertNotIn("penpot", ids)
+        self.assertIn("openpencil", ids)
+        self.assertNotIn("penpot", {item["id"] for item in ferrari.registry()})
+        self.assertNotIn("penpot", {item["id"] for item in ferrari.ubuntu_selection()})
+        self.assertNotIn("penpot", {item["id"] for item in ferrari.plan(
+            "desenhar um wireframe web")["selected"]})
+
     def test_quality_gate(self):
         approved=ferrari.ubuntu_selection()
         self.assertGreaterEqual(len(approved),50)
