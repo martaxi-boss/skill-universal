@@ -1,5 +1,7 @@
 # Ferrari — plano de fecho do motor universal e isolamento total por projeto
 
+**Atualização comprovada em 06/11/2026:** ComfyUI SD 1.5 em CPU com [PNG real #42149365272](https://github.com/martaxi-boss/VPS/actions/runs/42149365272) e faster-whisper tiny em CPU com [transcrição TXT/SRT/JSON #42170510453](https://github.com/martaxi-boss/VPS/actions/runs/42170510453) PASS; [ADB físico #42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714) também PASS. Os limites descritos abaixo são históricos de 05/11; consultar o [BOOTSTRAP atual](../BOOTSTRAP.md). F9/F10 ainda não concluídas, e a atualização da Skill cliente fica para o fecho geral.
+
 **Preparado em 05/11/2026; Fase 5 certificada no próprio dia.** Este documento detalha as **próximas fases 5–10** após os pontos 2 (40 ações tipadas privadas), 3 (certificação por domínio) e 4 (Skill empacotada/ponte testada). Não constitui autorização para operações destrutivas cegas nem prova de deploy; usar o [BOOTSTRAP](../BOOTSTRAP.md) e as execuções reais como fonte de estado.
 
 ## Contrato obrigatório, sem exceções de aplicação
@@ -62,7 +64,7 @@
 
 **Trabalho:** relacionar as capacidades originais — web/full-stack, apps, imagem, vídeo, áudio, Office/OCR, CAD/BIM/IFC/3D, cartografia, dados, segurança/engenharia reversa legítima, automação — com **um caso real representativo**, entrada e saída. Reaproveitar as certificações do Ponto 3 sem as repetir desnecessariamente. Para ferramentas detetadas mas `installed_unintegrated`, decidir se precisam de adaptação ou se são dependências indiretas; não inflacionar contagens. REA tem 229 nomes MCP mas não 229 operações certificadas; continuar cobertura prioritária dos fornecedores quando fizer sentido.
 
-**Limites explícitos não escondidos:** Penpot ausente; ComfyUI CPU sem modelos certificados; Hopper demo sem licença comercial; GUI interativa total, GPU e ADB físico ainda sem prova. Integrar apenas quando for compatível e houver recursos/licença; não prometer cobertura absoluta de hardware/fornecedores indisponíveis. **Higiene após cada grupo:** apagar dependências/protótipos abandonados pertencentes ao Ferrari e guardar provas GitHub Actions/VPS/ZIP.
+**Limites históricos de 05/11, entretanto parcialmente superados:** Penpot ausente; ComfyUI CPU ainda sem modelo nem geração certificados nessa data (certificação SD 1.5 em 06/11); Hopper demo sem licença comercial; GUI interativa total e GPU sem prova; ADB físico foi certificado em 06/11. Integrar apenas quando for compatível e houver recursos/licença; não prometer cobertura absoluta de hardware/fornecedores indisponíveis. **Higiene após cada grupo:** apagar dependências/protótipos abandonados pertencentes ao Ferrari e guardar provas GitHub Actions/VPS/ZIP.
 
 **Fechada quando:** matriz domínio→operação→executável privado→resultado real→limite publicado; nenhum botão falso ou capacidade anunciada que não funcione.
 
