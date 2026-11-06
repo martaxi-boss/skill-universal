@@ -49,10 +49,11 @@ def _source_html(source: str | Path) -> Path:
     # loads, active scripting or local-file access from that public request.
     if re.search(r"<\s*(?:script|iframe|object|embed|link|base|meta\s+http-equiv)\b", html, flags=re.I):
         raise ValueError("Active or external HTML elements are not supported")
-    if re.search(r'''\b(?:src|href|xlink:href|action|poster)\s*=\s*['"]?\s*(?:[a-z][a-z0-9+.-]*:|//)''',html,flags=re.I):
-        raise ValueError("External URL resources are forbidden in OpenPencil input")
-    if re.search(r'''@import\b|url\s*\(\s*['"]?\s*(?:[a-z][a-z0-9+.-]*:|//|/)''', html, flags=re.I):
-        raise ValueError("External CSS resources are forbidden in OpenPencil input")
+    if re.search(r'''\b(?:src|srcset|href|xlink:href|action|formaction|poster|background)\s*=''',
+                 html,flags=re.I):
+        raise ValueError("Link or resource attributes are forbidden in OpenPencil import")
+    if re.search(r'''@import\b|url\s*\(''', html, flags=re.I):
+        raise ValueError("External or local CSS resources are forbidden in OpenPencil input")
     return path.resolve(strict=True)
 
 
