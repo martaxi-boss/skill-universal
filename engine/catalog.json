@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "platform": "Ubuntu 24.04 LTS",
-  "description": "One authoritative Ferrari catalog: all existing engines read this file for tools, Ubuntu candidates, callable actions, upstream discovery, and providers. Presence, compatibility and functioning are separate tests.",
+  "description": "One authoritative Ferrari catalog: tools, program paths, Ubuntu candidates, approved actions, providers, shared runtimes and Python/npm/container discovery declarations. Availability is verified separately.",
   "ownership": {
     "project": "skill-universal",
     "home": "/srv/projects/skill-universal",
@@ -1418,7 +1418,10 @@
         "apt": "jq",
         "cost": "open-source"
       },
-      "core_order": 16
+      "core_order": 16,
+      "private_cli": [
+        "jq"
+      ]
     },
     {
       "id": "ripgrep",
@@ -1472,7 +1475,11 @@
         "priority": "recommended"
       },
       "upstream_order": 49,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "rg",
+      "private_cli": [
+        "rg"
+      ]
     },
     {
       "id": "fd",
@@ -1643,7 +1650,11 @@
         "static_count": null,
         "transport": "engine/rea_mcp.py",
         "note": "Sub-tools are discovered from the actual REA MCP server; no invented static installed tool count"
-      }
+      },
+      "private_executable": ".runtime/npm/rea/node_modules/.bin/rea",
+      "npm_packages": [
+        "rea-agents"
+      ]
     },
     {
       "id": "apktool",
@@ -1697,7 +1708,8 @@
         "priority": "recommended"
       },
       "upstream_order": 3,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_executable": "tools/apktool-3.0.3/bin/apktool"
     },
     {
       "id": "jadx",
@@ -1756,6 +1768,10 @@
       "upstream_source": "registry",
       "requires": [
         "java-25"
+      ],
+      "private_executable": "tools/jadx-1.5.6/bin/jadx",
+      "base_operations": [
+        "apk-decompile"
       ]
     },
     {
@@ -1815,7 +1831,8 @@
       "upstream_source": "registry",
       "requires": [
         "java-25"
-      ]
+      ],
+      "private_executable": "tools/ghidra-12.2/support/analyzeHeadless"
     },
     {
       "id": "binwalk",
@@ -1869,7 +1886,11 @@
         "priority": "recommended"
       },
       "upstream_order": 10,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "binwalk"
+      ],
+      "private_python_script": true
     },
     {
       "id": "unblob",
@@ -1940,7 +1961,11 @@
         "priority": "recommended"
       },
       "upstream_order": 4,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "r2",
+      "private_cli": [
+        "r2"
+      ]
     },
     {
       "id": "gdb",
@@ -1964,7 +1989,10 @@
         "apt": "binutils",
         "cost": "open-source"
       },
-      "core_order": 34
+      "core_order": 34,
+      "private_cli": [
+        "readelf"
+      ]
     },
     {
       "id": "objdump",
@@ -1976,7 +2004,10 @@
         "apt": "binutils",
         "cost": "open-source"
       },
-      "core_order": 35
+      "core_order": 35,
+      "private_cli": [
+        "objdump"
+      ]
     },
     {
       "id": "strings",
@@ -1988,7 +2019,13 @@
         "apt": "binutils",
         "cost": "open-source"
       },
-      "core_order": 36
+      "core_order": 36,
+      "private_cli": [
+        "strings"
+      ],
+      "base_operations": [
+        "binary-strings"
+      ]
     },
     {
       "id": "strace",
@@ -2012,7 +2049,10 @@
         "apt": "file",
         "cost": "open-source"
       },
-      "core_order": 38
+      "core_order": 38,
+      "private_cli": [
+        "file"
+      ]
     },
     {
       "id": "yara",
@@ -2038,7 +2078,8 @@
         "source": "https://developer.android.com/tools",
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
-      "core_order": 40
+      "core_order": 40,
+      "private_executable": "tools/android-cli-36.0.0/platform-tools/adb"
     },
     {
       "id": "aapt",
@@ -2064,7 +2105,8 @@
         "source": "https://developer.android.com/tools",
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
-      "core_order": 42
+      "core_order": 42,
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/apksigner"
     },
     {
       "id": "zipalign",
@@ -2078,7 +2120,8 @@
         "source": "https://developer.android.com/tools",
         "note": "Ferrari-owned Ubuntu Linux x86_64 component; private binary and libraries, no shared Android SDK, with no emulator."
       },
-      "core_order": 43
+      "core_order": 43,
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/zipalign"
     },
     {
       "id": "ffmpeg",
@@ -2136,7 +2179,14 @@
         "priority": "recommended"
       },
       "upstream_order": 30,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "base_operations": [
+        "video-thumbnail"
+      ]
     },
     {
       "id": "imagemagick",
@@ -2194,7 +2244,15 @@
         "priority": "recommended"
       },
       "upstream_order": 29,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "convert",
+      "private_cli": [
+        "identify",
+        "convert"
+      ],
+      "base_operations": [
+        "image-resize"
+      ]
     },
     {
       "id": "inkscape",
@@ -2234,7 +2292,10 @@
         "license_review_required": true,
         "eligible_for_ubuntu_preflight": false
       },
-      "ubuntu_order": 34
+      "ubuntu_order": 34,
+      "private_cli": [
+        "inkscape"
+      ]
     },
     {
       "id": "gimp",
@@ -2297,7 +2358,10 @@
         "priority": "recommended"
       },
       "upstream_order": 24,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "gimp-console-2.10"
+      ]
     },
     {
       "id": "blender",
@@ -2356,7 +2420,10 @@
         "priority": "recommended"
       },
       "upstream_order": 26,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "base_operations": [
+        "blender-house"
+      ]
     },
     {
       "id": "sox",
@@ -2471,7 +2538,8 @@
         "priority": "optional-heavy"
       },
       "upstream_order": 38,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "ferrari_managed_container": true
     },
     {
       "id": "pandoc",
@@ -2525,7 +2593,10 @@
         "priority": "recommended"
       },
       "upstream_order": 34,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "pandoc"
+      ]
     },
     {
       "id": "libreoffice",
@@ -2584,7 +2655,10 @@
         "priority": "recommended"
       },
       "upstream_order": 33,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "base_operations": [
+        "office-pdf"
+      ]
     },
     {
       "id": "pdftotext",
@@ -2596,7 +2670,14 @@
         "apt": "poppler-utils",
         "cost": "open-source"
       },
-      "core_order": 55
+      "core_order": 55,
+      "private_cli": [
+        "pdfinfo",
+        "pdftotext"
+      ],
+      "base_operations": [
+        "pdf-text"
+      ]
     },
     {
       "id": "tesseract",
@@ -2650,7 +2731,11 @@
         "priority": "recommended"
       },
       "upstream_order": 35,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "tesseract",
+      "private_cli": [
+        "tesseract"
+      ]
     },
     {
       "id": "exiftool",
@@ -2674,7 +2759,10 @@
         "apt": "graphviz",
         "cost": "open-source"
       },
-      "core_order": 58
+      "core_order": 58,
+      "private_cli": [
+        "dot"
+      ]
     },
     {
       "id": "svg",
@@ -2756,7 +2844,13 @@
         "priority": "recommended"
       },
       "upstream_order": 14,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "base_operations": [
+        "vite-build"
+      ],
+      "npm_packages": [
+        "vite"
+      ]
     },
     {
       "id": "astro",
@@ -2842,7 +2936,10 @@
         "priority": "recommended"
       },
       "upstream_order": 12,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "npm_packages": [
+        "next"
+      ]
     },
     {
       "id": "tailwindcss",
@@ -2956,7 +3053,11 @@
         "priority": "recommended"
       },
       "upstream_order": 21,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "npm_packages": [
+        "playwright",
+        "@playwright/test"
+      ]
     },
     {
       "id": "ruflo",
@@ -3015,6 +3116,10 @@
       "upstream_source": "registry",
       "requires": [
         "node-22"
+      ],
+      "private_executable": ".runtime/npm/ruflo/node_modules/.bin/ruflo",
+      "npm_packages": [
+        "ruflo"
       ]
     },
     {
@@ -3029,7 +3134,11 @@
         "source": "https://github.com/IfcOpenShell/IfcOpenShell",
         "note": "Ferrari-only Python venv; semantic IFC inventory via isolated IfcOpenShell (LGPL-3.0-or-later). Not a geometric/structural validation."
       },
-      "core_order": 69
+      "core_order": 69,
+      "base_operations": [
+        "ifc-summary"
+      ],
+      "python_module": "ifcopenshell"
     },
     {
       "id": "aapt2",
@@ -3043,7 +3152,8 @@
         "source": "https://developer.android.com/tools",
         "note": "Ferrari-owned Ubuntu Linux Android Build-Tools 36.0.0; inspect compiled APK manifest/resources."
       },
-      "core_order": 70
+      "core_order": 70,
+      "private_executable": "tools/android-cli-36.0.0/build-tools/36.0.0/aapt2"
     },
     {
       "id": "libvips",
@@ -3089,7 +3199,12 @@
         "priority": "recommended"
       },
       "upstream_order": 31,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "vips",
+      "private_cli": [
+        "vips",
+        "vipsheader"
+      ]
     },
     {
       "id": "ocrmypdf",
@@ -3135,7 +3250,12 @@
         "priority": "recommended"
       },
       "upstream_order": 36,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "ocrmypdf",
+      "private_cli": [
+        "ocrmypdf"
+      ],
+      "private_python_script": true
     },
     {
       "id": "opencv",
@@ -3186,7 +3306,9 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 72,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": null,
+      "python_module": "cv2"
     },
     {
       "id": "ansible",
@@ -3232,7 +3354,12 @@
         "priority": "recommended"
       },
       "upstream_order": 46,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "default_binary": "ansible",
+      "private_cli": [
+        "ansible-inventory"
+      ],
+      "private_python_script": true
     },
     {
       "id": "ytdlp",
@@ -3283,7 +3410,9 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 69,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "yt-dlp",
+      "private_executable": "tools/yt-dlp-2026.10.26/yt-dlp"
     },
     {
       "id": "prometheus",
@@ -3334,7 +3463,9 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 101,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/ferrari-services/prometheus/usr/bin/prometheus",
+      "ferrari_managed_container": true
     },
     {
       "id": "wireshark",
@@ -3385,7 +3516,11 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 104,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "tshark",
+      "private_cli": [
+        "tshark"
+      ]
     },
     {
       "id": "valkey",
@@ -3436,7 +3571,10 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 99,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "valkey-server",
+      "private_executable": "tools/ferrari-services/valkey-server/bin/valkey-server",
+      "ferrari_managed_container": true
     },
     {
       "id": "krita",
@@ -3486,7 +3624,10 @@
         "priority": "recommended"
       },
       "upstream_order": 25,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "krita"
+      ]
     },
     {
       "id": "kdenlive",
@@ -3536,7 +3677,10 @@
         "priority": "recommended"
       },
       "upstream_order": 27,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "melt"
+      ]
     },
     {
       "id": "scribus",
@@ -3586,7 +3730,10 @@
         "priority": "recommended"
       },
       "upstream_order": 28,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "scribus"
+      ]
     },
     {
       "id": "darktable",
@@ -3636,7 +3783,10 @@
         "priority": "recommended"
       },
       "upstream_order": 32,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_cli": [
+        "darktable-cli"
+      ]
     },
     {
       "id": "freecad",
@@ -3691,7 +3841,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 54,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/freecad-1.1.4/archive.AppImage"
     },
     {
       "id": "openscad",
@@ -3750,7 +3901,10 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 55,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "base_operations": [
+        "cad-stl"
+      ]
     },
     {
       "id": "librecad",
@@ -3805,7 +3959,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 57,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/librecad-2.2.1.6/squashfs-root/AppRun"
     },
     {
       "id": "qgis",
@@ -3860,7 +4015,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 59,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/qgis-4.2.3-condaforge/bin/qgis_process"
     },
     {
       "id": "audacity",
@@ -3915,7 +4071,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 65,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/audacity-4.0.2/squashfs-root/AppRun"
     },
     {
       "id": "obs",
@@ -3970,7 +4127,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 68,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/obs-studio-32.2.2/run-obs"
     },
     {
       "id": "lmms",
@@ -4025,7 +4183,10 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 66,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_cli": [
+        "lmms"
+      ]
     },
     {
       "id": "solvespace",
@@ -4080,7 +4241,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 61,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_executable": "tools/solvespace-3.1-ubuntu24/usr/bin/solvespace"
     },
     {
       "id": "synfig",
@@ -4135,7 +4297,9 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 62,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "synfigstudio",
+      "private_executable": "tools/synfig-1.5.5/SynfigStudio-1.5.5-2026.03.15-linux64-79bf7.appimage"
     },
     {
       "id": "openshot",
@@ -4190,7 +4354,9 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 71,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "openshot-qt",
+      "private_executable": "tools/openshot-4.1.1/squashfs-root/AppRun"
     },
     {
       "id": "calibre",
@@ -4245,7 +4411,11 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 81,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "private_cli": [
+        "ebook-convert"
+      ],
+      "private_python_script": true
     },
     {
       "id": "penpot",
@@ -4296,7 +4466,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 50,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "tailwind",
@@ -4342,7 +4513,10 @@
         "priority": "recommended"
       },
       "upstream_order": 15,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "npm_packages": [
+        "tailwindcss"
+      ]
     },
     {
       "id": "bootstrap",
@@ -4388,7 +4562,10 @@
         "priority": "recommended"
       },
       "upstream_order": 19,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "npm_packages": [
+        "bootstrap"
+      ]
     },
     {
       "id": "shadcn",
@@ -4434,7 +4611,10 @@
         "priority": "recommended"
       },
       "upstream_order": 16,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "npm_packages": [
+        "shadcn"
+      ]
     },
     {
       "id": "docling",
@@ -4485,7 +4665,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 78,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "docling"
     },
     {
       "id": "typst",
@@ -4531,7 +4712,9 @@
         "priority": "recommended"
       },
       "upstream_order": 37,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "private_executable": "tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
+      "python_module": "typst"
     },
     {
       "id": "duckdb",
@@ -4582,7 +4765,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 94,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "duckdb"
     },
     {
       "id": "polars",
@@ -4633,7 +4817,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 95,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "polars"
     },
     {
       "id": "streamlit",
@@ -4684,7 +4869,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 91,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "streamlit"
     },
     {
       "id": "gradio",
@@ -4735,7 +4921,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 92,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "gradio"
     },
     {
       "id": "godot",
@@ -4786,7 +4973,9 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 58,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "default_binary": "godot",
+      "private_executable": "tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64"
     },
     {
       "id": "faster-whisper",
@@ -4832,7 +5021,8 @@
         "priority": "recommended"
       },
       "upstream_order": 42,
-      "upstream_source": "registry"
+      "upstream_source": "registry",
+      "python_module": "faster_whisper"
     },
     {
       "id": "prefect",
@@ -4883,7 +5073,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 119,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "python_module": "prefect"
     },
     {
       "id": "rizin",
@@ -5797,7 +5988,8 @@
         "priority": "manual_license_review"
       },
       "upstream_order": 86,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "saleor",
@@ -5824,7 +6016,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 87,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "payload",
@@ -5878,7 +6071,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 89,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "supabase",
@@ -5905,7 +6099,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 90,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "dash",
@@ -6013,7 +6208,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 98,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "grafana",
@@ -6040,7 +6236,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 100,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "opentofu",
@@ -6229,7 +6426,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 109,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "neovim",
@@ -6553,7 +6751,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 122,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "immich",
@@ -6580,7 +6779,8 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 123,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
     },
     {
       "id": "jellyfin",
@@ -6607,16 +6807,38 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 124,
-      "upstream_source": "expansion"
+      "upstream_source": "expansion",
+      "ferrari_managed_container": true
+    },
+    {
+      "id": "bpy",
+      "category": "animation",
+      "origin": "Ferrari runtime discovery",
+      "kind": "python-module",
+      "python_module": "bpy"
+    },
+    {
+      "id": "openpencil",
+      "category": "design",
+      "origin": "Ferrari runtime discovery",
+      "kind": "npm-package",
+      "npm_packages": [
+        "@open-pencil/cli"
+      ]
     }
   ],
   "counts": {
-    "unique_tools": 174,
+    "unique_tools": 176,
     "core": 71,
     "ubuntu_candidates": 56,
     "upstream_registry": 125,
     "actions": 40,
     "providers": 12,
-    "shared_runtime_definitions": 3
+    "shared_runtime_definitions": 3,
+    "private_executable_paths": 22,
+    "private_cli_groups": 26,
+    "python_discovery_modules": 11,
+    "npm_package_definitions": 9,
+    "ferrari_managed_container_candidates": 14
   }
 }
