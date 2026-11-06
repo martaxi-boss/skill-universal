@@ -198,6 +198,40 @@ def ferrari_source_presence(tool):
     return {"scope":"ferrari_cpu_source","location":str(src),
             "version":"v0.43.0","model_inference_tested":False}
 
+def shared_dependencies(catalog):
+    """Read-only common Ferrari runtime inventory; no installs or PATH fallback.
+
+    A dependency is declared exactly once by id/reuse key and referred to by
+    tool IDs.  Being present does not prove an ABI-compatible execution.
+    """
+    home = HOME.resolve(strict=False)
+    names=set()
+    reusable=set()
+    records=[]
+    for entry in catalog.get("dependencies", []):
+        name=entry["id"]
+        key=entry["reuse_key"]
+        if name in names or key in reusable:
+            raise ValueError("Duplicate Ferrari shared dependency")
+        names.add(name)
+        reusable.add(key)
+        rel=Path(entry["relative_path"])
+        if rel.is_absolute() or ".." in rel.parts:
+            raise ValueError("Unsafe Ferrari shared dependency path")
+        candidate=HOME/rel
+        resolved=candidate.resolve(strict=False)
+        if not resolved.is_relative_to(home):
+            raise ValueError("Ferrari shared dependency outside project")
+        present=(candidate.is_file() and os.access(candidate,os.X_OK))
+        callers=[t["id"] for t in catalog["tools"] if name in t.get("requires",[])]
+        records.append({"id":name,"version":entry["version"],
+                        "path":str(candidate),"reuse_key":key,
+                        "required_by":callers,"present":present,
+                        "status":"present_unverified" if present else "not_detected",
+                        "compatibility_certified":False})
+    return records
+
+
 def inventory():
     catalog=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
     selected=[x["ubuntu"] for x in sorted(
@@ -270,6 +304,7 @@ def inventory():
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
+            "shared_dependencies":shared_dependencies(catalog),
             "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
 def normalize(value):
