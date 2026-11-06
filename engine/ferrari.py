@@ -46,7 +46,8 @@ def registry():
     An upstream candidate is NOT an installed or working program.  Preserve
     the original curated/source order, and never merge duplicate tool IDs.
     """
-    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    from engine import catalog_registry
+    catalog = catalog_registry.read_catalog(REGISTRY)
     if catalog.get("schema") != 2:
         raise ValueError("Unsupported Ferrari tool catalog")
     items = []
@@ -123,7 +124,8 @@ def doctor():
 
 def ubuntu_selection():
     """Only curated Ubuntu evidence; unreviewed discovery stays out of planning."""
-    catalog = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    from engine import catalog_registry
+    catalog = catalog_registry.read_catalog(REGISTRY)
     manifest = dict(catalog["ubuntu_metadata"])
     manifest["tools"] = [x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),
