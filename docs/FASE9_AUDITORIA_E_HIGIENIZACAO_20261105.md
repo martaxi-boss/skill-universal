@@ -133,3 +133,26 @@ Esta secção substitui as fotografias históricas acima; não interpretar afirm
 - [VPS #42232550380](https://github.com/martaxi-boss/VPS/actions/runs/42232550380): **PASS de teste funcional** em HTTP local `127.0.0.1`, HTML5 `<video>` e ficheiro sintético MP4; o yt-dlp privado extraiu o URL e descarregou um ficheiro idêntico byte a byte. Isto não certifica todos os sites, autenticação, DRM nem formatos de vídeo reais.
 - **Ainda não fazer `apt purge yt-dlp`:** o pacote global continua instalado para recuperação. A referência do novo executável no `tool_runtime.py` está no GitHub, mas a release ativa da VPS continua `f1f3b035...`; ativar e certificar primeiro uma release compatível e auditar as dependências/consumidores do pacote global. A contagem de **oito pacotes APT restantes permanece inalterada**.
 - Os outros sete programas (LibreCAD, QGIS, Audacity, OBS Studio, SolveSpace, Synfig e OpenShot) ainda não têm alternativas privadas certificadas. Não declarar F9 encerrada.
+
+## Continuação real — 06/11/2026, após o yt-dlp (estado atualizado)
+
+Esta secção **substitui o estado histórico dos «outros sete ainda sem substituto»**. Distinguir presença de ficheiro, instalação privada, arranque CLI, desenho real, GUI e independência total:
+
+| Programa | Estado privado observado | Prova VPS | Limite |
+| --- | --- | --- | --- |
+| yt-dlp 2026.10.26 | SHA256, extratores e download HTTP sintético byte-idêntico | [#42232550380](https://github.com/martaxi-boss/VPS/actions/runs/42232550380) | Sites comerciais, DRM e dependências externas não cobertos |
+| LibreCAD 2.2.1.6 | AppImage oficial extraído dentro de `tools/`, digest validado (395 MB) | [#42237644608](https://github.com/martaxi-boss/VPS/actions/runs/42237644608) | Interface e edição CAD ainda sem teste funcional |
+| Audacity 4.0.2 | AppImage extraído, digest validado (273 MB) | [#42237644608](https://github.com/martaxi-boss/VPS/actions/runs/42237644608) | Áudio, GUI e edição ainda sem teste funcional |
+| OpenShot 4.1.1 | AppImage extraído, digest validado (826 MB) | [#42237644608](https://github.com/martaxi-boss/VPS/actions/runs/42237644608) | Edição e renderização de vídeo ainda por testar |
+| Synfig Studio 1.5.5 | Type-1 AppImage oficial executável, SHA256 validado (111 MB) | [#42237644608](https://github.com/martaxi-boss/VPS/actions/runs/42237644608) | Formato não suporta o mesmo modo de extração; GUI e independência por certificar |
+| OBS Studio 32.2.2 | Pacote oficial Ubuntu 24.04 isolado, 457 MB; conflito de `libobs` global corrigido, `--version` e `libobs` privado **PASS** | [#42244136623](https://github.com/martaxi-boss/VPS/actions/runs/42244136623) | Gravação, cenas, WebSocket, stream e dependências totais não certificados |
+| SolveSpace 3.1 | Debian oficial Ubuntu 24.04 SHA256 validado, executável privado (9,8 MB) | [#42240722944](https://github.com/martaxi-boss/VPS/actions/runs/42240722944) | Usa bibliotecas básicas GTK/GL Ubuntu; GUI e CAD real por certificar |
+| QGIS 4.2.3 | Conda-forge GPL-2.0-only inteiramente no Ferrari; CLI, catálogo nativo, PyQGIS, bibliotecas GIS privadas **PASS**; 3,1 GB + 1,2 GB em cache/ambiente | [#42244331078](https://github.com/martaxi-boss/VPS/actions/runs/42244331078) | Inicialização integral de providers/GUI encontra `libhdf5_cpp.so.320` opcional em falta; não declarar todo o QGIS verde |
+
+**Teste funcional de geometria 2D sem GPU — PASS:** [VPS #42246944925](https://github.com/martaxi-boss/VPS/actions/runs/42246944925). Python/QgsGeometry privados criaram polígono sintético 100×50 metros, validaram área 5 000 m² e GeoJSON e geraram PNG com Qt/QImage por CPU. Não é projeto legal de arquitetura nem certificação integral de GUI/PDAL. A primeira tentativa [#42245729130](https://github.com/martaxi-boss/VPS/actions/runs/42245729130) corretamente revelou a falha do módulo opcional; a seguinte separou esse módulo da função que já pode ser certificada.
+
+**Integridade operacional e espaço:** oito serviços VPS intactos em todas as provas PASS citadas; última medição após QGIS: aprox. 34 GB disponíveis em disco de 72 GB. Ferramentas e caches instalados somente em `/srv/projects/skill-universal/{tools,.runtime}`. Nenhum dos oito pacotes APT antigos foi removido nesta segunda migração, para preservar o rollback. Testar e simular remoções antes de purgar; nunca `apt autoremove` às cegas.
+
+**Alinhamento GitHub↔VPS:** instaladores/testes/seleção de caminhos privados estão no repositório `martaxi-boss/skill-universal`. A release de código ativa ainda era `f1f3b03525adec7018d7d629243e7b0fbb7f5087` nas últimas provas, embora as ferramentas novas já estejam em `tools/`. Essa diferença **não deve ser descrita como release alinhada** até a versão nova passar `install/vps-isolated-release.sh --check`, ativação com rollback e leitura de verificação. Projetos e alterações locais externos ao Ferrari permanecem fora do âmbito destas modificações.
+
+**Veredito nesta fotografia:** 8/8 programas possuem presença privada verificável; certificação funcional desigual. **A Fase 9 ainda está aberta**, pois faltam prova/isolamento completos de GUI, reconciliação segura dos pacotes globais, higiene de workflows temporários e ativação da release.
