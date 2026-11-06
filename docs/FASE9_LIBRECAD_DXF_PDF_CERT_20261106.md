@@ -17,6 +17,6 @@
 
 ## Organização e higiene
 
-O código e os testes estão em [Ferrari PR #127](https://github.com/martaxi-boss/skill-universal/pull/127) e na correção [PR #129](https://github.com/martaxi-boss/skill-universal/pull/129). O transporte usa o **workflow Ferrari existente** do [VPS PR #368](https://github.com/martaxi-boss/VPS/pull/368) e a correção [PR #370](https://github.com/martaxi-boss/VPS/pull/370), sem outro catálogo, Skill, agente, ponte SSH ou projeto. O PR #367 foi encerrado por conflito de merge simultâneo e substituído pelo #368 sem perda de alterações; os seus registos históricos podem permanecer.
+O código original está no commit `25544619dfb8633e1c1fb620ad2cbe9b6929390a`; a correção Xvfb foi integrada no commit `7792e914fad631175f9e831695ad6178bce2cc29`. O código e os testes estão em [Ferrari PR #127](https://github.com/martaxi-boss/skill-universal/pull/127) e na correção [PR #129](https://github.com/martaxi-boss/skill-universal/pull/129). O transporte usa o **workflow Ferrari existente** do [VPS PR #368](https://github.com/martaxi-boss/VPS/pull/368) e a correção [PR #370](https://github.com/martaxi-boss/VPS/pull/370), sem outro catálogo, Skill, agente, ponte SSH ou projeto. O PR #367 foi encerrado por conflito de merge simultâneo e substituído pelo #368 sem perda de alterações; os seus registos históricos podem permanecer.
 
 **Próxima fronteira F9:** certificar funções reais de áudio/vídeo, OBS, outros formatos CAD e GUI onde aplicável; continuar a testar bibliotecas opcionais isoladas, sem declarar Fase 9 integralmente concluída.
