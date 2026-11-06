@@ -24,6 +24,7 @@ METHODS = frozenset(("tools/list", "tools/call"))
 def validate_requests(value):
     if not isinstance(value, list) or not value or len(value) > 30:
         raise ValueError("REA MCP requests must be a nonempty list of at most 30 entries")
+    allowed_names = None
     for item in value:
         if not isinstance(item, dict) or set(item) - {"method", "params"}:
             raise ValueError("Invalid REA MCP request fields")
@@ -40,9 +41,13 @@ def validate_requests(value):
                 raise ValueError("Invalid REA MCP tool name")
             if not isinstance(params["arguments"], dict):
                 raise ValueError("REA MCP tool arguments must be JSON object")
-            # No paid proprietary JEB bridge may be called through Ferrari.
-            if "jeb" in name.lower().split("_"):
-                raise ValueError("Paid JEB provider is excluded from the Ferrari catalog")
+            # Only tools admitted in the SINGLE Ferrari catalog may run.
+            # This also blocks newly advertised or demo-only REA operations.
+            if allowed_names is None:
+                manifest = json.loads((Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+                allowed_names = set(manifest["mcp_capabilities"]["names"])
+            if name not in allowed_names:
+                raise ValueError("REA MCP tool not admitted by Ferrari single catalog")
         elif set(params) - {"cursor"}:
             raise ValueError("Invalid tools/list params")
         elif "cursor" in params and (not isinstance(params["cursor"], str)
@@ -101,9 +106,8 @@ def _resources(root: Path):
     })
     # Do not inherit external Hopper paths from the VPS environment.
     env.pop("HOPPER_LAUNCHER_PATH", None)
-    hopper = _private_hopper_launcher(root)
-    if hopper is not None:
-        env["HOPPER_LAUNCHER_PATH"] = hopper
+    # Do not enable the Hopper demo as a provider: its full capabilities
+    # require commercial licensing. Other free REA providers remain private.
     return cli, env
 
 

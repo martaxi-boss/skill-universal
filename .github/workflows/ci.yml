@@ -74,8 +74,10 @@ jobs:
           assert all(x['certified_on_vps'] is False for x in selected)
           assert len(catalog['actions']) == 40
           assert len(catalog['providers']) == 8
-          assert len(catalog['mcp_capabilities']['names']) == 225
-          assert catalog['counts']['all_catalog_entries'] == 401
+          assert len(catalog['mcp_capabilities']['excluded_paid_or_demo_names']) == 9
+          assert catalog['counts']['mcp_source_advertised'] == 229
+          assert len(catalog['mcp_capabilities']['names']) == 220
+          assert catalog['counts']['all_catalog_entries'] == 396
           assert all(p['cost'] in ('free-tier', 'open-source', 'built-in') for p in catalog['providers'])
           print('Ferrari release/selection integrity: PASS (static only)')
           PY
