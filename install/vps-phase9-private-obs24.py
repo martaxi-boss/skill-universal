@@ -145,12 +145,15 @@ def install() -> dict:
         require(result.returncode == 0, "F9_OBS_DEB_EXTRACT_FAILED:" + result.stderr[-200:])
         # Refuse an archive without an independent project-private executable.
         relative = obs_binary(payload)
-        version_check = subprocess.run(["dpkg-deb", "-f", str(src), "Package", "Version", "Architecture"],
+        version_check = subprocess.run(["dpkg-deb", "-f", str(src)],
                                        env={"PATH": "/usr/bin:/bin"}, timeout=20,
                                        capture_output=True, text=True, check=False)
-        lines = version_check.stdout.strip().splitlines()
-        require(version_check.returncode == 0 and len(lines) >= 3 and
-                lines[0] == "obs-studio" and VERSION in lines[1] and lines[2] == "amd64",
+        fields = dict(line.split(": ", 1) for line in version_check.stdout.splitlines()
+                      if ": " in line and not line.startswith(" "))
+        require(version_check.returncode == 0
+                and fields.get("Package") == "obs-studio"
+                and VERSION in fields.get("Version", "")
+                and fields.get("Architecture") == "amd64",
                 "F9_OBS_DEB_METADATA_MISMATCH:" + version_check.stdout[-150:])
         data = {"source": URL, "sha256": SHA256, "version": VERSION,
                 "bytes": SIZE, "obs_relative_exe": relative,
