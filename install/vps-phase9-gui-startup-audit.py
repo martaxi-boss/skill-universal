@@ -40,6 +40,7 @@ def guard() -> None:
 
 def executable(name: str) -> Path:
     path=TOOLS/PROBES[name]
+    assert not path.is_symlink(), "F9_GUI_PRIVATE_APP_IS_SYMLINK:"+name
     assert path.is_file() and os.access(path,os.X_OK), "F9_GUI_PRIVATE_APP_MISSING:"+name
     assert path.resolve(strict=True).is_relative_to(TOOLS.resolve(strict=True)), \
         "F9_GUI_PRIVATE_APP_ESCAPED:"+name
