@@ -38,7 +38,10 @@ ROUTES.update({
  "productivity": ("notas", "gestao de projeto", "produtividade", "documentacao"),
 })
 LAYOUTS = {"landing": "website.html", "store": "layouts/store.html", "portfolio": "layouts/portfolio.html", "dashboard": "layouts/dashboard.html"}
-OPS = ("web-template","svg-poster","pdf-text","image-resize","video-thumbnail","apk-decompile","binary-strings","cad-stl","blender-house","office-pdf","ifc-summary","vite-build")
+# Operation IDs are also read from the same canonical universal registry;
+# never maintain a separate Ferrari operation allowlist in Python source.
+OPS = tuple(item["name"] for item in json.loads(REGISTRY.read_text(encoding="utf-8"))["functions"]
+            if item["kind"] == "operation")
 
 def registry():
     """Discover upstream entries from the Ferrari's only tool catalog.
