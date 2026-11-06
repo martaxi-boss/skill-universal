@@ -231,15 +231,117 @@ def install()->dict:
             shutil.rmtree(SIDECAR)
         raise
 
+def runtime_smoke()->dict:
+    """Runtime-load both PDAL plugins without changing the known-good QGIS environment."""
+    verified=check()
+    import resource
+    import signal
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix=".f9-pdal-loader-",dir=RUNTIME) as td:
+        work=Path(td)
+        e=private_env()
+        e.update({
+            "HOME":str(work),"TMPDIR":str(work),
+            "XDG_CONFIG_HOME":str(work),"XDG_CACHE_HOME":str(work),
+            "XDG_DATA_HOME":str(work),"XDG_RUNTIME_DIR":str(work),
+            "QGIS_PREFIX_PATH":str(QGIS),
+            "QT_QPA_PLATFORM":"offscreen",
+            "LIBGL_ALWAYS_SOFTWARE":"1",
+            "OMP_NUM_THREADS":"2",
+            "PDAL_DRIVER_PATH":str(QGIS/"lib"),
+            "LD_LIBRARY_PATH":str(SIDECAR/"lib")+":"+str(QGIS/"lib"),
+            "PATH":str(QGIS/"bin")+":/usr/bin:/bin",
+            "PYTHONPATH":":".join(str(p) for p in
+                                   (QGIS/"share/qgis/python",
+                                    QGIS/"share/qgis/python/plugins") if p.is_dir())
+        })
+        def child(name:str,argv:list[str])->dict:
+            p=subprocess.Popen(argv,cwd=work,env=e,
+                               stdout=subprocess.PIPE,stderr=subprocess.PIPE,
+                               text=True,start_new_session=True)
+            timed_out=False
+            try:
+                out,err=p.communicate(timeout=55)
+            except subprocess.TimeoutExpired:
+                timed_out=True
+                os.killpg(p.pid,signal.SIGKILL)
+                out,err=p.communicate(timeout=6)
+            clean=re.sub(re.escape(str(ROOT)),"<FERRARI>",(err or "")[-500:])
+            return {"probe":name,"exit_code":p.returncode,
+                    "timed_out":timed_out,"stdout_tail":(out or "")[-700:],
+                    "stderr_tail":clean,
+                    "pass":p.returncode==0 and not timed_out}
+        ct_code=(
+            "import ctypes,json,os,resource,sys;"
+            "resource.setrlimit(resource.RLIMIT_CORE,(0,0));"
+            "libs=sys.argv[1:];"
+            "[ctypes.CDLL(p,mode=os.RTLD_NOW|os.RTLD_LOCAL) for p in libs];"
+            "print(json.dumps({'loaded':len(libs)}))"
+        )
+        paths=[str(QGIS/"lib"/plugin) for plugin in PLUGINS]
+        dynamic=child("ctypes_pdal_shared_objects",
+                      [str(QGIS/"bin/python"),"-B","-c",ct_code,*paths])
+        load_count=0
+        if dynamic["pass"]:
+            try:
+                load_count=int(json.loads(dynamic["stdout_tail"].strip().splitlines()[-1])["loaded"])
+            except (ValueError,IndexError,KeyError):
+                pass
+        qgis_code=(
+            "import resource;"
+            "resource.setrlimit(resource.RLIMIT_CORE,(0,0));"
+            "from qgis.core import QgsApplication,QgsGeometry;"
+            "from pathlib import Path;"
+            "QgsApplication.setPrefixPath("+repr(str(QGIS))+",True);"
+            "app=QgsApplication([],False);app.initQgis();"
+            "g=QgsGeometry.fromWkt('POLYGON((0 0,100 0,100 50,0 50,0 0))');"
+            "assert g.isGeosValid() and abs(g.area()-5000)<0.1;"
+            "print('F9_QGIS_INITIALIZED_WITH_HDF5_SIDECAR=PASS')"
+        )
+        qgis=child("qgis_core_with_sidecar",
+                   [str(QGIS/"bin/python"),"-B","-c",qgis_code])
+        cli=QGIS/"bin/pdal"
+        drivers=None
+        if cli.is_file() and os.access(cli,os.X_OK) and cli.resolve().is_relative_to(QGIS):
+            drivers=child("pdal_driver_registry",[str(cli),"--drivers"])
+        plugins_loaded=(dynamic["pass"] and load_count==len(PLUGINS))
+        qgis_ok=(qgis["pass"] and
+                 "F9_QGIS_INITIALIZED_WITH_HDF5_SIDECAR=PASS" in qgis["stdout_tail"])
+        drivers_visible=(bool(drivers and drivers["pass"] and
+                              "readers.hdf" in drivers["stdout_tail"] and
+                              "readers.icebridge" in drivers["stdout_tail"]))
+    return {
+        "status":"private_pdal_runtime_pass" if plugins_loaded and qgis_ok
+                 else "partial_blocked",
+        "hdf5_version":HDF5_VERSION,
+        "plugins_dynamically_loaded":load_count,
+        "expected_plugins":len(PLUGINS),
+        "qgis_init_with_sidecar_pass":qgis_ok,
+        "pdal_driver_cli_present":cli.is_file(),
+        "pdal_both_drivers_advertised":drivers_visible,
+        "dynamic_loader_probe":dynamic,
+        "qgis_init_probe":qgis,
+        "pdal_drivers_probe":drivers,
+        "original_qgis_core_pass":verified["original_qgis_core_pass"],
+        "sidecar_prefix":str(SIDECAR),
+        "full_pdal_formats_certified":False,
+        "gui_certified":False,
+        "other_projects_changed":False,
+        "global_apt_changed":False,
+        "test_artifacts_removed":True
+    }
+
+
 def main()->int:
     parser=argparse.ArgumentParser()
     opts=parser.add_mutually_exclusive_group(required=True)
     opts.add_argument("--preview",action="store_true")
     opts.add_argument("--install",action="store_true")
     opts.add_argument("--check",action="store_true")
+    opts.add_argument("--runtime-smoke",action="store_true")
     args=parser.parse_args()
     try:
-        d=preview() if args.preview else install() if args.install else check()
+        d=preview() if args.preview else install() if args.install else runtime_smoke() if args.runtime_smoke else check()
         print(json.dumps(d,sort_keys=True),flush=True)
         return 0
     except (OSError,ValueError,RuntimeError,subprocess.SubprocessError) as exc:

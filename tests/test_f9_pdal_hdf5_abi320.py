@@ -93,6 +93,57 @@ class PrivateHDF5AbiTests(unittest.TestCase):
             self.assertTrue(all(p["linked"] and p["direct_hdf5_cpp_320_resolved"]
                                 for p in result.values()))
 
+    def test_runtime_load_two_real_private_plugins_and_qgis_headless(self):
+        with TemporaryDirectory() as td:
+            root=Path(td)
+            runtime=root/".runtime"
+            runtime.mkdir()
+            qgis=root/"qgis"
+            (qgis/"bin").mkdir(parents=True)
+            side=root/"sidecar"
+            side.mkdir()
+            def process(argv,**kwargs):
+                script=argv[3] if len(argv)>3 else ""
+                is_dynamic="ctypes.CDLL" in script
+                stdout=('{"loaded":2}\n' if is_dynamic
+                        else "F9_QGIS_INITIALIZED_WITH_HDF5_SIDECAR=PASS\n")
+                return SimpleNamespace(pid=100,returncode=0,
+                         communicate=lambda timeout=55: (stdout,""))
+            with patch.multiple(m,QGIS=qgis,RUNTIME=runtime,SIDECAR=side),\
+                 patch.object(m,"check",return_value={"original_qgis_core_pass":True}),\
+                 patch.object(m,"private_env",return_value={}),\
+                 patch.object(m.subprocess,"Popen",side_effect=process):
+                result=m.runtime_smoke()
+            self.assertEqual(result["status"],"private_pdal_runtime_pass")
+            self.assertEqual(result["plugins_dynamically_loaded"],2)
+            self.assertTrue(result["qgis_init_with_sidecar_pass"])
+            self.assertFalse(result["full_pdal_formats_certified"])
+            self.assertTrue(result["test_artifacts_removed"])
+            self.assertEqual(list(runtime.iterdir()),[])
+
+    def test_runtime_crash_is_not_a_certificate(self):
+        with TemporaryDirectory() as td:
+            root=Path(td)
+            runtime=root/".runtime"
+            runtime.mkdir()
+            qgis=root/"qgis"
+            (qgis/"bin").mkdir(parents=True)
+            side=root/"sidecar"
+            side.mkdir()
+            def crash(argv,**kwargs):
+                return SimpleNamespace(pid=99,returncode=-6,
+                         communicate=lambda timeout=55: ("","std::bad_alloc"))
+            with patch.multiple(m,QGIS=qgis,RUNTIME=runtime,SIDECAR=side),\
+                 patch.object(m,"check",return_value={"original_qgis_core_pass":True}),\
+                 patch.object(m,"private_env",return_value={}),\
+                 patch.object(m.subprocess,"Popen",side_effect=crash):
+                result=m.runtime_smoke()
+            self.assertEqual(result["status"],"partial_blocked")
+            self.assertEqual(result["plugins_dynamically_loaded"],0)
+            self.assertFalse(result["qgis_init_with_sidecar_pass"])
+            self.assertFalse(result["global_apt_changed"])
+            self.assertEqual(list(runtime.iterdir()),[])
+
     def test_install_failure_cleans_only_its_new_folder(self):
         with TemporaryDirectory() as td:
             root=Path(td)
