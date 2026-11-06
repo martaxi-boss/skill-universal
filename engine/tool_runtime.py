@@ -276,7 +276,7 @@ def inventory():
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
             "shared_dependencies":shared_dependencies(catalog),
-            "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
+            "note":"Read-only Ferrari-private program discovery. Functions share one universal catalog; distinct execution routes retain validation. Discovery is not certification."}
 
 def unified_catalog(*, inventory_now=None):
     """One authoritative catalog view: Ferrari programs + live REA MCP capabilities.
@@ -428,11 +428,37 @@ def unified_catalog(*, inventory_now=None):
             "invocation": {"kind": "rea-mcp", "method": "tools/call",
                            "name": entry["name"]},
             "selectable": entry["selectable"], "status": entry["status"],
+            "installed_separately": False,
         })
     # The public view is grouped by domain, not by favored program.
     functions.sort(key=lambda item: (item["category"], item["id"]))
     if len({item["id"] for item in functions}) != len(functions):
         raise ValueError("Duplicate Ferrari function ID")
+
+    # THE ONE UNIVERSAL CATALOG: programs, every integrated function,
+    # dependencies and suppliers share the SAME entries[] index. REA is
+    # represented by ordinary function records with program="rea".
+    program_entries = [item for item in entries if item["kind"] == "program"]
+    dependency_entries = [
+        {"id": "dependency:" + item["id"], "name": item["id"],
+         "kind": "dependency", "category": "runtime", "program": None,
+         "version": item["version"], "path": item["path"],
+         "required_by": item["required_by"], "status": item["status"],
+         "selectable": False, "installed": item["present"]}
+        for item in shared_dependencies(doc)
+    ]
+    provider_entries = [
+        {"id": "provider:" + item["id"], "name": item["id"],
+         "kind": "provider", "category": item["category"],
+         "program": item.get("tool_id"), "cost": item["cost"],
+         "admission": item["admission"], "selectable": False,
+         "status": "approved_local_provider_not_a_function"}
+        for item in doc["providers"]
+    ]
+    entries = program_entries + functions + dependency_entries + provider_entries
+    entries.sort(key=lambda item: (str(item["kind"]), str(item["id"])))
+    if len({item["id"] for item in entries}) != len(entries):
+        raise ValueError("Duplicate Ferrari universal catalog ID")
     counts = {
         "programs": len(doc["tools"]), "rea_mcp_capabilities": len(expected),
         "all_catalog_entries": len(entries),
@@ -465,7 +491,7 @@ def unified_catalog(*, inventory_now=None):
         "dependencies": shared_dependencies(doc),
         "providers": providers_now,
         "private_ecosystems": inventory_now["ecosystems"],
-        "note": "Single flat functions[] index combines approved REA MCP names, Ferrari typed actions and base operations from engine/catalog.json. Registered/selected != end-to-end certified; programs without an integrated function are not invented. Unverified Ubuntu candidates and cloud accounts are never silently executed.",
+        "note": "SINGLE universal entries[] catalog: programs, functions (REA included as regular program), dependencies and providers. Supplementary functions/actions/REA status are derived views, NOT separate catalogs. Registered/selected != end-to-end certified; programs without integrated functions are not invented.",
     }
 
 
