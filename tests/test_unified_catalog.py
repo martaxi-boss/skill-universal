@@ -21,7 +21,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         names = self.doc["mcp_capabilities"]["names"]
         self.assertEqual(len(names), 220)
         self.assertEqual(len(set(names)), len(names))
-        self.assertEqual(self.doc["counts"]["unique_tools"], 172)
+        self.assertEqual(self.doc["counts"]["unique_tools"], 173)
         self.assertEqual(self.doc["counts"]["mcp_capabilities"], 220)
         self.assertEqual(self.doc["counts"]["all_catalog_entries"], 393)
         self.assertEqual(len(self.doc["tools"]) + len(names), 393)
