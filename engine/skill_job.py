@@ -61,6 +61,8 @@ def validate_job(data):
         raise ValueError("Ferrari tool action is not integrated")
     if kind=="ruflo-host":
         ruflo_host.validate_job(data)
+    elif any(key in data for key in ("roles","steps","host")):
+        raise ValueError("Ruflo fields require kind=ruflo-host")
     if kind=="rea-mcp":
         if set(data)-{"version","id","kind","input","mcp_requests"}:
             raise ValueError("Unexpected original REA MCP job fields")
