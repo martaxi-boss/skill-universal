@@ -2,3 +2,4 @@ ferrari-preflight: 2026-11-06
 mode: read-only
 purpose: validate existing Ferrari Ubuntu deploy SSH secrets and independent VPS readiness before universal catalog guarded activation
 source: PR-114-universal-catalog-hygiene
+revalidation: 2026-11-06 runner-fixtures-fixed PR-115, read-only
