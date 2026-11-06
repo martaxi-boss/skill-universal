@@ -33,8 +33,10 @@ def validate_job(data):
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
         raise ValueError("Invalid Ferrari job ID")
     kind=data.get("kind")
-    if kind not in {"inventory","operation","auto","invoke","plan","rea-mcp","ruflo-host"}:
+    if kind not in {"inventory","catalog","operation","auto","invoke","plan","rea-mcp","ruflo-host"}:
         raise ValueError("Unsupported Ferrari job kind")
+    if kind=="catalog" and set(data)!={"version","id","kind"}:
+        raise ValueError("Catalog request accepts no input or side effects")
     inp=data.get("input")
     if kind in {"auto","invoke"} and not isinstance(inp,dict):
         raise ValueError("This operation requires an input file")
@@ -131,6 +133,11 @@ def execute(data, outdir):
             dest.mkdir(mode=0o700)
             (dest/"inventory.json").write_text(json.dumps(tool_runtime.inventory(),ensure_ascii=False,indent=2),encoding="utf-8")
             response={"confirmed":True,"artifacts":[str(dest/"inventory.json")]}
+        elif kind=="catalog":
+            dest.mkdir(mode=0o700)
+            catalog_file=dest/"catalog.json"
+            catalog_file.write_text(json.dumps(tool_runtime.unified_catalog(),ensure_ascii=False,indent=2),encoding="utf-8")
+            response={"confirmed":True,"artifacts":[str(catalog_file)]}
         elif kind=="operation":
             response=ferrari.run(data["operation"],str(dest),source=str(src) if src else None,
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
