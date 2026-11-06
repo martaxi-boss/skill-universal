@@ -318,7 +318,12 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
     if system()["distro"] != "ubuntu":
         raise RuntimeError("Ferrari execution is supported only on Ubuntu")
     p=_input(source) if op not in {"web-template","svg-poster","blender-house"} else None
-    if op=="web-template":
+    if op=="web-template" and source is not None:
+        # Optional HTML input uses the existing Skill operation and transport;
+        # no new operation ID, validator pin, SSH or 40-action manifest changes.
+        from engine import openpencil
+        exe,artifacts=openpencil.convert_html(_input(source),output)
+    elif op=="web-template":
         dest=_output(output,"site/index.html")
         if layout not in LAYOUTS:
             raise ValueError("Unknown layout")
