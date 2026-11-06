@@ -24,6 +24,7 @@ PYTHON_MODULES = {
 }
 NPM_PACKAGES = {
     "rea": ("rea-agents",), "ruflo": ("ruflo",),
+    "openpencil": ("@open-pencil/cli",),
     "nextjs": ("next",), "vite": ("vite",),
     "tailwind": ("tailwindcss",), "bootstrap": ("bootstrap",),
     "playwright": ("playwright", "@playwright/test"),
