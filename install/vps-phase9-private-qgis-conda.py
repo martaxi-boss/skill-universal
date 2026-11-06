@@ -172,18 +172,28 @@ def smoke() -> dict:
     detail=(cli.stdout+"\n"+cli.stderr)[-2400:]
     require(cli.returncode==0 and VERSION in detail,
             "F9_QGIS_PRIVATE_CLI_VERSION_SMOKE_FAILED:"+detail[-240:])
+    # Headless Processing is a useful standalone capability. PyQGIS is an
+    # additional API and must be reported separately, never falsely inferred.
+    native=execute([str(PREFIX_BIN),"--no-python","list"],timeout=120,environment=environment)
+    require(native.returncode==0 and native.stdout.lower().count("native:")>=5,
+            "F9_QGIS_NATIVE_PROCESSING_CATALOG_FAILED:"+
+            (native.stderr or native.stdout)[-220:])
+    pyenv=environment.copy()
+    locations=(TARGET/"share/qgis/python",TARGET/"share/qgis/python/plugins")
+    pyenv["PYTHONPATH"]=":".join(str(d) for d in locations if d.is_dir())
     py=execute([str(TARGET/"bin/python"),"-c",
                 "from qgis.core import QgsApplication; print('F9_PRIVATE_QGIS_PYTHON_IMPORT=PASS')"],
-               timeout=120,environment=environment)
-    require(py.returncode==0 and "F9_PRIVATE_QGIS_PYTHON_IMPORT=PASS" in py.stdout,
-            "F9_QGIS_PYTHON_IMPORT_FAILED:"+(py.stderr or py.stdout)[-350:])
+               timeout=120,environment=pyenv)
+    python_ok=bool(py.returncode==0 and
+                   "F9_PRIVATE_QGIS_PYTHON_IMPORT=PASS" in py.stdout)
     link=execute(["/usr/bin/ldd",str(PREFIX_BIN)],timeout=30,environment=environment)
     require(link.returncode==0 and "not found" not in link.stdout,
             "F9_QGIS_LDD_NOT_RESOLVED")
     qgis_libs=[x.strip() for x in link.stdout.splitlines() if "libqgis_" in x]
     require(qgis_libs and all(str(TARGET) in x for x in qgis_libs),
             "F9_QGIS_LINKED_TO_GLOBAL_QGIS_LIBRARY")
-    return {"cli_version_certified":True,"python_qgis_import_certified":True,
+    return {"cli_version_certified":True,"python_qgis_import_certified":python_ok,
+            "native_processing_catalog_certified":True,
             "private_qgis_libraries_loaded":True,"license":package["license"],
             "gui_runtime_certified":False}
 
