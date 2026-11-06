@@ -20,13 +20,13 @@ class OneToolCatalogTests(unittest.TestCase):
     def test_single_source_of_truth_with_original_evidence_preserved(self):
         doc = self.data
         self.assertEqual(doc["schema"], 2)
-        self.assertEqual(doc["counts"]["unique_tools"], 176)
-        self.assertEqual(len(doc["tools"]), 176)
+        self.assertEqual(doc["counts"]["unique_tools"], 174)
+        self.assertEqual(len(doc["tools"]), 174)
         self.assertEqual(len(doc["actions"]), 40)
-        self.assertEqual(len(doc["providers"]), 8)
+        self.assertEqual(len(doc["providers"]), 2)
         self.assertEqual(len([t for t in doc["tools"] if "core" in t]), 71)
         self.assertEqual(len([t for t in doc["tools"] if "ubuntu" in t]), 56)
-        self.assertEqual(len([t for t in doc["tools"] if "upstream" in t]), 125)
+        self.assertEqual(len([t for t in doc["tools"] if "upstream" in t]), 123)
         self.assertEqual(len({t["id"] for t in doc["tools"]}), len(doc["tools"]))
         self.assertTrue(all(t["id"] == t["id"].lower() for t in doc["tools"]))
         self.assertTrue(all(t.get("ubuntu", {}).get("certified_on_vps") is not True
@@ -35,9 +35,9 @@ class OneToolCatalogTests(unittest.TestCase):
     def test_all_consumers_work_from_same_catalog(self):
         self.assertEqual(len(tool_runtime.specs()), 40)
         self.assertEqual(len(core.inventory()), 71)
-        self.assertEqual(len(ferrari.registry()), 125)
+        self.assertEqual(len(ferrari.registry()), 123)
         self.assertEqual(len(ferrari.ubuntu_selection()), 56)
-        self.assertEqual(len(core.providers()), 8)
+        self.assertEqual(len(core.providers()), 2)
         inv = tool_runtime.inventory()
         self.assertEqual(inv["registered_actions"], 40)
         self.assertEqual(inv["selected"], 56)

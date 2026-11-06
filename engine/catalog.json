@@ -75,66 +75,10 @@
     "schema": 2,
     "origin": "Verified GitHub API repository metadata, 2026-11-02. GitHub stars are historical snapshots, not trust or functionality.",
     "notice": "Not installed, Ubuntu compatibility not certified. Licenses reported by GitHub metadata; review upstream license before redistributing.",
-    "count": 75
+    "count": 73
   },
-  "provider_policy": "Ubuntu-compatible free/open-source or explicitly no-charge-tier candidates only; cloud providers are disabled until explicitly configured and verified for no-cost execution. No paid plans, trials that require a payment method, cost-bearing fallback or automatic charges.",
+  "provider_policy": "Only Ferrarri-project-owned local open-source or built-in providers compatible with Ubuntu 24.04 LTS. Closed-source cloud/free-tier services are absent from the operative catalog; no paid or remote fallback.",
   "providers": [
-    {
-      "id": "openrouter-free",
-      "category": [
-        "code",
-        "analysis",
-        "text"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "OPENROUTER_API_KEY",
-      "url": "https://openrouter.ai/collections/free-models",
-      "note": "Modelos :free; limites de pedidos e disponibilidade. Não escolher modelos pagos sem consentimento.",
-      "admission": "free_only_no_paid_fallback"
-    },
-    {
-      "id": "gemini-free",
-      "category": [
-        "code",
-        "analysis",
-        "text"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "GEMINI_API_KEY",
-      "url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "note": "Só modelos suportados na camada gratuita; condições e uso de dados variam.",
-      "admission": "free_only_no_paid_fallback"
-    },
-    {
-      "id": "groq-free",
-      "category": [
-        "text",
-        "analysis",
-        "speech"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "GROQ_API_KEY",
-      "url": "https://console.groq.com/docs/rate-limits",
-      "note": "Quotas, modelo e região dependem da conta; verificar antes de cada execução.",
-      "admission": "free_only_no_paid_fallback"
-    },
-    {
-      "id": "cloudflare-workers-ai",
-      "category": [
-        "text",
-        "analysis",
-        "media"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "CLOUDFLARE_API_TOKEN",
-      "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
-      "note": "Conta/limites e modelos disponíveis variáveis.",
-      "admission": "free_only_no_paid_fallback"
-    },
     {
       "id": "imagemagick-local",
       "category": [
@@ -156,34 +100,6 @@
       "cost": "built-in",
       "binary": null,
       "note": "Criativos SVG locais sem chamadas pagas; não é geração fotorealista.",
-      "admission": "free_only_no_paid_fallback"
-    },
-    {
-      "id": "mistral-free",
-      "category": [
-        "code",
-        "analysis",
-        "text"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "MISTRAL_API_KEY",
-      "url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
-      "note": "Modo Free sem cartão, quotas e modelos selecionados; regras de tratamento de dados aplicam-se.",
-      "admission": "free_only_no_paid_fallback"
-    },
-    {
-      "id": "cerebras-free",
-      "category": [
-        "code",
-        "analysis",
-        "text"
-      ],
-      "kind": "cloud",
-      "cost": "free-tier",
-      "env": "CEREBRAS_API_KEY",
-      "url": "https://inference-docs.cerebras.ai/support/pricing",
-      "note": "Plano gratis documentado, com limites por modelo/conta; verificar o estado atual.",
       "admission": "free_only_no_paid_fallback"
     }
   ],
@@ -6406,34 +6322,6 @@
       "admission": "upstream_candidate_unverified"
     },
     {
-      "id": "nmap",
-      "category": "reverse",
-      "upstream": {
-        "id": "nmap",
-        "repository": "nmap/nmap",
-        "url": "https://github.com/nmap/nmap",
-        "category": "reverse",
-        "capabilities": [
-          "network_diagnostics"
-        ],
-        "license_status": "review_required",
-        "license_spdx": null,
-        "stars_snapshot": 13917,
-        "verified_on": "2026-11-02",
-        "ubuntu_compatibility": "candidate_not_tested",
-        "install_method": "apt",
-        "package_candidate": "nmap",
-        "package_ubuntu_verified": false,
-        "resources": "cpu",
-        "installed": false,
-        "smoke_tested": false,
-        "priority": "manual_license_review"
-      },
-      "upstream_order": 105,
-      "upstream_source": "expansion",
-      "admission": "upstream_candidate_unverified"
-    },
-    {
       "id": "androguard",
       "category": "reverse",
       "upstream": {
@@ -6599,34 +6487,6 @@
         "priority": "free_software_candidate"
       },
       "upstream_order": 111,
-      "upstream_source": "expansion",
-      "admission": "upstream_candidate_unverified"
-    },
-    {
-      "id": "vscode",
-      "category": "dev",
-      "upstream": {
-        "id": "vscode",
-        "repository": "microsoft/vscode",
-        "url": "https://github.com/microsoft/vscode",
-        "category": "dev",
-        "capabilities": [
-          "code_editor"
-        ],
-        "license_status": "github_declared",
-        "license_spdx": "MIT",
-        "stars_snapshot": 194499,
-        "verified_on": "2026-11-02",
-        "ubuntu_compatibility": "candidate_not_tested",
-        "install_method": "upstream",
-        "package_candidate": null,
-        "package_ubuntu_verified": false,
-        "resources": "gui",
-        "installed": false,
-        "smoke_tested": false,
-        "priority": "free_software_candidate"
-      },
-      "upstream_order": 112,
       "upstream_source": "expansion",
       "admission": "upstream_candidate_unverified"
     },
@@ -6961,12 +6821,12 @@
     }
   ],
   "counts": {
-    "unique_tools": 176,
+    "unique_tools": 174,
     "core": 71,
     "ubuntu_candidates": 56,
-    "upstream_registry": 125,
+    "upstream_registry": 123,
     "actions": 40,
-    "providers": 8,
+    "providers": 2,
     "shared_runtime_definitions": 3,
     "private_executable_paths": 22,
     "private_cli_groups": 26,
@@ -6974,14 +6834,14 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 14,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 396,
+    "all_catalog_entries": 394,
     "mcp_source_advertised": 229,
     "excluded_paid_or_demo_mcp_capabilities": 9
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
-    "cost": "no_required_paid_license_or_subscription",
-    "unsupported": "exclude_paid_or_ubuntu_incompatible",
+    "cost": "local_open_source_or_builtin_only_no_cloud_providers",
+    "unsupported": "exclude_no_identical_open_source_replacement_or_ubuntu_incompatible",
     "unverified": "candidate_not_executable_until_verified",
     "other_projects": "never_share_binaries_or_dependencies"
   },
