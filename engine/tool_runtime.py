@@ -40,7 +40,7 @@ ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
           # GUI AppImages are project-private; presence is not functional GUI certification.
           "librecad":HOME/"tools/librecad-2.2.1.6/squashfs-root/AppRun",
           "audacity":HOME/"tools/audacity-4.0.2/squashfs-root/AppRun",
-          "synfig":HOME/"tools/synfig-1.5.5/squashfs-root/AppRun",
+          "synfig":HOME/"tools/synfig-1.5.5/SynfigStudio-1.5.5-2026.03.15-linux64-79bf7.appimage",
           "openshot":HOME/"tools/openshot-4.1.1/squashfs-root/AppRun",
           "aapt2":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/aapt2",
           "apksigner":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
