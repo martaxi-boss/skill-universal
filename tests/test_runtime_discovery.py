@@ -69,13 +69,13 @@ class RuntimeDiscoveryTests(unittest.TestCase):
             self.assertIsNone(runtime_discovery.npm_presence("unknown",home=home,system_roots=()))
 
     def test_container_probe_only_ferrari_label_and_no_shell(self):
-        payload=('{"Labels":"org.motor-ferrari.managed=true,org.motor-ferrari.tool=penpot",'
-                 '"Image":"penpot/app:latest","State":"running"}\n')
+        payload=('{"Labels":"org.motor-ferrari.managed=true,org.motor-ferrari.tool=comfyui",'
+                 '"Image":"comfyui/app:latest","State":"running"}\n')
         with patch("engine.runtime_discovery.shutil.which",side_effect=lambda x: "/usr/bin/docker" if x=="docker" else None):
             with patch("engine.runtime_discovery.subprocess.run",
                        return_value=SimpleNamespace(returncode=0,stdout=payload,stderr="")) as execute:
                 result=runtime_discovery.container_discovery()
-        self.assertEqual(result["tools"]["penpot"][0]["state"],"running")
+        self.assertEqual(result["tools"]["comfyui"][0]["state"],"running")
         self.assertEqual(result["runtimes"]["docker"]["ferrari_managed_containers"],1)
         args=execute.call_args.args[0]
         self.assertIn("label=org.motor-ferrari.managed=true",args)
