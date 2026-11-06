@@ -85,6 +85,8 @@ class OpenPencilSkillTests(unittest.TestCase):
             '<html><style>@import "http://example.com/style.css"</style></html>',
             '<html><style>body{background:url(file:///etc/passwd)}</style></html>',
             '<html><iframe src="//external.example"></iframe></html>',
+            '<html><img src="../../etc/passwd"></html>',
+            '<html><a href="/etc/passwd">Do not read</a></html>',
             '<svg><text>incomplete html</text></svg>',
         )
         with tempfile.TemporaryDirectory() as d:
