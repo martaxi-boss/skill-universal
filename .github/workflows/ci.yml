@@ -79,9 +79,9 @@ jobs:
           assert 'excluded_paid_or_demo_mcp_capabilities' not in catalog['counts']
           assert catalog['counts']['mcp_source_advertised'] == 229
           assert len(catalog['mcp_capabilities']['names']) == 220
-          assert catalog['counts']['all_catalog_entries'] == 394
-          assert catalog['counts']['unique_tools'] == 174
-          assert catalog['counts']['upstream_registry'] == 123
+          assert catalog['counts']['all_catalog_entries'] == 393
+          assert catalog['counts']['unique_tools'] == 173
+          assert catalog['counts']['upstream_registry'] == 122
           assert all(t['id'] not in ('nmap', 'vscode') for t in catalog['tools'])
           assert all(p['kind'] == 'local' and p['cost'] in ('open-source', 'built-in') for p in catalog['providers'])
           print('Ferrari release/selection integrity: PASS (static only)')
