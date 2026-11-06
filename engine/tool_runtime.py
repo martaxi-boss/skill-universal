@@ -275,7 +275,7 @@ def inventory():
             "shared_dependencies":shared_dependencies(catalog),
             "note":"Read-only binaries, Python specs/venvs, npm manifests and Ferrari-labelled containers; discovery is not a functional test. Base operations and typed adapters remain separate."}
 
-def unified_catalog():
+def unified_catalog(*, inventory_now=None):
     """One authoritative catalog view: Ferrari programs + live REA MCP capabilities.
 
     The only persistent source is engine/catalog.json. REA tool descriptors are
@@ -322,7 +322,7 @@ def unified_catalog():
         observed = {x["name"]: x for x in found}
     except (ValueError, OSError, RuntimeError) as exc:
         mcp_error = str(exc)[:240]
-    inventory_now = inventory()
+    inventory_now = inventory() if inventory_now is None else inventory_now
     presence = {p["id"]: p for p in inventory_now["programs"]}
     entries = []
     for item in doc["tools"]:
