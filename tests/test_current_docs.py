@@ -125,6 +125,23 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn('"gui_editing_certified": False', script)
         self.assertIn('"preexisting_xvfb_qa_display": True', script)
 
+    def test_f9_cad3d_blender_and_pdal_scopes_are_evidence_backed(self):
+        report = (ROOT / "docs/FASE9_CAD3D_BLENDER_PDAL_SKILL_20261106.md").read_text(encoding="utf-8")
+        for proof in ("42312047260", "42312161892", "42311620021",
+                      "27 446,705", "208 faces", "6 geometrias",
+                      "full_pdal_formats_certified=false", "não certifica"):
+            self.assertIn(proof, report)
+        for path in ("BOOTSTRAP.md", "README.md",
+                     "skill/motor-universal-linux/SKILL.md",
+                     "skill/motor-universal-linux/references/bootstrap.md"):
+            with self.subTest(path=path):
+                entry = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("42312047260", entry)
+                self.assertIn("42312161892", entry)
+                self.assertIn("42311620021", entry)
+                self.assertIn("450", entry)
+        self.assertLess(len((ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")), 17000)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
