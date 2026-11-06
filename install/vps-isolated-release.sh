@@ -115,7 +115,7 @@ VERIFY_ARCHIVE
   tar --no-same-owner --no-same-permissions --strip-components=1 \
       -xzf "$WORK/release.tar.gz" -C "$STAGED"
   [[ -f "$STAGED/engine/ferrari.py" && -f "$STAGED/engine/skill_job.py"
-     && -f "$STAGED/engine/tool_actions.json" ]] || {
+     && -f "$STAGED/engine/catalog.json" ]] || {
     echo FERRARI_RELEASE_SOURCE_INVALID >&2; exit 5;
   }
   RELEASE="$STAGED"
