@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import unittest
 
-from engine import ferrari
+from engine import catalog_registry, ferrari
 
 ROOT=Path(__file__).resolve().parents[1]
 DOC=ROOT/"docs/FASE8_MATRIZ_COBERTURA_20261105.md"
@@ -21,7 +21,7 @@ class FerrariPhase8Coverage(unittest.TestCase):
                 cells=row.split("|")
                 self.assertGreaterEqual(len(cells),4)
                 found+=re.findall(r"`([a-z0-9-]+)`",cells[2])
-        expected={a["id"] for a in json.loads(MANIFEST.read_text())["actions"]}
+        expected={a["id"] for a in catalog_registry.read_catalog(MANIFEST)["actions"]}
         self.assertEqual(len(found),40)
         self.assertEqual(set(found),expected)
         self.assertEqual(len(set(found)),len(found))
