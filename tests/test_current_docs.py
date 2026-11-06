@@ -44,10 +44,14 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
         for doc in (bootstrap, readme, sk, portable):
-            self.assertIn("f1f3b035", doc)
             self.assertNotIn("pinado em `292aeb7d10eecef8c3ca84760cd579e84e4b97f3`", doc)
             self.assertIn("Hopper", doc)
             self.assertNotIn("é um link exclusivo", doc)
+            self.assertIn("450", doc)
+            self.assertIn("42297678715", doc)
+        # Historic SHA only needs to appear where historical releases are documented.
+        for doc in (bootstrap, sk, portable):
+            self.assertIn("f1f3b035", doc)
         # Historic code SHAs are not immutable requirements of the live snapshot.
         for doc in (readme, sk, portable):
             self.assertIn("b2869e33", doc)
@@ -84,7 +88,8 @@ class CurrentFerrariDocsTests(unittest.TestCase):
             self.assertIn("3.0.3", text)
             self.assertIn("41786521407", text)
             self.assertIn("rea-mcp", text)
-            self.assertIn("55/56", text)
+            self.assertIn("55/55", text)
+            self.assertIn("272/272", text)
             self.assertNotIn("REA antigo como fallback", text)
         self.assertIn("references/github-bridge.md", sk)
         self.assertIn("references/bootstrap.md", sk)
