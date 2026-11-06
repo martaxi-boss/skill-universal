@@ -6835,8 +6835,7 @@
     "ferrari_managed_container_candidates": 14,
     "mcp_capabilities": 220,
     "all_catalog_entries": 394,
-    "mcp_source_advertised": 229,
-    "excluded_paid_or_demo_mcp_capabilities": 9
+    "mcp_source_advertised": 229
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -6852,7 +6851,7 @@
     "invocation": "tools/call",
     "runtime_transport": "engine/rea_mcp.py",
     "verified_vps_workflow_run": 42269934831,
-    "scope": "one_catalog_live_reconciled",
+    "scope": "only_approved_names_exposed_to_ferrari",
     "names": [
       "inspect_analysis_settings",
       "update_analysis_settings",
@@ -7075,22 +7074,6 @@
       "get_navigation_context",
       "inspect_address_context"
     ],
-    "excluded_paid_provider_ids": [
-      "jeb",
-      "hopper-demo"
-    ],
-    "note": "REA tools/list advertises 229, but four JEB commercial-dependent capabilities are not admitted as Ferrari tools. Runtime reconciliation ignores these explicitly excluded paid-provider capabilities. No paid providers are ever invoked automatically.",
-    "excluded_paid_or_demo_names": [
-      "inspect_jeb_client",
-      "open_jeb_project",
-      "list_jeb_units",
-      "decompile_jeb_item",
-      "current_address",
-      "current_procedure",
-      "current_document",
-      "goto_address",
-      "list_bookmarks"
-    ],
-    "exclusion_reason": "Source REA tools/list returned 229; JEB commercial tools and Hopper GUI demo-specific operations are not eligible for free Ubuntu Ferrari selection."
+    "note": "Ferrari exposes ONLY the approved MCP names in this catalog. Upstream REA discovery may advertise other capabilities; no unlisted function is returned or callable by Ferrari."
   }
 }
