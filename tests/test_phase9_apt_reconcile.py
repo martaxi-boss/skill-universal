@@ -41,6 +41,19 @@ class Phase9AptSafetyTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError,"F9_APT_SIMULATION_WOULD_CHANGE_OTHER_PACKAGES"):
                 mod.simulation()
 
+    def test_debian_archive_fields_are_verified_independently(self):
+        from types import SimpleNamespace
+        def probe(args, **_):
+            self.assertEqual(args[:3], ["dpkg-deb","-f","/tmp/test.deb"])
+            self.assertEqual(len(args),4,"Each dpkg-deb query must ask for one field")
+            values={"Package":"gimp","Version":"2.10.36-3ubuntu0.24.04.1"}
+            return SimpleNamespace(returncode=0,stdout=values[args[3]]+"\\n")
+        with patch.object(mod,"command",side_effect=probe):
+            self.assertTrue(mod.matches_deb_identity(Path("/tmp/test.deb"),
+                              "gimp","2.10.36-3ubuntu0.24.04.1"))
+            self.assertFalse(mod.matches_deb_identity(Path("/tmp/test.deb"),
+                              "ansible","2.10.36-3ubuntu0.24.04.1"))
+
     def test_no_uncontrolled_autoremove(self):
         tree=ast.parse(SRC.read_text(encoding="utf-8"))
         code=SRC.read_text(encoding="utf-8")
