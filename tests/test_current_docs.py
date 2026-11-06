@@ -112,7 +112,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
     def test_librecad_private_dxf_pdf_certificate_is_not_gui_certification(self):
         report = (ROOT / "docs/FASE9_LIBRECAD_DXF_PDF_CERT_20261106.md").read_text(encoding="utf-8")
         for value in ("42310428893", "42311158545", "1 614", "pdfinfo",
-                      "Xvfb", "gui", "25544619"):
+                      "Xvfb", "GUI", "25544619"):
             self.assertIn(value, report)
         for path in ("BOOTSTRAP.md", "README.md",
                      "skill/motor-universal-linux/SKILL.md",
