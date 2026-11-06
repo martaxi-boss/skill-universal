@@ -99,6 +99,41 @@ def package_state() -> tuple[dict, set[str], bool]:
     return state, files, exact
 
 
+def independent_dpkg_package_state(name: str) -> dict:
+    """Cross-check dpkg -s against a separate status-query output contract."""
+    first = command(["dpkg", "-s", name], timeout=12)
+    first_installed = first.returncode == 0 and any(
+        row.strip() == "Status: install ok installed"
+        for row in first.stdout.splitlines())
+    second = command(["dpkg-query", "-W", "-f=${Status}", name], timeout=12)
+    second_installed = (second.returncode == 0
+                        and second.stdout.strip() == "install ok installed")
+    require(first_installed == second_installed,
+            "F9_DPKG_STATUS_METHODS_DISAGREE:" + name)
+    return {"installed": first_installed,
+            "dpkg_status_matches_query": True}
+
+
+def verify_packages_only() -> dict:
+    require(os.geteuid() == 0, "F9_AUDIT_REQUIRES_ROOT_READ_ONLY")
+    identity = verify_release()
+    states = {name: independent_dpkg_package_state(name) for name in PACKAGES}
+    services = {}
+    for name in SERVICES:
+        p = command(["systemctl", "is-active", name], timeout=10)
+        services[name] = p.returncode == 0 and p.stdout.strip() == "active"
+    require(all(services.values()), "F9_PROTECTED_SERVICES_UNHEALTHY")
+    return {
+        "status": "PASS", "mode": "independent_dpkg_validation", **identity,
+        "packages": states, "methods_agree": True,
+        "installed_count": sum(item["installed"] for item in states.values()),
+        "protected_services_active": len(SERVICES),
+        "apt_changes": 0, "file_changes": 0,
+        "other_projects_modified": False,
+        "purge_authorized": False,
+    }
+
+
 def consumer_scan(project: Path, deadline: float, owned: set[str]) -> dict:
     count = content = large = errors = unexpected_symlinks = paths_seen = 0
     references: Counter[str] = Counter()
@@ -235,8 +270,16 @@ def audit() -> dict:
 
 if __name__ == "__main__":
     try:
-        print(json.dumps(audit(), sort_keys=True, indent=2))
-        print("FERRARI_F9_GLOBAL_APT_READONLY=PASS", file=sys.stderr)
+        if sys.argv[1:] == ["--verify-packages"]:
+            report = verify_packages_only()
+            marker = "FERRARI_F9_APT_INDEPENDENT_DPKG=PASS"
+        elif len(sys.argv) == 1:
+            report = audit()
+            marker = "FERRARI_F9_GLOBAL_APT_READONLY=PASS"
+        else:
+            raise RuntimeError("F9_UNKNOWN_MODE")
+        print(json.dumps(report, sort_keys=True, indent=2))
+        print(marker, file=sys.stderr)
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
         print(json.dumps({"status": "BLOCKED", "reason": str(exc),
                           "apt_changes": 0}), file=sys.stderr)
