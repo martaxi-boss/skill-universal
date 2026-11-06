@@ -57,6 +57,25 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn("41981152670", bootstrap)
         self.assertIn("41840478411", bootstrap)
 
+    def test_one_catalog_guides_skill_and_public_readme(self):
+        """Do not send a Ferrari user to the deleted action registry."""
+        paths = (
+            "BOOTSTRAP.md", "README.md",
+            "skill/motor-universal-linux/SKILL.md",
+            "skill/motor-universal-linux/references/bootstrap.md",
+            "skill/motor-universal-linux/references/github-bridge.md",
+        )
+        for path in paths:
+            with self.subTest(path=path):
+                doc = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("engine/catalog.json", doc)
+                self.assertNotIn("engine/tool_actions.json", doc)
+        bootstrap = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
+        self.assertIn("42263466893", bootstrap)
+        self.assertIn("42265187873", bootstrap)
+        bridge = (ROOT / "skill/motor-universal-linux/references/github-bridge.md").read_text(encoding="utf-8")
+        self.assertIn("0b50e1d403deff8f3ccb421edd0b41c397d66b9b", bridge)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
