@@ -80,6 +80,20 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         bridge = (ROOT / "skill/motor-universal-linux/references/github-bridge.md").read_text(encoding="utf-8")
         self.assertIn("0b50e1d403deff8f3ccb421edd0b41c397d66b9b", bridge)
 
+    def test_f9_nominal_global_apt_readback_is_current(self):
+        report = (ROOT / "docs/FASE9_HIGIENE_APT_FINAL_20261106.md").read_text(encoding="utf-8")
+        self.assertIn("42300665770", report)
+        self.assertIn("42299686585", report)
+        self.assertIn("Instalados: 0/8", report)
+        self.assertIn("certificação funcional exaustiva", report)
+        for path in ("BOOTSTRAP.md", "README.md",
+                     "skill/motor-universal-linux/SKILL.md",
+                     "skill/motor-universal-linux/references/bootstrap.md"):
+            with self.subTest(path=path):
+                doc = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("42300665770", doc)
+                self.assertIn("QGIS", doc)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
