@@ -6972,8 +6972,10 @@
     "python_discovery_modules": 11,
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 14,
-    "mcp_capabilities": 229,
-    "all_catalog_entries": 405
+    "mcp_capabilities": 220,
+    "all_catalog_entries": 396,
+    "mcp_source_advertised": 229,
+    "excluded_paid_or_demo_mcp_capabilities": 9
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -7003,12 +7005,7 @@
       "resolve_native_call_targets",
       "address_name",
       "comment",
-      "current_address",
-      "current_procedure",
-      "current_document",
-      "goto_address",
       "inline_comment",
-      "list_bookmarks",
       "list_documents",
       "list_names",
       "list_procedures",
@@ -7103,10 +7100,6 @@
       "inspect_android_class",
       "inspect_android_method",
       "trace_android_references",
-      "inspect_jeb_client",
-      "open_jeb_project",
-      "list_jeb_units",
-      "decompile_jeb_item",
       "inspect_byte_entropy",
       "inspect_binary_layout",
       "inspect_analysis_view",
@@ -7220,6 +7213,18 @@
       "verify_unknown_resolution",
       "get_navigation_context",
       "inspect_address_context"
-    ]
+    ],
+    "excluded_paid_or_demo_names": [
+      "inspect_jeb_client",
+      "open_jeb_project",
+      "list_jeb_units",
+      "decompile_jeb_item",
+      "current_address",
+      "current_procedure",
+      "current_document",
+      "goto_address",
+      "list_bookmarks"
+    ],
+    "exclusion_reason": "Commercial-license provider functions: JEB Pro client API; Hopper-specific GUI-only tools. Live tools/list may advertise them, but Ferrari catalog does not admit or call them; other free-provider REA functions remain."
   }
 }
