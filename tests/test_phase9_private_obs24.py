@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import hashlib
 import io
+import json
 import tempfile
 import unittest
 
