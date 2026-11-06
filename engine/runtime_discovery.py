@@ -14,12 +14,12 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from engine import catalog_registry
 
 FERRARI_HOME = Path("/srv/projects/skill-universal")
 # Generated views from the SAME Ferrari tool catalog as the executable
 # router. The discovery engine reads no second source or external project.
-_DISCOVERY_CATALOG = json.loads(
-    (Path(__file__).resolve().parent / "catalog.json").read_text(encoding="utf-8"))
+_DISCOVERY_CATALOG = catalog_registry.read_catalog()
 if _DISCOVERY_CATALOG.get("schema") != 2:
     raise ValueError("Unsupported Ferrari tool catalog schema")
 PYTHON_MODULES = {
