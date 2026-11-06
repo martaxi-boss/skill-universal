@@ -125,6 +125,17 @@ class UniversalHygieneTests(unittest.TestCase):
         self.assertNotIn(audited, report2["removed_old_releases"])
         self.assertTrue(release.exists())
 
+    def test_audited_release_with_untracked_root_file_is_preserved(self):
+        audited = "0b50e1d403deff8f3ccb421edd0b41c397d66b9b"
+        release = self._release(audited)
+        (release / ".runtime").mkdir()
+        (release / "private-notes.json").write_text("do-not-delete")
+        result = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertNotIn(audited, result["removed_old_releases"])
+        self.assertTrue((release / "private-notes.json").is_file())
+        self.assertIn("unexpected_file_or_symlink_at_release_root",
+                      [row["reason"] for row in result["skipped_old_releases"]])
+
     def test_unknown_empty_runtime_release_is_still_preserved(self):
         release = self._release("d" * 40)
         (release / ".runtime").mkdir()
