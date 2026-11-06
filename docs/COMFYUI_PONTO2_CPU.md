@@ -35,3 +35,8 @@ Depois de PASS, remover workflows/pedidos administrativos **temporários** no re
 - Após certificação da alternativa, verificar ausência de consumidores e remover os **pesos Tiny-SD sem suporte** dentro da pasta Ferrari com guardas de versão e de hashes, não tocar nos modelos de outros projetos.
 
 **Estado:** modelo Tiny-SD verificado mas incompatível; SD 1.5 em preparação. Nenhuma certificação de geração real por ComfyUI até um novo run com PNG válido.
+
+## Prova SD 1.5 — diagnóstico intermédio
+
+- [VPS #42148799862](https://github.com/martaxi-boss/VPS/actions/runs/42148799862): pesos SD 1.5 full UNet fp16, CLIP e VAE **instalados e SHA256 PASS**; ComfyUI reconheceu e carregou o modelo em CPU (`FERRARI_COMFY_ACTUAL_MODEL_LOAD=PASS`), e KSampler concluiu **3/3 steps em cerca de 25 segundos**. O processo foi interrompido durante a descodificação VAE, **sem PNG certificado**; causa exata de terminação não provada (possível limite cgroup, SSH ou VAE). Nenhuma razão para aumentar quotas da VPS.
+- A próxima prova usa libertação explícita UNet/CLIP, `comfy.model_management.unload_all_models()` e `VAEDecodeTiled(tile_size=128,overlap=32)` nativa, com indicadores de memória e cgroup preservado em **5 GiB / 150% CPU**. Só considerar PASS com PNG real e hash do resultado.
