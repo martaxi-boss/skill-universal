@@ -95,6 +95,43 @@ class UniversalHygieneTests(unittest.TestCase):
         self.assertEqual(report["removed_old_releases"], [])
         self.assertTrue((self.root / "releases" / OLD).exists())
 
+    def test_audited_completely_empty_runtime_can_be_pruned(self):
+        audited = "0b50e1d403deff8f3ccb421edd0b41c397d66b9b"
+        release = self._release(audited)
+        (release / ".runtime").mkdir()
+        preview = hygiene.audit(self.root, NEW, FALLBACK)
+        self.assertIn(audited, preview["eligible_old_releases"])
+        self.assertTrue(release.exists())
+        applied = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertIn(audited, applied["removed_old_releases"])
+        self.assertFalse(release.exists())
+        self.assertTrue((self.root / "releases" / NEW).exists())
+        self.assertTrue((self.root / "releases" / FALLBACK).exists())
+
+    def test_audited_runtime_refuses_added_data_or_symlink(self):
+        audited = "0b50e1d403deff8f3ccb421edd0b41c397d66b9b"
+        release = self._release(audited)
+        folder = release / ".runtime"
+        folder.mkdir()
+        self.assertIn(audited, hygiene.audit(self.root, NEW, FALLBACK)
+                      ["eligible_old_releases"])
+        (folder / "new-real-state.json").write_text("{}")
+        report = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertNotIn(audited, report["removed_old_releases"])
+        self.assertTrue(release.exists())
+        (folder / "new-real-state.json").unlink()
+        (folder / "outside").symlink_to(self.root / "runtimes", target_is_directory=True)
+        report2 = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertNotIn(audited, report2["removed_old_releases"])
+        self.assertTrue(release.exists())
+
+    def test_unknown_empty_runtime_release_is_still_preserved(self):
+        release = self._release("d" * 40)
+        (release / ".runtime").mkdir()
+        result = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertNotIn(release.name, result["removed_old_releases"])
+        self.assertTrue(release.exists())
+
     def test_refuses_unsafe_top_level_project_links(self):
         (self.root / "current").unlink()
         (self.root / "current").symlink_to(
