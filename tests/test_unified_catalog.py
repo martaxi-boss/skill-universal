@@ -49,6 +49,40 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(len(self.doc["actions"]), 40)
         self.assertEqual(len(self.doc["mcp_capabilities"]["names"]), 220)
 
+    def test_complete_flat_index_contains_every_catalog_record_type(self):
+        """One browsable register; REA is one program, not another catalog."""
+        from collections import Counter
+        from engine import ferrari
+
+        with patch.object(rea_mcp, "discover_tools", return_value=[]):
+            result = tool_runtime.unified_catalog(
+                inventory_now={"programs": [], "ecosystems": {}})
+        entries = result["entries"]
+        self.assertEqual(len(entries), 450)
+        self.assertEqual(len({record["id"] for record in entries}), 450)
+        counts = Counter(record["kind"] for record in entries)
+        self.assertEqual(counts, {
+            "program": 173,
+            "base_operation": 12,
+            "typed_action": 40,
+            "mcp_capability": 220,
+            "dependency": 3,
+            "provider": 2,
+        })
+        self.assertIn("rea", {p["id"] for p in entries if p["kind"] == "program"})
+        self.assertTrue(all(
+            record["program"] == "rea" for record in entries
+            if record["kind"] == "mcp_capability"
+        ))
+        self.assertEqual(
+            set(ferrari.OPS),
+            {f["name"] for f in self.doc["functions"] if f["kind"] == "operation"},
+        )
+        self.assertEqual(
+            set(tool_runtime.specs()),
+            {f["name"] for f in self.doc["functions"] if f["kind"] == "invoke"},
+        )
+
     def test_free_only_ubuntu_admission_and_one_dependency_registry(self):
         self.assertEqual(len(self.doc["providers"]), 2)
         self.assertTrue(all(p["cost"] in {"open-source", "built-in"}
