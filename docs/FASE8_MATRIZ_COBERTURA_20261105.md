@@ -3,7 +3,7 @@
 **ATUALIZAÇÃO DE FECHO — 05/11/2026:** Fase 8 **CERTIFICADA 40/40** ações tipadas com provas individuais reais. A antiga ação pendente `android-adb-install-apk` foi executada em Android físico autorizado por Ferrari/GitHub Actions [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714) e devolveu `Performing Streamed Install` / `Success` no ZIP de resultados. A aplicação de teste `com.example.empty9patch` foi depois desinstalada com `Success`, confirmado no terminal ConnectBot. [Relatório de fecho](FASE8_FECHO_20261105.md) · [Evidências atualizadas em JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json). As menções a 39/40 e bloqueio ADB no levantamento abaixo representam o **estado histórico anterior a esta execução**, não o estado atual. Nenhuma alteração ao PINK IPTV.
 
 
-**Estado:** Fase 8 em certificação, com **39 ações tipadas individualmente verificadas por saídas reais**, **não** certificação da fase inteira. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
+**Estado prevalecente:** **Fase 8 CERTIFICADA — 40/40 ações tipadas individualmente executadas por Ferrari privado e verificadas em artefactos reais**. O inventário pós-merge #42100973198 é uma referência anterior à prova física ADB #42128892714. Base: código integrado na `main` de `martaxi-boss/skill-universal`, inventário remoto **pós-merge** [VPS #42100973198](https://github.com/martaxi-boss/VPS/actions/runs/42100973198), e provas funcionais [Ponto 3](CERTIFICACAO_FUNCIONAL_PONTO3_20261105.md) + [Fases 6–7](CERTIFICACAO_FASE7_20261105.md).
 
 **Regra permanente:** repositório `martaxi-boss/skill-universal` = pasta exclusiva `/srv/projects/skill-universal/`, sem programas, executores, caches ou dependências de aplicação Ferrari instalados globalmente. Nada de outros projetos, fornecedores partilhados ou novos coordenadores. O Ubuntu conserva as suas bibliotecas de SO.
 
@@ -30,7 +30,7 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 | Domínio | Ações tipadas registadas no Ferrari | Provas representativas e limites |
 |---|---|---|
-| **Android físico** | `android-adb-install-apk` | [Zipalign #42035337944](https://github.com/martaxi-boss/VPS/actions/runs/42035337944). ADB tem executor privado mas instalação em dispositivo real NÃO certificada |
+| **Android físico** | `android-adb-install-apk` | **PASS real** — [GitHub Actions #42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714), `adb-install.txt` com `Performing Streamed Install` e `Success` em Android físico autorizado; APK de teste público removido mais tarde com `Success`. Não altera Pink IPTV nem certifica toda a interação Android |
 | **Audio** | `ffmpeg-audio-wav`, `lmms-project-wav` | [LMMS/MLT #42030605124](https://github.com/martaxi-boss/VPS/actions/runs/42030605124). PASS de saída WAV sintética via LMMS; cada ação FFmpeg requer resultado próprio |
 | **Automação** | `ansible-inventory-json` | [Ansible #42092622311](https://github.com/martaxi-boss/VPS/actions/runs/42092622311), [DAG #42098800995](https://github.com/martaxi-boss/VPS/actions/runs/42098800995). PASS de inventário Ansible e DAG; sem coordenação VPS adicional |
 | **Dados** | `jq-format-json`, `duckdb-csv-profile`, `polars-csv-profile` | [DuckDB/Polars #42034750707](https://github.com/martaxi-boss/VPS/actions/runs/42034750707). PASS perfis de CSV reais; sem prometer dashboards de produção |
@@ -44,12 +44,13 @@ As 12 operações são métodos do motor Ferrari. O catálogo e os testes do Pon
 
 **Precisão:** nesta matriz a presença de uma ação tipada significa `registada + executor privado`. A coluna da direita apresenta **testes representativos por domínio**; não confirma que *todas* as ações dessa linha tenham sido invocadas com sucesso individualmente. Para cada nova ação usada em produção, exigir entrada, saída, run ID, ZIP e limites publicados.
 
-## Provas funcionais individuais verificadas na Fase 8 (39/40)
+## Provas funcionais individuais verificadas na Fase 8 (40/40)
 
-Estas **39 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados recuperados e inspecionados dentro de `ferrari-response.zip`. O único ID restante continuam registados/privados, mas não recebem certificação individual *nova* por associação. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
+Estas **40 ações** foram efetivamente executadas pelo Ferrari privado na VPS, com resultados individuais recuperados e inspecionados dentro de `ferrari-response.zip`. A 40.ª prova de instalação ADB é a execução real #42128892714, num dispositivo Android físico autorizado. A [base de provas JSON](FASE8_EVIDENCIAS_FUNCIONAIS_20261105.json) cobre os 40 IDs e regista, para cada um, se existe execução individual F8.
 
 | Ação tipada | Executável exclusivo do Ferrari | Prova GitHub Actions | Resultado real verificado |
 |---|---|---|---|
+| `android-adb-install-apk` | `/srv/projects/skill-universal/tools/android-cli-36.0.0/platform-tools/adb` | [#42128892714](https://github.com/martaxi-boss/VPS/actions/runs/42128892714) | Instalação real de APK pública `com.example.empty9patch` em Android físico autorizado; `Performing Streamed Install`, `Success`, `report.json` completed, pacote removido depois com Success |
 | `android-aapt2-manifest` | `/srv/projects/skill-universal/tools/android-cli-36.0.0/build-tools/36.0.0/aapt2` | [#42113835768](https://github.com/martaxi-boss/VPS/actions/runs/42113835768) | AAPT2 leu manifesto AXML real: package app.hello.jni, minSdk 21, targetSdk 29 |
 | `rea-android-resources` | `/srv/projects/skill-universal/.runtime/npm/rea/node_modules/.bin/rea` | [#42113866996](https://github.com/martaxi-boss/VPS/actions/runs/42113866996) | REA/Apktool 3.0.3 extraiu manifesto, SDK 21/29, pacote app.hello.jni, 5 ficheiros; sem strings.xml neste APK |
 | `apktool-decode-resources` | `/srv/projects/skill-universal/tools/apktool-3.0.3/bin/apktool` | [#42114077392](https://github.com/martaxi-boss/VPS/actions/runs/42114077392) | Apktool 3.0.3 devolveu 5 ficheiros reais: manifesto XML, apktool.yml, smali, ELF ARM64 e manifesto AXML |
@@ -118,7 +119,7 @@ A execução [#42106858184](https://github.com/martaxi-boss/VPS/actions/runs/421
 | `librecad`, `qgis`, `audacity`, `obs`, `solvespace`, `synfig`, `openshot` | GUI/desktop | Não detetados privadamente; avaliar headless e licenças antes de instalar |
 | `penpot` | Upstream externo | Preparado sem Docker operacional; não certificar serviço ou editor |
 
-Ainda por provar fora do catálogo: dispositivo Android físico por ADB, modelos ComfyUI, GUI interativa integral, funcionalidades comerciais Hopper e execução individual de todas as ferramentas REA MCP. Ruflo tem CLI privado e **não** tem certificação de agentes reais/modelos. Nenhum programa pago é obrigatório.
+Ainda por provar fora do catálogo: modelos ComfyUI, GUI interativa integral, funcionalidades comerciais Hopper e execução individual de todas as ferramentas REA MCP. O Android físico por ADB passou no caso limitado da instalação pública de teste #42128892714, sem ligação permanente. Ruflo tem CLI privado e **não** tem certificação de agentes reais/modelos. Nenhum programa pago é obrigatório.
 
 ## Ordem operacional desta fase
 
@@ -127,4 +128,4 @@ Ainda por provar fora do catálogo: dispositivo Android físico por ADB, modelos
 3. **Teste funcional:** GitHub CI → preflight protegido → VPS real → Skill/GitHub/ZIP → artefacto verificado → inventário novamente.
 4. **Higienização em cada grupo:** eliminar apenas ficheiros temporários abandonados e pertencentes ao Ferrari, com confirmação de que não estão a ser usados; preservar ativo e fallback. Não tocar nos 16 APT globais até classificação transversal da Fase 9.
 
-**Fecho da Fase 8:** só quando existir matriz completa `domínio → operação → executor privado → caso real → resultado → limitações`, sem funções fictícias ou fallback silencioso ao Ubuntu global. Este documento inicia essa revisão; **não declara a Fase 8 concluída**.
+**Fecho da Fase 8:** **CERTIFICADA 40/40 ações tipadas no âmbito dos casos testados**; matriz `domínio → ação → executor privado → execução real → resultado → limitações` completada. Não foram introduzidos executores globais, funções fictícias ou fallback silencioso ao Ubuntu global. Esta certificação não inclui capacidades opcionais sem integração privada, GUI total, inferência com modelos ou as 229 ferramentas REA MCP individualmente.
