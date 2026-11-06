@@ -2708,6 +2708,7 @@
         "note": "Geração SVG com Python padrão, disponível se o motor funcionar."
       },
       "core_order": 59,
+      "base_operations": ["svg-poster"],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
@@ -2722,6 +2723,7 @@
         "note": "Template HTML/CSS responsivo incluído neste projeto."
       },
       "core_order": 60,
+      "base_operations": ["web-template"],
       "admission": "ubuntu_reviewed_or_core"
     },
     {
