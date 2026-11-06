@@ -1,5 +1,7 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
+**VPS certificada 06/11/2026, 19h04 UTC:** release `9d0deb5d9cd919d8bf468e8cfb501c056a64c664` ([VPS #42276080241](https://github.com/martaxi-boss/VPS/actions/runs/42276080241), [Skill #42276249154](https://github.com/martaxi-boss/VPS/actions/runs/42276249154) PASS), fallback `decdb5a38b0bf0e2ce66c6351a45b2d2e8e294c2` preservado. Único `engine/catalog.json`: 396 entradas (176 programas e 220 REA, 9 ferramentas comerciais/demo excluídas), 40 ações, três runtimes presentes, 8 fornecedores admitidos. Só ImageMagick e SVG locais configurados; 6 cloud inativos. 8/8 serviços PASS, sem APT global. F9 e certificação transitiva das dependências pendentes. **Skill no ChatGPT não se atualiza só por alterar o GitHub.**
+
 **Estado revisto em 06/11/2026.** Este ficheiro acompanha **uma Skill Universal Ferrari**, única e independente. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
 
 ## Arquitetura e projeto
