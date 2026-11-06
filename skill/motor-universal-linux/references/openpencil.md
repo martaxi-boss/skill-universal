@@ -4,7 +4,7 @@ Usar apenas depois de confirmar no BOOTSTRAP que a release Ferrari ativa contém
 
 ## Entrada
 
-Enviar `kind=operation`, `operation=web-template`, `layout=store` e `input={name,content_base64}`, onde `name` termina em `.html` ou `.htm` e o conteúdo é HTML completo. Para o transporte via GitHub público, usar somente HTML próprio e não confidencial, com estilos inline, até 600 KB; sem script, iframes, URLs de recursos remotos nem importação de CSS externo. A ponte já limita a entrada total a 2 MB. Não colocar credenciais, código proprietário ou dados pessoais no pedido.
+Enviar `kind=operation`, `operation=web-template`, `layout=store` e `input={name,content_base64}`, onde `name` termina em `.html` ou `.htm` e o conteúdo é HTML completo. Para o transporte via GitHub público, usar somente HTML próprio e não confidencial, com estilos inline, até 600 KB; sem script, iframes, atributos `src`/`href`/outros recursos nem `url(...)`/`@import` no CSS, para impedir acesso a ficheiros ou à rede. A ponte já limita a entrada total a 2 MB. Não colocar credenciais, código proprietário ou dados pessoais no pedido.
 
 Exemplo de pedido válido, usando HTML sintético (base64 completo gerado da string HTML de teste pelo chamador):
 
