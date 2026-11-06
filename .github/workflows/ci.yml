@@ -73,12 +73,15 @@ jobs:
           assert catalog['ubuntu_metadata']['count'] == len(selected)
           assert all(x['certified_on_vps'] is False for x in selected)
           assert len(catalog['actions']) == 40
-          assert len(catalog['providers']) == 8
+          assert len(catalog['providers']) == 2
           assert len(catalog['mcp_capabilities']['excluded_paid_or_demo_names']) == 9
           assert catalog['counts']['mcp_source_advertised'] == 229
           assert len(catalog['mcp_capabilities']['names']) == 220
-          assert catalog['counts']['all_catalog_entries'] == 396
-          assert all(p['cost'] in ('free-tier', 'open-source', 'built-in') for p in catalog['providers'])
+          assert catalog['counts']['all_catalog_entries'] == 394
+          assert catalog['counts']['unique_tools'] == 174
+          assert catalog['counts']['upstream_registry'] == 123
+          assert all(t['id'] not in ('nmap', 'vscode') for t in catalog['tools'])
+          assert all(p['kind'] == 'local' and p['cost'] in ('open-source', 'built-in') for p in catalog['providers'])
           print('Ferrari release/selection integrity: PASS (static only)')
           PY
       - name: Inspect original engine
