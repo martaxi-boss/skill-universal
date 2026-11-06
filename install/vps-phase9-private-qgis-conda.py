@@ -226,8 +226,8 @@ def install() -> dict:
         MANIFEST.write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
         return check()
     except BaseException:
-        if TARGET.is_dir() and not TARGET.is_symlink() and
-                TARGET.resolve(strict=True).is_relative_to(TOOLS.resolve(strict=True)):
+        if (TARGET.is_dir() and not TARGET.is_symlink() and
+                TARGET.resolve(strict=True).is_relative_to(TOOLS.resolve(strict=True))):
             shutil.rmtree(TARGET)
         raise
 
