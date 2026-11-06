@@ -27,4 +27,6 @@ bash install/vps-openpencil-cli.sh --check
 
 O script pode ser passado por stdin num workflow Ferrari exclusivo sem alterar `current` nem o validador da Skill. Um run GitHub Actions e logs de import/export são obrigatórios para declarar a instalação certificada.
 
-**Estado:** o código em GitHub não demonstra instalação na VPS. Só atualizar esta linha para CERTIFICADO após prova de execução real.
+**Estado 06/11/2026: CERTIFICADO — CLI básica privada na VPS.** A execução [VPS #42144086173](https://github.com/martaxi-boss/VPS/actions/runs/42144086173) aprovou a importação HTML→.fig, exportação de SVG e HTML standalone, verificação exata da versão 0.16.0, auditoria de symlinks e preservação da release `current`. O npm adicionou 142 dependências apenas dentro de `.runtime/npm/openpencil/`; não executou APT/npm globais na VPS.
+
+O código e a deteção em GitHub entraram na main pela [PR #71](https://github.com/martaxi-boss/skill-universal/pull/71), commit `a831a7e605f4efb6cc4561e4d533a10280956e8d`, CI [#42144001926](https://github.com/martaxi-boss/skill-universal/actions/runs/42144001926) PASS. O workflow administrativo de uso único e o pedido foram retirados da main do repositório VPS após certificação. **Limite:** a release ativa foi preservada intencionalmente; a nova deteção no `engine/runtime_discovery.py` será incluída quando uma futura release Ferrari certificada for ativada. Não há nova ação tipada na ponte ou editor gráfico permanente.
