@@ -235,7 +235,7 @@ def run(doc,folder,uploaded=None):
                 out=dest/step["id"]
                 if step["kind"]=="invoke":
                     return tool_runtime.invoke(step["action"],str(source),str(out),step.get("query"))
-                return rea_mcp.invoke(step["mcp_requests"],out,source=None)
+                return rea_mcp.invoke(step["mcp_requests"],out,None)
             results={}
             waiting=list(doc["steps"])
             with ThreadPoolExecutor(max_workers=doc.get("max_parallel",2)) as pool:
