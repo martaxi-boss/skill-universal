@@ -6972,8 +6972,8 @@
     "python_discovery_modules": 11,
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 14,
-    "mcp_capabilities": 229,
-    "all_catalog_entries": 405
+    "mcp_capabilities": 225,
+    "all_catalog_entries": 401
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -7103,10 +7103,6 @@
       "inspect_android_class",
       "inspect_android_method",
       "trace_android_references",
-      "inspect_jeb_client",
-      "open_jeb_project",
-      "list_jeb_units",
-      "decompile_jeb_item",
       "inspect_byte_entropy",
       "inspect_binary_layout",
       "inspect_analysis_view",
@@ -7220,6 +7216,10 @@
       "verify_unknown_resolution",
       "get_navigation_context",
       "inspect_address_context"
-    ]
+    ],
+    "excluded_paid_provider_ids": [
+      "jeb"
+    ],
+    "note": "REA tools/list advertises 229, but four JEB commercial-dependent capabilities are not admitted as Ferrari tools. Runtime reconciliation ignores these explicitly excluded paid-provider capabilities. No paid providers are ever invoked automatically."
   }
 }

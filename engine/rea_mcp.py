@@ -40,6 +40,9 @@ def validate_requests(value):
                 raise ValueError("Invalid REA MCP tool name")
             if not isinstance(params["arguments"], dict):
                 raise ValueError("REA MCP tool arguments must be JSON object")
+            # No paid proprietary JEB bridge may be called through Ferrari.
+            if "jeb" in name.lower().split("_"):
+                raise ValueError("Paid JEB provider is excluded from the Ferrari catalog")
         elif set(params) - {"cursor"}:
             raise ValueError("Invalid tools/list params")
         elif "cursor" in params and (not isinstance(params["cursor"], str)
