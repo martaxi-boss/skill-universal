@@ -38,12 +38,13 @@ class LibreCADPrivateFunctionalCertTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "NO_ROOT"):
                 m.guard()
 
-    def test_environment_is_private_and_offscreen(self):
+    def test_environment_private_and_preexisting_xcb_qa(self):
         with TemporaryDirectory() as t:
             env = m.env(Path(t))
         self.assertEqual(env["HOME"], t)
         self.assertEqual(env["TMPDIR"], t)
         self.assertEqual(env["QT_QPA_PLATFORM"], "offscreen")
+        self.assertEqual(m.env(Path(t),xcb=True)["QT_QPA_PLATFORM"],"xcb")
         self.assertEqual(env["LIBGL_ALWAYS_SOFTWARE"], "1")
         self.assertTrue(env["PATH"].startswith(str(m.TOOLS)))
         self.assertNotIn("LD_LIBRARY_PATH", env)
@@ -71,11 +72,13 @@ class LibreCADPrivateFunctionalCertTests(unittest.TestCase):
             private=Path(t)/"skill-universal"
             runtime=private/".runtime"
             runtime.mkdir(parents=True)
-            def fake_call(args, work, timeout, pdfinfo=False):
+            def fake_call(args, work, timeout, pdfinfo=False, xcb=False):
                 if "dxf2pdf" in args:
-                    self.assertTrue(args[0].endswith("AppRun"))
-                    self.assertEqual(args[1:4],["dxf2pdf","-a","-o"])
-                    Path(args[4]).write_bytes(
+                    self.assertEqual(args[0],"/usr/bin/xvfb-run")
+                    self.assertTrue(args[3].endswith("AppRun"))
+                    self.assertTrue(xcb)
+                    self.assertEqual(args[-5:-2],["dxf2pdf","-a","-o"])
+                    Path(args[-2]).write_bytes(
                         b"%PDF-1.4\n"+b"0"*2000+b"\n%%EOF\n")
                     return SimpleNamespace(returncode=0,stdout="",stderr="")
                 if pdfinfo:
@@ -90,6 +93,8 @@ class LibreCADPrivateFunctionalCertTests(unittest.TestCase):
                 result=m.certify()
             self.assertEqual(result["status"],"pass")
             self.assertTrue(result["private_dxf2pdf_certified"])
+            self.assertTrue(result["preexisting_xvfb_qa_display"])
+            self.assertEqual(result["qt_platform"],"xcb")
             self.assertEqual(result["pdf_evidence"]["pdf_pages"],1)
             self.assertFalse(result["gui_editing_certified"])
             self.assertEqual(list(runtime.iterdir()),[])

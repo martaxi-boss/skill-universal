@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 import tempfile
@@ -176,6 +177,11 @@ def guard() -> dict:
     require(len(doc["tools"]) == 173 and len(doc["functions"]) == 272
             and doc["counts"]["all_catalog_entries"] == 450,
             "F9_LIBRECAD_CATALOG_NOT_UNIVERSAL")
+    # Ubuntu Xvfb is an existing temporary QA display, not an installed
+    # dependency or another application runtime outside the Ferrari project.
+    for qa in (Path('/usr/bin/xvfb-run'), Path('/usr/bin/Xvfb')):
+        require(qa.is_file() and os.access(qa, os.X_OK),
+                'F9_LIBRECAD_PREEXISTING_XVFB_QA_MISSING')
     for binary in (EXECUTABLE, PDFINFO):
         require(binary.is_file() and os.access(binary, os.X_OK),
                 "F9_LIBRECAD_PRIVATE_TOOL_MISSING:" + binary.name)
@@ -188,7 +194,7 @@ def guard() -> dict:
     return {"active_release": EXPECTED, "fallback_release": FALLBACK,
             "catalog_entries": 450, "appimage_sha256_verified": True}
 
-def env(work: Path, pdfinfo: bool = False) -> dict:
+def env(work: Path, pdfinfo: bool = False, xcb: bool = False) -> dict:
     child = {k: v for k, v in os.environ.items() if k not in {
         "QT_PLUGIN_PATH", "QT_QPA_PLATFORM_PLUGIN_PATH", "LD_LIBRARY_PATH",
         "PYTHONPATH", "QT_QPA_FONTDIR", "APPDIR", "APPIMAGE"}}
@@ -196,7 +202,7 @@ def env(work: Path, pdfinfo: bool = False) -> dict:
         "HOME": str(work), "TMPDIR": str(work),
         "XDG_CONFIG_HOME": str(work), "XDG_CACHE_HOME": str(work),
         "XDG_DATA_HOME": str(work), "XDG_RUNTIME_DIR": str(work),
-        "QT_QPA_PLATFORM": "offscreen",
+        "QT_QPA_PLATFORM": "xcb" if xcb else "offscreen",
         "LIBGL_ALWAYS_SOFTWARE": "1",
         "GSETTINGS_BACKEND": "memory",
         "PYTHONNOUSERSITE": "1",
@@ -209,10 +215,24 @@ def env(work: Path, pdfinfo: bool = False) -> dict:
         child["LD_LIBRARY_PATH"] = str(TOOLS / "ubuntu-cli/lib")
     return child
 
-def run(args: list[str], work: Path, timeout: int, pdfinfo: bool = False):
-    return subprocess.run(args, env=env(work, pdfinfo=pdfinfo), cwd=work,
-                          text=True, capture_output=True, check=False,
-                          timeout=timeout)
+def run(args: list[str], work: Path, timeout: int,
+        pdfinfo: bool = False, xcb: bool = False):
+    proc = subprocess.Popen(args, env=env(work, pdfinfo=pdfinfo, xcb=xcb),
+                            cwd=work, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True,
+                            start_new_session=True)
+    try:
+        out, err = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        # Stop the entire temporary QA display process group, not only its
+        # shell wrapper; leave no Xvfb or LibreCAD leftovers.
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        proc.communicate(timeout=5)
+        raise RuntimeError("F9_LIBRECAD_CONVERTER_TIMEOUT")
+    return subprocess.CompletedProcess(args, proc.returncode, out, err)
 
 def validate_pdf(path: Path, work: Path) -> dict:
     require(path.is_file() and not path.is_symlink() and path.stat().st_size > 1200,
@@ -243,8 +263,13 @@ def certify() -> dict:
         require(drawing.stat().st_size > 160 and DRAWING.count("\nLINE\n") == 4
                 and DRAWING.count("\nCIRCLE\n") == 1,
                 "F9_LIBRECAD_SYNTHETIC_DXF_BAD")
-        trial = run([str(EXECUTABLE), "dxf2pdf", "-a", "-o",
-                     str(output), str(drawing)], work, timeout=90)
+        # The 2.2.1.x AppImage ships the xcb platform plugin but may abort
+        # with QT_QPA_PLATFORM=offscreen. Its existing Xvfb QA display
+        # does not install or register another service/runtime on Ubuntu.
+        trial = run(["/usr/bin/xvfb-run", "-a",
+                     "--server-args=-screen 0 1280x800x24 -nolisten tcp",
+                     str(EXECUTABLE), "dxf2pdf", "-a", "-o",
+                     str(output), str(drawing)], work, timeout=90, xcb=True)
         # A PDF can exist even when a converter returns an error; both are required.
         converted = trial.returncode == 0
         evidence = {}
@@ -256,7 +281,8 @@ def certify() -> dict:
                 converted = False
                 diagnostic = str(exc)[-250:]
         else:
-            diagnostic = (trial.stderr or trial.stdout or "converter failed")[-300:]
+            raw = trial.stderr or trial.stdout or "converter failed"
+            diagnostic = (raw[:280] + " ... " + raw[-300:]) if len(raw) > 580 else raw
         diagnostic = diagnostic.replace(str(ROOT), "<FERRARI>")
         return {
             **identity,
@@ -267,6 +293,8 @@ def certify() -> dict:
             "synthetic_lines": 4,
             "synthetic_circles": 1,
             "private_dxf2pdf_certified": converted,
+            "preexisting_xvfb_qa_display": True,
+            "qt_platform": "xcb",
             "converter_exit_code": trial.returncode,
             "pdf_evidence": evidence,
             "diagnostic": diagnostic,
