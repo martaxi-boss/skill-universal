@@ -21,57 +21,25 @@ import wave
 
 ROOT=Path(__file__).resolve().parents[1]
 HOME=Path("/srv/projects/skill-universal")
-BINARIES={"imagemagick":"convert","libvips":"vips","opencv":None,
-          "wireshark":"tshark","ytdlp":"yt-dlp","tesseract":"tesseract",
-          "ocrmypdf":"ocrmypdf","radare2":"r2","ripgrep":"rg",
-          "valkey":"valkey-server","ansible":"ansible","godot":"godot",
-          "openshot":"openshot-qt","synfig":"synfigstudio"}
-ISOLATED={"apktool":HOME/"tools/apktool-3.0.3/bin/apktool",
-          "prometheus":HOME/"tools/ferrari-services/prometheus/usr/bin/prometheus",
-          "typst":HOME/"tools/typst-0.15.1/extracted/typst-x86_64-unknown-linux-musl/typst",
-          "godot":HOME/"tools/godot-4.7.2/extracted/Godot_v4.7.2-stable_linux.x86_64",
-          "freecad":HOME/"tools/freecad-1.1.4/archive.AppImage",
-          "valkey":HOME/"tools/ferrari-services/valkey-server/bin/valkey-server",
-          "ghidra":HOME/"tools/ghidra-12.2/support/analyzeHeadless",
-          "jadx":HOME/"tools/jadx-1.5.6/bin/jadx",
-          "rea":HOME/".runtime/npm/rea/node_modules/.bin/rea",
-          "ruflo":HOME/".runtime/npm/ruflo/node_modules/.bin/ruflo",
-          "ytdlp":HOME/"tools/yt-dlp-2026.10.26/yt-dlp",
-          # GUI AppImages are project-private; presence is not functional GUI certification.
-          "librecad":HOME/"tools/librecad-2.2.1.6/squashfs-root/AppRun",
-          "audacity":HOME/"tools/audacity-4.0.2/squashfs-root/AppRun",
-          "synfig":HOME/"tools/synfig-1.5.5/SynfigStudio-1.5.5-2026.03.15-linux64-79bf7.appimage",
-          "openshot":HOME/"tools/openshot-4.1.1/squashfs-root/AppRun",
-          "obs":HOME/"tools/obs-studio-32.2.2/run-obs",
-          "solvespace":HOME/"tools/solvespace-3.1-ubuntu24/usr/bin/solvespace",
-          "qgis":HOME/"tools/qgis-4.2.3-condaforge/bin/qgis_process",
-          "aapt2":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/aapt2",
-          "apksigner":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/apksigner",
-          "zipalign":HOME/"tools/android-cli-36.0.0/build-tools/36.0.0/zipalign",
-          "adb":HOME/"tools/android-cli-36.0.0/platform-tools/adb"}
-# Local copies of Ubuntu CLI binaries, shared only within this Ferrari project.
+# One authoritative Ferrari catalog, including program paths and shared
+# runtime declarations. Python dictionaries below are generated views, not
+# independent registries. No global executable fallback is allowed.
+CATALOG_PATH=ROOT/"engine/catalog.json"
+_CATALOG=json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+if _CATALOG.get("schema")!=2:
+    raise ValueError("Unsupported Ferrari catalog schema")
+BINARIES={t["id"]:t["default_binary"] for t in _CATALOG["tools"]
+          if "default_binary" in t}
+ISOLATED={t["id"]:HOME/t["private_executable"] for t in _CATALOG["tools"]
+          if "private_executable" in t}
 PRIVATE_CLI_ROOT=HOME/"tools/ubuntu-cli"
-PRIVATE_CLI={"file":("file",),"jq":("jq",),"ripgrep":("rg",),
-             "readelf":("readelf",),"objdump":("objdump",),"strings":("strings",),
-             "ffmpeg":("ffmpeg","ffprobe"),"pdftotext":("pdfinfo","pdftotext"),
-             "pandoc":("pandoc",),"graphviz":("dot",),
-             "imagemagick":("identify","convert"),"tesseract":("tesseract",),
-             "radare2":("r2",),"libvips":("vips","vipsheader"),
-             "wireshark":("tshark",),"inkscape":("inkscape",),
-             "binwalk":("binwalk",),"ansible":("ansible-inventory",),
-             "ocrmypdf":("ocrmypdf",),"calibre":("ebook-convert",),
-             "darktable":("darktable-cli",),"krita":("krita",),
-             "gimp":("gimp-console-2.10",),"scribus":("scribus",),
-             "lmms":("lmms",),"kdenlive":("melt",)}
-PRIVATE_PYTHON_SCRIPTS=frozenset({"binwalk","ansible","ocrmypdf","calibre"})
-# Python libraries have no command-line executable; detect them as modules instead.
+PRIVATE_CLI={t["id"]:tuple(t["private_cli"]) for t in _CATALOG["tools"]
+             if "private_cli" in t}
+PRIVATE_PYTHON_SCRIPTS=frozenset(
+    t["id"] for t in _CATALOG["tools"] if t.get("private_python_script"))
 PYTHON_MODULES=runtime_discovery.PYTHON_MODULES
-# Base Ferrari operations are independently implemented and tested, not manifest adapters.
-BASE_OPERATIONS={"jadx":["apk-decompile"],"blender":["blender-house"],
-                 "openscad":["cad-stl"],"libreoffice":["office-pdf"],
-                 "imagemagick":["image-resize"],"ffmpeg":["video-thumbnail"],
-                 "ifcopenshell":["ifc-summary"],"vite":["vite-build"],
-                 "pdftotext":["pdf-text"],"strings":["binary-strings"]}
+BASE_OPERATIONS={t["id"]:t["base_operations"] for t in _CATALOG["tools"]
+                 if "base_operations" in t}
 
 def python_module_location(tool):
     """Compatible location helper, now including Ferrari-owned virtual environments."""
