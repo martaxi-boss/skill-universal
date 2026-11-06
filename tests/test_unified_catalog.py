@@ -19,12 +19,12 @@ class UnifiedCatalogTests(unittest.TestCase):
 
     def test_all_real_rea_names_appear_once_in_same_authoritative_file(self):
         names = self.doc["mcp_capabilities"]["names"]
-        self.assertEqual(len(names), 229)
+        self.assertEqual(len(names), 225)
         self.assertEqual(len(set(names)), len(names))
         self.assertEqual(self.doc["counts"]["unique_tools"], 176)
-        self.assertEqual(self.doc["counts"]["mcp_capabilities"], 229)
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 405)
-        self.assertEqual(len(self.doc["tools"]) + len(names), 405)
+        self.assertEqual(self.doc["counts"]["mcp_capabilities"], 225)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 401)
+        self.assertEqual(len(self.doc["tools"]) + len(names), 401)
         self.assertEqual(self.doc["mcp_capabilities"]["discovery"], "tools/list")
         self.assertEqual(self.doc["mcp_capabilities"]["invocation"], "tools/call")
         self.assertEqual(self.doc["mcp_capabilities"]["verified_vps_workflow_run"], 42269934831)
@@ -52,10 +52,10 @@ class UnifiedCatalogTests(unittest.TestCase):
         with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
             result = tool_runtime.unified_catalog(inventory_now=seed)
         self.assertEqual(result["rea"]["status"], "rea_in_sync")
-        self.assertEqual(result["counts"]["all_catalog_entries"], 405)
-        self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 229)
+        self.assertEqual(result["counts"]["all_catalog_entries"], 401)
+        self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 225)
         self.assertEqual(result["counts"]["no_cost_providers"], 8)
-        self.assertEqual(sum(x["kind"] == "mcp_capability" for x in result["entries"]), 229)
+        self.assertEqual(sum(x["kind"] == "mcp_capability" for x in result["entries"]), 225)
         self.assertTrue(all(x["selectable"] for x in result["entries"]
                             if x["kind"] == "mcp_capability"))
         self.assertTrue(all(not x["installed_separately"] for x in result["entries"]
@@ -67,7 +67,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             result = tool_runtime.unified_catalog(inventory_now={"programs": [], "ecosystems": {}})
         self.assertEqual(result["rea"]["status"], "rea_catalog_drift")
         self.assertEqual(result["rea"]["unexpected_live_names"], ["unapproved_new_tool"])
-        self.assertEqual(len(result["rea"]["missing_live_names"]), 228)
+        self.assertEqual(len(result["rea"]["missing_live_names"]), 224)
         self.assertNotIn("rea:unapproved_new_tool", [x["id"] for x in result["entries"]])
 
     def test_unavailable_rea_is_not_falsely_marked_operational(self):
@@ -77,6 +77,30 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 0)
         self.assertTrue(all(not x["selectable"] for x in result["entries"]
                             if x["kind"] == "mcp_capability"))
+
+    def test_commercial_jeb_bridge_excluded_even_when_rea_advertises_it(self):
+        names = self.doc["mcp_capabilities"]["names"]
+        commercial = [
+            "inspect_jeb_client", "open_jeb_project",
+            "list_jeb_units", "decompile_jeb_item",
+        ]
+        self.assertEqual(self.doc["mcp_capabilities"]["excluded_paid_provider_ids"], ["jeb"])
+        self.assertTrue(all(name not in names for name in commercial))
+        advertised = [{"name": name} for name in names + commercial]
+        with patch.object(rea_mcp, "discover_tools", return_value=advertised):
+            result = tool_runtime.unified_catalog(
+                inventory_now={"programs": [], "ecosystems": {}})
+        self.assertEqual(result["rea"]["status"], "rea_in_sync")
+        self.assertEqual(result["rea"]["excluded_paid_live_names"], sorted(commercial))
+        self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 229)
+        self.assertEqual(result["counts"]["rea_mcp_paid_excluded_now"], 4)
+        self.assertEqual(result["counts"]["rea_mcp_capabilities"], 225)
+        self.assertFalse(any("jeb" in item["id"].split("_")
+                             for item in result["entries"]))
+        for name in commercial:
+            with self.assertRaisesRegex(ValueError, "Paid JEB"):
+                rea_mcp.validate_requests([{"method": "tools/call",
+                                            "params": {"name": name, "arguments": {}}}])
 
     def test_paid_provider_fails_closed_before_rea_discovery(self):
         modified = copy.deepcopy(self.doc)
@@ -94,7 +118,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         fake_inventory = {"selected": 56, "registered_actions": 40, "programs": [],
                           "ecosystems": {}, "shared_dependencies": []}
         fake_catalog = {"source": "engine/catalog.json",
-                        "counts": {"all_catalog_entries": 405}}
+                        "counts": {"all_catalog_entries": 401}}
         with tempfile.TemporaryDirectory() as td:
             output = Path(td) / "job"
             with patch.object(tool_runtime, "inventory", return_value=fake_inventory):
@@ -106,7 +130,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             with zipfile.ZipFile(output / "response.zip") as archive:
                 self.assertIn("artifacts/inventory.json", archive.namelist())
                 self.assertIn("artifacts/catalog.json", archive.namelist())
-                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 405)
+                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 401)
 
     def test_rea_live_discovery_requires_private_paths_and_no_duplicates(self):
         with tempfile.TemporaryDirectory() as td:
