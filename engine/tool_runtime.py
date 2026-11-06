@@ -84,7 +84,7 @@ def specs():
     doc=json.loads((ROOT/"engine/catalog.json").read_text(encoding="utf-8"))
     selected={x["id"] for x in doc["tools"] if "ubuntu" in x}
     legacy={x["id"] for x in doc["tools"] if "core" in x}
-    if doc.get("schema")!=1 or not isinstance(doc.get("actions"),list):
+    if doc.get("schema")!=2 or not isinstance(doc.get("actions"),list):
         raise ValueError("Invalid action manifest")
     result={}
     for x in doc["actions"]:
