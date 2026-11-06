@@ -50,7 +50,12 @@ def installed(tool: dict) -> bool:
 
 
 def inventory(category: str | None = None) -> list[dict]:
-    items = load_json("catalog.json")["tools"]
+    doc = load_json("catalog.json")
+    if doc.get("schema") != 2:
+        raise ValueError("Unsupported Ferrari catalog")
+    items = [x["core"] for x in sorted(
+        (x for x in doc["tools"] if "core" in x),
+        key=lambda x:x["core_order"])]
     result = []
     for t in items:
         if category and t["category"] != category:
@@ -158,7 +163,7 @@ def plan(request: str) -> dict:
 
 def providers() -> list[dict]:
     out = []
-    for p in load_json("providers.json")["providers"]:
+    for p in load_json("catalog.json")["providers"]:
         key = p.get("env")
         # Cloud-provider configuration remains separate from executable
         # availability; a global PATH command cannot satisfy a local provider.
