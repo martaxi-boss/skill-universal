@@ -20,13 +20,13 @@ class OneToolCatalogTests(unittest.TestCase):
     def test_single_source_of_truth_with_original_evidence_preserved(self):
         doc = self.data
         self.assertEqual(doc["schema"], 2)
-        self.assertEqual(doc["counts"]["unique_tools"], 174)
-        self.assertEqual(len(doc["tools"]), 174)
+        self.assertEqual(doc["counts"]["unique_tools"], 173)
+        self.assertEqual(len(doc["tools"]), 173)
         self.assertEqual(len(doc["actions"]), 40)
         self.assertEqual(len(doc["providers"]), 2)
         self.assertEqual(len([t for t in doc["tools"] if "core" in t]), 71)
-        self.assertEqual(len([t for t in doc["tools"] if "ubuntu" in t]), 56)
-        self.assertEqual(len([t for t in doc["tools"] if "upstream" in t]), 123)
+        self.assertEqual(len([t for t in doc["tools"] if "ubuntu" in t]), 55)
+        self.assertEqual(len([t for t in doc["tools"] if "upstream" in t]), 122)
         self.assertEqual(len({t["id"] for t in doc["tools"]}), len(doc["tools"]))
         self.assertTrue(all(t["id"] == t["id"].lower() for t in doc["tools"]))
         self.assertTrue(all(t.get("ubuntu", {}).get("certified_on_vps") is not True
@@ -35,12 +35,12 @@ class OneToolCatalogTests(unittest.TestCase):
     def test_all_consumers_work_from_same_catalog(self):
         self.assertEqual(len(tool_runtime.specs()), 40)
         self.assertEqual(len(core.inventory()), 71)
-        self.assertEqual(len(ferrari.registry()), 123)
-        self.assertEqual(len(ferrari.ubuntu_selection()), 56)
+        self.assertEqual(len(ferrari.registry()), 122)
+        self.assertEqual(len(ferrari.ubuntu_selection()), 55)
         self.assertEqual(len(core.providers()), 2)
         inv = tool_runtime.inventory()
         self.assertEqual(inv["registered_actions"], 40)
-        self.assertEqual(inv["selected"], 56)
+        self.assertEqual(inv["selected"], 55)
         self.assertEqual(len(inv["shared_dependencies"]), 3)
         self.assertTrue(all(d["status"] in {"present_unverified","not_detected"}
                             and not d["compatibility_certified"]
@@ -57,7 +57,7 @@ class OneToolCatalogTests(unittest.TestCase):
         self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 10)
         self.assertEqual(len(runtime_discovery.PYTHON_MODULES), 11)
         self.assertEqual(len(runtime_discovery.NPM_PACKAGES), 9)
-        self.assertEqual(len(runtime_discovery.CONTAINER_TOOLS), 14)
+        self.assertEqual(len(runtime_discovery.CONTAINER_TOOLS), 13)
         for name, path in tool_runtime.ISOLATED.items():
             self.assertEqual(path, tool_runtime.HOME / programs[name]["private_executable"])
             self.assertFalse(Path(programs[name]["private_executable"]).is_absolute())
