@@ -47,7 +47,7 @@ class Phase9AptSafetyTests(unittest.TestCase):
             self.assertEqual(args[:3], ["dpkg-deb","-f","/tmp/test.deb"])
             self.assertEqual(len(args),4,"Each dpkg-deb query must ask for one field")
             values={"Package":"gimp","Version":"2.10.36-3ubuntu0.24.04.1"}
-            return SimpleNamespace(returncode=0,stdout=values[args[3]]+"\\n")
+            return SimpleNamespace(returncode=0,stdout=values[args[3]]+"\n")
         with patch.object(mod,"command",side_effect=probe):
             self.assertTrue(mod.matches_deb_identity(Path("/tmp/test.deb"),
                               "gimp","2.10.36-3ubuntu0.24.04.1"))
