@@ -38,7 +38,7 @@ class Phase9GuiProbeTests(unittest.TestCase):
             binary=package/"run-obs"
             binary.symlink_to("/usr/bin/obs")
             with patch.object(m,"TOOLS",tools):
-                with self.assertRaisesRegex(AssertionError,"ESCAPED"):
+                with self.assertRaisesRegex(AssertionError,"IS_SYMLINK"):
                     m.executable("obs")
         with patch.object(m.os,"geteuid",return_value=0):
             with self.assertRaisesRegex(AssertionError,"NO_ROOT"):
