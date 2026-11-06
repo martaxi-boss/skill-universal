@@ -24,29 +24,6 @@ TARGET = TOOLS / "solvespace-3.1-ubuntu24"
 EXECUTABLE = TARGET / "usr/bin/solvespace"
 OS_PACKAGE = TARGET / "package.deb"
 
-# Two official Ubuntu 24.04 APT resource packages required by SolveSpace
-# symbolic links in the signed solvespace .deb. Download-only; never apt install.
-RESOURCES = {
-    "libjs-three": {
-        "version": "111+dfsg1-3",
-        "size": 1106842,
-        "sha256": "ef7cc260f96bd469245f1f2405981e305f6bf001965cfd7a750e37dc5d87a963",
-        "relative": "usr/share/javascript/three/three.js",
-        "link": "usr/share/solvespace/threejs/three.js",
-        "license": "MIT",
-    },
-    "unifont": {
-        "version": "1:15.1.01-1build1",
-        "size": 5908726,
-        "sha256": "f5d7516c5a430dc6ee8266fd333cc49339407865916462d608b8478b1e3a84a1",
-        "relative": "usr/share/unifont/unifont.hex",
-        "link": "usr/share/solvespace/fonts/unifont.hex",
-        "license": "GPL-2.0-or-later with font exception",
-    },
-}
-RESOURCE_MANIFEST = TARGET / "private-resources.json"
-
-
 
 def require(condition: bool, message: str) -> None:
     if not condition:
@@ -179,164 +156,14 @@ def install() -> dict:
     return check()
 
 
-def apt_resource_metadata(name: str) -> dict:
-    """Validate exact pinned packages in Ubuntu's signed local APT indexes."""
-    require(name in RESOURCES, "F9_SOLVESPACE_UNEXPECTED_RESOURCE")
-    pinned=RESOURCES[name]
-    output=call(["/usr/bin/apt-cache", "show", name]).stdout
-    for stanza in output.split("\n\n"):
-        fields={}
-        for line in stanza.splitlines():
-            if ": " in line and not line.startswith((" ", "\t")):
-                label,value=line.split(": ",1)
-                fields[label]=value
-        if fields.get("Package")!=name or fields.get("Version")!=pinned["version"]:
-            continue
-        require(fields.get("Architecture")=="all" and
-                fields.get("SHA256")==pinned["sha256"] and
-                fields.get("Size")==str(pinned["size"]) and
-                fields.get("Filename","").startswith("pool/universe/"),
-                "F9_SOLVESPACE_RESOURCE_REPOSITORY_HASH_UNEXPECTED:"+name)
-        return fields
-    raise RuntimeError("F9_SOLVESPACE_RESOURCE_APT_INDEX_MISSING:"+name)
-
-
-def resource_paths(name: str) -> tuple[Path,Path]:
-    entry=RESOURCES[name]
-    path=TARGET/entry["relative"]
-    link=TARGET/entry["link"]
-    require(path.resolve(strict=False).is_relative_to(TARGET.resolve(strict=True)),
-            "F9_SOLVESPACE_RESOURCE_DESTINATION_ESCAPED:"+name)
-    require(link.is_symlink(), "F9_SOLVESPACE_ORIGINAL_RESOURCE_LINK_MISSING:"+name)
-    require(link.resolve(strict=False)==path.resolve(strict=False),
-            "F9_SOLVESPACE_RESOURCE_LINK_CHANGED:"+name)
-    return path,link
-
-
-def check_resources() -> dict:
-    guard()
-    check()
-    require(RESOURCE_MANIFEST.is_file() and not RESOURCE_MANIFEST.is_symlink(),
-            "F9_SOLVESPACE_RESOURCES_NOT_VERIFIED")
-    require(RESOURCE_MANIFEST.stat().st_size<8192,
-            "F9_SOLVESPACE_RESOURCE_MANIFEST_OVERSIZED")
-    state=json.loads(RESOURCE_MANIFEST.read_text(encoding="utf-8"))
-    require(state.get("state")=="verified" and
-            set(state.get("packages",{}))==set(RESOURCES),
-            "F9_SOLVESPACE_RESOURCE_MANIFEST_INVALID")
-    for name,pinned in RESOURCES.items():
-        path,link=resource_paths(name)
-        require(path.is_file() and not path.is_symlink() and
-                path.resolve(strict=True).is_relative_to(TARGET.resolve(strict=True)),
-                "F9_SOLVESPACE_RESOURCE_FILE_NOT_PRIVATE:"+name)
-        info=state["packages"][name]
-        require(info.get("apt_sha256")==pinned["sha256"] and
-                info.get("version")==pinned["version"] and
-                info.get("relative")==pinned["relative"] and
-                len(info.get("content_sha256",""))==64 and
-                sha256(path)==info["content_sha256"] and
-                link.resolve(strict=True)==path.resolve(strict=True),
-                "F9_SOLVESPACE_RESOURCE_CONTENT_HASH_MISMATCH:"+name)
-    return {"status":"private_solvespace_resources_verified",
-            "project":str(TARGET),"resources":sorted(RESOURCES),
-            "private_resource_links_valid":True,
-            "gui_functional_certified":False,
-            "global_apt_changed":False}
-
-
-def repair_resources() -> dict:
-    guard()
-    check()  # Official SolveSpace payload must still pass its signed SHA256.
-    if RESOURCE_MANIFEST.exists() or RESOURCE_MANIFEST.is_symlink():
-        return check_resources()
-    for name in RESOURCES:
-        apt_resource_metadata(name)
-    extracted={}
-    # All downloads and extraction are staged inside Ferrari; only two
-    # trusted resource files are copied, not Debian scripts or global packages.
-    with tempfile.TemporaryDirectory(prefix=".f9-solvespace-resources-",dir=RUNTIME) as td:
-        scratch=Path(td)
-        for name,pinned in RESOURCES.items():
-            stage=scratch/name
-            stage.mkdir(mode=0o700)
-            call(["/usr/bin/apt-get","download",name+"="+pinned["version"]],
-                 cwd=stage,timeout=180)
-            downloaded=list(stage.glob("*.deb"))
-            require(len(downloaded)==1 and downloaded[0].is_file()
-                    and not downloaded[0].is_symlink(),
-                    "F9_SOLVESPACE_RESOURCE_DEB_NOT_UNIQUE:"+name)
-            package=downloaded[0]
-            require(package.stat().st_size==pinned["size"] and
-                    sha256(package)==pinned["sha256"],
-                    "F9_SOLVESPACE_RESOURCE_DOWNLOAD_SHA_MISMATCH:"+name)
-            out=stage/"unpacked"
-            out.mkdir(mode=0o700)
-            call(["/usr/bin/dpkg-deb","-x",str(package),str(out)],timeout=120)
-            source=out/pinned["relative"]
-            require(source.is_file() and not source.is_symlink()
-                    and source.resolve(strict=True).is_relative_to(out.resolve(strict=True)),
-                    "F9_SOLVESPACE_RESOURCE_DEB_FILE_MISSING:"+name)
-            dest,link=resource_paths(name)
-            require(not dest.exists() and not dest.is_symlink(),
-                    "F9_SOLVESPACE_RESOURCE_TARGET_ALREADY_EXISTS:"+name)
-            extracted[name]={"source":source,"sha256":sha256(source),"target":dest}
-        for name,contents in extracted.items():
-            dest=contents["target"]
-            parent=dest.parent
-            require(parent==TARGET/Path(RESOURCES[name]["relative"]).parent,
-                    "F9_SOLVESPACE_RESOURCE_PARENT_CHANGED:"+name)
-            # Create expected project-owned resource parent only.
-            parent.mkdir(mode=0o700,parents=True,exist_ok=True)
-            require(not parent.is_symlink() and
-                    parent.resolve(strict=True).is_relative_to(TARGET.resolve(strict=True)),
-                    "F9_SOLVESPACE_RESOURCE_PARENT_ESCAPE:"+name)
-            with tempfile.NamedTemporaryFile(prefix=".f9-resource-",dir=parent,
-                                             delete=False) as temp:
-                pending=Path(temp.name)
-            try:
-                with contents["source"].open("rb") as stream,pending.open("wb") as dst:
-                    while chunk:=stream.read(1024*1024):
-                        dst.write(chunk)
-                require(sha256(pending)==contents["sha256"],
-                        "F9_SOLVESPACE_RESOURCE_COPIED_SHA_MISMATCH:"+name)
-                os.replace(pending,dest)
-            finally:
-                if pending.exists():
-                    pending.unlink()
-        state={"state":"verified","packages":{
-            name:{"version":pinned["version"],"apt_sha256":pinned["sha256"],
-                  "relative":pinned["relative"],
-                  "content_sha256":extracted[name]["sha256"]}
-            for name,pinned in RESOURCES.items()}}
-        with tempfile.NamedTemporaryFile(prefix=".f9-resource-manifest-",dir=TARGET,
-                                         delete=False) as temp:
-            pending=Path(temp.name)
-        try:
-            pending.write_text(json.dumps(state,indent=2)+"\n",encoding="utf-8")
-            os.replace(pending,RESOURCE_MANIFEST)
-        finally:
-            if pending.exists():
-                pending.unlink()
-    return check_resources()
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
     modes = parser.add_mutually_exclusive_group(required=True)
     modes.add_argument("--install", action="store_true")
     modes.add_argument("--check", action="store_true")
-    modes.add_argument("--repair-resources", action="store_true")
-    modes.add_argument("--check-resources", action="store_true")
     args = parser.parse_args()
     try:
-        if args.install:
-            result=install()
-        elif args.repair_resources:
-            result=repair_resources()
-        elif args.check_resources:
-            result=check_resources()
-        else:
-            result=guard() or check()
+        result = install() if args.install else (guard() or check())
         print(json.dumps(result, sort_keys=True), flush=True)
         return 0
     except Exception as exc:
