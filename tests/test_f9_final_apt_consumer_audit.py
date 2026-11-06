@@ -72,6 +72,30 @@ class F9FinalAptAuditTests(unittest.TestCase):
         self.assertIn("/usr/bin/yt-dlp",owned)
         self.assertFalse(exact)
 
+    def test_independent_dpkg_methods_agree_on_installed_and_absent(self):
+        def present(argv,timeout=40):
+            if argv[:2]==["dpkg","-s"]:
+                return SimpleNamespace(returncode=0,
+                                       stdout="Package: yt-dlp\\nStatus: install ok installed\\n")
+            if argv[:2]==["dpkg-query","-W"]:
+                return SimpleNamespace(returncode=0,stdout="install ok installed")
+            raise AssertionError(argv)
+        with patch.object(m,"command",side_effect=present):
+            self.assertTrue(m.independent_dpkg_package_state("yt-dlp")["installed"])
+        def absent(argv,timeout=40):
+            return SimpleNamespace(returncode=1,stdout="")
+        with patch.object(m,"command",side_effect=absent):
+            self.assertFalse(m.independent_dpkg_package_state("yt-dlp")["installed"])
+
+    def test_independent_dpkg_mismatch_blocks_certification(self):
+        def disagreement(argv,timeout=40):
+            if argv[:2]==["dpkg","-s"]:
+                return SimpleNamespace(returncode=0,stdout="Status: install ok installed")
+            return SimpleNamespace(returncode=1,stdout="")
+        with patch.object(m,"command",side_effect=disagreement):
+            with self.assertRaisesRegex(RuntimeError,"METHODS_DISAGREE"):
+                m.independent_dpkg_package_state("yt-dlp")
+
     def test_guard_does_not_accept_other_projects_as_ferrari_root(self):
         with TemporaryDirectory() as td:
             bad=Path(td)/"skill-universal"
