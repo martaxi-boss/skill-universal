@@ -82,7 +82,19 @@ def main() -> int:
     latent=nodes.EmptyLatentImage().generate(256,256,1)[0]
     sample=nodes.KSampler().sample(model,1337,3,4.0,"euler","normal",
                                   positive,negative,latent,denoise=1.0)[0]
-    pixels=nodes.VAEDecode().decode(vae,sample)[0]
+    print("FERRARI_COMFY_SAMPLING_COMPLETE=PASS",flush=True)
+    # The small VPS has no swap. Release the large UNet and CLIP before
+    # decoding, then use ComfyUI's native tiled VAE to keep peak RAM low.
+    del model, clip, positive, negative, latent
+    import gc
+    import comfy.model_management
+    comfy.model_management.unload_all_models()
+    gc.collect()
+    memory_now=actual.with_name("memory.current")
+    if memory_now.is_file():
+        print("FERRARI_COMFY_AFTER_SAMPLER_CGROUP_MIB=%.1f"%(int(memory_now.read_text())/1024**2),flush=True)
+    print("FERRARI_COMFY_TILED_VAE_START=PASS",flush=True)
+    pixels=nodes.VAEDecodeTiled().decode(vae,sample,tile_size=128,overlap=32)[0]
     arr=np.clip(pixels[0].cpu().numpy()*255.0,0,255).astype(np.uint8)
     if arr.shape[:2]!=(256,256) or arr.std()<1.5:
         raise RuntimeError("FERRARI_COMFY_IMAGE_INVALID_OR_CONSTANT")
@@ -100,7 +112,7 @@ def main() -> int:
         "model_format":"safetensors",
         "engine":"ComfyUI-v0.43.0",
         "device":"cpu",
-        "image":"comfyui-tiny-sd-proof.png",
+        "image":"comfyui-sd15-proof.png",
         "size":[256,256],
         "seed":1337,
         "steps":3,
