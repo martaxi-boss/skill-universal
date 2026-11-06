@@ -67,7 +67,7 @@ class QGISNativeProcessingCertificateTests(unittest.TestCase):
         with TemporaryDirectory() as td:
             root=Path(td)/"skill-universal"
             runtime=root/".runtime"
-            runtime.mkdir()
+            runtime.mkdir(parents=True)
             target=root/"tools/qgis-4.2.3-condaforge"
             target.mkdir(parents=True)
             def make_result(args, **kwargs):
@@ -92,7 +92,7 @@ class QGISNativeProcessingCertificateTests(unittest.TestCase):
         with TemporaryDirectory() as td:
             root=Path(td)/"skill-universal"
             runtime=root/".runtime"
-            runtime.mkdir()
+            runtime.mkdir(parents=True)
             target=root/"tools/qgis-4.2.3-condaforge"
             target.mkdir(parents=True)
             with patch.multiple(m,ROOT=root,RUNTIME=runtime,TARGET=target), \
