@@ -155,7 +155,14 @@ def repair_launcher() -> dict:
     require(launcher.is_file() and not launcher.is_symlink(),
             "F9_OBS_LAUNCHER_NOT_REGULAR")
     wanted = launcher_source()
-    known_old = wanted.replace('"usr/local/lib/x86_64-linux-gnu", ', '')
+    # The previous F9 launcher had a different line wrap as well as no private path.
+    old_dirs = ('dirs = ("usr/local/lib/x86_64-linux-gnu", "opt/obs-studio/lib",\n'
+                '        "opt/obs-studio/lib64", "usr/lib", "usr/lib/x86_64-linux-gnu",\n'
+                '        "usr/local/lib")')
+    legacy_dirs = ('dirs = ("opt/obs-studio/lib", "opt/obs-studio/lib64", "usr/lib",\n'
+                   '        "usr/lib/x86_64-linux-gnu", "usr/local/lib")')
+    require(old_dirs in wanted, "F9_OBS_LAUNCHER_TEMPLATE_CHANGED")
+    known_old = wanted.replace(old_dirs, legacy_dirs)
     require(launcher.read_text(encoding="utf-8") in {known_old, wanted},
             "F9_OBS_UNKNOWN_LAUNCHER_REFUSE_REPAIR")
     if launcher.read_text(encoding="utf-8") != wanted:
