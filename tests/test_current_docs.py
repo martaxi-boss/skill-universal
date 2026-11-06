@@ -44,7 +44,8 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
         for doc in (bootstrap, readme, sk, portable):
-            self.assertIn("f1f3b035", doc)\n            self.assertNotIn("pinado em `292aeb7d10eecef8c3ca84760cd579e84e4b97f3`", doc)
+            self.assertIn("f1f3b035", doc)
+            self.assertNotIn("pinado em `292aeb7d10eecef8c3ca84760cd579e84e4b97f3`", doc)
             self.assertIn("Hopper", doc)
             self.assertNotIn("é um link exclusivo", doc)
         # Historic code SHAs are not immutable requirements of the live snapshot.
