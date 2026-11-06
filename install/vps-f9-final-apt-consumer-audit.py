@@ -170,7 +170,9 @@ def live_reference_count(owned: set[str]) -> dict:
             pass
         try:
             maps = (p / "maps").read_text(errors="replace")
-            if any(path in maps for path in owned if path.endswith((".so", ".so.1", ".so.2"))):
+            if any(len(parts := line.split()) >= 6
+                   and parts[-1] in owned
+                   for line in maps.splitlines()):
                 by_type["loaded_package_libraries"] += 1
         except (OSError, PermissionError):
             pass
@@ -188,8 +190,8 @@ def audit() -> dict:
     services_ok = all(active.values())
     deadline = time.monotonic() + MAX_SECONDS
     root_projects = ROOT.parent
-    observed = {p.name for p in root_projects.iterdir() if p.is_dir() and
-                p.name != ROOT.name}
+    observed = {p.name for p in root_projects.iterdir()
+                if p.is_dir() and not p.is_symlink() and p.name != ROOT.name}
     missing = sorted(set(PROJECTS) - observed)
     unknown = sorted(observed - set(PROJECTS))
     projects = [consumer_scan(root_projects / name, deadline, owned)
