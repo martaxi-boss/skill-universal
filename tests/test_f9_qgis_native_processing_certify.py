@@ -20,9 +20,10 @@ class QGISNativeProcessingCertificateTests(unittest.TestCase):
         self.assertIn('QgsApplication([], False)', m.CHILD)
         self.assertIn('initQgis()', m.CHILD)
         self.assertIn('geojson_export_and_reparse', m.CHILD)
-        self.assertIn('QgsVectorLayer(str(output)', m.CHILD)
-        self.assertIn('"ogr"', m.CHILD)
-        self.assertNotIn('QgsGeometry.fromJson', m.CHILD.split('reloaded =')[1])
+        self.assertIn('def ring_area(ring):', m.CHILD)
+        self.assertIn('area = ring_area(poly[0])', m.CHILD)
+        self.assertIn('independent_geojson_area_verified', m.CHILD)
+        self.assertNotIn('QgsVectorLayer(str(output)', m.CHILD)
         self.assertIn('6500.0 < area < 7500.0', m.CHILD)
         self.assertNotIn("real land", m.CHILD)
 
@@ -80,7 +81,8 @@ class QGISNativeProcessingCertificateTests(unittest.TestCase):
                 (work/"native-processing-result.json").write_text(json.dumps({
                     "native_buffer_algorithm_executed":True,
                     "geojson_export_and_reparse":True,
-                    "ogr_provider_geojson_readback":True,"feature_count":1}))
+                    "independent_geojson_area_verified":True,
+                    "ogr_provider_geojson_readback":False,"feature_count":1}))
                 return SimpleNamespace(returncode=0,stdout="PASS",stderr="")
             with patch.multiple(m,ROOT=root,RUNTIME=runtime,TARGET=target), \
                  patch.object(m,"guard"), \
