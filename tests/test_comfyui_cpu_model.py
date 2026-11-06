@@ -84,7 +84,7 @@ class ComfyModelTests(unittest.TestCase):
         self.assertIn("VAEDecodeTiled",code)
         self.assertIn("unload_all_models()",code)
         self.assertIn("FERRARI_COMFY_SAMPLING_COMPLETE=PASS",code)
-        self.assertIn('"image":"comfyui-sd15-proof.png"\',code)
+        self.assertIn('"image":"comfyui-sd15-proof.png"',code)
         self.assertIn("comfy.options.enable_args_parsing()",code)
         self.assertLess(code.index("comfy.options.enable_args_parsing()"),code.index("    import nodes"))
         self.assertIn("VAEDecode",code)
