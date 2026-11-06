@@ -18,12 +18,12 @@ class PrivateGeospatialSmokeTests(unittest.TestCase):
     def test_source_contains_real_qgis_geometry_roundtrip_and_cpu_renderer(self):
         child=m.CHILD
         self.assertIn("QgsGeometry.fromWkt", child)
-        self.assertIn("geom.area() - 5000.0", child)
+        self.assertIn("geom.area()-5000.0", child)
         self.assertIn("QPainter(img)", child)
         self.assertIn("QImage(640, 400", child)
         self.assertNotIn("app.initQgis()",child)
         self.assertIn("LIBGL_ALWAYS_SOFTWARE", SRC.read_text())
-        self.assertIn('"real_property_measurements_used": False', child)
+        self.assertIn('"real_property_measurements_used":False', child)
 
     def test_no_global_install_or_other_project_mutation(self):
         source=SRC.read_text(encoding="utf-8")
