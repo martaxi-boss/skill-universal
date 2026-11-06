@@ -61,3 +61,13 @@ Comparação autenticada dos commits locais registados na auditoria da VPS com a
 - A auditoria permanente da VPS foi reposta exatamente à versão original pré-F9 no [commit c71a85cd](https://github.com/martaxi-boss/VPS/commit/c71a85cdfb1b139e634197131985a326a757f684) e a execução [#42133850727](https://github.com/martaxi-boss/VPS/actions/runs/42133850727) concluiu **SUCCESS**. Nenhum diagnóstico temporário ficou inserido no workflow habitual.
 
 **Estado:** F9 continua aberta; não há prova de desinstalação dos 16 programas globais nem de captura das alterações locais dos projetos. Manter backups de referência e funcionamento dos serviços até reconciliação validada.
+
+
+## Higienização final do Hopper — 06/11/2026
+
+- O primeiro workflow de limpeza [#42133943881](https://github.com/martaxi-boss/VPS/actions/runs/42133943881) foi corretamente **bloqueado** ao detetar uma pasta raiz não vazia. Não houve remoção nesse teste.
+- A auditoria adicional só de leitura [#42134256803](https://github.com/martaxi-boss/VPS/actions/runs/42134256803) provou UID 1000 (`ubuntu`), diretório canónico sem symlink ou mountpoint, **5 diretórios interiores e zero ficheiros**. A razão do bloqueio era existirem subdiretórios vazios.
+- A limpeza mínima [#42134483519](https://github.com/martaxi-boss/VPS/actions/runs/42134483519) executou guardas independentes e devolveu `F9_EMPTY_HOPPER_NESTED_DIRECTORIES=5`, `F9_EMPTY_HOPPER=REMOVED`, `F9_PROTECTED_SERVICES_UNCHANGED=8`. Foram removidos **seis diretórios vazios** (pasta raiz e cinco interiores), sem `rm -rf` ou remoção de qualquer ficheiro.
+- O workflow temporário de limpeza foi eliminado de `martaxi-boss/VPS` após PASS, no [commit 919a2e37](https://github.com/martaxi-boss/VPS/commit/919a2e37d74e40b7687e46686a44a0b5853c9d9c). O inventário normal foi restituído à versão sem código de diagnóstico no [commit 8b499556](https://github.com/martaxi-boss/VPS/commit/8b4995567499c24847306fc723e43f46f9885cf7).
+
+**Pendências F9 preservadas:** 16 pacotes APT de aplicações ainda globais, dos quais oito sem executor privado certificado; seis alterações locais rastreadas em `pink-iptv` e outras seis em `iptvpn-bot` ainda não preservadas em commits; prova de origem/release para as instalações sem Git worktree. É deliberado não resolver estes problemas com `apt purge` global ou `git reset --hard` sem alternativas, testes de consumidores e rollback. Não declarar a Fase 9 concluída.
