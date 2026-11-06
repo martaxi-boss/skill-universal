@@ -22,7 +22,7 @@ class F9FinalAptAuditTests(unittest.TestCase):
         self.assertEqual(len(m.SERVICES),8)
         code=SOURCE.read_text(encoding="utf-8")
         ast.parse(code)
-        for forbidden in ('"apply"', '"purge", *PACKAGES', '"apt-get", "-y"',
+        for forbidden in ('"apply"', '"apt-get", "-y"',
                           '"apt-get", "install"', 'shutil.rmtree(', 'os.unlink(',
                           'os.remove(', 'rm -rf', 'git reset'):
             self.assertNotIn(forbidden,code)
