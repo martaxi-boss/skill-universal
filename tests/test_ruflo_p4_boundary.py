@@ -28,7 +28,7 @@ class RufloP4SafetyTests(unittest.TestCase):
     def test_ruflo_pinned_private_cli_without_automatic_swarm_start(self):
         installer=(ROOT/"install/install-agent-engines.sh").read_text(encoding="utf-8")
         self.assertIn("VERSION_RUFLO=3.71.0",installer)
-        self.assertIn('"$RUFLO" --help',installer)
+        self.assertIn('"$RUNTIME/ruflo/node_modules/.bin/ruflo" --help',installer)
         self.assertIn('.runtime/npm',installer)
         self.assertNotIn('"$RUFLO" start',installer)
         self.assertNotIn('"$RUFLO" daemon',installer)
