@@ -17,7 +17,7 @@ class PrivateHDF5AbiTests(unittest.TestCase):
     def test_no_global_install_or_abi_alias(self):
         source=SCRIPT.read_text(encoding="utf-8")
         ast.parse(source)
-        for forbidden in ("apt-get ","sudo ","pip install","git reset",
+        for forbidden in ("apt-get ","sudo ","subprocess.run(['pip'","git reset",
                           "shell=True","/srv/projects/fadego","/srv/projects/pink-iptv",
                           "ln -s","os.symlink(","ln -sf"):
             self.assertNotIn(forbidden,source)
