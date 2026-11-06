@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import hashlib
 import io
+import json
 import tempfile
 import unittest
 
@@ -110,6 +111,87 @@ class FerrariObsPrivateTests(unittest.TestCase):
                     mod.install()
                 self.assertFalse(target.exists())
                 self.assertEqual(list(runtime.iterdir()), [])
+
+    def test_launcher_prioritizes_bundled_libobs_over_host(self):
+        script=mod.launcher_source()
+        self.assertIn('usr/local/lib/x86_64-linux-gnu',script)
+        self.assertIn('env["LD_LIBRARY_PATH"] = ":".join(local)',script)
+        self.assertLess(script.index("usr/local/lib/x86_64-linux-gnu"),
+                        script.index("opt/obs-studio/lib"))
+
+    def test_refuses_to_replace_unknown_private_launcher(self):
+        payload=b"synthetic-package"
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)/"obs-studio-32.2.2"
+            root.mkdir()
+            (root/mod.FILENAME).write_bytes(payload)
+            exe=root/"payload/usr/local/bin/obs"
+            exe.parent.mkdir(parents=True)
+            exe.write_text("#!/bin/sh\n")
+            exe.chmod(0o700)
+            libs=root/"payload/usr/local/lib/x86_64-linux-gnu"
+            libs.mkdir(parents=True)
+            (libs/"libobs.so.30").write_bytes(b"private")
+            original="unsafe unrecognized launcher"
+            (root/"run-obs").write_text(original)
+            manifest={"source":mod.URL,"sha256":hashlib.sha256(payload).hexdigest(),
+                      "version":mod.VERSION,"bytes":len(payload),
+                      "obs_relative_exe":"usr/local/bin/obs"}
+            (root/"manifest.json").write_text(json.dumps(manifest))
+            with patch.multiple(mod,TARGET=root,SIZE=len(payload),
+                                SHA256=hashlib.sha256(payload).hexdigest()),\
+                 patch.object(mod,"guard"):
+                with self.assertRaisesRegex(RuntimeError,"UNKNOWN_LAUNCHER"):
+                    mod.repair_launcher()
+            self.assertEqual((root/"run-obs").read_text(),original)
+
+
+    def test_exact_previous_launcher_can_be_repaired_and_verified(self):
+        payload=b"synthetic-package"
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)/"obs-studio-32.2.2"
+            runtime=Path(td)/"runtime"
+            root.mkdir()
+            runtime.mkdir()
+            (root/mod.FILENAME).write_bytes(payload)
+            exe=root/"payload/usr/local/bin/obs"
+            exe.parent.mkdir(parents=True)
+            exe.write_text("#!/bin/sh\n")
+            exe.chmod(0o700)
+            libs=root/"payload/usr/local/lib/x86_64-linux-gnu"
+            libs.mkdir(parents=True)
+            (libs/"libobs.so.30").write_bytes(b"private")
+            wanted=mod.launcher_source()
+            newdirs=('dirs = ("usr/local/lib/x86_64-linux-gnu", "opt/obs-studio/lib",\n'
+                     '        "opt/obs-studio/lib64", "usr/lib", "usr/lib/x86_64-linux-gnu",\n'
+                     '        "usr/local/lib")')
+            olddirs=('dirs = ("opt/obs-studio/lib", "opt/obs-studio/lib64", "usr/lib",\n'
+                     '        "usr/lib/x86_64-linux-gnu", "usr/local/lib")')
+            self.assertIn(newdirs,wanted)
+            previous=wanted.replace(newdirs,olddirs)
+            launcher=root/"run-obs"
+            launcher.write_text(previous)
+            launcher.chmod(0o700)
+            manifest={"source":mod.URL,"sha256":hashlib.sha256(payload).hexdigest(),
+                      "version":mod.VERSION,"bytes":len(payload),
+                      "obs_relative_exe":"usr/local/bin/obs","cli_version_tested":False}
+            (root/"manifest.json").write_text(json.dumps(manifest))
+            def fake_run(cmd,**kwargs):
+                if cmd[0]=="/usr/bin/ldd":
+                    return SimpleNamespace(returncode=0,stdout=
+                        "libobs.so.30 => "+str(libs/"libobs.so.30")+" (0x1)\n",
+                        stderr="")
+                return SimpleNamespace(returncode=0,stdout="OBS Studio 32.2.2\n",stderr="")
+            with patch.multiple(mod,TARGET=root,RUNTIME=runtime,SIZE=len(payload),
+                                SHA256=hashlib.sha256(payload).hexdigest()),\
+                 patch.object(mod,"guard"),\
+                 patch.object(mod.subprocess,"run",side_effect=fake_run):
+                result=mod.repair_launcher()
+            self.assertTrue(result["repair_applied"])
+            self.assertTrue(result["private_libobs_linked"])
+            self.assertTrue(result["cli_version_tested"])
+            self.assertEqual(launcher.read_text(),wanted)
+            self.assertEqual(list(runtime.iterdir()),[])
 
 
 if __name__ == "__main__":

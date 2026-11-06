@@ -87,8 +87,9 @@ exe = (payload / data["obs_relative_exe"]).resolve(strict=True)
 if not exe.is_file() or not exe.is_relative_to(payload.resolve(strict=True)):
     raise SystemExit("F9_OBS_EXECUTABLE_ESCAPED")
 env = os.environ.copy()
-dirs = ("opt/obs-studio/lib", "opt/obs-studio/lib64", "usr/lib",
-        "usr/lib/x86_64-linux-gnu", "usr/local/lib")
+dirs = ("usr/local/lib/x86_64-linux-gnu", "opt/obs-studio/lib",
+        "opt/obs-studio/lib64", "usr/lib", "usr/lib/x86_64-linux-gnu",
+        "usr/local/lib")
 local = [str(payload / p) for p in dirs if (payload / p).is_dir()]
 if local:
     env["LD_LIBRARY_PATH"] = ":".join(local)
@@ -120,10 +121,97 @@ def check() -> dict:
     return {"status": "private_obs_package_verified", "package_sha256": SHA256,
             "version": VERSION, "private_path": str(launcher),
             "cli_version_tested": bool(info.get("cli_version_tested", False)),
+            "private_libobs_linked": bool(info.get("private_libobs_linked", False)),
             "gui_runtime_certified": False,
             "websocket_studio_certified": False,
             "dependency_isolation_certified": False,
             "global_apt_changed": False}
+
+def repair_launcher() -> dict:
+    """Repair only the known F9 private OBS launcher, never OS packages."""
+    guard()
+    require(TARGET.is_dir() and not TARGET.is_symlink(), "F9_OBS_NOT_INSTALLED")
+    package = TARGET / FILENAME
+    require(package.is_file() and not package.is_symlink()
+            and package.stat().st_size == SIZE and digest(package) == SHA256,
+            "F9_OBS_PACKAGE_DIGEST_MISMATCH")
+    marker = TARGET / "manifest.json"
+    require(marker.is_file() and not marker.is_symlink() and marker.stat().st_size < 4096,
+            "F9_OBS_NO_MANIFEST")
+    info = json.loads(marker.read_text(encoding="utf-8"))
+    require(info.get("source") == URL and info.get("sha256") == SHA256
+            and info.get("version") == VERSION and info.get("bytes") == SIZE,
+            "F9_OBS_PROVENANCE_MISMATCH")
+    exe = TARGET / "payload" / info["obs_relative_exe"]
+    require(exe.is_file() and not exe.is_symlink() and os.access(exe, os.X_OK)
+            and exe.resolve(strict=True).is_relative_to((TARGET / "payload").resolve(strict=True)),
+            "F9_OBS_INVALID_BINARY")
+    libs = TARGET / "payload/usr/local/lib/x86_64-linux-gnu"
+    require(libs.is_dir() and not libs.is_symlink()
+            and (libs / "libobs.so.30").is_file()
+            and libs.resolve(strict=True).is_relative_to(TARGET.resolve(strict=True)),
+            "F9_OBS_PRIVATE_LIBOBS_MISSING")
+    launcher = TARGET / "run-obs"
+    require(launcher.is_file() and not launcher.is_symlink(),
+            "F9_OBS_LAUNCHER_NOT_REGULAR")
+    wanted = launcher_source()
+    # The previous F9 launcher had a different line wrap as well as no private path.
+    old_dirs = ('dirs = ("usr/local/lib/x86_64-linux-gnu", "opt/obs-studio/lib",\n'
+                '        "opt/obs-studio/lib64", "usr/lib", "usr/lib/x86_64-linux-gnu",\n'
+                '        "usr/local/lib")')
+    legacy_dirs = ('dirs = ("opt/obs-studio/lib", "opt/obs-studio/lib64", "usr/lib",\n'
+                   '        "usr/lib/x86_64-linux-gnu", "usr/local/lib")')
+    require(old_dirs in wanted, "F9_OBS_LAUNCHER_TEMPLATE_CHANGED")
+    known_old = wanted.replace(old_dirs, legacy_dirs)
+    require(launcher.read_text(encoding="utf-8") in {known_old, wanted},
+            "F9_OBS_UNKNOWN_LAUNCHER_REFUSE_REPAIR")
+    if launcher.read_text(encoding="utf-8") != wanted:
+        with tempfile.NamedTemporaryFile(prefix=".f9-obs-launcher-", dir=TARGET,
+                                         delete=False) as fh:
+            staged = Path(fh.name)
+        try:
+            staged.write_text(wanted, encoding="utf-8")
+            staged.chmod(0o700)
+            os.replace(staged, launcher)
+        finally:
+            if staged.exists():
+                staged.unlink()
+    with tempfile.TemporaryDirectory(prefix=".f9-obs-check-", dir=RUNTIME) as td:
+        scratch=Path(td)
+        environment=os.environ.copy()
+        environment.update({"HOME":str(scratch),"XDG_CACHE_HOME":str(scratch),
+                            "XDG_CONFIG_HOME":str(scratch),"XDG_RUNTIME_DIR":str(scratch),
+                            "QT_QPA_PLATFORM":"offscreen","TMPDIR":str(scratch),
+                            "PYTHONNOUSERSITE":"1"})
+        try:
+            version=subprocess.run([str(launcher),"--version"],cwd=scratch,
+                                   env=environment,capture_output=True,text=True,
+                                   timeout=30,check=False)
+            info["cli_version_tested"] = version.returncode == 0 and VERSION in (
+                version.stdout+version.stderr)
+        except (OSError,subprocess.TimeoutExpired):
+            info["cli_version_tested"] = False
+        libenv=environment.copy()
+        libenv["LD_LIBRARY_PATH"] = str(libs)
+        linked=subprocess.run(["/usr/bin/ldd",str(exe)],env=libenv,
+                              timeout=25,capture_output=True,text=True,check=False)
+        info["private_libobs_linked"] = (
+            linked.returncode == 0 and "not found" not in linked.stdout
+            and any("libobs.so.30 => " in line and str(libs) in line
+                    for line in linked.stdout.splitlines()))
+    with tempfile.NamedTemporaryFile(prefix=".f9-obs-manifest-", dir=TARGET,
+                                     delete=False) as fh:
+        staged=Path(fh.name)
+    try:
+        staged.write_text(json.dumps(info,indent=2)+"\n",encoding="utf-8")
+        os.replace(staged,marker)
+    finally:
+        if staged.exists():
+            staged.unlink()
+    result=check()
+    result["repair_applied"]=True
+    return result
+
 
 def install() -> dict:
     guard()
@@ -184,10 +272,13 @@ def main() -> int:
     mode = p.add_mutually_exclusive_group(required=True)
     mode.add_argument("--install", action="store_true")
     mode.add_argument("--check", action="store_true")
+    mode.add_argument("--repair-launcher", action="store_true")
     args = p.parse_args()
     try:
         if args.install:
             result = install()
+        elif args.repair_launcher:
+            result = repair_launcher()
         else:
             guard()
             result = check()
