@@ -76,6 +76,8 @@ O teste de Lowcost Europa em 07/11/2026 foi rejeitado pelo utilizador por voz me
 
 Quando o utilizador fornece um endereço de site, página ou Reel, a primeira opção é **capturar automaticamente o conteúdo real acessível**, sem pedir fotografias manualmente. Ler references/automatic-creative-from-url.md. Preservar logótipo, cores, produtos, textos e CTA da página atual; se não abrir, explicar a falha sem fabricar imagens ou alegar que viu a página.
 
+**Não descrever uma voz sintética como voz humana gravada.**
+
 **Locução aprovada pelo proprietário:** o vídeo de referência 1000183150.mp4, com 44,8 s (07/11/2026), tem o estilo de voz pt-PT que o dono prefere. O projeto independente martaxi-boss/Criativos-anuncios utiliza Piper pt_PT-tugão-medium; privilegiar essa voz já aprovada e **não substituí-la por Kokoro, eSpeak ou outra voz por iniciativa própria**. Gerar a nova narração com o mesmo modelo, não recortar o áudio antigo para fingir um texto novo. A aprovação do estilo não dispensa ouvir o texto final.
 
 **Fluxo disponível:** no repositório martaxi-boss/Criativos-anuncios é possível criar um pedido só com source_url em ads/requests/ e obter um render automático privado via GitHub Actions; usa Chromium/Playwright para imagens reais do site, Piper para voz e FFmpeg para MP4. O Ferrari Skill pode comandar e auditar esse trabalho pelo conector GitHub, mas a renderização que ocorre no runner do projeto independente não é execução do motor Ferrari na VPS. Manter projetos fisicamente independentes e não misturar ambientes.
