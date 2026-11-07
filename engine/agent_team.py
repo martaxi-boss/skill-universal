@@ -475,8 +475,13 @@ def run(doc, dest, uploaded=None):
         # Journal the running stage before side effects. An interrupted tool may
         # NOT be replayed until explicit recovery acknowledges duplicate risk.
         stage = folder / "work" / (task["id"] + "-" + str(state["revision"]))
-        if turn["kind"] in {"invoke", "rea-mcp"}:
+        if turn["kind"] in {"invoke", "rea-mcp", "submit"}:
             stage.parent.mkdir(mode=0o700, exist_ok=True)
+            if (stage.parent.is_symlink() or
+                    not stage.parent.resolve(strict=True).is_relative_to(folder.resolve(strict=True)) or
+                    stage.is_symlink() or stage.exists()):
+                raise RuntimeError("Unsafe or duplicate Ferrari team stage")
+        if turn["kind"] in {"invoke", "rea-mcp"}:
             task["status"] = "failed"
             _atomic(folder / "state.json", state)
         extra = []
