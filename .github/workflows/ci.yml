@@ -125,7 +125,7 @@ jobs:
           assert plugin["name"] == "motor-ferrari"
           assert plugin["version"]
           skill = Path("skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
-          assert skill.startswith("---\u005cnname: motor-universal-linux\u005cn")
+          assert skill.splitlines()[:2] == ["---", "name: motor-universal-linux"]
           assert Path("skill/motor-universal-linux/agents/openai.yaml").is_file()
           print("Ferrari plugin identity and Skill source: PASS")
           PY
