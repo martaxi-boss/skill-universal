@@ -12,6 +12,12 @@
 4. Exigir no log FERRARI_SKILL_JOB_STATUS=completed e FERRARI_SKILL_END_TO_END=PASS; obter o artefacto ferrari-skill-result-<run_id>, verificar response.zip, report.json (status completed) e os ficheiros reais em artifacts/.
 5. Se a ligação/execução não for verificável, indicar a limitação; não simular um PASS nem repetir o pedido às cegas.
 
+## Futuro modo ruflo-team — exigir ativação certificada antes de enviar
+
+`engine/agent_team.py` implementa agora `kind=ruflo-team` com `phase=start|turn|status|recover|finish`, `team_id`, journal privado, fichas de papel, tarefas com revisor distinto, allowlists de ferramentas do catálogo e decisões da mesma IA anfitriã por várias rondas. [Contrato](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md). O código não faz chamadas LLM na VPS.
+
+**NÃO ENVIAR ESSE TIPO AINDA:** a release VPS e o validador pinado do workflow não incluem `ruflo-team`. Após CI verde, requer deploy isolado com fallback, atualização mínima do pin de validação (sem alterar SSH), verificação real Ruflo/REA, resposta ZIP e oito serviços saudáveis. O modo anterior `ruflo-host` mantém-se inalterado.
+
 ## Contrato JSON — versão 1
 
 Todos os exemplos exigem um nome de ficheiro **novo** no diretório ferrari-requests/. Os exemplos servem apenas como formato, não como comandos que executam automaticamente.
