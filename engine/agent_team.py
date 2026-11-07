@@ -153,9 +153,14 @@ def validate_job(doc):
             elif kind == "submit":
                 allowed = base
             elif kind == "review":
-                allowed = base | {"verdict"}
+                allowed = base | {"verdict", "evidence_sha256"}
                 if turn.get("verdict") not in {"approved", "changes_requested"}:
                     raise ValueError("Review needs an explicit verdict")
+                digests = turn.get("evidence_sha256")
+                if (not isinstance(digests, list) or not 1 <= len(digests) <= 30
+                        or any(not isinstance(v, str) or not re.fullmatch("[a-f0-9]{64}", v)
+                               for v in digests)):
+                    raise ValueError("Review must bind explicit evidence SHA256 hashes")
             else:
                 raise ValueError("No automatic LLM agent actions in Ferrari VPS")
             if set(turn) - allowed or not _text(turn.get("message"), 1500, 12):
@@ -453,6 +458,8 @@ def run(doc, dest, uploaded=None):
             if task["status"] != "awaiting_review" or turn["role"] != task["reviewer"]:
                 raise ValueError("Only the assigned independent reviewer may review submitted work")
             _check_recorded_evidence(state, folder)
+            if turn["evidence_sha256"] != [x["sha256"] for x in task["evidence"]]:
+                raise ValueError("Review references stale or incorrect evidence")
         else:
             if task["status"] != "pending" or turn["role"] != task["role"]:
                 raise ValueError("Turn does not belong to ready agent")
@@ -524,7 +531,8 @@ def run(doc, dest, uploaded=None):
                     else:
                         task["status"] = "pending"
                     task["review"] = {"role": turn["role"], "verdict": turn["verdict"],
-                                      "feedback": turn["message"]}
+                                      "feedback": turn["message"],
+                                      "evidence_sha256": turn["evidence_sha256"]}
                     state["reviews_recorded"] += 1
             state["revision"] += 1
             state["history"].append({"at": _now(), "event": turn["kind"],
