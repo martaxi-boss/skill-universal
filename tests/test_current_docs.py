@@ -6,6 +6,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CurrentFerrariDocsTests(unittest.TestCase):
+    def test_skill_delivery_contract_has_real_execution_and_verified_downloads(self):
+        """Never call an unexecuted Ferrari job complete or invent an attachment."""
+        sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
+        bridge = (ROOT / "skill/motor-universal-linux/references/github-bridge.md").read_text(encoding="utf-8")
+        for content in (sk, bridge):
+            for marker in ("FERRARI_SKILL_END_TO_END=PASS", "response.zip",
+                           "report.json", "Library file not found",
+                           "sandbox:/mnt/data/", "engine"):
+                self.assertIn(marker, content)
+            self.assertIn("e0509d5370828869479069c99f2eace779960cad", content)
+        self.assertIn("Não confundir trabalho do ChatGPT com trabalho do Ferrari", sk)
+        self.assertIn("Referências históricas, não ativas", bridge)
     def test_bootstrap_is_an_operational_snapshot_not_a_chronology(self):
         text = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
         self.assertIn("Fotografia atual com provas", text)
