@@ -70,10 +70,11 @@ A tarefa fica **awaiting_review**, não aprovada. O anfitrião entra agora no co
  "phase":"turn","team_id":"example-work-001","revision":1,
  "turn":{"task":"design","role":"reviewer","kind":"review",
          "message":"Os critérios de aceitação estão completos.",
-         "verdict":"approved"}}
+         "verdict":"approved",
+         "evidence_sha256":["0000000000000000000000000000000000000000000000000000000000000000"]}}
 ~~~
 
-O Ruflo regista a atribuição à função indicada e o Ferrari só liberta as dependências após a revisão por papel diferente. O anfitrião e a ficha da tarefa têm responsabilidade por verificar o conteúdo; o motor **não consegue provar por si só que a avaliação textual é inteligente ou correta**.
+**O SHA256 acima é apenas um marcador sintético de 64 dígitos; substituí-lo obrigatoriamente pelo hash REAL do `host_inbox.evidence` devolvido após a submissão.** Se for diferente, a revisão falha. O Ruflo regista a atribuição à função indicada e o Ferrari só liberta as dependências após a revisão por papel diferente. O anfitrião e a ficha da tarefa têm responsabilidade por verificar o conteúdo; o motor **não consegue provar por si só que a avaliação textual é inteligente ou correta**.
 
 ### 3. Executar uma ferramenta real e passar os resultados
 
@@ -102,7 +103,7 @@ O estado fica apenas dentro de /srv/projects/skill-universal/.runtime/ruflo-team
 
 - Só ações explicitamente aprovadas em engine/catalog.json ou REA MCP validado podem executar; cada papel dispõe de allowlist; **sem shell arbitrário**.
 - Não existe chave de IA nem modelo por agente; independent_agent_model_calls = 0 por definição da execução assistida. Um nome de agente, agent_spawn ou model=inherit **não é prova de inferência**.
-- Os ficheiros antigos são revalidados por hash antes da revisão e antes da aprovação final; symlinks e caminhos fora da sessão são rejeitados.
+- Os ficheiros antigos são revalidados por hash antes da revisão e antes da aprovação final; **cada aprovação tem de apresentar os SHA256 exatos dos ficheiros observados**. Symlinks e caminhos fora da sessão são rejeitados.
 - Um revisor lógico diferente do executor **não equivale a uma segunda IA independente**: é mais uma ronda de raciocínio da mesma IA, com critérios de revisão distintos.
 - GitHub do utilizador e repositório VPS são públicos; só dados sintéticos/não confidenciais são elegíveis por esta ponte. A persistência na VPS privada **não torna privados commits públicos**.
 
