@@ -13,7 +13,7 @@ Esta referência complementa a **única Skill Universal**. Uma ferramenta Ubuntu
 | Dados e automação | DuckDB, Polars, Streamlit, Prefect, Ruflo opcional | Validação de dados e execução tipada real, sem confundir CLI --help com fluxo funcional |
 | IA local | ComfyUI CPU, outros só se houver recursos | Modelos presentes e inferência real certificada; não presumir GPU |
 
-Instalação não garante que o programa possa ser controlado pelo Ferrari. O estado real está em BOOTSTRAP.md e nos outputs de engine/ferrari.py, engine/tool_runtime.py e engine/tool_actions.json.
+Instalação não garante que o programa possa ser controlado pelo Ferrari. O estado real está em BOOTSTRAP.md e na fonte persistente única `engine/catalog.json`, nos executores `engine/ferrari.py` e `engine/tool_runtime.py` e no inventário real devolvido pela Skill (`kind=inventory`). `engine/catalog_registry.py` fornece vistas derivadas, não outro catálogo.
 
 ## Roteamento
 

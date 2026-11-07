@@ -80,6 +80,20 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         bridge = (ROOT / "skill/motor-universal-linux/references/github-bridge.md").read_text(encoding="utf-8")
         self.assertIn("0b50e1d403deff8f3ccb421edd0b41c397d66b9b", bridge)
 
+    def test_skill_references_do_not_resurrect_legacy_catalog(self):
+        references=(
+            ROOT/"skill/motor-universal-linux/references/protocols.md",
+            ROOT/"skill/motor-universal-linux/references/github-bridge.md",
+        )
+        for path in references:
+            text=path.read_text(encoding="utf-8")
+            self.assertIn("engine/catalog.json",text)
+            self.assertNotIn("engine/tool_actions.json",text)
+        bridge=references[1].read_text(encoding="utf-8")
+        self.assertIn("42316041466",bridge)
+        self.assertIn("450 registos",bridge)
+        self.assertNotIn("396 entradas registadas",bridge)
+
     def test_f9_nominal_global_apt_readback_is_current(self):
         report = (ROOT / "docs/FASE9_HIGIENE_APT_FINAL_20261106.md").read_text(encoding="utf-8")
         self.assertIn("42300665770", report)
