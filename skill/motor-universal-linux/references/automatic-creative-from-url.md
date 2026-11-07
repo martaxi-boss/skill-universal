@@ -6,6 +6,12 @@ Este guia pertence à mesma Skill universal. Usa métodos do projeto independent
 
 O vídeo 1000183150.mp4 (44,8 s; recebido 07/11/2026) mostra o timbre e ritmo de locução que o dono aprovou. O projeto martaxi-boss/Criativos-anuncios utiliza Piper pt_PT-tugão-medium, com modelo verificado por SHA-256, geração de WAV frase a frase e mistura em FFmpeg. **Preferir essa mesma voz**, sem procurar outro TTS nem exigir nova autorização para experimentar o estilo. Não declarar que é uma gravação humana; é síntese pt-PT. A nova locução e sincronismo exigem audição antes de aprovação comercial.
 
+## Evidência real de referência — Low Cost Europa
+
+Em 07/11/2026, a execução [#42335182728](https://github.com/martaxi-boss/Criativos-anuncios/actions/runs/42335182728) concluiu **SUCCESS** com URL único `https://lowcost-europa.duckdns.org/`, cinco cenas, três cartões de produtos retirados do DOM público, logótipo real, CTA real e narração sintetizada com o mesmo Piper pt_PT-tugão-medium do projeto. O MP4 durou **19,656 s**, 864 × 1536, H.264/AAC; `site_capture.json.editorial.mode=authentic_editorial_composition` e `report.json.approval_state=preview_only`. Os materiais foram captados sem fotografias fornecidas manualmente. O teste demonstra funcionamento técnico e autenticidade dos elementos, **não** aprovação artística ou direitos comerciais definitivos.
+
+A montagem é uma recomposição publicitária de capturas de elementos visuais reais, não uma gravação literal do site. O código `editorial_scene.py` usa apenas imagens do cartão, logótipo e botão efetivamente captados na página. Quando esses elementos não existem, a fallback `editorial.mode=site_screenshots` conserva capturas reais e documenta o motivo. Proibir produtos, preços, logótipos e descontos fictícios.
+
 ## Fluxo URL primeiro, sem fotografias manuais
 
 Um pedido público só com URL pode ser criado por GitHub autenticado em martaxi-boss/Criativos-anuncios, caminho ads/requests/NOME-NOVO.json. Exemplo:
