@@ -2,9 +2,7 @@
 
 **Ferrari azul v1.0.6:** https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d. Atualizar in-place via Plugin Creator. Criativos: URLs, fotos, vídeos, Reels e fontes mistas; IA escreve e monta; Piper pt-PT.
 
-## VOZES PUBLICITÁRIAS APROVADAS — integração técnica e limites (07/11/2026)
-
-**Duas vozes de referência:** masculina Piper original `pt_PT-tugao-medium` (`piper-original-ptpt`, NÃO Rui HD) e feminina Raquel `pt-PT-RaquelNeural` (`raquel-neural-ptpt`). Estão preservadas na biblioteca do ChatGPT `/Lowcost Europa/Vozes aprovadas`. No repositório INDEPENDENTE `martaxi-boss/Criativos-anuncios`, a PR #2 integrou a seleção de ambas no mesmo renderizador; os ensaios reais #42378083734 (Raquel) e #42378094371 (Piper) terminaram com MP4, WAV e QA técnico. **Não concluir que ambas as vozes estão instaladas na VPS Ferrari:** a Raquel é sintetizada num runner GitHub através do Edge Read Aloud online. A licença de publicidade dessa via não está estabelecida; resultado apenas `preview_only`. Não misturar dependências de projetos nem colocar amostras privadas em GitHub público.
+**Vozes:** Piper original e Raquel; ver Skill.
 
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
 
