@@ -87,10 +87,11 @@ def validate_job(doc):
             rid, kind, actions = role["id"], role["type"], role["actions"]
             if not _id(rid) or rid in seen_roles or not _id(kind):
                 raise ValueError("Invalid or duplicated Ruflo role")
-            if not isinstance(actions, list) or len(actions) > 30 or len(actions) != len(set(actions)):
+            if (not isinstance(actions, list) or len(actions) > 30 or
+                    any(not isinstance(a, str) for a in actions) or len(actions) != len(set(actions))):
                 raise ValueError("Invalid role action allowlist")
             available = tool_runtime.specs()
-            if any(not isinstance(a, str) or a not in available for a in actions):
+            if any(a not in available and a != "rea-mcp" for a in actions):
                 raise ValueError("Role can only use Ferrari catalog actions")
             seen_roles.add(rid)
         seen_tasks = set()
@@ -253,6 +254,24 @@ def _verified_artifacts(answer, output):
     return evidence
 
 
+def _check_recorded_evidence(state, folder):
+    """Review and final acceptance fail if previously produced evidence changed."""
+    root = folder.resolve(strict=True)
+    for task in state["tasks"].values():
+        if task["status"] not in {"awaiting_review", "approved"}:
+            continue
+        items = task.get("evidence")
+        if not isinstance(items, list) or not items:
+            raise ValueError("Team task has no reviewable evidence")
+        for item in items:
+            path = Path(item["path"])
+            if (path.is_symlink() or not path.is_file()
+                    or not path.resolve(strict=True).is_relative_to(root)
+                    or path.stat().st_size != item["bytes"]
+                    or hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]):
+                raise ValueError("Private team evidence was modified or removed")
+
+
 def _stage_input(state, task, from_id, teamdir):
     if from_id == "$input":
         path = state.get("input_path")
@@ -403,8 +422,11 @@ def run(doc, dest, uploaded=None):
         if phase == "finish":
             if any(t["status"] != "approved" for t in state["tasks"].values()):
                 raise ValueError("All agent tasks require distinct reviewer approval")
-            if state["tool_calls_verified"] == 0 or state["reviews_recorded"] == 0:
-                raise ValueError("No real Ferrari tool and reviewed evidence; cannot certify")
+            _check_recorded_evidence(state, folder)
+            if (not any(t["status"] == "approved" and t.get("evidence_kind") == "tool"
+                        for t in state["tasks"].values())
+                    or state["reviews_recorded"] == 0):
+                raise ValueError("No approved real Ferrari tool evidence; cannot certify")
             state["status"] = "completed"
             state["revision"] += 1
             state["history"].append({"at": _now(), "event": "final_host_approval",
@@ -428,6 +450,7 @@ def run(doc, dest, uploaded=None):
         if turn["kind"] == "review":
             if task["status"] != "awaiting_review" or turn["role"] != task["reviewer"]:
                 raise ValueError("Only the assigned independent reviewer may review submitted work")
+            _check_recorded_evidence(state, folder)
         else:
             if task["status"] != "pending" or turn["role"] != task["role"]:
                 raise ValueError("Turn does not belong to ready agent")
@@ -479,6 +502,7 @@ def run(doc, dest, uploaded=None):
                 if turn["kind"] in {"invoke", "rea-mcp", "submit"}:
                     task["status"] = "awaiting_review"
                     task["evidence"] = evidence
+                    task["evidence_kind"] = "tool" if turn["kind"] in {"invoke", "rea-mcp"} else "host_note"
                     task["summary"] = turn["message"]
                     if turn["kind"] in {"invoke", "rea-mcp"}:
                         state["tool_calls_verified"] += 1
