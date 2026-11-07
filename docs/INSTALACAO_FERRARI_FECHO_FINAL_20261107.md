@@ -24,7 +24,7 @@ A remoção de 394 registos e 2 433 024 bytes tinha sido certificada em [#423157
 
 ## OBS e capacidades opcionais — não confundir com instalação
 
-OBS Studio **32.2.2 está presente e responde corretamente a `--version`** a partir do launcher privado. O teste isolado tentou iniciar uma gravação local **apenas de um canvas vazio**, sob Xvfb, sem captar câmara, ecrã, microfone ou transmitir. **Não foi gerado um ficheiro de vídeo** (`recording_files_created=0`, `obs_local_recording_certified=false`). Por isso, a gravação OBS não recebe certificação. Os ficheiros de ensaio temporários foram eliminados.
+OBS Studio **32.2.2 está presente e responde corretamente a `--version`** a partir do launcher privado. O teste isolado tentou iniciar uma gravação local **apenas de um canvas vazio**, sob Xvfb, sem captar câmara, ecrã, microfone ou transmitir. **Não foi gerado um ficheiro de vídeo** (`recording_files_created=0`, `obs_local_recording_certified=false`). Por isso, a gravação OBS permanece **não certificada**. Os ficheiros de ensaio temporários foram eliminados.
 
 O teste não equivale à certificação de interface interativa, formatos PDAL opcionais (HDF/Icebridge), bibliotecas transitivas de todas as 173 entradas ou qualquer projeto de produção. Esses são testes funcionais sob pedido, **não impedimentos à instalação Ferrari principal já certificada**. A prova PDAL TXT→LAS→TXT encontra-se em [#42317695882](https://github.com/martaxi-boss/VPS/actions/runs/42317695882), sem necessidade de nova instalação.
 
