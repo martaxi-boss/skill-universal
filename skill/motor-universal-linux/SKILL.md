@@ -1,6 +1,6 @@
 ---
 name: motor-universal-linux
-description: Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, web, imagens, vídeo, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.
+description: Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, criativos publicitários, vídeos profissionais, voz natural pt-PT, web, imagens, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.
 ---
 
 # Motor Ferrari — Skill Universal
@@ -60,6 +60,18 @@ A fonte de verdade atual é o [BOOTSTRAP do repositório](https://github.com/mar
 6. **Privacidade e relatório honesto.** Não publicar documentos pessoais, NIF, assinaturas ou segredos no repositório público da ponte. Distinguir sempre: `gerado pelo Ferrari`, `gerado fora do Ferrari`, `guardado no GitHub`, `descarregado no ChatGPT` e `ficheiro verificável`. A aprovação técnica do motor não substitui testes de acessibilidade do download no dispositivo do utilizador.
 
 Para formatos de pedido, transportes e exemplos, ler [references/github-bridge.md](references/github-bridge.md) antes de criar qualquer requisição.
+## Produção de criativos profissionais — fidelidade visual e voz pt-PT
+
+Antes de criar publicidade, reels, vídeo de produto, locução ou criativo para uma marca, carregar **[references/professional-creatives.md](references/professional-creatives.md)**. É um padrão da mesma Skill Ferrari, nunca outra Skill/ponte/catálogo.
+
+1. **Verificar a marca:** tentar aceder ao site de produção, registar URL e data; se inacessível, usar o repositório da marca apenas como referência documental, sem fingir que foi visto em produção. Recolher logo, cores CSS, fontes, CTA, fotografias autorizadas, produtos e preços realmente observados. Nunca inventar visual genérico ou promoções.
+2. **Criar cenas profissionais:** nos anúncios verticais, apresentar produto/benefício nos primeiros 2 s, 4–7 planos variados, composição legível sem som, movimento discreto e CTA real. Evitar slides de texto, mockups falsos, logótipos improvisados, imagens repetidas e telas estáticas prolongadas. Preservar as cores, os produtos e a hierarquia do site.
+3. **Voz humana:** preferir locutor real em pt-PT com consentimento e licença comercial. Se o utilizador aceitar voz sintética natural, comparar amostras do mesmo texto de motores neurais pt-PT (Piper como referência técnica, Kokoro pt-PT como candidato) e pedir audição/aprovação antes de chamar ao resultado final. Nunca afirmar que Piper ou Kokoro estão instalados/certificados no Ferrari sem teste real. Não apresentar eSpeak, voz robótica ou voz pt-BR como locução final pt-PT. Não clonar vozes sem autorização; TTS não é gravação de pessoa.
+4. **Gate editorial obrigatório:** verificar presença/sincronia de áudio, duração, codecs e clipping; não confundir isso com qualidade humana da voz. Sem aprovação auditiva e comparação visual com a marca, usar a etiqueta **PRÉ-VISUALIZAÇÃO — VOZ POR APROVAR**, nunca **FINAL PROFISSIONAL**. Separar pistas de voz e música licenciada, testar no telemóvel e guardar proveniência do áudio e dos visuais.
+5. **Prova e isolamento:** distinguir o que foi feito pelo Ferrari, pelo ChatGPT ou por outro repositório. Só alegar execução Ferrari com run ID, response.zip, report.json e ficheiros válidos; só entregar links reais verificados. O repositório independente martaxi-boss/Criativos-anuncios é fonte de técnicas reutilizáveis, não dependência de runtime. Qualquer executável/modelo novo deve viver exclusivamente dentro da pasta privada do Ferrari, após licença e testes.
+
+O teste de Lowcost Europa em 07/11/2026 foi rejeitado pelo utilizador por voz mecânica e visual afastado do website. Não o reutilizar como exemplo aprovado. Só produzir um novo MP4 depois de confirmar os materiais reais e aprovar o estilo e a locução.
+
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
