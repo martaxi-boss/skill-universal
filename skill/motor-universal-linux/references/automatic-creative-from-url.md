@@ -12,6 +12,12 @@ Em 07/11/2026, a execução [#42335182728](https://github.com/martaxi-boss/Criat
 
 A montagem é uma recomposição publicitária de capturas de elementos visuais reais, não uma gravação literal do site. O código `editorial_scene.py` usa apenas imagens do cartão, logótipo e botão efetivamente captados na página. Quando esses elementos não existem, a fallback `editorial.mode=site_screenshots` conserva capturas reais e documenta o motivo. Proibir produtos, preços, logótipos e descontos fictícios.
 
+## Regra fotográfica v2 — não é permitido reutilizar screenshots de cartões
+
+Após o utilizador rejeitar explicitamente os criativos de 07/11/2026 por fotografias inadequadas e voz acelerada, a via preferencial passou a ser `premium_scene.py` + `auto_site.py`: recolhe apenas o elemento `img.product-card__image`, mede a resolução de origem e parâmetros simples de qualidade, classifica fotografias, recorta as margens identificadas como interfaces incorporadas e compõe fundos da marca com **uma fotografia maior e texto reduzido por plano**. O produto final continua sujeito a crítica estética por IA anfitriã e aprovação humana; pontuações automáticas de cor/contraste **não detetam qualidade publicitária de forma fiável**. Se a página contiver apenas cartazes com textos incrustados ou fotos pobres, não promover um vídeo tecnicamente correto a final: procurar imagens alternativas do próprio site ou sinalizar que faltam fontes visuais adequadas.
+
+A voz do projeto aprovado mantém o **mesmo modelo Piper pt_PT-tugão-medium**, utilizando o parâmetro `--length_scale` superior a 1.0 (mais lento) e pausas entre frases; para cerca de 20s, preferir 35–50 palavras e sem compressão acelerada. `report.json` deve registar `voice_length_scale`, `spoken_words` e duração real. Não chamar humana a uma gravação TTS sintética. A Skill deve **abrir a tira de quadros e pelo menos três quadros individuais de tamanho grande**; um `SUCCESS` no GitHub e o `qa.distinct_scenes_verified` comprovam integridade técnica, não profissionalismo.
+
 ## Fluxo URL primeiro, sem fotografias manuais
 
 Um pedido público só com URL pode ser criado por GitHub autenticado em martaxi-boss/Criativos-anuncios, caminho ads/requests/NOME-NOVO.json. Exemplo:

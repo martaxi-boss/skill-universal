@@ -46,6 +46,14 @@ Escutar e verificar pt-PT (não pt-BR), pontuação, pausas, acentuação, emoç
 
 Som: locução com volume confortável, música licenciada 12–18 dB abaixo da fala durante a narração, faixas separadas, sem clipping, sem cortes de palavras. ffprobe, loudness e verificação técnica NÃO provam naturalidade.
 
+## Direção de arte — porta visual antes da etiqueta profissional
+
+A lição dos criativos Low Cost Europa é que uma captura genuína do site pode ser **inadequada como fotografia publicitária**. Não capturar o artigo/cartão completo, com botões, preços, etiquetas, textos e margens, para o colar dentro de outro cartão no vídeo. Usar a fotografia real do produto ou um clip publicitário original. Se o próprio ficheiro de imagem inclui cartazes, textos e etiquetas impressos, a fotografia continua visualmente poluída; recortar apenas quando possível **sem falsificar ou eliminar características do equipamento** e procurar alternativas autênticas no mesmo site.
+
+O ChatGPT anfitrião é responsável pela avaliação editorial: abrir `preview_scenes.jpg`, três imagens PNG em tamanho integral e o MP4/WAV; verificar equilíbrio, exposição, recorte, alinhamento, peso do texto, ritmo, identidades, foco visual, margens e legibilidade em telemóvel. Se detetar elementos duplicados ou produtos demasiado pequenos, rejeitar a versão, corrigir o layout e voltar a testar. Nenhum `technical_pass` significa `approved_for_ads`. Não pedir ao utilizador que faça manualmente as fotografias quando existirem materiais públicos adequados.
+
+Para a voz já aprovada, preservar Piper pt_PT-tugão-medium, usar texto curto e `length_scale` cerca de 1.15–1.20, com pausas. Abrandar não significa aplicar `atempo<1` no áudio pronto, nem substituir a voz. Se o resultado não couber em 20s, reescrever o texto ou rever duração de forma transparente; nunca acelerar a fala.
+
 ## Checklist de entrega
 
 - [ ] brand_source_verified: URL/captura da produção ou indicação repository_only, sem alegar produção verificada.
