@@ -168,6 +168,17 @@ class CurrentFerrariDocsTests(unittest.TestCase):
                        "42315365287","42315656543","42315724016","2 433 024"):
             self.assertIn(marker,report)
 
+    def test_f11_pdal_las_certification_scope(self):
+        report=(ROOT/"docs/FASE11_PDAL_LAS_REAL_20261107.md").read_text()
+        for value in ("42317695882","327 bytes","5 pontos","TXT","LAS",
+                      "HDF","Icebridge","450","8/8"):
+            self.assertIn(value,report)
+        paths=("BOOTSTRAP.md","README.md","skill/motor-universal-linux/SKILL.md",
+               "skill/motor-universal-linux/references/bootstrap.md")
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertIn("42317695882",(ROOT/path).read_text())
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")

@@ -36,6 +36,8 @@ O contrato para pedido e resultado está em [references/github-bridge.md](skill/
 
 **Certificação funcional F9 (06/11):** [QGIS buffer #42304131087](https://github.com/martaxi-boss/VPS/actions/runs/42304131087), [LibreCAD DXF→PDF #42311158545](https://github.com/martaxi-boss/VPS/actions/runs/42311158545), [OpenSCAD→STL #42312047260](https://github.com/martaxi-boss/VPS/actions/runs/42312047260) e [Blender→BLEND/GLB/PNG #42312161892](https://github.com/martaxi-boss/VPS/actions/runs/42312161892) **PASS** nos exemplos sintéticos reais. [HDF5 privado #42311011076](https://github.com/martaxi-boss/VPS/actions/runs/42311011076) e [PDAL #42311620021](https://github.com/martaxi-boss/VPS/actions/runs/42311620021) carregaram dois plugins, mas **não** foram certificados os formatos PDAL. GUI interativa, áudio/vídeo/OBS e isolamento transitivo completo ainda pendentes. Um catálogo e um motor Ferrari; outros projetos preservados. [Relatório](docs/FASE9_CAD3D_BLENDER_PDAL_SKILL_20261106.md).
 
+**F11 — PDAL funcional (07/11):** [F11 PDAL LAS #42317695882](https://github.com/martaxi-boss/VPS/actions/runs/42317695882) PASS no caso sintético real TXT→LAS→TXT: 5 pontos preservados, LAS de 327 bytes, validação independente do cabeçalho e leitura inversa de coordenadas, sem instalações globais. Formatos HDF/Icebridge e GUI/OBS continuam não certificados. [Relatório](docs/FASE11_PDAL_LAS_REAL_20261107.md).
+
 **Segurança:** não incluir segredos, ficheiros privados ou dados pessoais em repositórios públicos; base64 não cifra. Nenhuma instalação fora da pasta Ferrari, nenhuma alteração silenciosa à ponte SSH e nenhuma nova Skill paralela.
 
 
