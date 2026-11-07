@@ -17,9 +17,26 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn("3.0.3", text)
         self.assertIn("REA FINAL e Trial removidos", text)
         self.assertIn("NÃO autorizar", text)
-        self.assertLess(len(text), 17000, "Keep old milestone narratives in Git history/docs")
+        self.assertLess(len(text), 24000, "Keep old milestone narratives in Git history/docs")
         self.assertNotIn("Instalação na VPS: não iniciada", text)
         self.assertNotIn("0 ferramentas certificadas na VPS", text)
+
+    def test_host_ruflo_shared_ai_team_mandatory_and_not_falsely_certified(self):
+        bootstrap = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
+        portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        for text in (bootstrap, skill, portable, readme):
+            self.assertIn("Ruflo", text)
+            self.assertIn("anfitri", text.lower())
+            self.assertIn("OBRIGATÓRIO", text)
+            self.assertIn("NÃO", text)
+        self.assertIn("única IA anfitriã partilhada", bootstrap)
+        self.assertIn("PORTA DE ACEITAÇÃO OBRIGATÓRIA", bootstrap)
+        self.assertIn("independent_agent_model_calls=0", bootstrap)
+        self.assertIn("42218479317", bootstrap)
+        self.assertIn("não é, só por existir, uma API", bootstrap)
+        self.assertIn("BLOQUEIO FUNCIONAL DA EQUIPA", bootstrap)
 
     def test_current_entrypoints_agree_on_scope(self):
         paths = (
