@@ -4,6 +4,8 @@
 
 **[BOOTSTRAP canónico, provas e pendências](BOOTSTRAP.md)** — ponto de verdade atual. Os relatórios de docs/ e commits antigos descrevem datas históricas e não substituem uma auditoria recente.
 
+**REQUISITO OBRIGATÓRIO DA ARQUITETURA FINAL (07/11):** um anfitrião IA partilhado (ChatGPT/Codex/Claude) fornece raciocínio contextualizado a cada agente especializado; Ruflo sub-anfitrião organiza equipa, distribui e reúne tarefas, coordena colaboração entre papéis; Ferrari executa ferramentas. A equipa com raciocínio e colaboração real **ainda NÃO está certificada** (hoje só papéis e ferramentas assistidos); instalação principal do motor permanece concluída. **Não declarar Ferrari completo** antes de provar o ciclo completo anfitrião↔Ruflo↔agentes, sem APIs pagas obrigatórias nem modelos separados por agente. BOOTSTRAP governa esta regra.
+
 ## Estado confirmado
 
 **Estado vigente, verificado a 06/11/2026:** catálogo universal **único** em `engine/catalog.json`, com 450 registos de tipos diferentes: **173 programas, 272 funções integradas (220 REA na mesma lista), 3 dependências centrais e 2 fornecedores locais**. O Penpot foi excluído da seleção; OpenPencil permanece. [Ativação real #42294843737](https://github.com/martaxi-boss/VPS/actions/runs/42294843737) PASS, [inventário pós-higiene #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) PASS (55/55 programas Ubuntu selecionados detetados, 272/272 funções selecionáveis e 40/40 ações disponíveis).
