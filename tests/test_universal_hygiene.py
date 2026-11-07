@@ -136,6 +136,24 @@ class UniversalHygieneTests(unittest.TestCase):
         self.assertIn("unexpected_file_or_symlink_at_release_root",
                       [row["reason"] for row in result["skipped_old_releases"]])
 
+    def test_f10_verified_old_fallback_only_when_empty(self):
+        legacy = "952b0a75ba798471b07053677d53791bd078ed56"
+        release = self._release(legacy)
+        state = release / ".runtime"
+        state.mkdir()
+        self.assertIn(legacy, hygiene.audit(self.root, NEW, FALLBACK)
+                      ["eligible_old_releases"])
+        (state / "preserve-me").write_bytes(b"non-empty-state")
+        blocked = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertNotIn(legacy, blocked["removed_old_releases"])
+        self.assertTrue(release.exists())
+        (state / "preserve-me").unlink()
+        safe = hygiene.audit(self.root, NEW, FALLBACK, apply=True)
+        self.assertIn(legacy, safe["removed_old_releases"])
+        self.assertFalse(release.exists())
+        self.assertTrue((self.root / "releases" / NEW).exists())
+        self.assertTrue((self.root / "releases" / FALLBACK).exists())
+
     def test_unknown_empty_runtime_release_is_still_preserved(self):
         release = self._release("d" * 40)
         (release / ".runtime").mkdir()
