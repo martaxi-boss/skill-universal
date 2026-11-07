@@ -2,6 +2,12 @@
 
 Data: 07/11/2026. Aplica-se na Skill universal, sem criar um segundo motor, catálogo ou serviço. A qualidade final depende de avaliação humana.
 
+## Preferência de voz confirmada pelo proprietário
+
+O utilizador enviou 1000183150.mp4 (44,8 s) em 07/11/2026 como exemplo de voz que **aprova**. A locução do projeto martaxi-boss/Criativos-anuncios, feita com Piper pt_PT-tugão-medium, passa a ser a primeira escolha. Não propor substituir essa voz por outra para o mesmo anúncio sem solicitação; gravar uma nova locução para cada guião e testar o áudio resultante.
+
+O proprietário também rejeitou a necessidade de fornecer fotografias manualmente. Um URL de site deve acionar primeiro o fluxo de captura pública descrito em automatic-creative-from-url.md. O código GitHub pode diferir da produção: a captura verdadeira da página é a fonte visual primária. Reels têm limites diferentes de acessibilidade.
+
 ## Fonte de marca obrigatória
 
 Usar, pela ordem: (1) domínio real atual, capturas confirmadas com data; (2) repositório de código, com etiqueta «apenas fonte GitHub, produção não verificada»; (3) materiais autorizados do proprietário. Capturas antigas, templates inventados, logótipos reconstruídos e fotografias de demonstração não substituem visuais reais. Os preços exigem data/fonte e devem ser apresentados como observados, não garantidos.

@@ -72,6 +72,18 @@ Antes de criar publicidade, reels, vídeo de produto, locução ou criativo para
 
 O teste de Lowcost Europa em 07/11/2026 foi rejeitado pelo utilizador por voz mecânica e visual afastado do website. Não o reutilizar como exemplo aprovado. Só produzir um novo MP4 depois de confirmar os materiais reais e aprovar o estilo e a locução.
 
+## Criativo automático a partir de URL — prioridade obrigatória
+
+Quando o utilizador fornece um endereço de site, página ou Reel, a primeira opção é **capturar automaticamente o conteúdo real acessível**, sem pedir fotografias manualmente. Ler references/automatic-creative-from-url.md. Preservar logótipo, cores, produtos, textos e CTA da página atual; se não abrir, explicar a falha sem fabricar imagens ou alegar que viu a página.
+
+**Locução aprovada pelo proprietário:** o vídeo de referência 1000183150.mp4, com 44,8 s (07/11/2026), tem o estilo de voz pt-PT que o dono prefere. O projeto independente martaxi-boss/Criativos-anuncios utiliza Piper pt_PT-tugão-medium; privilegiar essa voz já aprovada e **não substituí-la por Kokoro, eSpeak ou outra voz por iniciativa própria**. Gerar a nova narração com o mesmo modelo, não recortar o áudio antigo para fingir um texto novo. A aprovação do estilo não dispensa ouvir o texto final.
+
+**Fluxo disponível:** no repositório martaxi-boss/Criativos-anuncios é possível criar um pedido só com source_url em ads/requests/ e obter um render automático privado via GitHub Actions; usa Chromium/Playwright para imagens reais do site, Piper para voz e FFmpeg para MP4. O Ferrari Skill pode comandar e auditar esse trabalho pelo conector GitHub, mas a renderização que ocorre no runner do projeto independente não é execução do motor Ferrari na VPS. Manter projetos fisicamente independentes e não misturar ambientes.
+
+**Reels:** capturar apenas material público e autorizado. Não ultrapassar login, restrições, DRM nem políticas da plataforma. O modo automático para páginas web não equivale ainda a extração fiável de Reels; indicar reel_media_pending quando não for possível obter o vídeo original.
+
+Só anunciar preview gerada ou final aprovado depois de verificar URL de origem, execução, ficheiros, voz e direitos de uso.
+
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
