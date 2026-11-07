@@ -8,6 +8,12 @@ O utilizador enviou 1000183150.mp4 (44,8 s) em 07/11/2026 como exemplo de voz qu
 
 O proprietário também rejeitou a necessidade de fornecer fotografias manualmente. Um URL de site deve acionar primeiro o fluxo de captura pública descrito em automatic-creative-from-url.md. O código GitHub pode diferir da produção: a captura verdadeira da página é a fonte visual primária. Reels têm limites diferentes de acessibilidade.
 
+## Duas vozes aprovadas — seleção única de perfil
+
+O proprietário escolheu expressamente duas amostras de referência, e não necessariamente duas vozes com nomes próprios. **Masculino:** o Piper original `pt_PT-tugao-medium`, `voice_profile=piper-original-ptpt` (NÃO Rui HD); **feminino:** Raquel `pt-PT-RaquelNeural`, `voice_profile=raquel-neural-ptpt`. A pasta `/Lowcost Europa/Vozes aprovadas` da biblioteca contém os dois áudios de referência. **Não escolher Rui por suposição.** O projeto independente `martaxi-boss/Criativos-anuncios` usa um único renderizador e permite escolher o perfil em `ads/requests/*.json`; aprovações e licença de uso comercial são questões separadas.
+
+Provas públicas de execução: [Raquel #42378083734](https://github.com/martaxi-boss/Criativos-anuncios/actions/runs/42378083734) e [Piper #42378094371](https://github.com/martaxi-boss/Criativos-anuncios/actions/runs/42378094371). Ambos os workflows produziram MP4 e WAV com voz e cenas verificadas; a duração real depende do guião e não se deve alegar 20 segundos só pelo valor solicitado. **O backend Raquel foi testado no runner do projeto Criativos-anuncios, não dentro da VPS Ferrari.** O Edge Read Aloud usado no teste não concede licença comercial por defeito. É proibido rotular o seu áudio como autorizado para publicação até verificação de direitos.
+
 ## Fonte de marca obrigatória
 
 Usar, pela ordem: (1) domínio real atual, capturas confirmadas com data; (2) repositório de código, com etiqueta «apenas fonte GitHub, produção não verificada»; (3) materiais autorizados do proprietário. Capturas antigas, templates inventados, logótipos reconstruídos e fotografias de demonstração não substituem visuais reais. Os preços exigem data/fonte e devem ser apresentados como observados, não garantidos.
