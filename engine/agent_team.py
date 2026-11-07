@@ -238,6 +238,8 @@ def _verified_artifacts(answer, output):
         raise RuntimeError("Tool did not produce evidence")
     if len(files) > 30:
         raise RuntimeError("Too many Ferrari evidence files")
+    if output.is_symlink() or not output.is_dir():
+        raise RuntimeError("Ferrari tool did not create its private output directory")
     root = output.resolve(strict=True)
     evidence = []
     total = 0
@@ -291,7 +293,7 @@ def _stage_input(state, task, from_id, teamdir):
 
 
 @contextmanager
-def _ruflo_ledger(state, task_id=None):
+def _ruflo_ledger(state, task_id=None, actor_role=None):
     """Real Ruflo MCP, ephemeral for each host-led round; no LLM API or daemon."""
     with tempfile.TemporaryDirectory(dir=HOME / ".runtime", prefix="ruflo-team-round-") as tmp:
         client = ruflo_host.RufloMCP(tmp)
@@ -316,7 +318,7 @@ def _ruflo_ledger(state, task_id=None):
                 task = state["tasks"][task_id]
                 reply = client.tool("task_create", {"type": "research",
                      "description": "Ferrari host-led " + task["goal"][:160],
-                     "priority": "normal", "assignTo": [agentids[task["role"]]]})
+                     "priority": "normal", "assignTo": [agentids[actor_role or task["role"]]]})
                 task_key = ruflo_host.lookup(reply, ("taskId", "task_id"))
                 if not task_key:
                     raise RuntimeError("Ruflo did not assign task")
@@ -479,7 +481,7 @@ def run(doc, dest, uploaded=None):
             _atomic(folder / "state.json", state)
         extra = []
         try:
-            with _ruflo_ledger(state, task["id"]) as (client, ruflo_task):
+            with _ruflo_ledger(state, task["id"], turn["role"]) as (client, ruflo_task):
                 if turn["kind"] == "invoke":
                     answer = tool_runtime.invoke(turn["action"], source, str(stage), query)
                     evidence = _verified_artifacts(answer, stage)
