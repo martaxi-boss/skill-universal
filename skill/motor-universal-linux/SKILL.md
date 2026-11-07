@@ -72,9 +72,9 @@ Antes de criar publicidade, reels, vídeo de produto, locução ou criativo para
 
 O teste de Lowcost Europa em 07/11/2026 foi rejeitado pelo utilizador por voz mecânica e visual afastado do website. Não o reutilizar como exemplo aprovado. Só produzir um novo MP4 depois de confirmar os materiais reais e aprovar o estilo e a locução.
 
-## Direção criativa automática — o utilizador só fornece o endereço
+## Direção criativa automática — o utilizador fornece a fonte que tiver
 
-Esta é a regra do utilizador para **qualquer publicidade**. A IA anfitriã do Ferrari assume as funções de **analista do negócio, redatora, diretora de arte e supervisora de edição**. Não solicitar ao utilizador que escreva guião, selecione imagens, determine categorias ou faça a montagem quando o site ou a página pública permitir análise. O briefing padrão necessário é apenas **URL e duração**, se indicada; na ausência de duração usar uma duração editorial razoável e identificá-la no relatório.
+Esta é a regra do utilizador para **qualquer publicidade**. A IA anfitriã do Ferrari assume as funções de **analista, argumentista, diretora de arte e supervisora de edição**, independentemente de receber URL, fotografias, vídeo, Reel, uma ideia ou uma mistura de materiais. **O URL não é obrigatório.** Não solicitar guião, seleção de fotografias nem storyboard quando a IA pode fazê-los. Aceitar a fonte que o utilizador efetivamente fornecer e inferir formato/duração sensatos se não forem indicados. Para todas as modalidades, ler [references/creative-multisource.md](references/creative-multisource.md). O guia de URL é apenas um ramo, não o contrato universal.
 
 **Ordem criativa obrigatória:**
 1. **Compreender primeiro** o site, página ou Reel acessível: tipo de negócio, finalidade, serviços/produtos reais, para quem se destina quando isso estiver explícito, vantagem realmente demonstrada, funcionamento da oferta, CTA, cores e materiais visuais. Analisar também as páginas de produto/detalhe e a referência de locução já aprovada. Criar um **briefing factual** com fontes e ressalvas; não pressupor preços, garantias, características ou vendas.
@@ -86,7 +86,11 @@ Esta é a regra do utilizador para **qualquer publicidade**. A IA anfitriã do F
 
 **Onde está a inteligência:** o GitHub Actions gratuito é o executor dos scripts de extração/TTS/FFmpeg; **não é um redator IA por si só**. A IA anfitriã do ChatGPT, com a Skill, lê o briefing de fonte, cria o guião e o plano de cenas e entrega um pedido de render pelo GitHub, sem pedir ao utilizador o texto. O gerador determinístico `auto_script` é só fallback técnico de **pré-visualização**, nunca prova de argumento publicitário profissional. Manter `martaxi-boss/Criativos-anuncios` independente do Ferrari VPS; não misturar binários, dependências ou projetos. Ver [references/automatic-creative-from-url.md](references/automatic-creative-from-url.md).
 
-## Criativo automático a partir de URL — prioridade obrigatória
+## Entrada publicitária multiformato — procedimento obrigatório
+
+A mesma Skill Ferrari tem de aceitar **sites/páginas, fotografias, ficheiros de vídeo, Reels autorizados, ideias escritas e misturas destas fontes**, sem segunda Skill ou dependência cruzada. Começar pela fonte real recebida. **Não exigir URL a quem envia fotografias ou um vídeo.** Criar conceito e texto comercial adaptados, storyboard que corresponda às imagens e duração, locução Piper pt-PT de ritmo descontraído, montagem e QA artístico. Ler [references/creative-multisource.md](references/creative-multisource.md) em todas as tarefas publicitárias. Se o pedido for URL, ler também [references/automatic-creative-from-url.md](references/automatic-creative-from-url.md). Se for vídeo ou imagens locais, usar o pré-processamento privado no projeto independente Criativos-anuncios e não publicar os media no GitHub público. Se for Reel inacessível, não inventar download. O pré-processamento de vídeo que extrai frames ainda **não equivale a editar clipes com movimento**: comunicar e testar essa capacidade antes de prometer um Reel final.
+
+## Criativo automático a partir de URL — ramo condicionado à entrada
 
 Quando o utilizador fornece um endereço de site, página ou Reel, a primeira opção é **capturar automaticamente o conteúdo real acessível**, sem pedir fotografias manualmente. Ler references/automatic-creative-from-url.md. Preservar logótipo, cores, produtos, textos e CTA da página atual; se não abrir, explicar a falha sem fabricar imagens ou alegar que viu a página.
 
