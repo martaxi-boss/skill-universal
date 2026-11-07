@@ -54,6 +54,12 @@ O ChatGPT anfitrião é responsável pela avaliação editorial: abrir `preview_
 
 Para a voz já aprovada, preservar Piper pt_PT-tugão-medium, usar texto curto e `length_scale` cerca de 1.15–1.20, com pausas. Abrandar não significa aplicar `atempo<1` no áudio pronto, nem substituir a voz. Se o resultado não couber em 20s, reescrever o texto ou rever duração de forma transparente; nunca acelerar a fala.
 
+## Publicidade primeiro: argumento original, depois imagens sincronizadas
+
+A responsabilidade do criativo é da IA anfitriã do Ferrari, não do utilizador. Não pedir frases, fotografias, storyboard ou estilo de montagem se a fonte pública e o vídeo de voz aprovado estiverem disponíveis. Analisar a natureza e funcionamento do negócio e escrever um texto **explicativo e comercialmente útil**, em linguagem pt-PT; apoiar cada afirmação em fonte real. O papel da IA é organizar uma narrativa própria (gancho → como funciona/o que oferece → provas observáveis → CTA), não repetir simplesmente o H1 e cinco nomes de produtos.
+
+Criar `business_brief.json`, definir `voice_sentences` próprias, selecionar imagens/planos correspondentes e conferir em `storyboard.json` que **cada frase é ilustrada pelo produto, serviço ou funcionalidade exata**. A sincronização usa os tempos reais da narração (Piper aprovado com pausa natural). O ritmo, número de cenas e detalhe visual dependem da duração e da história; nunca forçar três fotos nem distribuir cenas em tempos iguais sem sentido. `auto_script` serve de primeira prévia factual; um anúncio editorialmente profissional requer análise e escrita pelo agente anfitrião, revisão visual e escuta.
+
 ## Checklist de entrega
 
 - [ ] brand_source_verified: URL/captura da produção ou indicação repository_only, sem alegar produção verificada.
