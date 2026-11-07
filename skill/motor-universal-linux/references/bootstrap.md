@@ -6,6 +6,8 @@
 
 **Estado revisto em 06/11/2026.** Este ficheiro acompanha **uma Skill Universal Ferrari**, única e independente. O [BOOTSTRAP canónico do GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e os runs atuais são a fonte de verdade; este resumo não substitui inventário real da VPS.
 
+**07/11 — equipa Ruflo com rondas de anfitrião (código em validação, não produção):** `engine/agent_team.py` + `kind=ruflo-team` + testes de papéis, tarefas, revisores distintos, ferramentas do catálogo, hash dos artefactos e journal de retoma. O anfitrião fornece inteligência numa sequência de pedidos e resultados; Ruflo MCP é efémero por ronda. O modo novo aguarda release VPS/validador atualizado e ensaio real, sem API ChatGPT automática. [Descrição](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md). 
+
 ## Catálogo universal integrado no GitHub
 
 A [PR #112](https://github.com/martaxi-boss/skill-universal/pull/112) unificou **173 programas, 272 interfaces (12 operações base + 40 ações tipadas + 220 REA), 3 dependências e 2 fornecedores = 450 registos** em uma única fonte `engine/catalog.json`. `functions[]` abrange todos os programas, inclusive REA; `unified_catalog().entries[]` reúne também dependências e fornecedores. [Deploy real #42294843737](https://github.com/martaxi-boss/VPS/actions/runs/42294843737) e [readback pela Skill #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) PASS confirmaram essa versão na VPS.

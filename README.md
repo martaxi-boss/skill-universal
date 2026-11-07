@@ -2,6 +2,8 @@
 
 **Estado revisto em 07/11/2026.** Uma única Skill e um único motor/orquestrador Ubuntu privado. O ChatGPT ou Codex interpreta pedidos; o Ferrari seleciona os executores reais, trabalha na VPS e devolve um relatório e ZIP. Não confundir com Engenharia Reversa antiga, Project Leader ou os outros projetos.
 
+**Equipa Ruflo com inteligência anfitriã — programação de 07/11:** o novo `engine/agent_team.py` e `kind=ruflo-team` implementam fichas de agentes, rondas de IA anfitriã, revisão por outro papel, estado privado durável, allowlists e provas SHA-256. [Documentação e exemplos](docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md). **Código/CI não equivalem a instalação na VPS nem a API ChatGPT autónoma.**
+
 **[BOOTSTRAP canónico, provas e pendências](BOOTSTRAP.md)** — ponto de verdade atual. Os relatórios de docs/ e commits antigos descrevem datas históricas e não substituem uma auditoria recente.
 
 **REQUISITO OBRIGATÓRIO DA ARQUITETURA FINAL (07/11):** um anfitrião IA partilhado (ChatGPT/Codex/Claude) fornece raciocínio contextualizado a cada agente especializado; Ruflo sub-anfitrião organiza equipa, distribui e reúne tarefas, coordena colaboração entre papéis; Ferrari executa ferramentas. A equipa com raciocínio e colaboração real **ainda NÃO está certificada** (hoje só papéis e ferramentas assistidos); instalação principal do motor permanece concluída. **Não declarar Ferrari completo** antes de provar o ciclo completo anfitrião↔Ruflo↔agentes, sem APIs pagas obrigatórias nem modelos separados por agente. BOOTSTRAP governa esta regra.
