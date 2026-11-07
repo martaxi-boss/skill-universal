@@ -96,6 +96,15 @@ class AgentTeamTests(unittest.TestCase):
                 "executor": str(self.home / "tools/ubuntu-cli/bin/jq")}
 
     def execute(self, request):
+        # Imitate the real host reading the prior response's evidence hashes
+        # before issuing a fresh, artifact-bound review decision.
+        if (request.get("phase") == "turn" and
+                request["turn"].get("kind") == "review" and
+                "evidence_sha256" not in request["turn"]):
+            journal = self.home / ".runtime/ruflo-team-sessions/real-role-work/state.json"
+            saved = json.loads(journal.read_text()) if journal.is_file() else {"tasks": {}}
+            evidence = saved["tasks"].get(request["turn"]["task"], {}).get("evidence", [])
+            request["turn"]["evidence_sha256"] = [v["sha256"] for v in evidence] or ["0" * 64]
         self.index += 1
         dest = self.home / ("result-" + str(self.index))
         result = agent_team.run(request, dest,
@@ -178,6 +187,16 @@ class AgentTeamTests(unittest.TestCase):
         invalid["roles"][0]["actions"] = ["shell"]
         with self.assertRaises(ValueError):
             agent_team.validate_job(invalid)
+
+    def test_wrong_sha256_is_not_review_evidence(self):
+        self.seeded()
+        self.execute(turn("design", "architect", 0, "submit",
+                          "Record a plan with verifiable evidence in Ferrari."))
+        invalid = turn("design", "reviewer", 1, "review",
+                       "Claiming review of a different artifact checksum.",
+                       verdict="approved", evidence_sha256=["0" * 64])
+        with self.assertRaisesRegex(ValueError, "stale or incorrect"):
+            self.execute(invalid)
 
     def test_reject_and_correct_then_approve(self):
         self.seeded()
