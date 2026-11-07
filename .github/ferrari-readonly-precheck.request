@@ -1,5 +1,5 @@
-ferrari-preflight: 2026-11-06
+ferrari-preflight: 2026-11-07
 mode: read-only
-purpose: validate existing Ferrari Ubuntu deploy SSH secrets and independent VPS readiness before universal catalog guarded activation
-source: PR-114-universal-catalog-hygiene
-revalidation: 2026-11-06 runner-fixtures-fixed PR-115, read-only
+purpose: confirm current isolated Ferrari VPS prerequisites before activating Ruflo shared-host agent team
+source: PR-141 agent_team merge 14dc89fa41755c70214dfc0df7e0694b7054c0e8
+rules: no global installs, no changes to other projects, preserve rollback and 8 services
