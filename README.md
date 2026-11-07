@@ -1,6 +1,6 @@
 # Motor Ferrari — Skill Universal Ubuntu
 
-**Estado revisto em 06/11/2026.** Uma única Skill e um único motor/orquestrador Ubuntu privado. O ChatGPT ou Codex interpreta pedidos; o Ferrari seleciona os executores reais, trabalha na VPS e devolve um relatório e ZIP. Não confundir com Engenharia Reversa antiga, Project Leader ou os outros projetos.
+**Estado revisto em 07/11/2026.** Uma única Skill e um único motor/orquestrador Ubuntu privado. O ChatGPT ou Codex interpreta pedidos; o Ferrari seleciona os executores reais, trabalha na VPS e devolve um relatório e ZIP. Não confundir com Engenharia Reversa antiga, Project Leader ou os outros projetos.
 
 **[BOOTSTRAP canónico, provas e pendências](BOOTSTRAP.md)** — ponto de verdade atual. Os relatórios de docs/ e commits antigos descrevem datas históricas e não substituem uma auditoria recente.
 
@@ -44,3 +44,6 @@ O contrato para pedido e resultado está em [references/github-bridge.md](skill/
 ### Catálogo integral (revisão de 06/11/2026)
 
 Uma só fonte persistente: `engine/catalog.json` (schema 2), com **173 programas, 272 funções numa só lista, 3 dependências centrais e 2 fornecedores locais = 450 registos**. Os 220 nomes REA admitidos fazem parte das mesmas 272 interfaces; o REA original pode anunciar 229, dos quais nove não são admitidos pelo Ferrari. Os executores privados e as 40 ações continuam; **55/55 programas Ubuntu selecionados foram detetados**, mas essa deteção não certifica todas as funções internas de cada programa. `kind=inventory` devolve `inventory.json` e `catalog.json` pela ponte original. A release atual e os seus dados foram verificados em [#42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715).
+
+
+**Instalação Ferrari — aceitação final (07/11):** [VPS #42318822376](https://github.com/martaxi-boss/VPS/actions/runs/42318822376) **PASS**: um catálogo 450, 55/55 programas Ubuntu selecionados, 40/40 ações, 69 programas detetados, oito pacotes APT legados ausentes, release antiga 394 eliminada, fallback moderno e 8/8 serviços protegidos. OBS privado 32.2.2 responde a `--version`, mas **não foi certificada a gravação GUI**: nenhum vídeo foi produzido no ensaio temporário. Não exigir a certificação de todas as funções opcionais para declarar terminada a instalação. [Relatório](docs/INSTALACAO_FERRARI_FECHO_FINAL_20261107.md).
