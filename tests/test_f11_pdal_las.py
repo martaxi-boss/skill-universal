@@ -41,9 +41,9 @@ class PdalLasTests(unittest.TestCase):
     def test_csv_coordinates_are_validated(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/"roundtrip.csv"
-            p.write_text("X,Y,Z\\n"+"".join(f"{a},{b},{c}\\n" for a,b,c in m.POINTS))
+            p.write_text("X,Y,Z\n"+"".join(f"{a},{b},{c}\n" for a,b,c in m.POINTS))
             self.assertEqual(m.verify_csv(p),5)
-            p.write_text("X,Y,Z\\n"+ "0,0,0\\n"*5)
+            p.write_text("X,Y,Z\n"+ "0,0,0\n"*5)
             with self.assertRaisesRegex(RuntimeError,"COORDINATES"):
                 m.verify_csv(p)
 
@@ -57,9 +57,9 @@ class PdalLasTests(unittest.TestCase):
             self.assertEqual(x["pipeline"][1]["type"],"writers.las")
 
     def test_driver_failure_cannot_be_pass(self):
-        with tempfile.TemporaryDirectory() as d, \\
-             patch.object(m,"RUNTIME",Path(d)), \\
-             patch.object(m,"guard",return_value=Path("/private/pdal")), \\
+        with tempfile.TemporaryDirectory() as d, \
+             patch.object(m,"RUNTIME",Path(d)), \
+             patch.object(m,"guard",return_value=Path("/private/pdal")), \
              patch.object(m,"run",return_value={"exit_code":1,"timed_out":False,
                                                 "stdout_tail":"","stderr_tail":"missing"}):
             x=m.certify()
