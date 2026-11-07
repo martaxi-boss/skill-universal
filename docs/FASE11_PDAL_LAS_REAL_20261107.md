@@ -30,6 +30,6 @@ O pipeline executou a conversão **TXT → LAS → TXT**, usando `readers.text`,
 
 ## Limites
 
-Este PASS prova **uma conversão funcional real LAS** no ambiente privado e a respetiva releitura, não todos os formatos PDAL. Os plugins adicionais `readers.hdf` e `readers.icebridge` foram carregados dinamicamente na F9, mas ainda **não** têm leitura de datasets reais certificada. As aplicações GUI completas e OBS também permanecem pendentes.
+Este PASS prova **uma conversão funcional real LAS** no ambiente privado e a respetiva releitura, não todos os formatos PDAL. Os plugins adicionais `readers.hdf` e `readers.icebridge` (Icebridge) foram carregados dinamicamente na F9, mas ainda **não** têm leitura de datasets reais certificada. As aplicações GUI completas e OBS também permanecem pendentes.
 
 O campo diagnóstico `driver_names_in_tail=false` significa apenas que os nomes dos drivers não apareceram no trecho limitado de saída guardado; não invalida os dois pipelines concluídos com código 0 e releitura validada. A release ativa `205c6f0e` e o fallback `7bf6dcec` mantiveram-se inalterados. Não criar outro catálogo, motor ou Skill.
