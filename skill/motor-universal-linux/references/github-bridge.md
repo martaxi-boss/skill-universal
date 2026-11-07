@@ -12,11 +12,13 @@
 4. Exigir no log FERRARI_SKILL_JOB_STATUS=completed e FERRARI_SKILL_END_TO_END=PASS; obter o artefacto ferrari-skill-result-<run_id>, verificar response.zip, report.json (status completed) e os ficheiros reais em artifacts/.
 5. Se a ligação/execução não for verificável, indicar a limitação; não simular um PASS nem repetir o pedido às cegas.
 
-## Futuro modo ruflo-team — exigir ativação certificada antes de enviar
+## Modo ruflo-team certificado na VPS: uma IA anfitriã por rondas
 
-`engine/agent_team.py` implementa agora `kind=ruflo-team` com `phase=start|turn|status|recover|finish`, `team_id`, journal privado, fichas de papel, tarefas com revisor distinto, allowlists de ferramentas do catálogo e decisões da mesma IA anfitriã por várias rondas. [Contrato](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md). O código não faz chamadas LLM na VPS.
+`engine/agent_team.py` aceita `kind=ruflo-team` com `phase=start|turn|status|recover|finish` e `team_id`. O anfitrião ChatGPT/Codex recebe `host_inbox` e `revision` do `ruflo-team-status.json`, raciocina no contexto da ficha do agente e envia uma **nova requisição JSON por ronda**. Os passos `submit`, `invoke`, `rea-mcp` e `review` passam por ferramentas autorizadas pelo catálogo único e revisores de papel diferente; a revisão usa `evidence_sha256` exato do resultado. O `finish` exige provas verificadas. [Contrato com JSONs completos](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md).
 
-**NÃO ENVIAR ESSE TIPO AINDA:** a release VPS e o validador pinado do workflow não incluem `ruflo-team`. Após CI verde, requer deploy isolado com fallback, atualização mínima do pin de validação (sem alterar SSH), verificação real Ruflo/REA, resposta ZIP e oito serviços saudáveis. O modo anterior `ruflo-host` mantém-se inalterado.
+**JÁ AUTORIZADO NA PONTE ORIGINAL:** a release Ferrari `e0509d5370828869479069c99f2eace779960cad` foi ativada com [VPS #42325589374](https://github.com/martaxi-boss/VPS/actions/runs/42325589374) PASS (4 papéis, 2 ferramentas, 3 revisões, 8/8 serviços) e o validador da ponte existente foi pinado nessa revisão. A missão por rondas ChatGPT→GitHub→VPS→Ruflo→Ferrari→ZIP terminou em [#42326357951](https://github.com/martaxi-boss/VPS/actions/runs/42326357951), 3 tarefas aprovadas, 2 execuções reais e 3 revisões. O modo anterior `ruflo-host` mantém-se intacto.
+
+**LIMITAÇÃO:** os agentes **não invocam autonomamente o ChatGPT** a partir da VPS. O anfitrião conduz cada ronda e pode ser ChatGPT ou um Codex autorizado. Não existe API da subscrição ChatGPT presumida, nem serviço LLM instalado na VPS. Só enviar ficheiros sintéticos/não confidenciais no repositório público.
 
 ## Contrato JSON — versão 1
 
