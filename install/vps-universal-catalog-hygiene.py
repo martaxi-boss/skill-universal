@@ -40,6 +40,9 @@ AUDITED_EMPTY_RUNTIME = frozenset((
     "decdb5a38b0bf0e2ce66c6351a45b2d2e8e294c2",
     "f1f3b03525adec7018d7d629243e7b0fbb7f5087",
     "fe1bb6e7073fdd8a963963909127cde6d570f253",
+    # F10 VPS read-only audit #42315365287: exactly empty .runtime, 0 bytes,
+    # no extra root entries, pointers or accessible process references.
+    "952b0a75ba798471b07053677d53791bd078ed56",
 ))
 
 # Top-level names are from the GitHub trees of all nine pinned commits.
