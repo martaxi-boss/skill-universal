@@ -1,5 +1,7 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+**Plugin azul (`motor-universal-linux`, v1.0.1):** https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d. Para atualizar: Plugin Creator `get_plugin_files` → `update_plugin` com release atual; preservar o plugin original.
+
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
 
 **REGRA VINCULATIVA / BLOQUEIO DE FECHO FUNCIONAL:** o Ferrari completo DEVE disponibilizar a hierarquia **IA anfitriã (ChatGPT, Codex ou outra autorizada) → Ruflo como sub-anfitrião gestor da equipa → subagentes trabalhadores → motor Ferrari e catálogo único → ferramentas reais → validação pelo anfitrião e entrega**. O Ruflo e os agentes **NÃO SÃO OPCIONAIS NA ARQUITETURA-ALVO**. Não os substituir silenciosamente por execução sem agentes, nem criar outra Skill, segundo motor, coordenador IA residente na VPS ou segundo catálogo. Pedidos simples podem utilizar diretamente uma ação Ferrari; isso não dispensa a equipa na certificação do produto completo.
