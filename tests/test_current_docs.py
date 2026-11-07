@@ -142,6 +142,18 @@ class CurrentFerrariDocsTests(unittest.TestCase):
                 self.assertIn("450", entry)
         self.assertLess(len((ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")), 17000)
 
+    def test_f10_active_fallback_and_cleanup_evidence(self):
+        paths = ("BOOTSTRAP.md", "README.md", "skill/motor-universal-linux/SKILL.md",
+                 "skill/motor-universal-linux/references/bootstrap.md")
+        for path in paths:
+            text=(ROOT/path).read_text(encoding="utf-8")
+            for marker in ("205c6f0e", "7bf6dcec", "450", "42314959728", "42315724016"):
+                self.assertIn(marker,text)
+        report=(ROOT/"docs/FASE10_CATALOGO_HIGIENE_FINAL_20261107.md").read_text()
+        for marker in ("42314715020","42314959728","42315141299",
+                       "42315365287","42315656543","42315724016","2 433 024"):
+            self.assertIn(marker,report)
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
