@@ -23,7 +23,9 @@ jobs:
           test -n "$magic" && test -f "$magic"
           sudo cp -L "$magic" /srv/projects/skill-universal/tools/ubuntu-cli/share/magic.mgc
       - name: Unit tests, core and Ferrari
-        run: python3 -m unittest discover -s tests -v
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 -m py_compile install/vps-ruflo-team-real-certify.py
       - name: Validate both installers
         run: |
           bash -n install/install-ubuntu.sh

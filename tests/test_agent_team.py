@@ -88,6 +88,8 @@ class AgentTeamTests(unittest.TestCase):
 
     def synthetic_tool(self, _name, source, dest, _query=None):
         self.assertTrue(Path(source).is_file())
+        self.assertEqual(Path(source).suffix.lower(), ".json",
+                         "Ferrari typed actions require the actual input extension")
         output = Path(dest)
         output.mkdir(parents=True)
         data = output / "transformed.json"

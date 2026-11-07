@@ -410,7 +410,13 @@ def run(doc, dest, uploaded=None):
                     raise ValueError("Unsafe Ferrari uploaded team input")
                 input_dir = folder / "input"
                 input_dir.mkdir(mode=0o700)
-                private = input_dir / "source"
+                # Ferrari typed actions validate suffixes (.json, .png, etc.).
+                # Keep the validated extension when moving the uploaded file
+                # into this team's private workspace.
+                suffix = source.suffix.lower()
+                if not re.fullmatch(r"\.[a-z0-9]{1,12}", suffix):
+                    raise ValueError("Ferrari team input requires a safe file extension")
+                private = input_dir / ("source" + suffix)
                 shutil.copyfile(source, private)
                 private.chmod(0o600)
                 state["input_path"] = str(private)
