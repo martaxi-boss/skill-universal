@@ -2,6 +2,8 @@
 
 **Estado operacional verificado em 07/11/2026:** o Ferrari tem um único catálogo de 450 registos (173 programas, 272 funções — 220 REA —, 3 dependências e 2 fornecedores). A release ativa `e0509d5370828869479069c99f2eace779960cad` foi certificada na VPS em [#42325589374](https://github.com/martaxi-boss/VPS/actions/runs/42325589374) e na ponte ChatGPT→GitHub→VPS→ZIP em [#42326357951](https://github.com/martaxi-boss/VPS/actions/runs/42326357951). A revisão `205c6f0e970259c79fa2111b6670c2fe1672fb27` é fallback histórico, não a ativa. A CI do repositório não equivale a um pedido Ferrari executado.
 
+**Referências históricas, não ativas:** o pin anterior `0b50e1d403deff8f3ccb421edd0b41c397d66b9b` e o inventário [#42316041466](https://github.com/martaxi-boss/VPS/actions/runs/42316041466) continuam documentados apenas para auditoria. A fonte atual é o [BOOTSTRAP canónico](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) e o catálogo único `engine/catalog.json`; verificar o `ref` do workflow real antes de declarar qual a release ativa.
+
 **Via operacional:** repositório do motor martaxi-boss/skill-universal; repositório de transporte martaxi-boss/VPS; workflow exclusivo .github/workflows/ferrari-skill-request.yml na main. A ponte apenas entrega pedidos e recolhe resultados; a lógica fica no Ferrari (engine/skill_job.py, engine/orchestrator.py). Sem SSH direto no cliente nem regras adicionais no transporte.
 
 ## Enviar um pedido
