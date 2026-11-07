@@ -13,7 +13,7 @@
 | Funções REA na mesma lista | 220 |
 | Programas Ubuntu selecionados detetados | **55/55** |
 | Ações integradas executáveis | **40/40** |
-| Programas detetados no inventário | **69** |
+| Programas detetados no inventário | **69 programas** |
 | Manifestos antigos no ativo e fallback | **0** |
 | Release antiga com catálogo de 394 entradas | **Eliminada** |
 | Oito pacotes globais antigos | **0 instalados** |
