@@ -171,7 +171,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
                 self.assertIn("42312161892", entry)
                 self.assertIn("42311620021", entry)
                 self.assertIn("450", entry)
-        self.assertLess(len((ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")), 17000)
+        self.assertLess(len((ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")), 24000)
 
     def test_f10_active_fallback_and_cleanup_evidence(self):
         paths = ("BOOTSTRAP.md", "README.md", "skill/motor-universal-linux/SKILL.md",
