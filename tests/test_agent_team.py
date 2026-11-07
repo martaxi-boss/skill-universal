@@ -231,6 +231,30 @@ class AgentTeamTests(unittest.TestCase):
             "acknowledge_risk": True})
         self.assertEqual(s["tasks"]["implement"], "pending")
 
+    def test_symlinked_work_folder_cannot_escape_private_team(self):
+        self.seeded()
+        session = self.home / ".runtime/ruflo-team-sessions/real-role-work"
+        elsewhere = self.home / "outside-session"
+        elsewhere.mkdir()
+        (session / "work").symlink_to(elsewhere, target_is_directory=True)
+        with self.assertRaisesRegex(RuntimeError, "Unsafe"):
+            self.execute(turn("design", "architect", 0, "submit",
+                         "Attempted to write through a disallowed symlink."))
+
+    def test_host_notes_alone_can_never_certify_a_team(self):
+        manifest = start()
+        manifest["tasks"] = [manifest["tasks"][0]]
+        self.execute(manifest)
+        self.execute(turn("design", "architect", 0, "submit",
+                          "A complete plan, but no real Ferrari tool was executed."))
+        self.execute(turn("design", "reviewer", 1, "review",
+                          "The documentation has been reviewed.", verdict="approved"))
+        with self.assertRaisesRegex(ValueError, "real Ferrari tool"):
+            self.execute({"version": 1, "id": "finish-no-tool",
+                     "kind": "ruflo-team", "team_id": "real-role-work",
+                     "phase": "finish", "revision": 2,
+                     "approval": "Final approval has no actual executor evidence."})
+
     def test_cycles_unknown_roles_and_no_automatic_llm(self):
         invalid = start()
         invalid["tasks"][0]["depends_on"] = ["verify"]
