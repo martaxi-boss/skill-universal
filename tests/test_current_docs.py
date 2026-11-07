@@ -179,6 +179,15 @@ class CurrentFerrariDocsTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertIn("42317695882",(ROOT/path).read_text())
 
+    def test_final_ferrari_installation_report_is_evidence_backed(self):
+        report=(ROOT/"docs/INSTALACAO_FERRARI_FECHO_FINAL_20261107.md").read_text()
+        for proof in ("42318822376","55/55","40/40","69 programas",
+                      "8/8","450","OBS","não certificada"):
+            self.assertIn(proof,report)
+        for entry in ("BOOTSTRAP.md","README.md",
+                      "skill/motor-universal-linux/SKILL.md"):
+            self.assertIn("42318822376",(ROOT/entry).read_text())
+
     def test_portable_skill_does_not_reintroduce_old_runtime(self):
         sk = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
