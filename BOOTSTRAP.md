@@ -1,6 +1,6 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Ferrari azul v1.0.5:** https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d. Atualizar in-place via Plugin Creator. Criativos: IA analisa site, escreve o texto, escolhe imagens correspondentes, sincroniza Piper pt-PT; Reels exigem acesso autorizado.
+**Ferrari azul v1.0.6:** https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d. Atualizar in-place via Plugin Creator. Criativos: URLs, fotos, vídeos, Reels e fontes mistas; IA escreve e monta; Piper pt-PT.
 
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
 
