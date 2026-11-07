@@ -23,7 +23,8 @@ class FinalAcceptanceTests(TestCase):
     def test_obs_version_fail_is_not_recording_pass(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
-            exe=root/"run-obs"
+            exe=root/"tools"/"run-obs"
+            exe.parent.mkdir()
             exe.write_text("test");exe.chmod(0o700)
             (root/".runtime").mkdir()
             with patch.object(module,"ROOT",root),patch.object(module,"OBS",exe),\
