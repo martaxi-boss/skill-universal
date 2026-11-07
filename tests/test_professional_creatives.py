@@ -17,6 +17,6 @@ class CreativeContractTests(unittest.TestCase):
         self.assertTrue(any(x.get("id")=="piper" for x in catalog["tools"]))
         self.assertFalse(any("piper" in x.get("id","").lower() for x in catalog["functions"]))
         doc=(ROOT/"skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("não afirmar que Piper ou Kokoro estão instalados/certificados",doc)
+        self.assertIn("Nunca afirmar que Piper ou Kokoro estão instalados/certificados",doc)
 if __name__=="__main__":
     unittest.main()
