@@ -38,6 +38,25 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertIn("não é, só por existir, uma API", bootstrap)
         self.assertIn("BLOQUEIO FUNCIONAL DA EQUIPA", bootstrap)
 
+    def test_host_round_team_protocol_is_documented_without_fake_vps_claims(self):
+        from engine import agent_team
+        self.assertEqual(agent_team.MAX_ROLES, 8)
+        self.assertIn("architect", agent_team.BRIEFS)
+        self.assertIn("reviewer", agent_team.BRIEFS)
+        docs = (ROOT / "docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md").read_text(encoding="utf-8")
+        bootstrap = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
+        bridge = (ROOT / "skill/motor-universal-linux/references/github-bridge.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        for item in (docs, bootstrap, skill, bridge, readme):
+            self.assertIn("ruflo-team", item)
+        self.assertIn("validador pinado", bootstrap)
+        self.assertIn("não certifica Ruflo real", docs)
+        self.assertIn("phase=start|turn|status|recover|finish", bridge)
+        self.assertIn("independent_agent_model_calls", docs)
+        source = (ROOT / "engine/skill_job.py").read_text(encoding="utf-8")
+        self.assertIn("agent_team.run(data,dest,src)", source)
+
     def test_current_entrypoints_agree_on_scope(self):
         paths = (
             "README.md",
