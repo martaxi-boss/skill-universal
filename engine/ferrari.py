@@ -399,6 +399,9 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
             exe, artifacts = program_adapters.qgis_buffer(p, folder)
         else:
             exe, artifacts = program_adapters.godot_starter(folder)
+    elif op=="prometheus-rule-check":
+        from engine import monitor_tools
+        exe,artifacts=monitor_tools.check_rules(p,Path(output).resolve())
     elif op=="docling-docx-markdown":
         from engine import document_tools
         exe,artifacts=document_tools.convert(p,Path(output).resolve())

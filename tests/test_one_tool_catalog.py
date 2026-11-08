@@ -59,7 +59,7 @@ class OneToolCatalogTests(unittest.TestCase):
         self.assertEqual(len(tool_runtime.ISOLATED), 22)
         self.assertEqual(len(tool_runtime.PRIVATE_CLI), 26)
         self.assertEqual(len(tool_runtime.BINARIES), 14)
-        self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 19)
+        self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 20)
         self.assertEqual(len(runtime_discovery.PYTHON_MODULES), 11)
         self.assertEqual(len(runtime_discovery.NPM_PACKAGES), 9)
         self.assertEqual(len(runtime_discovery.CONTAINER_TOOLS), 13)

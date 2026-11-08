@@ -16,7 +16,7 @@ EXPECTED = {
         "freecad", "audacity", "obs", "solvespace", "synfig", "openshot",
     },
     "optional_model_runtime": {"comfyui"},
-    "standalone_cli_candidate": {"ytdlp", "prometheus"},
+    "standalone_cli_candidate": {"ytdlp"},
 }
 
 
@@ -25,7 +25,7 @@ class FerrariInstallationTriageTests(unittest.TestCase):
         catalog = catalog_registry.read_catalog()
         reviewed = {t["id"]: t["integration_review"] for t in catalog["tools"]
                     if "integration_review" in t}
-        self.assertEqual(len(reviewed), 19)
+        self.assertEqual(len(reviewed), 18)
         self.assertEqual(set(reviewed), set().union(*EXPECTED.values()))
         for group, ids in EXPECTED.items():
             for name in ids:
@@ -37,8 +37,8 @@ class FerrariInstallationTriageTests(unittest.TestCase):
                     self.assertFalse(any(f["program"] == name
                                          for f in catalog["functions"]))
         self.assertEqual(catalog["counts"]["unique_tools"], 173)
-        self.assertEqual(catalog["counts"]["functions"], 279)
-        self.assertEqual(catalog["counts"]["all_catalog_entries"], 457)
+        self.assertEqual(catalog["counts"]["functions"], 280)
+        self.assertEqual(catalog["counts"]["all_catalog_entries"], 458)
 
     def test_inventory_distinguishes_present_reuse_from_missing(self):
         # Simulate two Ferrari-owned executable paths. This is NOT a VPS
@@ -61,8 +61,8 @@ class FerrariInstallationTriageTests(unittest.TestCase):
             inventory = tool_runtime.inventory()
 
         triage = inventory["installation_triage"]
-        self.assertEqual(triage["classified"], 19)
-        self.assertEqual(triage["detected_reuse"], 2)
+        self.assertEqual(triage["classified"], 18)
+        self.assertEqual(triage["detected_reuse"], 1)
         self.assertEqual(triage["not_detected_on_this_host"], 17)
         self.assertFalse(triage["reinstallation_performed"])
         self.assertEqual(triage["groups"],
