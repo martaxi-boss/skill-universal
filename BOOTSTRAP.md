@@ -1,20 +1,8 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Ferrari azul v1.0.6:** https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d. Atualizar in-place via Plugin Creator. Criativos: URLs, fotos, vídeos, Reels e fontes mistas; IA escreve e monta; Piper pt-PT.
+**Plugin Ferrari:** v1.0.7 atual; v1.0.8 candidata; [QA real e revisões](docs/CORRECAO_QA_TRABALHOS_REAIS_20261108.md). https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d.
 
 **Vozes:** Piper original e Raquel; ver Skill.
-
-**Estado do plugin (08/11/2026):** instalação ChatGPT verificada como `motor-universal-linux` v1.0.7. A fonte de atualização proposta usa a MESMA identidade e manifesto v1.0.8; CI, GitHub e atualização no cliente são portas de aceitação diferentes. Não criar segunda Skill nem duplicar o plugin.
-
-## Correções guiadas por trabalho real — qualidade e agentes (08/11/2026)
-
-Foram examinados pedidos Low Cost Europa, Matinhos, idioma e vídeo com `response.zip` reais. Problemas observados: MP4 tecnicamente válido mas áudio silencioso, HTML produzido sem prova de responsividade ou navegação, JSON formatado em vez de teste efetivo do sistema de idiomas e tarefas `ruflo-host` em que o papel «revisor» não inspecionou o artefacto do trabalhador.
-
-**Nova porta `engine/quality_gate.py` (fonte candidata a certificação):** valida assinaturas PDF/PNG/MP4, extensões esperadas, energia sonora real (FFmpeg+FFprobe apenas do Ferrari privado) e existência de evidência de browser desktop/móvel, quando o único anfitrião define os critérios. `kind=operation|invoke|auto|plan|ruflo-host` pode receber `acceptance` com `required_extensions`, `audible_audio` e `browser_evidence`. Uma falha impede `report.json.status=completed`; na ausência de critérios a resposta **não recebe certificação semântica** (`quality_gate.status=not_certified`). Energia audível não prova fala natural; screenshot não prova fluxo de compras. `ruflo-host.steps[].kind=review` agora pode consumir artefactos de uma tarefa anterior e produzir relatório JSON com SHA-256 e provas técnicas, mas **não é raciocínio de outro modelo**. Para revisão crítica e colaboração o anfitrião deve conduzir `ruflo-team` com verificação real de cada resultado.
-
-**Obrigação de implantação:** estes novos campos só podem circular na ponte normal após CI, pré-teste da nova release, ativação protegida na VPS, atualização do pin do validador e pedido ponta-a-ponta com ZIP verificado. Até então, são apenas código em revisão. Os relatórios guardados em `inventory().expansion` são assinalados como `historical_installation_snapshot`, jamais como nova deteção. O total de 450 entradas do catálogo não equivale a 450 testes funcionais.
-
-
 
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
 
