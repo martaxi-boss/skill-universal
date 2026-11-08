@@ -92,6 +92,16 @@ def answer(text, kind):
     return d["result"]
 
 
+def result_id(result, label):
+    """OpenShot CLI mutations carry IDs inside result.data, not always at top level."""
+    for item in (result.get("data"), result.get("file"), result.get("clip"), result):
+        if isinstance(item, dict):
+            value = item.get("id") or item.get("file_id") or item.get("clip_id")
+            if isinstance(value, str) and 0 < len(value) <= 160:
+                return value
+    raise RuntimeError("F13_"+label+"_MISSING_ID:"+repr(result)[:250])
+
+
 def digest(path):
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -161,15 +171,11 @@ def certify():
                 return val
 
             imported = call("file", "import", str(source))
-            file_id = imported.get("id") or imported.get("file_id")
-            if not isinstance(file_id, str) or not file_id:
-                raise RuntimeError("F13_IMPORT_MISSING_FILE_ID:"+repr(imported)[:250])
+            file_id = result_id(imported,"IMPORTED_FILE")
             call("project", "profile", "set", "--from-file", file_id, "--create-custom")
             added = call("clip", "add", file_id, "--layer", "1000000",
                          "--position", "0", "--start", "0", "--end", "1")
-            clip_id = added.get("id") or added.get("clip_id")
-            if not isinstance(clip_id,str) or not clip_id:
-                raise RuntimeError("F13_EDIT_MISSING_CLIP_ID:"+repr(added)[:250])
+            clip_id = result_id(added,"EDITED_CLIP")
             call("project", "save", str(project))
             call("export", "start", str(edited), "--wait", "--wait-timeout", "115",
                  timeout=150)
