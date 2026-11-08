@@ -1,6 +1,6 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Plugin Ferrari:** v1.0.7 atual; v1.0.8 candidata; [QA real e revisões](docs/CORRECAO_QA_TRABALHOS_REAIS_20261108.md). https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d.
+**Estado 08/11:** Ferrari VPS `e83ed6d` ativo, `e0509d5` fallback; Skill única v1.0.8 atualizada. [QA e provas](docs/CORRECAO_QA_TRABALHOS_REAIS_20261108.md).
 
 **Vozes:** Piper original e Raquel; ver Skill.
 
