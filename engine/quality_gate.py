@@ -184,6 +184,25 @@ def inspect(files, acceptance=None):
                         issues.append("Mobile usability findings are unresolved")
                     if not isinstance(interactions, dict) or interactions.get("status") != "clear" or interactions.get("findings") != []:
                         issues.append("Keyboard and interactive usability findings are unresolved")
+                    navigation = evidence.get("navigation", {})
+                    if not isinstance(navigation, dict) or navigation.get("status") != "clear" or navigation.get("findings") != []:
+                        issues.append("Unresolved local navigation or placeholder links")
+                    elif (type(navigation.get("links_total")) is not int
+                          or type(navigation.get("internal_files_verified")) is not int
+                          or type(navigation.get("fragments_verified")) is not int):
+                        issues.append("Browser navigation evidence is incomplete")
+                    elif navigation.get("spa_routes_unverified") != 0:
+                        issues.append("SPA routes were not verified by a real page navigation")
+                    elif type(navigation.get("external_unverified")) is not int:
+                        issues.append("Unverified external link count is missing")
+                    elif type(navigation.get("schemes_unverified")) is not int:
+                        issues.append("Unverified mailto/tel link count is missing")
+                    elif navigation["links_total"] < (navigation["internal_files_verified"] +
+                            navigation["fragments_verified"] + navigation["external_unverified"] +
+                            navigation["schemes_unverified"]):
+                        issues.append("Inconsistent browser navigation link counts")
+                    elif navigation["external_unverified"] or navigation["schemes_unverified"]:
+                        warnings.append("External, mailto and tel links were inspected but not opened or certified")
                     for key in ("page_errors", "console_errors", "blocked_external"):
                         if evidence.get(key) != []:
                             issues.append("Browser has unresolved " + key)
