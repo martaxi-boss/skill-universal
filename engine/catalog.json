@@ -5782,13 +5782,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 451,
+    "all_catalog_entries": 452,
     "mcp_source_advertised": 229,
-    "functions": 273,
-    "functions_base_operations": 13,
+    "functions": 274,
+    "functions_base_operations": 14,
     "functions_typed_actions": 40,
     "functions_mcp": 220,
-    "all_universal_entries": 451
+    "all_universal_entries": 452
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -9796,6 +9796,17 @@
       "invocation": {
         "kind": "operation",
         "operation": "web-template"
+      }
+    },
+    {
+      "id": "operation:image-analyze",
+      "name": "image-analyze",
+      "kind": "operation",
+      "program": "opencv",
+      "category": "vision",
+      "invocation": {
+        "kind": "operation",
+        "operation": "image-analyze"
       }
     }
   ],
