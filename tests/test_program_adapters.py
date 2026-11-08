@@ -108,6 +108,28 @@ class FerrariProgramAdaptersTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     a.librecad_dxf_pdf(file, root / "artifacts")
 
+    def test_appimage_launcher_link_within_ferrari_is_allowed_but_escape_is_not(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            inside = root / "tools/app/bin"
+            inside.mkdir(parents=True)
+            real = inside / "real-binary"
+            real.write_text("#!/bin/sh\\nexit 0\\n")
+            real.chmod(0o700)
+            launcher = root / "tools/app/AppRun"
+            launcher.symlink_to(real)
+            external = Path(temp).parent / "outside-bin-for-ferrari-test"
+            # This test never creates an executable outside the temporary
+            # Ferrari fixture: use a directory escape to test the guard.
+            escaping = inside / "escape"
+            escaping.symlink_to(Path(temp).parent / "etc-passwd-ferrari-absent")
+            with patch.object(a, "HOME", root):
+                self.assertEqual(a._private_file(launcher, executable=True), real)
+                with self.assertRaises(RuntimeError):
+                    a._private_file(launcher, executable=False)
+                with self.assertRaises((RuntimeError, FileNotFoundError)):
+                    a._private_file(escaping, executable=True)
+
     def test_guards_keep_execution_private_and_no_shell(self):
         source = Path(a.__file__).read_text(encoding="utf-8")
         self.assertIn("shell=False", source)
