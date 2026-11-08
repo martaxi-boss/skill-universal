@@ -80,8 +80,11 @@ class AudioTranscribeTests(unittest.TestCase):
     def test_real_cpu_transcription_from_verifiable_public_fixture(self):
         # Runs on the VPS when the already installed private model exists.
         # CI runner without Ferrari's model does not claim proof by a mock.
-        if not audio_tools.HOME.is_dir():
-            self.skipTest("Not running on the Ferrari VPS")
+        # CI containers can mount /srv/projects/skill-universal as a test
+        # directory without the installed model. Only the *active release*
+        # symlink identifies a real Ferrari VPS for mandatory ASR execution.
+        if not (audio_tools.HOME / "current").is_symlink():
+            self.skipTest("Not running on an activated Ferrari VPS release")
         self.assertTrue(audio_tools.available(),
                         "Ferrari VPS has no functional private faster-whisper model/venv")
         home=audio_tools.HOME
