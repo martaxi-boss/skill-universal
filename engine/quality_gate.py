@@ -30,9 +30,9 @@ def validate(policy):
         raise ValueError("Invalid Ferrari acceptance policy")
     extensions = policy.get("required_extensions", [])
     if (not isinstance(extensions, list) or len(extensions) > 12 or
-            len(set(extensions)) != len(extensions) or
             any(not isinstance(ext, str) or not re.fullmatch(r"\.[a-z0-9]{2,12}", ext)
-                for ext in extensions)):
+                for ext in extensions) or
+            len(set(extensions)) != len(extensions)):
         raise ValueError("Invalid required output extensions")
     for key in ("audible_audio", "browser_evidence"):
         if key in policy and type(policy[key]) is not bool:
