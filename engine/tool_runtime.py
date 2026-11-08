@@ -214,7 +214,10 @@ def inventory():
     selected=[x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),
         key=lambda x:x["ubuntu_order"])]
-    helpers=[x["core"] for x in sorted(
+    # Resolve historical core display aliases through the canonical tool ID.
+    # In particular, old "REA" is an alias of the existing lowercase "rea",
+    # NOT a second tool or an uninstalled programme.
+    helpers=[{**x["core"],"id":x["id"]} for x in sorted(
         (x for x in catalog["tools"] if "core" in x),
         key=lambda x:x["core_order"])]
     defined=specs()
