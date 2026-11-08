@@ -29,8 +29,8 @@ def make_docx(path: Path, text="Ferrari document synthetic laboratory proof"):
 class FerrariNewProgramAdapters(unittest.TestCase):
     def test_one_catalog_exact_two_more_direct_operations(self):
         d=catalog_registry.read_catalog()
-        self.assertEqual(d["counts"]["all_catalog_entries"],457)
-        self.assertEqual(d["counts"]["functions"],279)
+        self.assertEqual(d["counts"]["all_catalog_entries"],458)
+        self.assertEqual(d["counts"]["functions"],280)
         self.assertEqual(d["counts"]["functions_base_operations"],19)
         self.assertEqual(len(d["tools"]),173)
         for op,tool in (("docling-docx-markdown","docling"),("valkey-kv-test","valkey")):
