@@ -82,7 +82,9 @@ PROGRAM_EXPECTED = {
     "qgis": re.compile(r"QGIS|[0-9]+\.[0-9]+\.[0-9]+", re.I),
     "godot": re.compile(r"4\.[0-9]+", re.I),
     "prometheus": re.compile(r"prometheus", re.I),
-    "valkey": re.compile(r"valkey", re.I),
+    # The privately installed Valkey 7.2 server prints "Server v=7.2.13".
+    # --version is exit-0 and non-daemon; require the expected upstream 7.2 branch.
+    "valkey": re.compile(r"(?:valkey\s+)?Server\s+v=7\.2\.[0-9]+\b", re.I),
 }
 
 
