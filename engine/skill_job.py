@@ -17,7 +17,7 @@ import traceback
 import uuid
 import zipfile
 
-from engine import ferrari, tool_runtime, orchestrator, rea_mcp, ruflo_host, agent_team, quality_gate
+from engine import ferrari, tool_runtime, orchestrator, rea_mcp, ruflo_host, agent_team, quality_gate, runtime_health
 
 MAX_REQUEST_BYTES = 2_800_000
 MAX_INPUT_BYTES = 2_000_000
@@ -27,7 +27,7 @@ INPUT_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\.[a-zA-Z0-9]{1,12}
 def validate_job(data):
     if not isinstance(data,dict) or data.get("version") != 1:
         raise ValueError("Expected a version 1 Ferrari job object")
-    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel","mcp_requests","roles","steps","host","phase","team_id","mission","tasks","turn","revision","approval","task","reason","acknowledge_risk","acceptance"}:
+    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel","mcp_requests","roles","steps","host","phase","team_id","mission","tasks","turn","revision","approval","task","reason","acknowledge_risk","acceptance","targets"}:
         raise ValueError("Unknown Ferrari job fields")
     jid=data.get("id")
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
@@ -37,8 +37,18 @@ def validate_job(data):
         if kind not in {"operation", "invoke", "auto", "plan", "ruflo-host"}:
             raise ValueError("Acceptance policy is unsupported for this job kind")
         quality_gate.validate(data["acceptance"])
-    if kind not in {"inventory","operation","auto","invoke","plan","rea-mcp","ruflo-host","ruflo-team"}:
+    if kind not in {"inventory","runtime-check","operation","auto","invoke","plan","rea-mcp","ruflo-host","ruflo-team"}:
         raise ValueError("Unsupported Ferrari job kind")
+    if kind=="runtime-check":
+        if set(data)-{"version","id","kind","targets"}:
+            raise ValueError("Unexpected Ferrari runtime-check fields")
+        targets=data.get("targets")
+        if (not isinstance(targets,list) or not 1<=len(targets)<=len(runtime_health.PROGRAM_COMMANDS)
+                or any(not isinstance(t,str) or t not in runtime_health.PROGRAM_COMMANDS for t in targets)
+                or len(set(targets))!=len(targets)):
+            raise ValueError("Expected unique, whitelisted Ferrari support-program targets")
+    elif "targets" in data:
+        raise ValueError("Ferrari targets require runtime-check")
     inp=data.get("input")
     if kind in {"auto","invoke"} and not isinstance(inp,dict):
         raise ValueError("This operation requires an input file")
@@ -145,6 +155,21 @@ def execute(data, outdir):
             catalog_file=dest/"catalog.json"
             catalog_file.write_text(json.dumps(tool_runtime.unified_catalog(inventory_now=existing),ensure_ascii=False,indent=2),encoding="utf-8")
             response={"confirmed":True,"artifacts":[str(inventory_file),str(catalog_file)]}
+        elif kind=="runtime-check":
+            dest.mkdir(mode=0o700)
+            items=[]
+            for program in data["targets"]:
+                exe=tool_runtime.executable(program)
+                items.append(runtime_health.probe_support_program(program,exe,tool_runtime.HOME))
+            check={"status":"complete_with_failures" if any(not x["startup_smoke_pass"] for x in items) else "passed",
+                   "scope":"Private non-network startup checks only, NOT integrated functionality",
+                   "results":items,
+                   "pass_count":sum(x["startup_smoke_pass"] for x in items),
+                   "requested_count":len(items)}
+            output=dest/"runtime-check.json"
+            output.write_text(json.dumps(check,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            response={"confirmed":True,"artifacts":[str(output)],
+                      "executor":"ferrari-private-version-smoke","operation":"runtime-check"}
         elif kind=="operation":
             response=ferrari.run(data["operation"],str(dest),source=str(src) if src else None,
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
