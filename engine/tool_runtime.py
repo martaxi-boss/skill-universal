@@ -248,14 +248,15 @@ def inventory():
         if not path and callable_ops:
             first=defined[callable_ops[0]]
             path=executable(tool,first["binary"])
-        from engine import professional_tools, audio_tools
+        from engine import professional_tools, audio_tools, image_tools
         # Integrated Python-module workflows use their own Ferrari-private
         # interpreter and model evidence, never a globally installed binary.
         builtin = entry.get("cost") == "built-in" and tool in {"svg", "html-templates"}
         available=(True if builtin else
                    professional_tools.bim_available() if tool=="ifcopenshell" else
                    professional_tools.vite_available() if tool=="vite" else
-                   audio_tools.available() if tool=="faster-whisper" else bool(path))
+                   audio_tools.available() if tool=="faster-whisper" else
+                   image_tools.available() if tool=="opencv" else bool(path))
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
         present=bool(path or evidence or builtin)

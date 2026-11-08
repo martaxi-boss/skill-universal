@@ -385,6 +385,11 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         exe=_exe("jadx")
         _call([exe,"-d",str(dest),str(p)],timeout=600)
         artifacts=[dest]
+    elif op=="image-analyze":
+        # Reuse the Ferrari-owned Docling/OpenCV virtualenv for bounded
+        # offline image diagnostics; installation alone never grants an action.
+        from engine import image_tools
+        exe,artifacts=image_tools.analyze(p,Path(output).resolve())
     elif op=="audio-transcribe":
         # One universal catalog entry, executed using the Ferrari-owned
         # faster-whisper venv and offline model. NOT a TTS or paid API route.
