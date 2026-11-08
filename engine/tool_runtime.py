@@ -221,6 +221,10 @@ def inventory():
         (x for x in catalog["tools"] if "core" in x),
         key=lambda x:x["core_order"])]
     defined=specs()
+    # Classification lives in the same canonical catalog as every program.
+    # It never grants an operation or triggers an installation.
+    review_index={x["id"]:x["integration_review"] for x in catalog["tools"]
+                  if "integration_review" in x}
     ecosystems=runtime_discovery.discover()
     python=ecosystems["python"]["tools"]
     npm=ecosystems["npm"]["tools"]
@@ -265,6 +269,7 @@ def inventory():
                "callable" if callable_ops or base_ops else
                "runtime_dependency_verified" if runtime_verified else
                "installed_unintegrated" if present else "not_detected")
+        review=review_index.get(tool)
         detection=("private_runtime_smoke" if runtime_verified else
                    "executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
@@ -280,7 +285,14 @@ def inventory():
                 "actions":callable_ops,"base_operations":base_ops,
                 "installation_tier":entry.get("installation_tier"),
                 "apt_candidate":entry.get("installation_candidate"),
-                "status":state}
+                "status":state,
+                **({"installation_review": {
+                     **review,
+                     "observed_installed":present,
+                     "next_install_action": ("reuse_private_installation" if present
+                                             else "evaluate_only_for_requested_workflow"),
+                     "direct_operation_confirmed":bool(callable_ops or base_ops),
+                   }} if review else {})}
     records=[inspect(x,"shortlist_56") for x in selected]
     used={x["id"] for x in selected}
     records.extend(inspect(x,"auxiliary_catalogue") for x in helpers if x["id"] not in used)
@@ -324,7 +336,19 @@ def inventory():
                     expansion[group]=content
             except (OSError,ValueError,UnicodeError):
                 pass
-    return {"selected":len(selected),"registered_actions":len(defined),
+    reviewed=[x for x in records if "installation_review" in x]
+    groups=sorted({x["installation_review"]["group"] for x in reviewed})
+    installation_triage={
+        "classified":len(reviewed),
+        "detected_reuse":sum(x["installed"] for x in reviewed),
+        "not_detected_on_this_host":sum(not x["installed"] for x in reviewed),
+        "groups":{g:sum(x["installation_review"]["group"]==g for x in reviewed)
+                  for g in groups},
+        "reinstallation_performed":False,
+        "note":"Read-only evidence: support classification does not mean executable integration or permission to reinstall.",
+    }
+    return {"installation_triage":installation_triage,
+            "selected":len(selected),"registered_actions":len(defined),
             "installed":sum(x["installed"] for x in records),
             "selected_detected":len(picked)-len(absent),
             "selected_not_detected":len(absent),
