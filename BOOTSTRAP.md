@@ -4,6 +4,8 @@
 
 **F12 — higiene e testes funcionais (08/11):** [VPS #42511248400](https://github.com/martaxi-boss/VPS/actions/runs/42511248400): cache npm 0 bytes, zero descartáveis GUI, serviços 8/8; sem limpeza VPS aplicável nesse âmbito. [VPS #42511331936](https://github.com/martaxi-boss/VPS/actions/runs/42511331936): FreeCAD FCStd/STEP de 3 000 mm³ e yt-dlp MP4 localhost com SHA-256 igual, **2/2 PASS**. São provas reais dos programas, **não novas operações do catálogo**. GitHub: 21 envelopes QA limpos e PR #43 legado fechado. [Relatório](docs/FERRARI_F12_HIGIENE_E_CERTIFICACAO_REAL_20261108.md).
 
+**Provas históricas (NÃO ATIVAS):** [Ruflo #42218479317](https://github.com/martaxi-boss/VPS/actions/runs/42218479317); [F10 inventário #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715), release 205c6f0e e fallback 7bf6dcec; [ativação #42314959728](https://github.com/martaxi-boss/VPS/actions/runs/42314959728) e [higiene #42315724016](https://github.com/martaxi-boss/VPS/actions/runs/42315724016).
+
 **Vozes:** Piper original e Raquel; ver Skill.
 
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
@@ -43,7 +45,7 @@
 **F11 — PDAL LAS funcional certificado:** [VPS #42317695882](https://github.com/martaxi-boss/VPS/actions/runs/42317695882) PASS: TXT→LAS→TXT, 5 pontos, cabeçalho LAS de 327 bytes e coordenadas revalidadas, 8/8 serviços. Não certifica HDF/Icebridge nem todos os formatos PDAL. [Relatório F11](docs/FASE11_PDAL_LAS_REAL_20261107.md).
 
 
-**Ponto 7 — histórico Ruflo:** [VPS #42216565299](https://github.com/martaxi-boss/VPS/actions/runs/42216565299) provou jq/REA com papéis assistidos; prova mais recente de rejeição e correção: #42509439220.
+**Ruflo anterior:** #42216565299; correção real: #42509439220.
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
