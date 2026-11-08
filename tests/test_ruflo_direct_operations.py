@@ -162,9 +162,10 @@ class RufloCatalogOperationTests(unittest.TestCase):
             with self.subTest(example=example):
                 with self.assertRaises(ValueError):
                     agent_team.validate_job(turn(0, "maker", "operation", **example))
-        with self.assertRaises(ValueError):
-            skill_job.validate_job(turn(0, "maker", "operation",
-                                        operation="cad-stl", input_from="/etc/passwd"))
+        self.call(start_request(), self.upload)
+        with self.assertRaisesRegex(ValueError, "approved dependency"):
+            self.call(turn(0, "maker", "operation",
+                           operation="cad-stl", input_from="/etc/passwd"))
         # The base-operation name is nested in the authorized host turn;
         # no unvalidated root-level arbitrary operation is admitted.
         with self.assertRaises(ValueError):
@@ -183,7 +184,7 @@ class RufloCatalogOperationTests(unittest.TestCase):
         saved = self.journal()
         self.assertEqual(saved["tasks"]["cad"]["status"], "failed")
         self.assertEqual(saved["revision"], 1)
-        with self.assertRaisesRegex(ValueError, "Only failed tasks"):
+        with self.assertRaisesRegex(ValueError, "ready agent"):
             self.call(turn(1, "maker", "operation",
                            operation="cad-stl", input_from="$input"))
 
