@@ -338,7 +338,7 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         raise ValueError("Unsupported operation: no arbitrary shell")
     if system()["distro"] != "ubuntu":
         raise RuntimeError("Ferrari execution is supported only on Ubuntu")
-    p=_input(source) if op not in {"web-template","svg-poster","blender-house"} else None
+    p=_input(source) if op not in {"web-template","svg-poster","blender-house","godot-starter"} else None
     if op=="web-template" and source is not None:
         # Optional HTML input uses the existing Skill operation and transport;
         # no new operation ID, validator pin, SSH or 40-action manifest changes.
@@ -390,6 +390,15 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         # offline image diagnostics; installation alone never grants an action.
         from engine import image_tools
         exe,artifacts=image_tools.analyze(p,Path(output).resolve())
+    elif op in {"librecad-dxf-pdf", "qgis-buffer-5m", "godot-starter"}:
+        from engine import program_adapters
+        folder = Path(output).resolve()
+        if op == "librecad-dxf-pdf":
+            exe, artifacts = program_adapters.librecad_dxf_pdf(p, folder)
+        elif op == "qgis-buffer-5m":
+            exe, artifacts = program_adapters.qgis_buffer(p, folder)
+        else:
+            exe, artifacts = program_adapters.godot_starter(folder)
     elif op=="audio-transcribe":
         # One universal catalog entry, executed using the Ferrari-owned
         # faster-whisper venv and offline model. NOT a TTS or paid API route.
