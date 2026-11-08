@@ -94,7 +94,7 @@ def analyze(source: Path, folder: Path):
         raise RuntimeError("Ferrari image analysis did not produce valid artifacts")
     with preview.open("rb") as f:
         header = f.read(24)
-    if (header[:8] != b"\\x89PNG\\r\\n\\x1a\\n"
+    if (header[:8] != b"\x89PNG\r\n\x1a\n"
             or int.from_bytes(header[16:20], "big") < 1
             or int.from_bytes(header[20:24], "big") < 1):
         raise RuntimeError("Ferrari OpenCV preview is not a valid PNG")
@@ -174,7 +174,7 @@ def _worker(source: Path, folder: Path) -> int:
     }
     with (folder / "image-analysis.json").open("x", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
-        f.write("\\n")
+        f.write("\n")
     print("FERRARI_OPENCV_IMAGE_ANALYZE=PASS", flush=True)
     return 0
 
