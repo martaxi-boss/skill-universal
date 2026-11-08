@@ -41,6 +41,29 @@ class FerrariNewProgramAdapters(unittest.TestCase):
                 self.assertEqual(len(entries),1)
                 self.assertEqual(entries[0]["program"],tool)
 
+    def test_docling_module_inventory_promotes_only_verified_private_worker(self):
+        # A module does not have a CLI binary. The worker presence needs its
+        # own private executable probe, exactly as faster-whisper/OpenCV.
+        evidence={"scope":"ferrari_venv",
+                  "location":"/srv/projects/skill-universal/.runtime/venvs/extended/docling/lib/python3.12/site-packages/docling"}
+        worlds={
+            "python":{"tools":{"docling":evidence}},
+            "npm":{"tools":{}},
+            "containers":{"tools":{}}
+        }
+        with patch.object(tool_runtime.runtime_discovery,"discover",return_value=worlds):
+            with patch.object(doc,"available",return_value=True):
+                available=tool_runtime.inventory()
+            with patch.object(doc,"available",return_value=False):
+                missing=tool_runtime.inventory()
+        yes=next(x for x in available["programs"] if x["id"]=="docling")
+        no=next(x for x in missing["programs"] if x["id"]=="docling")
+        self.assertEqual(yes["status"],"callable")
+        self.assertEqual(yes["integration_role"],"direct_action")
+        self.assertEqual(yes["base_operations"],["docling-docx-markdown"])
+        self.assertEqual(no["status"],"installed_unintegrated")
+        self.assertEqual(no["base_operations"],[])
+
     def test_docx_package_accepts_only_bounded_private_word_parts(self):
         with tempfile.TemporaryDirectory() as tmp:
             home=Path(tmp)
