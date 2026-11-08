@@ -55,7 +55,7 @@ def validate_job(doc):
         raise ValueError("Ferrari Ruflo max_parallel must be 1 or 2")
     names=set()
     for item in steps:
-        if not isinstance(item,dict) or set(item)-{"id","role","kind","action","query","input_from","mcp_requests"}:
+        if not isinstance(item,dict) or set(item)-{"id","role","kind","action","query","input_from","mcp_requests","acceptance"}:
             raise ValueError("Unknown Ruflo task field")
         sid,role,kind=item.get("id"),item.get("role"),item.get("kind")
         if not isinstance(sid,str) or not IDENTITY.fullmatch(sid) or sid in names or role not in ids:
