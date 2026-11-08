@@ -175,7 +175,8 @@ class RufloCatalogOperationTests(unittest.TestCase):
 
     def test_escaping_result_causes_failure_and_recovery_gate(self):
         self.call(start_request(), self.upload)
-        def escape(_op, _folder, source=None, title=None, layout=None):
+        def escape(_op, folder, source=None, title=None, layout=None):
+            Path(folder).mkdir(parents=True)
             return {"confirmed": True, "artifacts": ["/etc/passwd"]}
         with patch.object(agent_team.ferrari, "run", side_effect=escape):
             with self.assertRaisesRegex(RuntimeError, "Unsafe"):
