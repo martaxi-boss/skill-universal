@@ -9,7 +9,7 @@ revisão #42526667840 e [fecho #42526730098](https://github.com/martaxi-boss/VPS
 PASS, um STL 40×30×12 mm/furo ~10 mm, `status=completed`.
 Catálogo **458 entradas, 280 funções** preservado.
 [Provas, contrato e limites](docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
-A Skill mantém a identidade **v1.0.20**; confirmar instalação ChatGPT à parte.
+A Skill mantém a identidade **v1.0.21**; confirmar instalação ChatGPT à parte.
 
 **Histórico:** release anterior `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`
 e fallback então `427e1c33c6d10ca8ecd2103861adccd3d552c381`:
