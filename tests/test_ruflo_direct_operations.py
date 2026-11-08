@@ -137,6 +137,25 @@ class RufloCatalogOperationTests(unittest.TestCase):
         self.assertEqual(final["autonomous_agent_model_calls"], 0)
         self.assertEqual(FakeRuflo.calls.count("swarm_shutdown"), 3)
 
+    def test_catalog_generator_can_run_without_uploaded_source(self):
+        start = start_request()
+        start.pop("input")
+        start["roles"][0]["actions"] = ["operation:svg-poster"]
+        self.call(start)
+        def fake_poster(op, folder, source=None, title=None, layout=None):
+            self.assertEqual(op, "svg-poster")
+            self.assertIsNone(source)
+            out = Path(folder)
+            out.mkdir(parents=True)
+            file = out / "poster.svg"
+            file.write_text("<svg xmlns='http://www.w3.org/2000/svg'></svg>")
+            return {"confirmed": True, "artifacts": [str(file)],
+                    "executor": "ferrari-private"}
+        with patch.object(agent_team.ferrari, "run", side_effect=fake_poster):
+            result = self.call(turn(0, "maker", "operation", operation="svg-poster"))
+        self.assertEqual(result["tool_calls_verified"], 1)
+        self.assertEqual(result["tasks"]["cad"], "awaiting_review")
+
     def test_unknown_and_unapproved_operations_are_rejected(self):
         start = start_request()
         start["roles"][0]["actions"] = ["operation:not-a-catalog-operation"]
