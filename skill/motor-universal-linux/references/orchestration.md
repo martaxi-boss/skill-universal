@@ -22,7 +22,7 @@ O DAG da VPS foi certificado na [execução #42098800995](https://github.com/mar
 
 ## Papel do Ruflo e outras ferramentas
 
-Ruflo `3.71.0` está dentro do npm privado Ferrari e o CLI respondeu ao teste `--version`. **Agentes reais com modelo/fornecedor não foram certificados**; não chamar Ruflo de coordenador do servidor nem presumir subscrição paga. Prefect é igualmente opcional. A ferramenta opcional não substitui `engine/orchestrator.py`.
+Ruflo `3.71.0` está no npm privado Ferrari e é **sub-anfitrião gestor de papéis e tarefas apenas durante a ronda conduzida pela IA anfitriã** (ChatGPT/Codex/outro autorizado). A equipa `kind=ruflo-team` já completou trabalho real com ferramenta privada, revisão independente, rejeição, correção e aprovação [#42509439220](https://github.com/martaxi-boss/VPS/actions/runs/42509439220). **O único raciocínio vem da IA anfitriã partilhada; agentes com modelos próprios ou LLM autónomo na VPS não são um objetivo nem uma pendência.** Não instalar coordenador permanente, API/modelos por agente ou pressupor fornecimento da API pela subscrição ChatGPT. Prefect é opcional; Ruflo não substitui `engine/orchestrator.py` nem o único catálogo Ferrari.
 
 ## Desinstalação e higiene
 
