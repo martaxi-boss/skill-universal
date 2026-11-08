@@ -205,8 +205,8 @@ async function main() {
         navigation.external_unverified++;
         continue;
       }
-      if (destination.pathname === "/" && destination.hash &&
-          !destination.search) {
+      if ((destination.pathname === "/" || destination.pathname === "/index.html") &&
+          destination.hash && !destination.search) {
         let id;
         try { id = decodeURIComponent(destination.hash.slice(1)); }
         catch { id = ""; }
