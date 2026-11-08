@@ -203,6 +203,62 @@ print("FERRARI_PRIVATE_SKILL_JOB_RESPONSE_ZIP=PASS")
 VERIFY_REAL
 echo FERRARI_RELEASE_PRIVATE_PREACTIVATION=PASS
 
+# Never switch 'current' until the three new specialist adapters have
+# actually produced output on this VPS, not merely returned --version.
+# This is bounded to the dedicated Ferrari release that introduces them.
+if "$PRIVATE_PYTHON" - <<'ADAPTERS_RELEASE_CHECK'
+from engine import ferrari
+required = {"librecad-dxf-pdf", "qgis-buffer-5m", "godot-starter"}
+assert required <= set(ferrari.OPS)
+ADAPTERS_RELEASE_CHECK
+then
+  "$PRIVATE_PYTHON" - "$WORK" <<'ADAPTERS_REAL_PREACTIVATION'
+import json
+from pathlib import Path
+import runpy
+import sys
+
+from engine import ferrari
+
+work = Path(sys.argv[1])
+drawing = runpy.run_path("install/vps-f9-librecad-dxf2pdf-certify.py")["DRAWING"]
+dxf = work / "specialist-test.dxf"
+dxf.write_bytes(drawing.replace("\n", "\r\n").encode("ascii"))
+result = ferrari.run("librecad-dxf-pdf", str(work / "specialist-librecad"),
+                     source=str(dxf))
+assert result["confirmed"] and len(result["artifacts"]) == 2
+pdf = work / "specialist-librecad" / "librecad-drawing.pdf"
+meta = json.loads((work / "specialist-librecad" / "librecad-report.json").read_text())
+assert pdf.read_bytes().startswith(b"%PDF-") and meta["private_pdfinfo_verified"]
+print("FERRARI_PRIVATE_LIBRECAD_REAL=PASS")
+
+geo = work / "specialist-test.geojson"
+geo.write_text(json.dumps({
+    "type":"FeatureCollection",
+    "crs":{"type":"name","properties":{"name":"EPSG:3857"}},
+    "features":[{"type":"Feature","properties":{},
+        "geometry":{"type":"Polygon","coordinates":[[
+            [0,0],[100,0],[100,50],[0,50],[0,0]]]}}]}),
+    encoding="utf-8")
+result = ferrari.run("qgis-buffer-5m", str(work / "specialist-qgis"),
+                     source=str(geo))
+assert result["confirmed"] and len(result["artifacts"]) == 2
+shape = json.loads((work / "specialist-qgis" / "qgis-buffer-5m.geojson").read_text())
+meta = json.loads((work / "specialist-qgis" / "qgis-buffer-report.json").read_text())
+assert len(shape["features"]) == 1
+assert meta["area_after_m2"] > meta["area_before_m2"] == 5000
+print("FERRARI_PRIVATE_QGIS_REAL=PASS")
+
+result = ferrari.run("godot-starter", str(work / "specialist-godot"))
+assert result["confirmed"] and len(result["artifacts"]) == 3
+meta = json.loads((work / "specialist-godot" / "godot-starter-report.json").read_text())
+assert meta["engine_exit_code"] == 0
+assert (work / "specialist-godot" / "godot-starter/main.tscn").is_file()
+print("FERRARI_PRIVATE_GODOT_REAL=PASS")
+print("FERRARI_PRIVATE_SPECIALIST_SMOKE=PASS")
+ADAPTERS_REAL_PREACTIVATION
+fi
+
 if [[ "$MODE" == "--check" ]]; then
   echo FERRARI_RELEASE_NOT_ACTIVATED_CHECK_ONLY
   exit 0
