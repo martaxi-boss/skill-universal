@@ -102,18 +102,36 @@ class AudioTranscribeTests(unittest.TestCase):
             self.assertEqual(len(data),1_152_693)
             blob=hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
             self.assertEqual(blob,fixture_blob)
-            exe,outputs=audio_tools.transcribe(src,work/"artifacts")
-            self.assertTrue(exe.endswith(":faster-whisper-cpu"))
-            self.assertEqual(len(outputs),3)
-            report=json.loads(outputs[2].read_text("utf-8"))
-            self.assertEqual(report["status"],"completed")
-            self.assertEqual(report["language_detected"],"en")
-            self.assertGreater(report["segments"],0)
-            text=outputs[0].read_text("utf-8").lower()
+            import base64
+            from zipfile import ZipFile
+            job={"version":1,"id":"ferrari-real-asr-jfk","kind":"operation",
+                 "operation":"audio-transcribe",
+                 "input":{"name":"public-test-speech.flac",
+                          "content_base64":base64.b64encode(data).decode("ascii")},
+                 "acceptance":{"required_extensions":[".txt",".srt",".json"]}}
+            result,code=skill_job.execute(job,work/"output")
+            self.assertEqual(code,0,result)
+            self.assertEqual(result["status"],"completed")
+            self.assertEqual(result["quality_gate"]["status"],"passed")
+            self.assertTrue(result["executor"].endswith(":faster-whisper-cpu"))
+            bundle=work/"output/response.zip"
+            with ZipFile(bundle) as archive:
+                self.assertIsNone(archive.testzip())
+                self.assertTrue({"report.json","artifacts/transcript.txt",
+                                 "artifacts/subtitles.srt",
+                                 "artifacts/transcript-report.json"}.issubset(archive.namelist()))
+                proof=json.loads(archive.read("artifacts/transcript-report.json"))
+                transcript=archive.read("artifacts/transcript.txt").decode("utf-8").lower()
+                subtitles=archive.read("artifacts/subtitles.srt").decode("utf-8")
+            self.assertEqual(proof["status"],"completed")
+            self.assertEqual(proof["language_detected"],"en")
+            self.assertGreater(proof["segments"],0)
             for word in ("ask","country","americans"):
-                self.assertIn(word,text)
-            self.assertIn("-->",outputs[1].read_text("utf-8"))
-            self.assertFalse(report["semantic_accuracy_certified"])
+                self.assertIn(word,transcript)
+            self.assertIn("-->",subtitles)
+            self.assertFalse(proof["semantic_accuracy_certified"])
+            print("FERRARI_REAL_ASR_SKILL_TO_ZIP=PASS segments=" +
+                  str(proof["segments"]))
 
 
 if __name__=="__main__":
