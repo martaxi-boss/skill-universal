@@ -17,7 +17,7 @@ import traceback
 import uuid
 import zipfile
 
-from engine import ferrari, tool_runtime, orchestrator, rea_mcp, ruflo_host, agent_team
+from engine import ferrari, tool_runtime, orchestrator, rea_mcp, ruflo_host, agent_team, quality_gate
 
 MAX_REQUEST_BYTES = 2_800_000
 MAX_INPUT_BYTES = 2_000_000
@@ -27,12 +27,16 @@ INPUT_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\.[a-zA-Z0-9]{1,12}
 def validate_job(data):
     if not isinstance(data,dict) or data.get("version") != 1:
         raise ValueError("Expected a version 1 Ferrari job object")
-    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel","mcp_requests","roles","steps","host","phase","team_id","mission","tasks","turn","revision","approval","task","reason","acknowledge_risk"}:
+    if set(data) - {"version","id","kind","operation","request","action","title","layout","input","query","plan","max_parallel","mcp_requests","roles","steps","host","phase","team_id","mission","tasks","turn","revision","approval","task","reason","acknowledge_risk","acceptance"}:
         raise ValueError("Unknown Ferrari job fields")
     jid=data.get("id")
     if not isinstance(jid,str) or not ID_PATTERN.fullmatch(jid):
         raise ValueError("Invalid Ferrari job ID")
     kind=data.get("kind")
+    if "acceptance" in data:
+        if kind not in {"operation", "invoke", "auto", "plan", "ruflo-host"}:
+            raise ValueError("Acceptance policy is unsupported for this job kind")
+        quality_gate.validate(data["acceptance"])
     if kind not in {"inventory","operation","auto","invoke","plan","rea-mcp","ruflo-host","ruflo-team"}:
         raise ValueError("Unsupported Ferrari job kind")
     inp=data.get("input")
@@ -89,7 +93,7 @@ def validate_job(data):
         raise ValueError("Invalid site layout")
     if kind=="plan":
         # The existing Ferrari orchestrator owns the DAG; the Skill only carries it.
-        if set(data)-{"version","id","kind","input","plan","max_parallel"}:
+        if set(data)-{"version","id","kind","input","plan","max_parallel","acceptance"}:
             raise ValueError("Unrecognized Ferrari plan envelope fields")
         plan=data.get("plan")
         if not isinstance(plan,dict) or set(plan)!={"version","steps"}:
@@ -206,6 +210,9 @@ def execute(data, outdir):
                 raise RuntimeError("Ferrari artifact escapes this isolated job")
             relative_files.append(str(resolved.relative_to(canonical_target)))
         result["artifacts"]=relative_files
+        result["quality_gate"]=quality_gate.inspect(files,data.get("acceptance"))
+        if result["quality_gate"]["status"] == "failed":
+            raise RuntimeError("Ferrari acceptance failed: " + "; ".join(result["quality_gate"]["failures"])[:700])
         result["executor"]=response.get("executor")
         result["operation"]=response.get("operation",response.get("action",kind))
         result["status"]="completed"
