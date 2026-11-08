@@ -1,5 +1,7 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
+**CONSOLIDAÇÃO v1.0.22 — 08/11/2026:** A missão de verificação ChatGPT anfitriã → Ruflo efémero → catálogo Ferrari concluiu [#42529577832](https://github.com/martaxi-boss/VPS/actions/runs/42529577832), com 2 chamadas reais de ferramentas e 2 revisões por papel diferente; 1 STL **ASCII** validado (46×34×9 mm, dois furos) e `file-mime` corretamente `text/plain`. O `quality_gate` automático foi `not_certified`, não passar esse valor a PASS. [Inventário real posterior #42530379999](https://github.com/martaxi-boss/VPS/actions/runs/42530379999): 458 entradas/280 funções/40 ações disponíveis, 73 programas detetados, 51 invocáveis. [Auditoria VPS #42530304058](https://github.com/martaxi-boss/VPS/actions/runs/42530304058): 7 caches, zero candidatos, zero remoção, serviços estáveis. [Higiene GitHub #a6011b9](https://github.com/martaxi-boss/VPS/commit/a6011b9fd87a9ed6ddc756b616df50025048a8c4) removeu só do HEAD 11 pedidos concluídos, mantendo histórico e provas. Não mudar SSH, catálogo, release ativa ou fallback por mera limpeza. [Relatório completo](docs/HIGIENE_FERRARI_V1022_20261108.md).
+
 **ESTADO ATUAL (08/11/2026):** Ferrari VPS `046126279a605d331b95683ece0a26d3c464d0eb`;
 fallback `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`.
 [Ativação #42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)
@@ -9,7 +11,7 @@ revisão #42526667840 e [fecho #42526730098](https://github.com/martaxi-boss/VPS
 PASS, um STL 40×30×12 mm/furo ~10 mm, `status=completed`.
 Catálogo **458 entradas, 280 funções** preservado.
 [Provas, contrato e limites](docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
-**Skill ChatGPT v1.0.21:** [Motor Ferrari — instalação original](https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d). **Para futuras atualizações:** usar este ID, sem criar outro plugin.
+**Skill ChatGPT — fonte final v1.0.22 (publicação instalada confirmada separadamente):** [Motor Ferrari — instalação original](https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d). **Para futuras atualizações:** usar este ID, sem criar outro plugin.
 
 **Histórico:** release anterior `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`
 e fallback então `427e1c33c6d10ca8ecd2103861adccd3d552c381`:

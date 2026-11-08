@@ -1,6 +1,8 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Estado vigente da Skill v1.0.21 (08/11/2026):** Ferrari ativo na VPS
+**Higiene v1.0.22:** [BOOTSTRAP principal](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md) prevalece. [Ronda Ruflo concluída #42529577832](https://github.com/martaxi-boss/VPS/actions/runs/42529577832): 2 operações reais/revisões distintas; STL ASCII verificado (file-mime `text/plain`), qualidade automática `not_certified`. [Inventário vivo #42530379999](https://github.com/martaxi-boss/VPS/actions/runs/42530379999): 458 entradas, 280 funções, 40/40 ações. [Auditoria caches #42530304058](https://github.com/martaxi-boss/VPS/actions/runs/42530304058): zero elegíveis, nenhum apagamento. O GitHub distribui a fonte, não instala automaticamente o cliente.
+
+**Estado consolidado da fonte da Skill v1.0.22 (08/11/2026):** Ferrari ativo na VPS
 `046126279a605d331b95683ece0a26d3c464d0eb`, fallback preservado
 `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`. A [ativação
 #42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)

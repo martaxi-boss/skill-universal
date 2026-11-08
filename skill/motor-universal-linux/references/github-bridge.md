@@ -1,5 +1,7 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
+**Ronda nova na fonte v1.0.22 (08/11/2026):** [#42529223723 início](https://github.com/martaxi-boss/VPS/actions/runs/42529223723) → [#42529278092 CAD real](https://github.com/martaxi-boss/VPS/actions/runs/42529278092) → [#42529365806 revisão independente](https://github.com/martaxi-boss/VPS/actions/runs/42529365806) → [#42529435760 file-mime real](https://github.com/martaxi-boss/VPS/actions/runs/42529435760) → [#42529508788 revisão](https://github.com/martaxi-boss/VPS/actions/runs/42529508788) → [#42529577832 finish](https://github.com/martaxi-boss/VPS/actions/runs/42529577832). Duas ferramentas do catálogo dentro de papéis Ruflo, duas aprovações, hashes reais e ZIP. O STL atual é **ASCII**, não binário; `file-mime` reportou corretamente `text/plain`. A certificação funcional por inspeção independente não implica `quality_gate=passed` (gate automático da ronda: `not_certified`). Sem alteração da ponte ou SSH. [Inventário novo](https://github.com/martaxi-boss/VPS/actions/runs/42530379999) e [auditoria de caches](https://github.com/martaxi-boss/VPS/actions/runs/42530304058) confirmam resultados posteriores à ativação anterior.
+
 **Atualização certificada 08/11/2026 — execução direta Ruflo de operação base:** Ferrari
 `current=046126279a605d331b95683ece0a26d3c464d0eb`,
 fallback `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`.
@@ -16,7 +18,7 @@ produziu um STL de 61 170 B, malha fechada 40×30×12 mm/furo ~10 mm;
 [Revisão #42526667840](https://github.com/martaxi-boss/VPS/actions/runs/42526667840)
 aprovou evidência real antes do fecho. Usa a **mesma ponte SSH**, o mesmo
 Ruflo efémero, a mesma IA anfitriã e o mesmo catálogo; não gera execução
-automática por LLM na VPS. [Contrato completo](../../../docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
+automática por LLM na VPS. [Contrato completo](https://github.com/martaxi-boss/skill-universal/blob/main/docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
 **Esta operação foi certificada, não todas as operações.** A distribuição da
 Skill para o cliente ChatGPT mantém verificação de instalação separada.
 
