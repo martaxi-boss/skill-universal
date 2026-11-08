@@ -21,10 +21,10 @@ class F14OBSRetry(unittest.TestCase):
 
     def test_only_decoded_frames_can_be_pass(self):
         text=PATH.read_text(encoding="utf-8")
-        for marker in ("-count_frames","nb_read_frames","frame_count>=8",
+        for marker in ("-count_frames","nb_read_frames","final_MP4", "private_ffmpeg_postprocess", "final_mp4_sha256",
                        "private_OBS_child_only_SIGINT","obs_process_in_group",
                        "FerrariSynthetic","recording_certified",
-                       "recording_lacks_verified_decodable_video_frames",
+                       "finalized_MP4_not_independently_validated",
                        "ffprobe_exit", "synthetic_blank_canvas_only"):
             self.assertIn(marker,text)
         for marker in ("AuxAudioDevice1=disabled","DesktopAudioDevice1=disabled",
