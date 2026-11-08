@@ -4,6 +4,18 @@
 
 **Vozes:** Piper original e Raquel; ver Skill.
 
+**Estado do plugin (08/11/2026):** instalação ChatGPT verificada como `motor-universal-linux` v1.0.7. A fonte de atualização proposta usa a MESMA identidade e manifesto v1.0.8; CI, GitHub e atualização no cliente são portas de aceitação diferentes. Não criar segunda Skill nem duplicar o plugin.
+
+## Correções guiadas por trabalho real — qualidade e agentes (08/11/2026)
+
+Foram examinados pedidos Low Cost Europa, Matinhos, idioma e vídeo com `response.zip` reais. Problemas observados: MP4 tecnicamente válido mas áudio silencioso, HTML produzido sem prova de responsividade ou navegação, JSON formatado em vez de teste efetivo do sistema de idiomas e tarefas `ruflo-host` em que o papel «revisor» não inspecionou o artefacto do trabalhador.
+
+**Nova porta `engine/quality_gate.py` (fonte candidata a certificação):** valida assinaturas PDF/PNG/MP4, extensões esperadas, energia sonora real (FFmpeg+FFprobe apenas do Ferrari privado) e existência de evidência de browser desktop/móvel, quando o único anfitrião define os critérios. `kind=operation|invoke|auto|plan|ruflo-host` pode receber `acceptance` com `required_extensions`, `audible_audio` e `browser_evidence`. Uma falha impede `report.json.status=completed`; na ausência de critérios a resposta **não recebe certificação semântica** (`quality_gate.status=not_certified`). Energia audível não prova fala natural; screenshot não prova fluxo de compras. `ruflo-host.steps[].kind=review` agora pode consumir artefactos de uma tarefa anterior e produzir relatório JSON com SHA-256 e provas técnicas, mas **não é raciocínio de outro modelo**. Para revisão crítica e colaboração o anfitrião deve conduzir `ruflo-team` com verificação real de cada resultado.
+
+**Obrigação de implantação:** estes novos campos só podem circular na ponte normal após CI, pré-teste da nova release, ativação protegida na VPS, atualização do pin do validador e pedido ponta-a-ponta com ZIP verificado. Até então, são apenas código em revisão. Os relatórios guardados em `inventory().expansion` são assinalados como `historical_installation_snapshot`, jamais como nova deteção. O total de 450 entradas do catálogo não equivale a 450 testes funcionais.
+
+
+
 ## CONTRATO OBRIGATÓRIO — ANFITRIÃO, SUB-ANFITRIÃO RUFLO E SUBAGENTES (07/11/2026)
 
 **REGRA VINCULATIVA / BLOQUEIO DE FECHO FUNCIONAL:** o Ferrari completo DEVE disponibilizar a hierarquia **IA anfitriã (ChatGPT, Codex ou outra autorizada) → Ruflo como sub-anfitrião gestor da equipa → subagentes trabalhadores → motor Ferrari e catálogo único → ferramentas reais → validação pelo anfitrião e entrega**. O Ruflo e os agentes **NÃO SÃO OPCIONAIS NA ARQUITETURA-ALVO**. Não os substituir silenciosamente por execução sem agentes, nem criar outra Skill, segundo motor, coordenador IA residente na VPS ou segundo catálogo. Pedidos simples podem utilizar diretamente uma ação Ferrari; isso não dispensa a equipa na certificação do produto completo.
