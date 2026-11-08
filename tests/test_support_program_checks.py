@@ -34,6 +34,28 @@ class SupportRuntimeTests(unittest.TestCase):
             self.assertTrue(kwargs["cwd"].startswith(str(root/".runtime")))
             self.assertEqual(list((root/".runtime").iterdir()),[])
 
+    def test_real_valkey_7213_version_format_is_a_success_not_a_failure(self):
+        with TemporaryDirectory() as folder:
+            root=Path(folder)
+            binary=self._private(root,"valkey")
+            # Captured from the Ferrari-owned Valkey 7.2.13 executable in
+            # actual VPS #42484626392; no server is started.
+            real="Server v=7.2.13 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=d168676aca4db8ba"
+            with patch.object(runtime_health.subprocess,"run",
+                    return_value=SimpleNamespace(returncode=0,stdout=real,stderr="")) as run:
+                evidence=runtime_health.probe_support_program("valkey",str(binary),root)
+            self.assertEqual(evidence["status"],"startup_smoke_pass")
+            self.assertTrue(evidence["startup_smoke_pass"])
+            args,kwargs=run.call_args
+            self.assertEqual(args[0],[str(binary),"--version"])
+            self.assertFalse(kwargs["shell"])
+            self.assertEqual(list((root/".runtime").iterdir()),[])
+            with patch.object(runtime_health.subprocess,"run",
+                    return_value=SimpleNamespace(returncode=0,
+                        stdout="Server v=6.0.0 sha=00000000",stderr="")):
+                rejected=runtime_health.probe_support_program("valkey",str(binary),root)
+            self.assertEqual(rejected["status"],"startup_smoke_failed")
+
     def test_missing_outside_and_unknown_programs_fail_closed(self):
         with TemporaryDirectory() as folder:
             root=Path(folder)/"ferrari"
