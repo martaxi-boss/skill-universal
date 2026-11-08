@@ -259,6 +259,41 @@ print("FERRARI_PRIVATE_SPECIALIST_SMOKE=PASS")
 ADAPTERS_REAL_PREACTIVATION
 fi
 
+# Require genuine Docling Word extraction and a fully torn-down local Valkey
+# service BEFORE any activation or symlink switch; no global packages.
+if "$PRIVATE_PYTHON" - <<'FERRARI_DOCUMENT_CACHE_PRESENT'
+from engine import ferrari
+assert {"docling-docx-markdown", "valkey-kv-test"} <= set(ferrari.OPS)
+FERRARI_DOCUMENT_CACHE_PRESENT
+then
+  "$PRIVATE_PYTHON" - "$WORK" <<'FERRARI_DOCUMENT_CACHE_REAL'
+import json,sys
+from pathlib import Path
+from engine import ferrari
+work=Path(sys.argv[1])
+docx=work/"demo.docx"
+assert docx.is_file(), "Existing private Word smoke fixture missing"
+result=ferrari.run("docling-docx-markdown",str(work/"new-docling"),source=str(docx))
+assert result["confirmed"] and len(result["artifacts"])==2
+markdown=(work/"new-docling/docling-extracted.md").read_text(encoding="utf-8")
+record=json.loads((work/"new-docling/docling-report.json").read_text(encoding="utf-8"))
+assert "Ferrari release privada" in markdown, markdown[:250]
+assert record["status"]=="completed" and record["offline"] is True
+print("FERRARI_PRIVATE_DOCLING_REAL=PASS")
+
+result=ferrari.run("valkey-kv-test",str(work/"new-valkey"))
+assert result["confirmed"] and len(result["artifacts"])==1
+record=json.loads((work/"new-valkey/valkey-kv-report.json").read_text(encoding="utf-8"))
+assert record["status"]=="completed" and record["ping"]=="PONG"
+assert record["set"] is True and record["get_verified"] is True
+assert record["del_verified"] is True and record["get_after_del"] is None
+assert record["tcp_listener"] is False and record["persistent_daemon"] is False
+assert record["temporary_data_deleted"] is True
+print("FERRARI_PRIVATE_VALKEY_REAL=PASS")
+print("FERRARI_PRIVATE_DOCUMENT_CACHE_SMOKE=PASS")
+FERRARI_DOCUMENT_CACHE_REAL
+fi
+
 if [[ "$MODE" == "--check" ]]; then
   echo FERRARI_RELEASE_NOT_ACTIVATED_CHECK_ONLY
   exit 0
