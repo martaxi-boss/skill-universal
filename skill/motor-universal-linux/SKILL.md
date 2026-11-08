@@ -108,6 +108,17 @@ Quando o utilizador fornece um endereço de site, página ou Reel, a primeira op
 
 Só anunciar preview gerada ou final aprovado depois de verificar URL de origem, execução, ficheiros, voz e direitos de uso.
 
+## Regra de qualidade para trabalhos reais (revisão de 08/11/2026)
+
+**Não confundir sucesso técnico com cumprimento da encomenda.** A auditoria dos trabalhos Low Cost Europa e Matinhos revelou conversões corretas mas sem garantia do produto pedido (um MP4 pode ter áudio silencioso, um HTML pode não estar pronto para telemóvel, e um JSON formatado não comprova que o website usa geolocalização). O dono quer **resultado funcional auditado**, não somente `report.json.status=completed`.
+
+- **Pedidos simples:** usar `kind=invoke` ou `kind=operation`, mas exigir que os ficheiros e a função cumpram o resultado pretendido.
+- **Pedidos complexos, trabalhos multimédia, alterações a websites e decisões com dependências:** a mesma IA anfitriã planeia a equipa e conduz `kind=ruflo-team` com papéis de investigador/arquitecto, executor, tester e revisor de papel diferente, por rondas `start/turn/review/finish`. A IA tem de verificar o conteúdo dos artefactos antes de aprovar; uma chamada a uma ferramenta REA não relacionada com o artefacto NÃO constitui revisão. Sem orquestração externa nem novos agentes LLM residentes.
+- **`kind=ruflo-host`** continua disponível, mas um par de tarefas e papéis registados no Ruflo **não prova revisão**. O modo de revisão técnica `steps[].kind=review` tem de apontar para `input_from` de tarefa anterior e conter `acceptance` com verificações concretas. O relatório distingue claramente tarefas registadas de revisões técnicas verificadas. A verificação automática **não substitui a avaliação crítica pela IA anfitriã**.
+- **Critérios de aceitação no pedido:** para versões do motor E validador da ponte que admitam o campo `acceptance`, usar por exemplo `{"acceptance":{"required_extensions":[".mp4"],"audible_audio":true}}` quando houver locução ou música audível solicitada. O motor recusa áudio ausente/silencioso usando **FFprobe/FFmpeg privados** e não anuncia voz natural só por haver energia acústica. Para trabalho web exigir `{"acceptance":{"browser_evidence":true}}` e revisar as capturas desktop/móvel, cliques, redirecionamentos e layout. Para documentos exigir o(s) formato(s) em `required_extensions`. Não enviar estes novos campos até o validador da ponte estar na versão compatível; primeiro certificar/deploy/pinar a release.
+- **Porta de conclusão:** guardar e ler `report.json.quality_gate`: `passed` é exclusivamente prova dos critérios técnicos definidos; `not_certified` significa que não foram pedidos testes de aceitação semântica; `failed` bloqueia `completed`. Aprovação comercial/visual/urbanística exige inspeção da IA anfitriã, nunca é inferida do ZIP.
+- **Inventário:** `expansion.*.evidence_scope=historical_installation_snapshot` é histórico e `live_revalidated=false`; só `programs[].path`, executabilidade, testes e dependências efetivamente verificadas representam a instalação presente. Não anunciar 173 programas certificados: 173 é o universo catalogado.
+
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
