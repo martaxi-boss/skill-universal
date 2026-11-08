@@ -203,6 +203,34 @@ def _validated_polygon(source: Path) -> tuple[str, float]:
     return wkt, area
 
 
+
+def _single_polygon_area(geometry: dict) -> float:
+    """Independently check one closed Polygon or single-part MultiPolygon."""
+    if not isinstance(geometry, dict):
+        raise RuntimeError("QGIS export geometry is invalid")
+    kind = geometry.get("type")
+    coords = geometry.get("coordinates")
+    if kind == "Polygon":
+        rings = coords
+    elif kind == "MultiPolygon" and isinstance(coords, list) and len(coords) == 1:
+        rings = coords[0]
+    else:
+        raise RuntimeError("QGIS buffer did not export one polygon")
+    if not isinstance(rings, list) or not rings:
+        raise RuntimeError("QGIS polygon ring missing")
+    for ring in rings:
+        if (not isinstance(ring, list) or not 4 <= len(ring) <= 4096
+                or ring[0] != ring[-1]
+                or any(not isinstance(pos, list) or len(pos) < 2
+                       or any(type(v) not in {int, float} or not math.isfinite(v)
+                              for v in pos[:2]) for pos in ring)):
+            raise RuntimeError("QGIS polygon ring not closed or invalid")
+    area = _ring_area(rings[0]) - sum(_ring_area(hole) for hole in rings[1:])
+    if not math.isfinite(area) or area <= 0:
+        raise RuntimeError("QGIS polygon area invalid")
+    return area
+
+
 def qgis_buffer(source: Path, folder: Path):
     """Actually run QGIS native:buffer, with a fixed documented five-metre distance."""
     source = _private_file(source)
@@ -239,14 +267,9 @@ def qgis_buffer(source: Path, folder: Path):
     if not isinstance(features, list) or len(features) != 1:
         raise RuntimeError("QGIS GeoJSON output has unexpected feature count")
     geom = features[0].get("geometry", {})
-    if geom.get("type") != "Polygon":
-        raise RuntimeError("QGIS buffer did not export a polygon")
-    rings = geom.get("coordinates")
-    if not isinstance(rings, list) or not rings or len(rings[0]) < 4:
-        raise RuntimeError("QGIS polygon ring missing")
-    if rings[0][0] != rings[0][-1]:
-        raise RuntimeError("QGIS polygon ring not closed")
-    area_out = _ring_area(rings[0]) - sum(_ring_area(hole) for hole in rings[1:])
+    # QGIS/GeoJSON exporters may legally promote a polygon buffer to a
+    # single MultiPolygon. Both are accepted; complex unions are rejected.
+    area_out = _single_polygon_area(geom)
     if not (math.isfinite(area_out) and area_out > area_in):
         raise RuntimeError("QGIS buffer geometry failed independent area check")
     record = {"status": "completed", "program": "qgis",
