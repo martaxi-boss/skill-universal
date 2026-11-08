@@ -41,7 +41,7 @@
 **F11 — PDAL LAS funcional certificado:** [VPS #42317695882](https://github.com/martaxi-boss/VPS/actions/runs/42317695882) PASS: TXT→LAS→TXT, 5 pontos, cabeçalho LAS de 327 bytes e coordenadas revalidadas, 8/8 serviços. Não certifica HDF/Icebridge nem todos os formatos PDAL. [Relatório F11](docs/FASE11_PDAL_LAS_REAL_20261107.md).
 
 
-**Ponto 7 — Ruflo assistido (prova parcial da equipa obrigatória):** [#42216565299](https://github.com/martaxi-boss/VPS/actions/runs/42216565299) registou dois papéis, duas tarefas e executou jq/REA privados; [Skill→ZIP #42218479317](https://github.com/martaxi-boss/VPS/actions/runs/42218479317) PASS na release anterior `f1f3b03525adec7018d7d629243e7b0fbb7f5087`. Inferência LLM autónoma não certificada; sem segundo coordenador. [Contrato](docs/RUFLO_SINGLE_HOST_CERT_20261106.md).
+**Ponto 7 — Ruflo assistido (prova parcial da equipa obrigatória):** [#42216565299](https://github.com/martaxi-boss/VPS/actions/runs/42216565299) registou dois papéis, duas tarefas e executou jq/REA privados; [Skill→ZIP #42218479317](https://github.com/martaxi-boss/VPS/actions/runs/42218479317) PASS na release anterior `f1f3b03525adec7018d7d629243e7b0fbb7f5087`. Sem modelo autónomo por agente, por conceção; sem segundo coordenador. [Contrato](docs/RUFLO_SINGLE_HOST_CERT_20261106.md).
 
 ## 1. Decisão permanente — UMA ÚNICA SKILL
 
@@ -102,7 +102,7 @@ O workflow manual de deploy do repositório Ferrari mantém as fases **PRECHECK,
 
 ## 5. Pendências prioritárias
 
-1. **BLOQUEIO FUNCIONAL DA EQUIPA:** implementar e provar o circuito anfitrião → Ruflo sub-anfitrião → subagentes com raciocínio por papel partilhando uma IA anfitriã → colaboração real → ferramentas Ferrari/REA → revisão e entrega. Estado: **OBRIGATÓRIO, NÃO CERTIFICADO**; papéis registados não bastam.
+1. **EQUIPA COM IA ANFITRIÃ — CERTIFICADA NOS TESTES REALIZADOS:** anfitrião partilhado → Ruflo → papéis especializados → ferramentas Ferrari/REA → rejeição, repetição e revisão distinta → aprovação final. Prova real [#42509439220](https://github.com/martaxi-boss/VPS/actions/runs/42509439220). **Autonomia LLM por agente não é exigida nem está pendente.**
 2. **Sincronia de estado:** aferir por pedido de inventário somente de leitura a release realmente ativa, número atual de ações e executores privados; comparar com GitHub e com o pin do validador.
 3. **Entrega da única Skill:** atualizar e validar SKILL.md e referências portáteis; empacotar skill.zip; verificar separadamente se a versão nova foi instalada no ChatGPT. Repo atualizado não prova cliente atualizado.
 4. **Higienização segura:** classificar binários, venvs, APT globais, fornecedores e resíduos por propriedade; eliminar apenas ficheiros exclusivos com prova e rollback, sem mexer em projetos alheios.
@@ -113,7 +113,7 @@ Não declarar cobertura universal de todas as tarefas, fornecedores e formatos s
 
 ## 6. Execução, segurança e recuperação
 
-- Os tipos implementados no executor são **inventory, operation, invoke, auto, plan, rea-mcp e ruflo-host**; a Skill instalada no ChatGPT pode continuar desatualizada. Consultar [references/github-bridge.md](skill/motor-universal-linux/references/github-bridge.md) antes de emitir um pedido.
+- Os tipos implementados no executor são **inventory, runtime-check, operation, invoke, auto, plan, rea-mcp, ruflo-host e ruflo-team**; a mesma Skill está na versão v1.0.16, sujeita a readback após publicação. Consultar [references/github-bridge.md](skill/motor-universal-linux/references/github-bridge.md) antes de emitir um pedido.
 - Criar apenas JSON de pedido novo, sem segredos ou dados pessoais em repositório público; base64 não é encriptação. Identificar run pelo commit correspondente e exigir response.zip, report.json, status completed e ficheiros reais.
 - Na VPS, usar o Ferrari e SSH existentes, sem comandos arbitrários enviados em pedidos e sem instalar fora de /srv/projects/skill-universal. O workflow manual de deploy não deve repetir instalações existentes por defeito.
 - Preservar sempre checkpoints e fallback antes de qualquer alteração com impacto operacional.
