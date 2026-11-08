@@ -9,7 +9,7 @@ revisão #42526667840 e [fecho #42526730098](https://github.com/martaxi-boss/VPS
 PASS, um STL 40×30×12 mm/furo ~10 mm, `status=completed`.
 Catálogo **458 entradas, 280 funções** preservado.
 [Provas, contrato e limites](docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
-A Skill mantém a identidade **v1.0.21**; confirmar instalação ChatGPT à parte.
+**Skill ChatGPT v1.0.21:** [Motor Ferrari — instalação original](https://chatgpt.com/plugins/Plugin_b62aaa180b308191b124269fd0acbf9d). **Para futuras atualizações:** usar este ID, sem criar outro plugin.
 
 **Histórico:** release anterior `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`
 e fallback então `427e1c33c6d10ca8ecd2103861adccd3d552c381`:
@@ -19,7 +19,7 @@ autonomia LLM sem anfitriã NÃO FAZ PARTE do produto.
 
 **F12–F14 (08/11):** [F12](docs/FERRARI_F12_HIGIENE_E_CERTIFICACAO_REAL_20261108.md): FreeCAD e yt-dlp PASS; [F13](docs/FERRARI_F13_OPENSHOT_REAL_20261108.md): OpenShot PASS; [F14 #42515392261](https://github.com/martaxi-boss/VPS/actions/runs/42515392261): SolveSpace SVG e Synfig PNG PASS; [OBS #42516534292](https://github.com/martaxi-boss/VPS/actions/runs/42516534292): MP4 400 frames/13,33s finalizado por FFmpeg PASS; MKV nativo incompleto. Audacity 4 sem automação certificada. **8/8 serviços, catálogo inalterado.** [F14](docs/FERRARI_F14_GUI_CERTIFICACOES_FINAL_20261108.md).
 
-**Provas históricas (NÃO ATIVAS):** [Ruflo #42218479317](https://github.com/martaxi-boss/VPS/actions/runs/42218479317); [F10 inventário #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715), release 205c6f0e e fallback 7bf6dcec; [ativação #42314959728](https://github.com/martaxi-boss/VPS/actions/runs/42314959728) e [higiene #42315724016](https://github.com/martaxi-boss/VPS/actions/runs/42315724016).
+**Provas históricas (NÃO ATIVAS):** Ruflo #42218479317; F10 #42297678715 (release 205c6f0e/fallback 7bf6dcec); ativação #42314959728; higiene #42315724016. Consultar GitHub Actions e relatórios históricos.
 
 **Vozes:** Piper original e Raquel; ver Skill.
 
