@@ -6,6 +6,7 @@
 - [CI #42507144652](https://github.com/martaxi-boss/skill-universal/actions/runs/42507144652) e [PR CI #42507148200](https://github.com/martaxi-boss/skill-universal/actions/runs/42507148200): PASS; testes de inputs inválidos, fuga de projeto, ausência de shell, limite temporal e rollback.
 - [Pré-teste privado VPS #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090): 532 regressões PASS, 40/40 ações, parsing real `promtool check rules` sobre regras sintéticas (`FERRARI_PRIVATE_PROMETHEUS_RULES_REAL=PASS`), versão ativa mantida, 8/8 serviços.
 - [Ativação protegida VPS #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402): repetição dos testes, `FERRARI_RELEASE_SWITCH=PASS`, versão ativa confirmada `3f0ba44b...`, fallback `427e1c33...`, `FERRARI_PROMRULES_ACTIVE_51_CALLABLE=PASS`, oito serviços ativos e zero reinstalações.
+- [Execução real pela ponte Skill #42507884892](https://github.com/martaxi-boss/VPS/actions/runs/42507884892): pedido `prometheus-rule-check` ao motor ativo, `FERRARI_SKILL_JOB_STATUS=completed`, `FERRARI_SKILL_END_TO_END=PASS`, `report.json.quality_gate.status=passed`. ZIP descarregado/aberto: `promtool-check.txt` contém `SUCCESS: 1 rules found`; `prometheus-rules-report.json` confirma 1 regra, executável privado e SHA-256 da evidência correspondente (`a942baf90da7348473476cc8ca5600b26ae0c7ec7b725f5f4a6c56dedb4d2bc4`).
 - Ponte Skill original alinhada em [PR VPS #405](https://github.com/martaxi-boss/VPS/pull/405); conexão SSH e identidade de host inalteradas.
 
 ## Único catálogo
