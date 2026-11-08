@@ -115,7 +115,12 @@ class RufloCatalogOperationTests(unittest.TestCase):
             engine.assert_called_once()
         self.assertEqual(result["tool_calls_verified"], 1)
         self.assertEqual(result["tasks"]["cad"], "awaiting_review")
+        self.assertEqual(len(result["verified_tool_events"]), 1)
+        self.assertEqual(result["verified_tool_events"][0]["catalog_action"],
+                         "operation:cad-stl")
         evidence = self.journal()["tasks"]["cad"]["evidence"]
+        self.assertEqual(result["verified_tool_events"][0]["evidence_sha256"],
+                         [evidence[0]["sha256"]])
         self.assertEqual(len(evidence), 1)
         path = Path(evidence[0]["path"])
         self.assertEqual(path.suffix, ".stl")
