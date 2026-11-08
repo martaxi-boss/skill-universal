@@ -21,7 +21,7 @@ import re
 import shutil
 import tempfile
 
-from engine import ruflo_host, tool_runtime, rea_mcp
+from engine import ferrari, ruflo_host, tool_runtime, rea_mcp
 
 HOME = Path("/srv/projects/skill-universal")
 SESSION_PARENT = HOME / ".runtime" / "ruflo-team-sessions"
@@ -91,7 +91,10 @@ def validate_job(doc):
                     any(not isinstance(a, str) for a in actions) or len(actions) != len(set(actions))):
                 raise ValueError("Invalid role action allowlist")
             available = tool_runtime.specs()
-            if any(a not in available and a != "rea-mcp" for a in actions):
+            if any(a not in available and a != "rea-mcp"
+                   and (not a.startswith("operation:")
+                        or a[len("operation:"):] not in ferrari.OPS)
+                   for a in actions):
                 raise ValueError("Role can only use Ferrari catalog actions")
             seen_roles.add(rid)
         seen_tasks = set()
@@ -148,6 +151,8 @@ def validate_job(doc):
             base = {"task", "role", "kind", "message"}
             if kind == "invoke":
                 allowed = base | {"action", "input_from", "query"}
+            elif kind == "operation":
+                allowed = base | {"operation", "input_from", "title", "layout"}
             elif kind == "rea-mcp":
                 allowed = base | {"mcp_requests"}
             elif kind == "submit":
@@ -170,6 +175,21 @@ def validate_job(doc):
             if kind == "invoke" and (not isinstance(turn.get("action"), str)
                                       or turn["action"] not in tool_runtime.specs()):
                 raise ValueError("Unknown Ferrari action")
+            if kind == "operation":
+                operation = turn.get("operation")
+                if not isinstance(operation, str) or operation not in ferrari.OPS:
+                    raise ValueError("Unknown Ferrari catalog operation")
+                if "title" in turn and not _text(turn["title"], 120):
+                    raise ValueError("Invalid Ferrari operation title")
+                if "layout" in turn and (not isinstance(turn["layout"], str)
+                                         or turn["layout"] not in ferrari.LAYOUTS):
+                    raise ValueError("Unknown Ferrari operation layout")
+                no_source = {"web-template", "svg-poster", "blender-house",
+                             "godot-starter", "valkey-kv-test"}
+                if operation not in no_source and not isinstance(turn.get("input_from"), str):
+                    raise ValueError("Ferrari operation requires input_from")
+                if operation in no_source - {"web-template"} and "input_from" in turn:
+                    raise ValueError("Ferrari generator does not accept input_from")
     else:
         raise ValueError("Unknown Ruflo team phase")
     return True
@@ -369,7 +389,14 @@ def _status(state):
             "reviews_recorded": state["reviews_recorded"],
             "autonomous_agent_model_calls": 0,
             "host_reasoning_mode": "external_host_rounds_only",
-            "ruflo_session_mode": "ephemeral_per_round"}
+            "ruflo_session_mode": "ephemeral_per_round",
+            "verified_tool_events": [
+                {"task": event["task"], "role": event["role"],
+                 "catalog_action": event["catalog_action"],
+                 "evidence_sha256": event["evidence_sha256"]}
+                for event in state.get("history", [])
+                if "catalog_action" in event
+            ][-MAX_TASKS:]}
 
 
 def _export(state, dest, extra=()):
@@ -471,16 +498,21 @@ def run(doc, dest, uploaded=None):
                 raise ValueError("Turn does not belong to ready agent")
             if any(state["tasks"][d]["status"] != "approved" for d in task["depends_on"]):
                 raise ValueError("Task dependencies are not independently approved")
-        if turn["kind"] == "invoke":
+        if turn["kind"] in {"invoke", "operation"}:
             role = state["roles"][turn["role"]]
-            action = turn["action"]
+            action = (turn["action"] if turn["kind"] == "invoke"
+                      else "operation:" + turn["operation"])
             if action not in role["actions"]:
                 raise ValueError("Ferrari tool not authorized for this agent")
-            spec = tool_runtime.specs()[action]
-            query = turn.get("query")
-            if ("{query}" in spec["args"]) != (isinstance(query, str) and _text(query, 200)):
-                raise ValueError("Ferrari tool query requirements not met")
-            source = _stage_input(state, task, turn.get("input_from", "$input"), folder)
+            if turn["kind"] == "invoke":
+                spec = tool_runtime.specs()[action]
+                query = turn.get("query")
+                if ("{query}" in spec["args"]) != (isinstance(query, str) and _text(query, 200)):
+                    raise ValueError("Ferrari tool query requirements not met")
+                source = _stage_input(state, task, turn.get("input_from", "$input"), folder)
+            else:
+                source = (_stage_input(state, task, turn["input_from"], folder)
+                          if "input_from" in turn else None)
         else:
             source = None
         if turn["kind"] == "rea-mcp" and "rea-mcp" not in state["roles"][turn["role"]]["actions"]:
@@ -488,13 +520,13 @@ def run(doc, dest, uploaded=None):
         # Journal the running stage before side effects. An interrupted tool may
         # NOT be replayed until explicit recovery acknowledges duplicate risk.
         stage = folder / "work" / (task["id"] + "-" + str(state["revision"]))
-        if turn["kind"] in {"invoke", "rea-mcp", "submit"}:
+        if turn["kind"] in {"invoke", "operation", "rea-mcp", "submit"}:
             stage.parent.mkdir(mode=0o700, exist_ok=True)
             if (stage.parent.is_symlink() or
                     not stage.parent.resolve(strict=True).is_relative_to(folder.resolve(strict=True)) or
                     stage.is_symlink() or stage.exists()):
                 raise RuntimeError("Unsafe or duplicate Ferrari team stage")
-        if turn["kind"] in {"invoke", "rea-mcp"}:
+        if turn["kind"] in {"invoke", "operation", "rea-mcp"}:
             task["status"] = "failed"
             _atomic(folder / "state.json", state)
         extra = []
@@ -502,6 +534,12 @@ def run(doc, dest, uploaded=None):
             with _ruflo_ledger(state, task["id"], turn["role"]) as (client, ruflo_task):
                 if turn["kind"] == "invoke":
                     answer = tool_runtime.invoke(turn["action"], source, str(stage), query)
+                    evidence = _verified_artifacts(answer, stage)
+                    extra = [e["path"] for e in evidence]
+                elif turn["kind"] == "operation":
+                    answer = ferrari.run(turn["operation"], str(stage), source=source,
+                                         title=turn.get("title", "Ferrari Skill"),
+                                         layout=turn.get("layout", "landing"))
                     evidence = _verified_artifacts(answer, stage)
                     extra = [e["path"] for e in evidence]
                 elif turn["kind"] == "rea-mcp":
@@ -519,12 +557,12 @@ def run(doc, dest, uploaded=None):
                     extra = [str(note)]
                 else:
                     evidence = task["evidence"]
-                if turn["kind"] in {"invoke", "rea-mcp", "submit"}:
+                if turn["kind"] in {"invoke", "operation", "rea-mcp", "submit"}:
                     task["status"] = "awaiting_review"
                     task["evidence"] = evidence
-                    task["evidence_kind"] = "tool" if turn["kind"] in {"invoke", "rea-mcp"} else "host_note"
+                    task["evidence_kind"] = "tool" if turn["kind"] in {"invoke", "operation", "rea-mcp"} else "host_note"
                     task["summary"] = turn["message"]
-                    if turn["kind"] in {"invoke", "rea-mcp"}:
+                    if turn["kind"] in {"invoke", "operation", "rea-mcp"}:
                         state["tool_calls_verified"] += 1
                         client.tool("task_complete", {"taskId": ruflo_task,
                             "result": {"verified_tool_artifacts": [e["sha256"] for e in evidence],
@@ -541,12 +579,19 @@ def run(doc, dest, uploaded=None):
                                       "evidence_sha256": turn["evidence_sha256"]}
                     state["reviews_recorded"] += 1
             state["revision"] += 1
-            state["history"].append({"at": _now(), "event": turn["kind"],
-                   "task": task["id"], "role": turn["role"], "message": turn["message"][:240]})
+            event = {"at": _now(), "event": turn["kind"],
+                     "task": task["id"], "role": turn["role"],
+                     "message": turn["message"][:240]}
+            if turn["kind"] in {"invoke", "operation", "rea-mcp"}:
+                event["catalog_action"] = (turn["action"] if turn["kind"] == "invoke"
+                                            else "operation:" + turn["operation"]
+                                            if turn["kind"] == "operation" else "rea-mcp")
+                event["evidence_sha256"] = [entry["sha256"] for entry in evidence]
+            state["history"].append(event)
             _atomic(folder / "state.json", state)
             return _export(state, dest, extra)
         except Exception:
-            if turn["kind"] in {"invoke", "rea-mcp"}:
+            if turn["kind"] in {"invoke", "operation", "rea-mcp"}:
                 task["status"] = "failed"
                 state["revision"] += 1
                 state["history"].append({"at": _now(), "event": "execution_failed",
