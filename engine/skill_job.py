@@ -169,7 +169,8 @@ def execute(data, outdir):
             output=dest/"runtime-check.json"
             output.write_text(json.dumps(check,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
             response={"confirmed":True,"artifacts":[str(output)],
-                      "executor":"ferrari-private-version-smoke","operation":"runtime-check"}
+                      "executor":"ferrari-private-version-smoke","operation":"runtime-check",
+                      "all_checks_passed":check["status"]=="passed"}
         elif kind=="operation":
             response=ferrari.run(data["operation"],str(dest),source=str(src) if src else None,
                                  title=data.get("title","Ferrari Skill"),layout=data.get("layout","landing"))
@@ -238,6 +239,8 @@ def execute(data, outdir):
         result["quality_gate"]=quality_gate.inspect(files,data.get("acceptance"))
         if result["quality_gate"]["status"] == "failed":
             raise RuntimeError("Ferrari acceptance failed: " + "; ".join(result["quality_gate"]["failures"])[:700])
+        if kind=="runtime-check" and not response.get("all_checks_passed"):
+            raise RuntimeError("Ferrari support program startup check failed; inspect runtime-check.json")
         result["executor"]=response.get("executor")
         result["operation"]=response.get("operation",response.get("action",kind))
         result["status"]="completed"
