@@ -114,8 +114,11 @@ def inspect(files, acceptance=None):
             failures.append("Empty or nonregular Ferrari artifact")
             continue
         ext = p.suffix.lower()
-        if ext == ".pdf" and not p.open("rb").read(5) == b"%PDF-":
-            failures.append("Invalid PDF signature")
+        if ext == ".pdf":
+            with p.open("rb") as handle:
+                signature = handle.read(5)
+            if signature != b"%PDF-":
+                failures.append("Invalid PDF signature")
         if ext == ".png":
             with p.open("rb") as handle:
                 head = handle.read(24)
