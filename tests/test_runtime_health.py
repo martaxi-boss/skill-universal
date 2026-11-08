@@ -111,6 +111,8 @@ class PrivateRuntimeHealthTests(unittest.TestCase):
         self.assertEqual(len(all_ids),173)
         self.assertEqual(len(records),173)
         self.assertEqual({x["id"] for x in records},all_ids)
+        self.assertNotIn("REA",{x["id"] for x in records})
+        self.assertIn("rea",{x["id"] for x in records})
         self.assertEqual(observed["programs_catalogued"],173)
         self.assertEqual(observed["programs_preflighted"],173)
         unadmitted=[x for x in catalogue["tools"] if
