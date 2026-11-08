@@ -33,7 +33,8 @@ class FerrariF14ClosureDocs(unittest.TestCase):
     def test_same_plugin_identity_version(self):
         import json
         manifest=json.loads((ROOT/"packaging/motor-ferrari/plugin.json").read_text())
-        self.assertEqual(manifest["version"],"1.0.20")
+        self.assertGreaterEqual(tuple(map(int, manifest["version"].split("."))), (1, 0, 20))
+        self.assertIn("v" + manifest["version"], (ROOT/"skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8"))
         self.assertEqual(manifest["name"],"motor-universal-linux")
 
 if __name__=="__main__":
