@@ -1,5 +1,14 @@
 # Ferrari: adaptadores de programas — prova real e fila restante (08/11/2026)
 
+## Auditoria final da segunda vaga — inventário corrigido
+
+- **Release ativa** `cde16ce5debfbd247decac800ce47bfeed36adaa`; **fallback** `a44bebc0018dec38f659a8ed859e92ba0522c365`. [Pré-teste protegido #42497258398](https://github.com/martaxi-boss/VPS/actions/runs/42497258398) **PASS** sem alterar produção; [ativação #42497376684](https://github.com/martaxi-boss/VPS/actions/runs/42497376684) **PASS**, com **525 testes**, 40 ações e 8 serviços, Docling/Valkey reais e leitura da release+rollback.
+- A correção da deteção de Docling instalado como *módulo Python* passou o teste de regressão, e a VPS confirmou `FERRARI_PRIVATE_DOCLING_INVENTORY_CALLABLE=PASS`; não foi instalada segunda cópia do programa.
+- [Auditoria Skill→GitHub→VPS→ZIP #42497575120](https://github.com/martaxi-boss/VPS/actions/runs/42497575120) **completed**: catálogo universal **173 programas + 279 funções + 3 dependências + 2 fornecedores = 457 entradas**, 73 programas detectados, **50 callable**, **19 installed_unintegrated**, 34 not_detected, 67 candidatos não admitidos e 3 runtimes verificados. O relatório de inventário foi pedido sem *acceptance* específica, pelo que o `quality_gate` é `not_certified`; o próprio JSON e os estados foram lidos e comparados independentemente. Não confundir um inventário válido com certificação semântica de cada programa.
+- Skill cliente v1.0.13 é **atualização in-place da identidade workspace original**, não nova Skill. Restantes 19 devem ser integrados só com ações concretas, ou reconhecidos como bibliotecas/serviços usados indiretamente quando houver prova.
+
+
+
 ## Segunda vaga certificada — Docling e Valkey (08/11/2026)
 
 - **Ferrari ativo:** `a44bebc0018dec38f659a8ed859e92ba0522c365`; fallback imediato `df0ac55dcb93003ea672abaa5deba8ea9e49ebe8`. **Um catálogo:** 173 programas, 279 funções (19 operações + 40 ações + 220 REA), 3 dependências e 2 fornecedores = **457 entradas**, sem duplicar ferramentas ou Python.
