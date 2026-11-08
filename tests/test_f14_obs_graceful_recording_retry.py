@@ -1,6 +1,7 @@
 """F14 OBS closure retry: secure private process group and real decoded video evidence."""
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
@@ -34,9 +35,11 @@ class F14OBSRetry(unittest.TestCase):
             self.assertNotIn(forbidden,text)
 
     def test_obs_only_signalled_after_validating_project_process(self):
-        with patch.object(m,"ROOT",Path("/tmp/ferrari-root")):
-            # Nonmatching processes cannot be selected for signalling.
-            with patch.object(m.Path,"iterdir",return_value=[]):
+        with TemporaryDirectory() as td:
+            root=Path(td)
+            (root/"tools/obs-studio-32.2.2").mkdir(parents=True)
+            with patch.object(m,"ROOT",root):
+                # Impossible process group cannot match a private executable.
                 self.assertEqual(m.obs_process_in_group(1234567),[])
         self.assertEqual(m.SERVICES[0],"pink-iptv-backend")
 
