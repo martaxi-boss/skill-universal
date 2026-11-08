@@ -71,7 +71,7 @@ jobs:
           assert all(re.fullmatch('[a-f0-9]{64}',keys[x]['sha256']) for x in ('ghidra','jadx'))
           from engine import catalog_registry
           raw=json.loads(Path('engine/catalog.json').read_text())
-          assert len(raw['functions']) == 274
+          assert len(raw['functions']) == 277
           assert 'actions' not in raw
           assert 'names' not in raw['mcp_capabilities']
           assert all('base_operations' not in t for t in raw['tools'])
@@ -87,7 +87,7 @@ jobs:
           assert 'excluded_paid_or_demo_mcp_capabilities' not in catalog['counts']
           assert catalog['counts']['mcp_source_advertised'] == 229
           assert len(catalog['mcp_capabilities']['names']) == 220
-          assert catalog['counts']['all_catalog_entries'] == 452
+          assert catalog['counts']['all_catalog_entries'] == 455
           assert catalog['counts']['unique_tools'] == 173
           assert catalog['counts']['upstream_registry'] == 122
           assert all(t['id'] not in ('nmap', 'vscode') for t in catalog['tools'])
