@@ -209,7 +209,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         functions = result["functions"]
         self.assertEqual(len(functions), 280)
         self.assertEqual(result["counts"]["functions_registered"], 280)
-        self.assertEqual(result["counts"]["functions_from_base_operations"], 19)
+        self.assertEqual(result["counts"]["functions_from_base_operations"], 20)
         self.assertEqual(result["counts"]["functions_from_typed_actions"], 40)
         self.assertEqual(result["counts"]["functions_from_rea_mcp"], 220)
         self.assertEqual(len({item["id"] for item in functions}), len(functions))
