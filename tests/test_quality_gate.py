@@ -91,24 +91,50 @@ class AcceptanceTests(unittest.TestCase):
                     self.assertTrue(next(c for c in passed["checks"]
                                          if c["check"] == "audible-audio")["audible"])
 
-    def test_browser_evidence_must_include_both_viewports(self):
+    def test_browser_evidence_requires_real_browser_results_not_just_png_and_json(self):
         with TemporaryDirectory() as folder:
-            p = Path(folder) / "site.html"
+            p=Path(folder)/"site.html"
             p.write_text("<html></html>")
-            missing = quality_gate.inspect([p], {"browser_evidence": True})
-            self.assertEqual(missing["status"], "failed")
-            report = Path(folder) / "browser-check.json"
-            report.write_text(json.dumps({"status": "passed"}))
-            files = [p, report]
-            for name in ("desktop.png", "mobile.png"):
-                image = Path(folder) / name
-                image.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 8
-                                  + (320).to_bytes(4, "big")
-                                  + (240).to_bytes(4, "big"))
+            missing=quality_gate.inspect([p],{"browser_evidence":True})
+            self.assertEqual(missing["status"],"failed")
+            report=Path(folder)/"browser-check.json"
+            report.write_text(json.dumps({"status":"passed"}))
+            files=[p,report]
+            png_header=bytes.fromhex("89504e470d0a1a0a")+"0".encode()*8+(320).to_bytes(4,"big")+(240).to_bytes(4,"big")
+            for name in ("browser-screenshot.png","browser-mobile.png"):
+                image=Path(folder)/name
+                image.write_bytes(png_header+b"other image bytes")
                 files.append(image)
-            verified = quality_gate.inspect(files, {"browser_evidence": True})
-            self.assertEqual(verified["status"], "passed")
-            self.assertTrue(verified["warnings"])
+            false_positive=quality_gate.inspect(files,{"browser_evidence":True})
+            self.assertEqual(false_positive["status"],"failed")
+            self.assertTrue(any("Mobile" in x or "Playwright" in x for x in false_positive["failures"]))
+            valid={
+                "status":"passed",
+                "viewport":{"width":1280,"height":720},
+                "body_text_chars":50,"dom_ready":"complete",
+                "mobile":{"viewport":{"width":390,"height":844},
+                          "viewport_meta_present":True,
+                          "horizontal_overflow_px":0,
+                          "spotcheck_status":"clear","findings":[]},
+                "interactions":{"status":"clear","findings":[]},
+                "page_errors":[],"console_errors":[],"blocked_external":[]
+            }
+            report.write_text(json.dumps(valid))
+            success=quality_gate.inspect(files,{"browser_evidence":True})
+            self.assertEqual(success["status"],"passed",success)
+            self.assertTrue(success["warnings"])
+            for edit in (
+                {"mobile":{**valid["mobile"],"horizontal_overflow_px":215}},
+                {"mobile":{**valid["mobile"],"spotcheck_status":"findings",
+                            "findings":["Horizontal overflow"]}},
+                {"interactions":{"status":"findings","findings":["Tab did not move"]}},
+                {"blocked_external":["https://invalid.example/script.js"]},
+                {"console_errors":["Uncaught error"]},
+            ):
+                report.write_text(json.dumps({**valid,**edit}))
+                rejected=quality_gate.inspect(files,{"browser_evidence":True})
+                self.assertEqual(rejected["status"],"failed",edit)
+
 
 
 class _FakeMCP:

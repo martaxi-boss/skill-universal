@@ -10,7 +10,7 @@ import json
 import importlib.util
 import os
 from pathlib import Path
-from engine import runtime_discovery, catalog_registry
+from engine import runtime_discovery, catalog_registry, runtime_health
 import re
 import shutil
 import subprocess
@@ -192,11 +192,20 @@ def shared_dependencies(catalog):
             raise ValueError("Ferrari shared dependency outside project")
         present=(candidate.is_file() and os.access(candidate,os.X_OK))
         callers=[t["id"] for t in catalog["tools"] if name in t.get("requires",[])]
-        records.append({"id":name,"version":entry["version"],
-                        "path":str(candidate),"reuse_key":key,
-                        "required_by":callers,"present":present,
-                        "status":"present_unverified" if present else "not_detected",
-                        "compatibility_certified":False})
+        record={"id":name,"version":entry["version"],
+                "path":str(candidate),"reuse_key":key,
+                "required_by":callers,"present":present,
+                "status":"present_unverified" if present else "not_detected",
+                "compatibility_certified":False}
+        # Only fixed, whitelisted, project-private execution smoke tests.
+        # A version/standard-library probe does NOT certify third-party ABI
+        # compatibility. Preserve that distinction in the returned report.
+        if name in runtime_health.COMMANDS:
+            evidence=runtime_health.probe_dependency(record,HOME)
+            record["runtime_probe"]=evidence
+            if evidence["runtime_smoke_pass"]:
+                record["status"]="runtime_smoke_pass"
+        records.append(record)
     return records
 
 
@@ -205,7 +214,10 @@ def inventory():
     selected=[x["ubuntu"] for x in sorted(
         (x for x in catalog["tools"] if "ubuntu" in x),
         key=lambda x:x["ubuntu_order"])]
-    helpers=[x["core"] for x in sorted(
+    # Resolve historical core display aliases through the canonical tool ID.
+    # In particular, old "REA" is an alias of the existing lowercase "rea",
+    # NOT a second tool or an uninstalled programme.
+    helpers=[{**x["core"],"id":x["id"]} for x in sorted(
         (x for x in catalog["tools"] if "core" in x),
         key=lambda x:x["core_order"])]
     defined=specs()
@@ -213,10 +225,21 @@ def inventory():
     python=ecosystems["python"]["tools"]
     npm=ecosystems["npm"]["tools"]
     containers=ecosystems["containers"]["tools"]
+    dependencies=shared_dependencies(catalog)
+    # The auxiliary catalogue previously called Python, Node and Java
+    # "not detected" even though these are Ferrari-owned shared runtimes.
+    # Expose verified runtime dependencies WITHOUT inventing a typed action.
+    runtime_aliases={"python":"python-3.12", "node":"node-22", "java":"java-25"}
+    runtime_index={x["id"]:x for x in dependencies}
     def inspect(entry,source):
         tool=entry["id"]
         base_bin=entry.get("bin") or BINARIES.get(tool,tool)
         path=executable(tool,base_bin)
+        dependency=runtime_index.get(runtime_aliases.get(tool))
+        runtime_verified=bool(dependency and
+                              dependency.get("runtime_probe",{}).get("runtime_smoke_pass"))
+        if not path and runtime_verified:
+            path=dependency["path"]
         module_evidence=python.get(tool) if not path else None
         npm_evidence=npm.get(tool) if not path and not module_evidence else None
         container_evidence=containers.get(tool) if not path and not module_evidence and not npm_evidence else None
@@ -234,14 +257,22 @@ def inventory():
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
         present=bool(path or evidence or builtin)
-        state=("callable" if callable_ops or base_ops else
+        state=("candidate_not_admitted" if entry.get("admission")=="upstream_candidate_unverified" else
+               "callable" if callable_ops or base_ops else
+               "runtime_dependency_verified" if runtime_verified else
                "installed_unintegrated" if present else "not_detected")
-        detection=("executable" if path else "python_module" if module_evidence else
+        detection=("private_runtime_smoke" if runtime_verified else
+                   "executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
                    "ferrari_cpu_source" if source_evidence else "ferrari_builtin" if builtin else None)
-        return {"id":tool,"category":entry["category"],"source":source,"installed":present,
+        return {"id":tool,"category":entry["category"],"source":source,
+                "admission":entry.get("admission"),"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,
+                "runtime_probe":dependency.get("runtime_probe") if runtime_verified else None,
+                "integration_role":("shared_runtime" if runtime_verified else
+                                    "direct_action" if callable_ops or base_ops else
+                                    "installed_support_only" if present else "not_detected"),
                 "actions":callable_ops,"base_operations":base_ops,
                 "installation_tier":entry.get("installation_tier"),
                 "apt_candidate":entry.get("installation_candidate"),
@@ -249,6 +280,20 @@ def inventory():
     records=[inspect(x,"shortlist_56") for x in selected]
     used={x["id"] for x in selected}
     records.extend(inspect(x,"auxiliary_catalogue") for x in helpers if x["id"] not in used)
+    used={p["id"] for p in records}
+    # The previous inventory silently excluded ~67 tools present only as
+    # upstream candidates. Cover EVERY tool in the ONE universal catalogue
+    # without falsely treating an upstream wish-list as installed or approved.
+    for entry in catalog["tools"]:
+        if entry["id"] not in used:
+            record=dict(entry)
+            record["bin"]=record.get("default_binary",entry["id"])
+            records.append(inspect(record,"upstream_candidate" if
+                                   entry.get("admission")=="upstream_candidate_unverified"
+                                   else "additional_catalogue"))
+            used.add(entry["id"])
+    if len(records)!=len(catalog["tools"]) or len(used)!=len(records):
+        raise ValueError("Ferrari universal program catalogue inventory coverage mismatch")
     picked=records[:len(selected)]
     absent=[p for p in picked if not p["installed"]]
     missing_by_tier={}
@@ -282,7 +327,14 @@ def inventory():
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
-            "shared_dependencies":shared_dependencies(catalog),
+            "programs_catalogued":len(catalog["tools"]),
+            "programs_preflighted":len(records),
+            "upstream_candidates_not_admitted":sum(
+                x["status"]=="candidate_not_admitted" for x in records),
+            "upstream_candidates_detected":sum(
+                x["status"]=="candidate_not_admitted" and x["installed"]
+                for x in records),
+            "shared_dependencies":dependencies,
             "note":"Read-only Ferrari-private program discovery. Functions share one universal catalog; distinct execution routes retain validation. Discovery is not certification."}
 
 def unified_catalog(*, inventory_now=None):

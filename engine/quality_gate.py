@@ -154,22 +154,48 @@ def inspect(files, acceptance=None):
                         failures.append("Audio acceptance could not be certified: " + str(exc)[:180])
         if policy.get("browser_evidence"):
             reports = [p for p in paths if p.name == "browser-check.json"]
-            mobile = [p for p in paths if "mobile" in p.name.lower() and p.suffix.lower() == ".png"]
-            desktop = [p for p in paths if "desktop" in p.name.lower() and p.suffix.lower() == ".png"]
+            mobile = [p for p in paths if p.name == "browser-mobile.png"]
+            desktop = [p for p in paths if p.name == "browser-screenshot.png"]
             passed = bool(reports and mobile and desktop)
+            issues = []
             if passed:
                 try:
-                    content = json.loads(reports[0].read_text(encoding="utf-8"))
-                    passed = isinstance(content, dict)
-                except (OSError, ValueError, UnicodeError):
-                    passed = False
-            checks.append({"check": "browser-evidence",
-                           "status": "passed" if passed else "failed",
-                           "note": "Screenshots are evidence, not a guarantee of visual or click correctness"})
+                    evidence = json.loads(reports[0].read_text(encoding="utf-8"))
+                    m = evidence.get("mobile", {})
+                    interactions = evidence.get("interactions", {})
+                    if evidence.get("status") != "passed":
+                        issues.append("Playwright browser did not pass")
+                    if evidence.get("viewport") != {"width": 1280, "height": 720}:
+                        issues.append("Desktop viewport was not verified")
+                    if type(evidence.get("body_text_chars")) is not int or evidence["body_text_chars"] < 1:
+                        issues.append("Browser has no verified rendered text")
+                    if evidence.get("dom_ready") not in {"complete", "interactive"}:
+                        issues.append("Document did not reach DOM readiness")
+                    if not isinstance(m, dict) or m.get("viewport") != {"width": 390, "height": 844}:
+                        issues.append("Mobile 390x844 viewport is missing")
+                    if not isinstance(m, dict) or m.get("viewport_meta_present") is not True:
+                        issues.append("Mobile viewport metadata missing")
+                    if not isinstance(m, dict) or m.get("horizontal_overflow_px") != 0:
+                        issues.append("Mobile has unverified horizontal overflow")
+                    if not isinstance(m, dict) or m.get("spotcheck_status") != "clear" or m.get("findings") != []:
+                        issues.append("Mobile usability findings are unresolved")
+                    if not isinstance(interactions, dict) or interactions.get("status") != "clear" or interactions.get("findings") != []:
+                        issues.append("Keyboard and interactive usability findings are unresolved")
+                    for key in ("page_errors", "console_errors", "blocked_external"):
+                        if evidence.get(key) != []:
+                            issues.append("Browser has unresolved " + key)
+                except (OSError, ValueError, UnicodeError, TypeError, AttributeError):
+                    issues.append("Browser report is malformed or unreadable")
             if not passed:
-                failures.append("Browser report and desktop/mobile screenshots required")
+                issues.append("Real Playwright report and both viewport screenshots are required")
+            checks.append({"check": "browser-evidence",
+                           "status": "failed" if issues else "passed",
+                           "issues": issues,
+                           "note": "Verified local browser/mobile checks do NOT prove deployed website UX, geolocation, checkout or commercial content"})
+            if issues:
+                failures.extend(issues)
             else:
-                warnings.append("Host must review mobile layout, navigation and interactions")
+                warnings.append("Host must still inspect screenshots and test the deployed site, routing, navigation and commerce")
     elif any(ext in MEDIA_EXTENSIONS or ext in {".html", ".svg"} for ext in extensions):
         warnings.append("Output was generated; audio, usability, and editorial requirements were not requested as acceptance checks")
 
