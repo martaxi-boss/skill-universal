@@ -5782,13 +5782,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 452,
+    "all_catalog_entries": 455,
     "mcp_source_advertised": 229,
-    "functions": 274,
-    "functions_base_operations": 14,
+    "functions": 277,
+    "functions_base_operations": 17,
     "functions_typed_actions": 40,
     "functions_mcp": 220,
-    "all_universal_entries": 452
+    "all_universal_entries": 455
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -9807,6 +9807,39 @@
       "invocation": {
         "kind": "operation",
         "operation": "image-analyze"
+      }
+    },
+    {
+      "id": "operation:librecad-dxf-pdf",
+      "name": "librecad-dxf-pdf",
+      "kind": "operation",
+      "program": "librecad",
+      "category": "cad",
+      "invocation": {
+        "kind": "operation",
+        "operation": "librecad-dxf-pdf"
+      }
+    },
+    {
+      "id": "operation:qgis-buffer-5m",
+      "name": "qgis-buffer-5m",
+      "kind": "operation",
+      "program": "qgis",
+      "category": "geo",
+      "invocation": {
+        "kind": "operation",
+        "operation": "qgis-buffer-5m"
+      }
+    },
+    {
+      "id": "operation:godot-starter",
+      "name": "godot-starter",
+      "kind": "operation",
+      "program": "godot",
+      "category": "game",
+      "invocation": {
+        "kind": "operation",
+        "operation": "godot-starter"
       }
     }
   ],
