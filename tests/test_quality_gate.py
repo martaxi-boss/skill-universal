@@ -24,7 +24,7 @@ class AcceptanceTests(unittest.TestCase):
                 {"required_extensions": [".pdf"]})
             self.assertEqual(report["status"], "failed")
             self.assertIn("Invalid PDF signature", report["failures"])
-            (root / "valid.pdf").write_bytes(b"%PDF-1.7\\nmock")
+            (root / "valid.pdf").write_bytes(b"%PDF-1.7\nmock")
             success = quality_gate.inspect([root / "valid.pdf"],
                 {"required_extensions": [".pdf"]})
             self.assertEqual(success["status"], "passed")
@@ -68,7 +68,7 @@ class AcceptanceTests(unittest.TestCase):
     def test_silence_and_real_audio_are_distinguished(self):
         with TemporaryDirectory() as folder:
             media = Path(folder) / "video.mp4"
-            media.write_bytes(b"\\x00\\x00\\x00\\x18ftypisom")
+            media.write_bytes(b"\x00\x00\x00\x18ftypisom")
             def fake_binaries(name):
                 return "/tmp/private-" + name
             def response(argv, **kwargs):
@@ -102,7 +102,7 @@ class AcceptanceTests(unittest.TestCase):
             files = [p, report]
             for name in ("desktop.png", "mobile.png"):
                 image = Path(folder) / name
-                image.write_bytes(b"\\x89PNG\\r\\n\\x1a\\n" + b"\\x00" * 8
+                image.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 8
                                   + (320).to_bytes(4, "big")
                                   + (240).to_bytes(4, "big"))
                 files.append(image)
