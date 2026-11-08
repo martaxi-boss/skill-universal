@@ -1,6 +1,6 @@
 {
   "name": "motor-universal-linux",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, web, imagens, vídeo, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.",
   "interface": {
     "displayName": "motor-universal-linux",
