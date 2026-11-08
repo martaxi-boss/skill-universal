@@ -5,6 +5,8 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import hashlib
 import io
+import gc
+import warnings
 import json
 import os
 import tempfile
@@ -153,7 +155,16 @@ class FerrariPhase9AppimageTests(unittest.TestCase):
                  patch.dict(mod.ASSETS, {"synfig": a}), \
                  patch.object(mod, "fetch", side_effect=fake_fetch), \
                  patch.object(mod.subprocess, "run") as extraction:
-                result = mod.install("synfig")
+                # Regression: the real VPS activation previously emitted a
+                # ResourceWarning from an unclosed Synfig Type-1 header read.
+                with warnings.catch_warnings(record=True) as captured:
+                    warnings.simplefilter("always", ResourceWarning)
+                    result = mod.install("synfig")
+                    gc.collect()
+                leaked = [w for w in captured
+                          if issubclass(w.category, ResourceWarning)
+                          and a["filename"] in str(w.message)]
+                self.assertFalse(leaked, "Synfig archive descriptor must close")
                 self.assertEqual(result["status"], "private_appimage_verified")
                 self.assertFalse(result["extraction_verified"])
                 self.assertFalse(result["gui_runtime_certified"])
