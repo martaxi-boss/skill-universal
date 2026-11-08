@@ -260,7 +260,7 @@ def run(doc,folder,uploaded=None):
                         "reviewed_by":step["role"],"quality":evidence,
                         "verified_inputs":[{"name":Path(p).name,
                             "sha256":hashlib.sha256(Path(p).read_bytes()).hexdigest()} for p in previous]},
-                        ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+                        ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
                     return {"confirmed":True,"artifacts":[str(item)],
                             "executor":"ferrari-quality-gate","operation":"review"}
                 return rea_mcp.invoke(step["mcp_requests"],out,None)
