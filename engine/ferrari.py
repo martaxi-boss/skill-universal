@@ -385,6 +385,11 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         exe=_exe("jadx")
         _call([exe,"-d",str(dest),str(p)],timeout=600)
         artifacts=[dest]
+    elif op=="audio-transcribe":
+        # One universal catalog entry, executed using the Ferrari-owned
+        # faster-whisper venv and offline model. NOT a TTS or paid API route.
+        from engine import audio_tools
+        exe,artifacts=audio_tools.transcribe(p,Path(output).resolve())
     elif op in {"ifc-summary","vite-build"}:
         from engine import professional_tools
         folder=Path(output).resolve()
