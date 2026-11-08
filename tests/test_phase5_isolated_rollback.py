@@ -15,7 +15,10 @@ import tempfile
 import unittest
 
 EXPECTED_ACTIVE_SHA = "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
-EXPECTED_SCRIPT_BLOB = "2b1f7703b96a963af01af02bc9617e7554b85a98"
+# Historical VPS phase-5 fixture preserves the original immutable bytes.
+EXPECTED_LEGACY_SCRIPT_BLOB = "2b1f7703b96a963af01af02bc9617e7554b85a98"
+# The source-tree test uses the newer adapter-gated preactivation script.
+EXPECTED_SCRIPT_BLOB = "6d733dcecaadd6f1cf7cb32b9844eb1ad6747d9c"
 LIVE_ROOT = os.environ.get("FERRARI_PHASE5_LIVE_ROOT")
 ROOT = (Path(LIVE_ROOT) if LIVE_ROOT else Path(__file__).resolve().parents[1]).resolve()
 SCRIPT = (ROOT / "current/install/vps-isolated-release.sh"
@@ -27,7 +30,8 @@ def release_shell_blocks():
     data = SCRIPT.read_bytes()
     # Git blob hash confirms that the tested bytes are the deployed source.
     blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
-    assert blob == EXPECTED_SCRIPT_BLOB, "FERRARI_PHASE5_ACTIVE_SCRIPT_BLOB_MISMATCH"
+    expected = EXPECTED_LEGACY_SCRIPT_BLOB if LIVE_ROOT else EXPECTED_SCRIPT_BLOB
+    assert blob == expected, "FERRARI_PHASE5_ACTIVE_SCRIPT_BLOB_MISMATCH"
     source = data.decode("utf-8")
     begin = source.index("cleanup() {\n")
     end = source.index("\ntrap cleanup EXIT", begin) + len("\ntrap cleanup EXIT")
