@@ -5782,13 +5782,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 450,
+    "all_catalog_entries": 451,
     "mcp_source_advertised": 229,
-    "functions": 272,
-    "functions_base_operations": 12,
+    "functions": 273,
+    "functions_base_operations": 13,
     "functions_typed_actions": 40,
     "functions_mcp": 220,
-    "all_universal_entries": 450
+    "all_universal_entries": 451
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -6728,6 +6728,17 @@
       "invocation": {
         "kind": "operation",
         "operation": "video-thumbnail"
+      }
+    },
+    {
+      "id": "operation:audio-transcribe",
+      "name": "audio-transcribe",
+      "kind": "operation",
+      "program": "faster-whisper",
+      "category": "audio",
+      "invocation": {
+        "kind": "operation",
+        "operation": "audio-transcribe"
       }
     },
     {
