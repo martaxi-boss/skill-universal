@@ -1,6 +1,27 @@
 # Ponte Ferrari: ChatGPT → GitHub Actions → VPS → ZIP
 
-**Estado real mais recente, 08/11/2026:** Ferrari VPS ativo `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`, fallback `427e1c33c6d10ca8ecd2103861adccd3d552c381`. [Pré-teste #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090) e [ativação #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) PASS: **532 testes, 40 ações, 8 serviços**, e `promtool check rules` privado real. Catálogo único: **173 programas, 280 funções, 458 entradas; 51 callable e 18 suportes**. A ponte Ferrari **original** fixada à mesma release pela [PR #405](https://github.com/martaxi-boss/VPS/pull/405), sem alteração SSH. [Skill→GitHub→VPS→ZIP #42507884892](https://github.com/martaxi-boss/VPS/actions/runs/42507884892): `prometheus-rule-check` **completed**, `quality_gate=passed`, dois artefactos reais, 1 regra válida e SHA-256 conferido. Plugin workspace **v1.0.20** atualiza a mesma identidade no ChatGPT; jamais criar duplicado. A Skill só valida regras YAML e não certifica monitorização contínua. Não publicar conteúdos confidenciais no GitHub público.
+**Atualização certificada 08/11/2026 — execução direta Ruflo de operação base:** Ferrari
+`current=046126279a605d331b95683ece0a26d3c464d0eb`,
+fallback `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`.
+[Pré-teste #42526150460](https://github.com/martaxi-boss/VPS/actions/runs/42526150460),
+[ativação protegida #42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)
+e [missão fechada #42526730098](https://github.com/martaxi-boss/VPS/actions/runs/42526730098)
+PASS. O pedido `ruflo-team` aceita agora, **dentro da ronda de trabalho autorizada**,
+`turn.kind="operation"`, `turn.operation="cad-stl"` e `turn.input_from="$input"`;
+declarar a permissão do papel `actions:["operation:cad-stl"]` em `phase=start`.
+A [chamada real #42526587063](https://github.com/martaxi-boss/VPS/actions/runs/42526587063)
+produziu um STL de 61 170 B, malha fechada 40×30×12 mm/furo ~10 mm;
+`verified_tool_events[].catalog_action=operation:cad-stl` e SHA-256
+`0c3e483d18ccce5efa19615e61964ec55588ee9045a571e8979221d1e76217d0`.
+[Revisão #42526667840](https://github.com/martaxi-boss/VPS/actions/runs/42526667840)
+aprovou evidência real antes do fecho. Usa a **mesma ponte SSH**, o mesmo
+Ruflo efémero, a mesma IA anfitriã e o mesmo catálogo; não gera execução
+automática por LLM na VPS. [Contrato completo](../../../docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
+**Esta operação foi certificada, não todas as operações.** A distribuição da
+Skill para o cliente ChatGPT mantém verificação de instalação separada.
+
+
+**Estado anterior à certificação direta de Ruflo, 08/11/2026:** Ferrari VPS ativo `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`, fallback `427e1c33c6d10ca8ecd2103861adccd3d552c381`. [Pré-teste #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090) e [ativação #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) PASS: **532 testes, 40 ações, 8 serviços**, e `promtool check rules` privado real. Catálogo único: **173 programas, 280 funções, 458 entradas; 51 callable e 18 suportes**. A ponte Ferrari **original** fixada à mesma release pela [PR #405](https://github.com/martaxi-boss/VPS/pull/405), sem alteração SSH. [Skill→GitHub→VPS→ZIP #42507884892](https://github.com/martaxi-boss/VPS/actions/runs/42507884892): `prometheus-rule-check` **completed**, `quality_gate=passed`, dois artefactos reais, 1 regra válida e SHA-256 conferido. Plugin workspace **v1.0.20** atualiza a mesma identidade no ChatGPT; jamais criar duplicado. A Skill só valida regras YAML e não certifica monitorização contínua. Não publicar conteúdos confidenciais no GitHub público.
 
 **Estado operacional verificado em 07/11/2026:** o Ferrari tem um único catálogo de 450 registos (173 programas, 272 funções — 220 REA —, 3 dependências e 2 fornecedores). A release então ativa `e0509d5370828869479069c99f2eace779960cad` foi certificada na VPS em [#42325589374](https://github.com/martaxi-boss/VPS/actions/runs/42325589374) e na ponte ChatGPT→GitHub→VPS→ZIP em [#42326357951](https://github.com/martaxi-boss/VPS/actions/runs/42326357951). A revisão `205c6f0e970259c79fa2111b6670c2fe1672fb27` é fallback histórico, não a ativa. A CI do repositório não equivale a um pedido Ferrari executado.
 
@@ -28,7 +49,7 @@
 - Não transmitir dados confidenciais em repositórios públicos; parar o envio ao Ferrari quando o único transporte acessível for público e expuser dados privados. Não alterar o workflow nem montar camadas de transporte para corrigir um link.
 ## Modo ruflo-team certificado na VPS: uma IA anfitriã por rondas
 
-`engine/agent_team.py` aceita `kind=ruflo-team` com `phase=start|turn|status|recover|finish` e `team_id`. O anfitrião ChatGPT/Codex recebe `host_inbox` e `revision` do `ruflo-team-status.json`, raciocina no contexto da ficha do agente e envia uma **nova requisição JSON por ronda**. Os passos `submit`, `invoke`, `rea-mcp` e `review` passam por ferramentas autorizadas pelo catálogo único e revisores de papel diferente; a revisão usa `evidence_sha256` exato do resultado. O `finish` exige provas verificadas. [Contrato com JSONs completos](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md).
+`engine/agent_team.py` aceita `kind=ruflo-team` com `phase=start|turn|status|recover|finish` e `team_id`. O anfitrião ChatGPT/Codex recebe `host_inbox` e `revision` do `ruflo-team-status.json`, raciocina no contexto da ficha do agente e envia uma **nova requisição JSON por ronda**. Os passos `submit`, `invoke`, `operation`, `rea-mcp` e `review` passam por ferramentas autorizadas pelo catálogo único e revisores de papel diferente; a revisão usa `evidence_sha256` exato do resultado. O `finish` exige provas verificadas. [Contrato com JSONs completos](https://github.com/martaxi-boss/skill-universal/blob/main/docs/RUFLO_HOST_TEAM_ROUNDS_20261107.md).
 
 **JÁ AUTORIZADO NA PONTE ORIGINAL:** a release Ferrari `e0509d5370828869479069c99f2eace779960cad` foi ativada com [VPS #42325589374](https://github.com/martaxi-boss/VPS/actions/runs/42325589374) PASS (4 papéis, 2 ferramentas, 3 revisões, 8/8 serviços) e o validador da ponte existente foi pinado nessa revisão. A missão por rondas ChatGPT→GitHub→VPS→Ruflo→Ferrari→ZIP terminou em [#42326357951](https://github.com/martaxi-boss/VPS/actions/runs/42326357951), 3 tarefas aprovadas, 2 execuções reais e 3 revisões. O modo anterior `ruflo-host` mantém-se intacto.
 
