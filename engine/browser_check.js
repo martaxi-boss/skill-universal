@@ -307,7 +307,17 @@ async function main() {
       : data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
     fs.writeFileSync(reportPath, JSON.stringify(data, null, 2) + "\n", {mode: 0o600});
     if (data.status !== "passed" || data.page_errors.length || data.console_errors.length) {
-      throw new Error("Browser test detected blocked requests or page errors");
+      const reasons = [
+        ...(data.navigation?.findings || []).slice(0, 5),
+        ...(data.navigation?.spa_routes_unverified
+            ? ["Unverified SPA routes: " + data.navigation.spa_routes_unverified] : []),
+        ...(data.blocked_external.length
+            ? ["External resources blocked: " + data.blocked_external.length] : []),
+        ...(data.page_errors.length ? ["Page errors: " + data.page_errors.length] : []),
+        ...(data.console_errors.length ? ["Console errors: " + data.console_errors.length] : []),
+      ];
+      throw new Error("Browser quality gate " + data.status + ": " +
+                      (reasons.join("; ") || "Unspecified browser failure").slice(0, 520));
     }
     await context.close();
   } finally {
