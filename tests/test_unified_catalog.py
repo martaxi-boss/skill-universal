@@ -23,9 +23,9 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(len(set(names)), len(names))
         self.assertEqual(self.doc["counts"]["unique_tools"], 173)
         self.assertEqual(self.doc["counts"]["mcp_capabilities"], 220)
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 450)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 451)
         self.assertEqual(len(self.doc["tools"]) + len(self.doc["functions"]) +
-                         len(self.doc["providers"]) + len(self.doc["dependencies"]), 450)
+                         len(self.doc["providers"]) + len(self.doc["dependencies"]), 451)
         self.assertEqual(self.doc["mcp_capabilities"]["discovery"], "tools/list")
         self.assertEqual(self.doc["mcp_capabilities"]["invocation"], "tools/call")
         self.assertEqual(self.doc["mcp_capabilities"]["verified_vps_workflow_run"], 42269934831)
@@ -38,10 +38,10 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertNotIn("actions", raw)
         self.assertNotIn("names", raw["mcp_capabilities"])
         self.assertTrue(all("base_operations" not in tool for tool in raw["tools"]))
-        self.assertEqual(len(raw["functions"]), 272)
-        self.assertEqual(len({f["id"] for f in raw["functions"]}), 272)
+        self.assertEqual(len(raw["functions"]), 273)
+        self.assertEqual(len({f["id"] for f in raw["functions"]}), 273)
         self.assertEqual(len(raw["tools"]) + len(raw["functions"]) +
-                         len(raw["dependencies"]) + len(raw["providers"]), 450)
+                         len(raw["dependencies"]) + len(raw["providers"]), 451)
         self.assertEqual({f["kind"] for f in raw["functions"]},
                          {"operation", "invoke", "mcp_capability"})
         self.assertEqual({f["program"] for f in raw["functions"]
@@ -58,12 +58,12 @@ class UnifiedCatalogTests(unittest.TestCase):
             result = tool_runtime.unified_catalog(
                 inventory_now={"programs": [], "ecosystems": {}})
         entries = result["entries"]
-        self.assertEqual(len(entries), 450)
-        self.assertEqual(len({record["id"] for record in entries}), 450)
+        self.assertEqual(len(entries), 451)
+        self.assertEqual(len({record["id"] for record in entries}), 451)
         counts = Counter(record["kind"] for record in entries)
         self.assertEqual(counts, {
             "program": 173,
-            "base_operation": 12,
+            "base_operation": 13,
             "typed_action": 40,
             "mcp_capability": 220,
             "dependency": 3,
@@ -106,7 +106,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         self.assertEqual(self.doc["expansion_metadata"]["count"], 72)
         self.assertEqual(self.doc["admission_policy"]["cost"],
                          "local_open_source_or_builtin_only_no_cloud_providers")
-        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 450)
+        self.assertEqual(self.doc["counts"]["all_catalog_entries"], 451)
 
     def test_closed_cloud_provider_fails_closed_even_with_free_tier(self):
         modified = copy.deepcopy(self.doc)
@@ -129,7 +129,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         with patch.object(rea_mcp, "discover_tools", return_value=fake_live):
             result = tool_runtime.unified_catalog(inventory_now=seed)
         self.assertEqual(result["rea"]["status"], "rea_in_sync")
-        self.assertEqual(result["counts"]["all_catalog_entries"], 450)
+        self.assertEqual(result["counts"]["all_catalog_entries"], 451)
         self.assertEqual(result["counts"]["rea_mcp_discovered_now"], 220)
         self.assertEqual(result["counts"]["no_cost_providers"], 2)
         self.assertEqual(sum(x["kind"] == "mcp_capability" for x in result["entries"]), 220)
@@ -207,9 +207,9 @@ class UnifiedCatalogTests(unittest.TestCase):
             result = tool_runtime.unified_catalog(
                 inventory_now={"programs": [], "ecosystems": {}})
         functions = result["functions"]
-        self.assertEqual(len(functions), 272)
-        self.assertEqual(result["counts"]["functions_registered"], 272)
-        self.assertEqual(result["counts"]["functions_from_base_operations"], 12)
+        self.assertEqual(len(functions), 273)
+        self.assertEqual(result["counts"]["functions_registered"], 273)
+        self.assertEqual(result["counts"]["functions_from_base_operations"], 13)
         self.assertEqual(result["counts"]["functions_from_typed_actions"], 40)
         self.assertEqual(result["counts"]["functions_from_rea_mcp"], 220)
         self.assertEqual(len({item["id"] for item in functions}), len(functions))
@@ -250,7 +250,7 @@ class UnifiedCatalogTests(unittest.TestCase):
         fake_inventory = {"selected": 55, "registered_actions": 40, "programs": [],
                           "ecosystems": {}, "shared_dependencies": []}
         fake_catalog = {"source": "engine/catalog.json",
-                        "counts": {"all_catalog_entries": 450}}
+                        "counts": {"all_catalog_entries": 451}}
         with tempfile.TemporaryDirectory() as td:
             output = Path(td) / "job"
             with patch.object(tool_runtime, "inventory", return_value=fake_inventory):
@@ -262,7 +262,7 @@ class UnifiedCatalogTests(unittest.TestCase):
             with zipfile.ZipFile(output / "response.zip") as archive:
                 self.assertIn("artifacts/inventory.json", archive.namelist())
                 self.assertIn("artifacts/catalog.json", archive.namelist())
-                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 450)
+                self.assertEqual(json.loads(archive.read("artifacts/catalog.json"))["counts"]["all_catalog_entries"], 451)
 
     def test_rea_live_discovery_requires_private_paths_and_no_duplicates(self):
         with tempfile.TemporaryDirectory() as td:
