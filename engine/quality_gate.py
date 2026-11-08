@@ -31,7 +31,7 @@ def validate(policy):
     extensions = policy.get("required_extensions", [])
     if (not isinstance(extensions, list) or len(extensions) > 12 or
             len(set(extensions)) != len(extensions) or
-            any(not isinstance(ext, str) or not re.fullmatch(r"\\.[a-z0-9]{2,12}", ext)
+            any(not isinstance(ext, str) or not re.fullmatch(r"\.[a-z0-9]{2,12}", ext)
                 for ext in extensions)):
         raise ValueError("Invalid required output extensions")
     for key in ("audible_audio", "browser_evidence"):
@@ -119,7 +119,7 @@ def inspect(files, acceptance=None):
         if ext == ".png":
             with p.open("rb") as handle:
                 head = handle.read(24)
-            if (len(head) < 24 or head[:8] != b"\\x89PNG\\r\\n\\x1a\\n"
+            if (len(head) < 24 or head[:8] != b"\x89PNG\r\n\x1a\n"
                     or int.from_bytes(head[16:20], "big") == 0
                     or int.from_bytes(head[20:24], "big") == 0):
                 failures.append("Invalid PNG signature or dimensions")
