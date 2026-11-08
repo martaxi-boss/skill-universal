@@ -247,6 +247,26 @@ def execute(data, outdir):
     except Exception as exc:
         code=2
         result["error"]=str(exc)[:1200]
+        # Keep bounded, explicit technical evidence even if an executor fails
+        # before it can return its successful-artifact manifest. Never archive
+        # arbitrary work files, input ZIP content, directories or symlinks.
+        diagnostics=[]
+        for name in ("browser-check.json","browser-screenshot.png",
+                     "browser-mobile.png","runtime-check.json"):
+            candidate=target/"artifacts"/name
+            try:
+                if (candidate.is_file() and not candidate.is_symlink()
+                        and 0<candidate.stat().st_size<=8*1024*1024
+                        and candidate.resolve(strict=True).is_relative_to(
+                            target.resolve(strict=True))):
+                    rel=str(candidate.relative_to(target))
+                    diagnostics.append(rel)
+                    if rel not in result["artifacts"]:
+                        result["artifacts"].append(rel)
+            except (OSError,ValueError,RuntimeError):
+                pass
+        if diagnostics:
+            result["diagnostic_artifacts"]=diagnostics
     (target/"report.json").write_text(json.dumps(result,indent=2,ensure_ascii=False),encoding="utf-8")
     archive=target/"response.zip"
     with zipfile.ZipFile(archive,"w",zipfile.ZIP_DEFLATED) as z:
