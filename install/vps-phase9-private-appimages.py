@@ -133,7 +133,9 @@ def install(key: str) -> dict:
         # that option launches the GTK app, which fails on a headless VPS.
         # Keep the original verified executable without claiming GUI certification.
         if key == "synfig":
-            require(archive.open("rb").read(4) == b"\x7fELF",
+            with archive.open("rb") as stream:
+                header = stream.read(4)
+            require(header == b"\x7fELF",
                     "F9_GUI_TYPE1_NOT_ELF:" + key)
         else:
             # Extract on the project's private filesystem, no host FUSE mount.
