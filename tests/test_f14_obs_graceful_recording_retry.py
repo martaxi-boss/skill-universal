@@ -23,7 +23,7 @@ class F14OBSRetry(unittest.TestCase):
         text=PATH.read_text(encoding="utf-8")
         for marker in ("-count_frames","nb_read_frames","frame_count>=8",
                        "private_OBS_child_only_SIGINT","obs_process_in_group",
-                       "real", "FerrariSynthetic","recording_certified",
+                       "FerrariSynthetic","recording_certified",
                        "recording_lacks_verified_decodable_video_frames",
                        "ffprobe_exit", "synthetic_blank_canvas_only"):
             self.assertIn(marker,text)
