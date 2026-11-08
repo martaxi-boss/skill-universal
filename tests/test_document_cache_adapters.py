@@ -31,7 +31,7 @@ class FerrariNewProgramAdapters(unittest.TestCase):
         d=catalog_registry.read_catalog()
         self.assertEqual(d["counts"]["all_catalog_entries"],458)
         self.assertEqual(d["counts"]["functions"],280)
-        self.assertEqual(d["counts"]["functions_base_operations"],19)
+        self.assertEqual(d["counts"]["functions_base_operations"],20)
         self.assertEqual(len(d["tools"]),173)
         for op,tool in (("docling-docx-markdown","docling"),("valkey-kv-test","valkey")):
             with self.subTest(op=op):
