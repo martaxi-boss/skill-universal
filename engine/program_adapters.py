@@ -56,7 +56,8 @@ def _private_file(path: Path, executable: bool = False) -> Path:
     root = HOME.resolve(strict=True)
     path = Path(path)
     real = path.resolve(strict=True)
-    if (path.is_symlink() or not path.is_file() or not real.is_relative_to(root)
+    if (not path.is_file() or not real.is_relative_to(root)
+            or (path.is_symlink() and not executable)
             or (executable and not os.access(path, os.X_OK))):
         raise RuntimeError("Ferrari private input or executable is unavailable")
     return real
