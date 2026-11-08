@@ -181,7 +181,8 @@ def validate_job(doc):
                     raise ValueError("Unknown Ferrari catalog operation")
                 if "title" in turn and not _text(turn["title"], 120):
                     raise ValueError("Invalid Ferrari operation title")
-                if "layout" in turn and turn["layout"] not in ferrari.LAYOUTS:
+                if "layout" in turn and (not isinstance(turn["layout"], str)
+                                         or turn["layout"] not in ferrari.LAYOUTS):
                     raise ValueError("Unknown Ferrari operation layout")
                 no_source = {"web-template", "svg-poster", "blender-house",
                              "godot-starter", "valkey-kv-test"}
