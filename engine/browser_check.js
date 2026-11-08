@@ -298,9 +298,13 @@ async function main() {
     mobile.spotcheck_status = mobile.findings.length ? "findings" : "clear";
     data.mobile = mobile;
 
-    // Diagnostics are reported even when a page has usability findings;
-    // passing here means the browser executed, not that WCAG was certified.
-    data.status = data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
+    // Diagnostics are retained in the JSON on failure. A visibly broken
+    // static link or unverified SPA route is NEVER a passing browser build.
+    // Neither this gate nor a passing route claims full WCAG certification.
+    data.status = (data.navigation.status !== "clear" ||
+                   data.navigation.spa_routes_unverified !== 0)
+      ? "failed_navigation"
+      : data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
     fs.writeFileSync(reportPath, JSON.stringify(data, null, 2) + "\n", {mode: 0o600});
     if (data.status !== "passed" || data.page_errors.length || data.console_errors.length) {
       throw new Error("Browser test detected blocked requests or page errors");
