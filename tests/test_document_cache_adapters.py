@@ -87,7 +87,7 @@ class FerrariNewProgramAdapters(unittest.TestCase):
                 self.assertEqual(len(files),2)
                 self.assertTrue(all(f.is_file() for f in files))
                 self.assertIn("docling-private-word",exe)
-                self.assertIn("FERRARI",files[0].read_text() or "Ferrari")
+                self.assertIn("Ferrari",files[0].read_text())
                 with self.assertRaises(FileExistsError):
                     doc.convert(source,target)
 
