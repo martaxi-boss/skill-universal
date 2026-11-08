@@ -123,7 +123,7 @@ jobs:
           plugin = json.loads(Path("packaging/motor-ferrari/plugin.json").read_text(encoding="utf-8"))
           assert plugin["$schema"] == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
           assert plugin["name"] == "motor-universal-linux"
-          assert plugin["version"]
+          assert plugin["version"] == "1.0.8"
           skill = Path("skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
           assert skill.splitlines()[:2] == ["---", "name: motor-universal-linux"]
           assert Path("skill/motor-universal-linux/agents/openai.yaml").is_file()
@@ -134,17 +134,7 @@ jobs:
           cp -a skill/motor-universal-linux dist-plugin/motor-universal-linux/skills/
           (cd dist-plugin && zip -q -r ../ferrari-plugin-update.zip motor-universal-linux)
           unzip -t ferrari-plugin-update.zip | tail -n 1
-          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^motor-universal-linux/skills/[^/]+/SKILL.md)"
-          test "$skill_count" -eq 1
-
-      - name: Publish Ferrari plugin update package
-        uses: actions/upload-artifact@v4
-        with:
-          name: ferrari-plugin-update
-          path: ferrari-plugin-update.zip
-          if-no-files-found: error
-          retention-days: 14
-)"
+          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^motor-universal-linux/skills/[^/]+/SKILL.md$')"
           test "$skill_count" -eq 1
 
       - name: Publish Ferrari plugin update package
