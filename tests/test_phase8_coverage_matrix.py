@@ -30,8 +30,11 @@ class FerrariPhase8Coverage(unittest.TestCase):
         text=DOC.read_text(encoding="utf-8")
         base=text.split("## Operações base (12)",1)[1].split("## Matriz de ações",1)[0]
         found=re.findall(r"`([a-z0-9-]+)`",base.splitlines()[2])
-        self.assertEqual(len(found),len(ferrari.OPS))
-        self.assertEqual(set(found),set(ferrari.OPS))
+        # The Fase 8 matrix is a historical certificate for its 12 base
+        # operations, not a mutable count of newer certified functions.
+        self.assertEqual(len(found),12)
+        self.assertEqual(set(found),set(ferrari.OPS)-{"audio-transcribe"})
+        self.assertIn("audio-transcribe",ferrari.OPS)
 
     def test_private_counts_and_missing_tools_are_explicit(self):
         s=DOC.read_text(encoding="utf-8")
