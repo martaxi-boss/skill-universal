@@ -135,6 +135,10 @@ class FerrariProfessionalTests(unittest.TestCase):
                     Path(args[-2]).with_name("browser-mobile.png").write_bytes(b"PNG" * 80)
                     Path(args[-1]).write_text(json.dumps({
                         "status":"passed","browser_version":"test",
+                        "navigation":{"status":"clear","links_total":2,
+                                      "internal_files_verified":1,"fragments_verified":1,
+                                      "external_unverified":0,"schemes_unverified":0,
+                                      "spa_routes_unverified":0,"findings":[]},
                         "interactions":{"status":"clear","focusable_count":4,"findings":[],
                                         "tab_forward":"passed","shift_tab_back":"passed",
                                         "button_enter":"passed","button_space":"passed",
@@ -175,6 +179,11 @@ class FerrariProfessionalTests(unittest.TestCase):
         self.assertIn('data-ferrari-test="button"',source)
         self.assertIn('data-ferrari-test="form"',source)
         self.assertIn('data-ferrari-test="link"',source)
+        self.assertIn('a[href]',source)
+        self.assertIn('Missing in-page anchor:',source)
+        self.assertIn('Non-functional link destination:',source)
+        self.assertIn('Missing local navigation target:',source)
+        self.assertIn('spa_routes_unverified',source)
         self.assertIn('opt-in data-ferrari-test controls only',source)
         self.assertIn('not actual mobile-device emulation',source)
         self.assertNotIn('spawn(',source)

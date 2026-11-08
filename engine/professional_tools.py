@@ -169,8 +169,15 @@ def vite_build(source: Path, output_dir: Path):
         result = json.loads(browser_report.read_text(encoding="utf-8"))
         mobile = result.get("mobile") or {}
         interactions = result.get("interactions") or {}
+        navigation = result.get("navigation") or {}
         if (result.get("status") != "passed"
-                or interactions.get("status") not in {"clear", "findings"}
+                or interactions.get("status") != "clear"
+                or navigation.get("status") != "clear"
+                or not isinstance(navigation.get("links_total"), int)
+                or navigation.get("spa_routes_unverified") != 0
+                or not isinstance(navigation.get("internal_files_verified"), int)
+                or not isinstance(navigation.get("fragments_verified"), int)
+                or mobile.get("spotcheck_status") != "clear"
                 or not isinstance(interactions.get("focusable_count"), int)
                 or not isinstance(interactions.get("findings"), list)
                 or not screenshot.is_file() or screenshot.stat().st_size < 100

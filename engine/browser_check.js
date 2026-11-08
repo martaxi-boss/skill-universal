@@ -167,6 +167,85 @@ async function main() {
     interactions.status = interactions.findings.length ? "findings" : "clear";
     data.interactions = interactions;
 
+    // Inspect ALL local link destinations without activating arbitrary controls.
+    // This cannot prove backend routing or external websites. It DOES detect
+    // obvious dead links, fake "#" placeholders, javascript: and missing anchors.
+    const navigation = {
+      mode: "DOM and Ferrari-owned dist inspection; no arbitrary clicks",
+      links_total: 0, internal_files_verified: 0,
+      fragments_verified: 0, external_unverified: 0,
+      spa_routes_unverified: 0, schemes_unverified: 0,
+      findings: [],
+    };
+    const hrefs = await page.locator("a[href]").evaluateAll(nodes =>
+      nodes.slice(0, 240).map(node => node.getAttribute("href") || ""));
+    navigation.links_total = await page.locator("a[href]").count();
+    if (navigation.links_total > 240) {
+      navigation.findings.push("Too many links to verify within 240-link limit");
+    }
+    const pageIds = new Set(await page.locator("[id]").evaluateAll(nodes =>
+      nodes.map(node => node.id).filter(Boolean)));
+    for (const raw of hrefs) {
+      const href = raw.trim();
+      if (!href || href === "#" || /^javascript:/i.test(href)) {
+        navigation.findings.push("Non-functional link destination: " + href.slice(0, 100));
+        continue;
+      }
+      let destination;
+      try { destination = new URL(href, page.url()); }
+      catch {
+        navigation.findings.push("Malformed link destination: " + href.slice(0, 100));
+        continue;
+      }
+      if (["mailto:", "tel:"].includes(destination.protocol)) {
+        navigation.schemes_unverified++;
+        continue;
+      }
+      if (destination.protocol !== "http:" || destination.host !== "ferrari.invalid") {
+        navigation.external_unverified++;
+        continue;
+      }
+      if ((destination.pathname === "/" || destination.pathname === "/index.html") &&
+          destination.hash && !destination.search) {
+        let id;
+        try { id = decodeURIComponent(destination.hash.slice(1)); }
+        catch { id = ""; }
+        if (!id || !pageIds.has(id)) {
+          navigation.findings.push("Missing in-page anchor: " + href.slice(0, 100));
+        } else {
+          navigation.fragments_verified++;
+        }
+        continue;
+      }
+      let relative;
+      try { relative = decodeURIComponent(destination.pathname); }
+      catch {
+        navigation.findings.push("Malformed internal link path: " + href.slice(0, 100));
+        continue;
+      }
+      if (relative.includes("\\") || relative.includes("\0")) {
+        navigation.findings.push("Unsafe internal link path: " + href.slice(0, 100));
+        continue;
+      }
+      const extension = path.extname(relative).toLowerCase();
+      const servedPath = relative.endsWith("/") ? relative + "index.html" : relative;
+      if (!extension && !relative.endsWith("/") && relative !== "/") {
+        // A history-API SPA route can be legitimate, but this check cannot
+        // assert that its application router handles the path.
+        navigation.spa_routes_unverified++;
+        continue;
+      }
+      const local = path.resolve(root, "." + servedPath);
+      if (!local.startsWith(root + path.sep) ||
+          !fs.existsSync(local) || !fs.statSync(local).isFile()) {
+        navigation.findings.push("Missing local navigation target: " + href.slice(0, 100));
+      } else {
+        navigation.internal_files_verified++;
+      }
+    }
+    navigation.status = navigation.findings.length ? "findings" : "clear";
+    data.navigation = navigation;
+
     // Responsive CSS viewport check, using the SAME browser and page.
     // This does not claim Android device emulation or WCAG certification.
     await page.setViewportSize({width: 390, height: 844});
@@ -219,9 +298,13 @@ async function main() {
     mobile.spotcheck_status = mobile.findings.length ? "findings" : "clear";
     data.mobile = mobile;
 
-    // Diagnostics are reported even when a page has usability findings;
-    // passing here means the browser executed, not that WCAG was certified.
-    data.status = data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
+    // Diagnostics are retained in the JSON on failure. A visibly broken
+    // static link or unverified SPA route is NEVER a passing browser build.
+    // Neither this gate nor a passing route claims full WCAG certification.
+    data.status = (data.navigation.status !== "clear" ||
+                   data.navigation.spa_routes_unverified !== 0)
+      ? "failed_navigation"
+      : data.blocked_external.length ? "partial_external_assets_blocked" : "passed";
     fs.writeFileSync(reportPath, JSON.stringify(data, null, 2) + "\n", {mode: 0o600});
     if (data.status !== "passed" || data.page_errors.length || data.console_errors.length) {
       throw new Error("Browser test detected blocked requests or page errors");

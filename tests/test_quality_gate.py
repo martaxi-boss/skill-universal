@@ -117,6 +117,10 @@ class AcceptanceTests(unittest.TestCase):
                           "horizontal_overflow_px":0,
                           "spotcheck_status":"clear","findings":[]},
                 "interactions":{"status":"clear","findings":[]},
+                "navigation":{"status":"clear","links_total":2,
+                              "internal_files_verified":1,"fragments_verified":1,
+                              "external_unverified":0,"schemes_unverified":0,
+                              "spa_routes_unverified":0,"findings":[]},
                 "page_errors":[],"console_errors":[],"blocked_external":[]
             }
             report.write_text(json.dumps(valid))
@@ -130,6 +134,10 @@ class AcceptanceTests(unittest.TestCase):
                 {"interactions":{"status":"findings","findings":["Tab did not move"]}},
                 {"blocked_external":["https://invalid.example/script.js"]},
                 {"console_errors":["Uncaught error"]},
+                {"navigation":{**valid["navigation"],"status":"findings",
+                               "findings":["Non-functional link destination: #"]}},
+                {"navigation":{**valid["navigation"],"spa_routes_unverified":1}},
+                {"navigation":{**valid["navigation"],"links_total":"2"}},
             ):
                 report.write_text(json.dumps({**valid,**edit}))
                 rejected=quality_gate.inspect(files,{"browser_evidence":True})
