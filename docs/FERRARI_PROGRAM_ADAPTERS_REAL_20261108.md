@@ -1,5 +1,18 @@
 # Ferrari: adaptadores de programas — prova real e fila restante (08/11/2026)
 
+## Segunda vaga certificada — Docling e Valkey (08/11/2026)
+
+- **Ferrari ativo:** `a44bebc0018dec38f659a8ed859e92ba0522c365`; fallback imediato `df0ac55dcb93003ea672abaa5deba8ea9e49ebe8`. **Um catálogo:** 173 programas, 279 funções (19 operações + 40 ações + 220 REA), 3 dependências e 2 fornecedores = **457 entradas**, sem duplicar ferramentas ou Python.
+- [Precheck VPS #42495918959](https://github.com/martaxi-boss/VPS/actions/runs/42495918959) **PASS:** 524 testes, 40/40 ações, 8/8 serviços, conversão de DOCX sintético em Markdown com Docling privado e prova PING/SET/GET/DEL Valkey em socket UNIX transitório; *não ativou a release*.
+- [Ativação VPS #42496077967](https://github.com/martaxi-boss/VPS/actions/runs/42496077967) **PASS:** dois ciclos dos mesmos ensaios reais, readback do release SHA e fallback intacto, 8/8 serviços protegidos.
+- [Skill→ZIP Docling #42496314303](https://github.com/martaxi-boss/VPS/actions/runs/42496314303) **PASS:** DOCX original de teste → `docling-extracted.md` com o texto original, `docling-report.json`, SHA256 igual ao Markdown efetivo, `quality_gate=passed`. **Não comprova OCR, PDF complexo nem interpretação perfeita.**
+- [Skill→ZIP Valkey #42496444032](https://github.com/martaxi-boss/VPS/actions/runs/42496444032) **PASS:** `valkey-kv-report.json` prova PONG, SET=OK, GET original, DEL=1, GET após DEL vazio e limpeza obrigatória. **Não prova cache em produção, desempenho nem persistência.**
+- **Contratos:** `kind=operation`, `operation=docling-docx-markdown` e `input.name=documento.docx` + `input.content_base64` até 2 MB geram Markdown e JSON; `operation=valkey-kv-test` não exige input e devolve apenas JSON. Usar exclusivamente material sintético/autorizado no GitHub público, sem dados pessoais. Dependências permanecem dentro de `/srv/projects/skill-universal`, sem instalações APT.
+- **Saldo de integração:** dos 24 programas sem operação direta na auditoria inicial, **5 ganharam ações reais**: LibreCAD, QGIS, Godot, Docling, Valkey. **Restam 19 sem operação direta**, dos quais alguns são dependências ou já trabalham indiretamente via Playwright, REA/Ghidra e Ruflo anfitrião. Não inventar botões/funções duplicados só para reduzir a contagem.
+
+## Primeira vaga — registo histórico anterior (455 entradas)
+
+
 ## Estado certificado — sem multiplicar motores ou catálogos
 
 - **Ferrari ativo na VPS:** `df0ac55dcb93003ea672abaa5deba8ea9e49ebe8`; fallback preservado `46b679f4304454e28a23aa779507af393f0c5258`.
@@ -20,9 +33,9 @@
 
 São operações no `engine/catalog.json` e `engine/ferrari.py`, com adaptadores privados `engine/program_adapters.py` e o **mesmo** job `kind=operation`. Sem daemon, outra Skill, segundo catálogo, aplicação global nem alteração dos projetos vizinhos. A qualidade editorial/comercial e operações GUI complexas continuam fora destas provas.
 
-## Fila de trabalho — restantes 21 instalados sem adaptador direto
+## Fila histórica de 21 após primeira vaga — 19 ainda pendentes de operação direta
 
-O inventário original incluía 24 `installed_unintegrated`. Três passam a chamar estas operações reais. Os restantes **21 não são necessariamente avarias nem precisam todos de botão próprio**: é preciso separar os executores dos componentes de suporte. A próxima ação deverá demonstrar um trabalho útil, produzir artefacto verificável e executar nas dependências privadas, nunca promover um `--version` a certificação.
+O inventário original incluía 24 `installed_unintegrated`. Três foram ligados na primeira vaga e Docling/Valkey na segunda. Os restantes **19 não são necessariamente avarias nem precisam todos de botão próprio**: é preciso separar os executores dos componentes de suporte. A próxima ação deverá demonstrar um trabalho útil, produzir artefacto verificável e executar nas dependências privadas, nunca promover um `--version` a certificação.
 
 | Programa | Papel a esclarecer e prova exigida antes de `callable` |
 |---|---|
@@ -48,7 +61,7 @@ O inventário original incluía 24 `installed_unintegrated`. Três passam a cham
 | Gradio | Interface efémera com resposta testada e sem daemon sobrevivente |
 | Prefect | Workflow/scheduler: DAG em processo efémero, estado e saída verificados |
 
-**Não marcar os 21 como concluídos enquanto não existirem provas equivalentes às três acima.** A classificação é *papel técnico*, não autorização para transferir dados privados ou usar redes externas.
+**Não marcar os 19 restantes como concluídos enquanto não existirem provas específicas e relevantes.** A classificação é *papel técnico*, não autorização para transferir dados privados ou usar redes externas.
 
 ## Nota de segurança e rollback
 
