@@ -119,6 +119,16 @@ Só anunciar preview gerada ou final aprovado depois de verificar URL de origem,
 - **Porta de conclusão:** guardar e ler `report.json.quality_gate`: `passed` é exclusivamente prova dos critérios técnicos definidos; `not_certified` significa que não foram pedidos testes de aceitação semântica; `failed` bloqueia `completed`. Aprovação comercial/visual/urbanística exige inspeção da IA anfitriã, nunca é inferida do ZIP.
 - **Inventário:** `expansion.*.evidence_scope=historical_installation_snapshot` é histórico e `live_revalidated=false`; só `programs[].path`, executabilidade, testes e dependências efetivamente verificadas representam a instalação presente. Não anunciar 173 programas certificados: 173 é o universo catalogado.
 
+## Diagnóstico de dependências e programas de suporte (candidato 08/11/2026)
+
+Não tratar `instalado`, `arranca` e `executa uma ação Ferrari integrada` como sinónimos. A auditoria encontrou três runtimes privados (Python 3.12, Node 22, Java 25) reportados erradamente como não detetados na lista auxiliar. O motor passa a testá-los por comandos fixos e privados: Python importa `ssl/sqlite3/json/hashlib`; Node usa `crypto/fs`; Java responde a `-version`. O inventário mostra `shared_dependencies[].runtime_probe.runtime_smoke_pass` e classifica Python/Node/Java como `runtime_dependency_verified` quando a execução for PASS. Não afirmar que um simples teste de arranque certifica todas as ABI/transitivas.
+
+Após nova release aprovada e pin do validador da ponte alinhado, o tipo **`kind=runtime-check`** aceita `targets` exclusivamente da allowlist `["ytdlp","qgis","godot","prometheus","valkey"]`, como diagnóstico explícito. Exemplo: `{"version":1,"id":"health-project-20261108","kind":"runtime-check","targets":["ytdlp","qgis"]}`. Executa somente comandos de versão seguros nos binários privados, com HOME temporário dentro do Ferrari, sem rede, comandos arbitrários, serviços residentes ou alterações a outras pastas. `artifacts/runtime-check.json` regista PASS/FAIL por programa. Se um alvo não arrancar, a requisição falha e o ZIP guarda a prova.
+
+**Limites não ultrapassáveis pelo teste de versão:** o programa pode arrancar mas ainda não ter adaptador direto no catálogo. Aplicações GUI como OBS, FreeCAD e Audacity requerem certificação de fluxo funcional específico, não chamadas cegas de CLI. A autonomia de agentes LLM na VPS não nasce de um simples teste; Ruflo continua com rondas conduzidas pela IA anfitriã, sem modelos pagos obrigatórios.
+
+**QA web exigente:** quando `acceptance.browser_evidence=true`, o Ferrari deve receber o relatório real do Playwright e ambas as capturas. Reprova erros de consola/página, HTML não carregado, campos acessíveis com problemas, testes de teclado com falhas, ausência de viewport mobile ou overflow horizontal. Não basta apresentar um JSON genérico e dois PNG. Um PASS local ainda exige revisão do anfitrião e testes efetivos do site publicado (geo-idiomas, checkout e navegação).
+
 ## Execução com a ponte GitHub existente
 
 1. Compreender resultado, entradas e formato. Consultar references/protocols.md e, para DAGs, references/orchestration.md.
