@@ -25,7 +25,7 @@ class F14OBSRetry(unittest.TestCase):
                        "private_OBS_child_only_SIGINT","obs_process_in_group",
                        "FerrariSynthetic","recording_certified",
                        "finalized_MP4_not_independently_validated",
-                       "ffprobe_exit", "synthetic_blank_canvas_only"):
+                       "ffmpeg_exit", "synthetic_blank_canvas_only"):
             self.assertIn(marker,text)
         for marker in ("AuxAudioDevice1=disabled","DesktopAudioDevice1=disabled",
                        "--startrecording","-nolisten tcp"):
