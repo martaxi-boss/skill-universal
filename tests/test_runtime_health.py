@@ -102,6 +102,26 @@ class PrivateRuntimeHealthTests(unittest.TestCase):
             self.assertTrue(all(x["present"] for x in results))
             self.assertTrue(all(x["compatibility_certified"] is False for x in results))
 
+    def test_all_173_catalogued_programs_are_reported_without_claiming_upstream_install(self):
+        from engine import catalog_registry
+        catalogue=catalog_registry.read_catalog()
+        observed=tool_runtime.inventory()
+        all_ids={x["id"] for x in catalogue["tools"]}
+        records=observed["programs"]
+        self.assertEqual(len(all_ids),173)
+        self.assertEqual(len(records),173)
+        self.assertEqual({x["id"] for x in records},all_ids)
+        self.assertEqual(observed["programs_catalogued"],173)
+        self.assertEqual(observed["programs_preflighted"],173)
+        unadmitted=[x for x in catalogue["tools"] if
+                    x.get("admission")=="upstream_candidate_unverified"]
+        self.assertEqual(observed["upstream_candidates_not_admitted"],len(unadmitted))
+        for item in records:
+            if item["admission"]=="upstream_candidate_unverified":
+                self.assertEqual(item["status"],"candidate_not_admitted")
+                self.assertEqual(item["actions"],[])
+                self.assertEqual(item["base_operations"],[])
+
     def test_catalogue_runtime_names_not_misclassified_missing(self):
         with tempfile.TemporaryDirectory() as folder:
             home=Path(folder)
