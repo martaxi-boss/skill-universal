@@ -1,6 +1,22 @@
 # Bootstrap portátil — Motor Ferrari Ubuntu
 
-**Estado real comprovado em 08/11/2026:** Ferrari VPS ativo `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`, fallback `427e1c33c6d10ca8ecd2103861adccd3d552c381` preservado. [Pré-teste #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090), [ativação #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) PASS: **532 regressões, 40/40 ações privadas, 8/8 serviços protegidos**. Catálogo universal **173 programas + 280 funções (20 base + 40 ações + 220 REA) + 3 dependências + 2 fornecedores = 458 entradas**; **51 programas callable e 18 suportes privados classificados**, zero reinstalações. Nova função `prometheus-rule-check` executa validação real de regras YAML pelo `promtool` privado; não certifica monitorização contínua, alertas ou operações GUI. A Skill v1.0.19 mantém a mesma identidade Ferrari; confirmar a versão instalada. O Ruflo assistido por UMA IA anfitriã foi certificado; autonomia sem anfitrião NÃO é requisito do produto.
+**Estado vigente da Skill v1.0.21 (08/11/2026):** Ferrari ativo na VPS
+`046126279a605d331b95683ece0a26d3c464d0eb`, fallback preservado
+`3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`. A [ativação
+#42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)
+passou com 8/8 serviços. A operação de catálogo `cad-stl` foi executada
+**dentro da tarefa Ruflo** no [run #42526587063](https://github.com/martaxi-boss/VPS/actions/runs/42526587063),
+revista por papel distinto no [#42526667840](https://github.com/martaxi-boss/VPS/actions/runs/42526667840)
+e encerrada pela IA anfitriã no [#42526730098](https://github.com/martaxi-boss/VPS/actions/runs/42526730098).
+A Skill usa `kind=ruflo-team` e `turn.kind="operation"`, com permissão
+`actions:["operation:cad-stl"]`, evidência real SHA-256 e revisão.
+Catálogo único **458 entradas / 280 funções** inalterado. O GitHub atualizado
+**não instala por si só** a atualização no ChatGPT; substituir a mesma
+instalação existente, sem a duplicar. O resto deste ficheiro documenta
+fotografias históricas; o BOOTSTRAP canónico do GitHub prevalece.
+
+
+**Estado histórico anterior à ativação Ruflo direta em 08/11/2026:** Ferrari VPS então ativo `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`, fallback `427e1c33c6d10ca8ecd2103861adccd3d552c381` preservado. [Pré-teste #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090), [ativação #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) PASS: **532 regressões, 40/40 ações privadas, 8/8 serviços protegidos**. Catálogo universal **173 programas + 280 funções (20 base + 40 ações + 220 REA) + 3 dependências + 2 fornecedores = 458 entradas**; **51 programas callable e 18 suportes privados classificados**, zero reinstalações. Nova função `prometheus-rule-check` executa validação real de regras YAML pelo `promtool` privado; não certifica monitorização contínua, alertas ou operações GUI. A Skill v1.0.19 mantém a mesma identidade Ferrari; confirmar a versão instalada. O Ruflo assistido por UMA IA anfitriã foi certificado; autonomia sem anfitrião NÃO é requisito do produto.
 
 **F12 posterior — higiene/provas reais:** [VPS #42511248400](https://github.com/martaxi-boss/VPS/actions/runs/42511248400) auditou cache npm e scratch GUI (0 candidatos, sem apagar); [VPS #42511331936](https://github.com/martaxi-boss/VPS/actions/runs/42511331936) comprovou **FreeCAD FCStd/STEP paramétrico** e **yt-dlp descarregamento MP4 localhost com SHA-256 igual** (2/2, 8/8 serviços). **Não são operações novas**; sem reinstalação e sem GUI completa certificada. Detalhes no BOOTSTRAP canónico e no relatório F12.
 

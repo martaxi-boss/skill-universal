@@ -7,6 +7,8 @@ description: Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de c
 
 ## Estado operacional verificado — 08/11/2026
 
+**Pacote da Skill v1.0.21:** atualização da mesma instalação `motor-universal-linux`, sem duplicar. Reflete a operação direta `turn.kind=operation` no Ruflo certificado, com autorização por papel, execução real `cad-stl`, hash SHA-256, revisão independente e fecho. As instruções de GitHub, validador e VPS permanecem as existentes. Não afirmar que publicar no GitHub instala automaticamente a Skill no ChatGPT.
+
 **NOVO ESTADO FERRARI/RUFLO VERIFICADO (08/11/2026):** release ativa na VPS
 `046126279a605d331b95683ece0a26d3c464d0eb` e fallback
 `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`, ambos confirmados pela

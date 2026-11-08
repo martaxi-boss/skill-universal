@@ -23,7 +23,9 @@ class FerrariF14ClosureDocs(unittest.TestCase):
         for marker in ("400", "13,333333","46 185", "0c170035a8ca4e98ca2ef7d5b9e9269f17d717e78416bbfad8aa15258e0bb50e", "MKV", "GUI", "não"):
             self.assertIn(marker,report)
         self.assertIn("v1.0.20",skill)
-        self.assertIn("v1.0.20",bootstrap)
+        import json
+        manifest=json.loads((ROOT/"packaging/motor-ferrari/plugin.json").read_text())
+        self.assertIn("v" + manifest["version"],bootstrap)
         self.assertLess(len(bootstrap),24000)
     def test_no_new_fictitious_catalog_operations(self):
         report=REPORT.read_text(encoding="utf-8")
@@ -33,7 +35,8 @@ class FerrariF14ClosureDocs(unittest.TestCase):
     def test_same_plugin_identity_version(self):
         import json
         manifest=json.loads((ROOT/"packaging/motor-ferrari/plugin.json").read_text())
-        self.assertEqual(manifest["version"],"1.0.20")
+        self.assertGreaterEqual(tuple(map(int, manifest["version"].split("."))), (1, 0, 20))
+        self.assertIn("v" + manifest["version"], (ROOT/"skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8"))
         self.assertEqual(manifest["name"],"motor-universal-linux")
 
 if __name__=="__main__":
