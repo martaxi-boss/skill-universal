@@ -13,7 +13,7 @@ class SharedHostContractTests(unittest.TestCase):
     def test_canonical_contract_uses_one_active_host(self):
         b=(ROOT/"BOOTSTRAP.md").read_text(encoding="utf-8")
         top=b.split("**FONTE DE VERDADE OBRIGATÓRIA",1)[0]
-        for marker in ("UMA IA anfitriã", "Ruflo", "mesma IA anfitriã",
+        for marker in ("única IA anfitriã", "Ruflo", "mesma IA anfitriã",
                        "42509439220", "não fazem parte", "não bloqueia"):
             # Canonical contract must keep the meaning explicit.
             if marker=="não fazem parte":
