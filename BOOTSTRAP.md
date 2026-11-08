@@ -15,7 +15,7 @@ A Skill mantém a identidade **v1.0.20**; confirmar instalação ChatGPT à part
 e fallback então `427e1c33c6d10ca8ecd2103861adccd3d552c381`:
 532 regressões, 40/40 ações, 8/8 serviços. `prometheus-rule-check`
 certificou regras YAML, não monitorização contínua. IA anfitriã única,
-zero modelos LLM por agente.
+autonomia LLM sem anfitriã NÃO FAZ PARTE do produto.
 
 **F12–F14 (08/11):** [F12](docs/FERRARI_F12_HIGIENE_E_CERTIFICACAO_REAL_20261108.md): FreeCAD e yt-dlp PASS; [F13](docs/FERRARI_F13_OPENSHOT_REAL_20261108.md): OpenShot PASS; [F14 #42515392261](https://github.com/martaxi-boss/VPS/actions/runs/42515392261): SolveSpace SVG e Synfig PNG PASS; [OBS #42516534292](https://github.com/martaxi-boss/VPS/actions/runs/42516534292): MP4 400 frames/13,33s finalizado por FFmpeg PASS; MKV nativo incompleto. Audacity 4 sem automação certificada. **8/8 serviços, catálogo inalterado.** [F14](docs/FERRARI_F14_GUI_CERTIFICACOES_FINAL_20261108.md).
 
