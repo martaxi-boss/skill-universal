@@ -82,6 +82,7 @@ class PrivateOpenCVTests(unittest.TestCase):
                 self.assertNotIn("PYTHONPATH",kw["env"])
                 self.assertEqual(kw["env"]["HOME"],str(dest))
                 self.assertEqual(kw["env"]["PYTHONNOUSERSITE"],"1")
+                self.assertEqual(kw["env"]["OPENCV_IO_MAX_IMAGE_PIXELS"],str(image_tools.MAX_PIXELS))
                 preview=dest/"image-preview.png"
                 preview.write_bytes(fixture_png(16,16))
                 (dest/"image-analysis.json").write_text(json.dumps({
