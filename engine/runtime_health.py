@@ -21,9 +21,9 @@ COMMANDS = {
     "java-25": ("-version",),
 }
 EXPECTED = {
-    "python-3.12": re.compile(r"FERRARI_PYTHON_READY:3\\.12\\.[0-9]+"),
-    "node-22": re.compile(r"FERRARI_NODE_READY:22\\.23\\.4"),
-    "java-25": re.compile(r"(?:java|openjdk) version [\\x22']?25\\.0\\.5|openjdk 25\\.0\\.5"),
+    "python-3.12": re.compile(r"FERRARI_PYTHON_READY:3\.12\.[0-9]+"),
+    "node-22": re.compile(r"FERRARI_NODE_READY:22\.23\.4"),
+    "java-25": re.compile(r"(?:java|openjdk) version [\x22']?25\.0\.5|openjdk 25\.0\.5"),
 }
 
 
@@ -55,7 +55,7 @@ def probe_dependency(entry, home):
                                 shell=False, capture_output=True, text=True,
                                 errors="replace", timeout=8, check=False,
                                 cwd=str(root), env=environment)
-        observed = (result.stdout + "\\n" + result.stderr)[:4096]
+        observed = (result.stdout + "\n" + result.stderr)[:4096]
         matched = result.returncode == 0 and bool(EXPECTED[name].search(observed))
         base.update({"executed": True,
                      "runtime_smoke_pass": matched,
