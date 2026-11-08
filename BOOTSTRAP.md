@@ -1,26 +1,21 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**ESTADO ATUAL CONFIRMADO — 08/11/2026, Ruflo CAD direto:** release ativa
-`046126279a605d331b95683ece0a26d3c464d0eb`, fallback preservado
-`3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`.
-O [pré-teste #42526150460](https://github.com/martaxi-boss/VPS/actions/runs/42526150460)
-e a [ativação protegida #42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)
-PASS confirmaram o novo `current`, 8/8 serviços e nenhum ajuste SSH.
-A [missão real #42526523928](https://github.com/martaxi-boss/VPS/actions/runs/42526523928)
-→ [CAD direto #42526587063](https://github.com/martaxi-boss/VPS/actions/runs/42526587063)
-→ [revisão #42526667840](https://github.com/martaxi-boss/VPS/actions/runs/42526667840)
-→ [fecho #42526730098](https://github.com/martaxi-boss/VPS/actions/runs/42526730098)
-provou `kind=ruflo-team` com `turn.kind=operation`, `operation=cad-stl` dentro da tarefa
-autorizada `operation:cad-stl`, STL real fechado 40×30×12 mm/furo 10 mm,
-SHA-256 `0c3e483d18ccce5efa19615e61964ec55588ee9045a571e8979221d1e76217d0`,
-revisão por papel distinto e `status=completed`. Catálogo único **458 entradas** e
-**280 funções** inalterado, zero modelos LLM por agente. [Contrato, provas,
-limites e medição independente](docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
-Esta prova é da **operação CAD ensaiada**; outras operações requerem teste real
-individual. O pacote/instalação da Skill no cliente ChatGPT tem validação própria.
+**ESTADO ATUAL (08/11/2026):** Ferrari VPS `046126279a605d331b95683ece0a26d3c464d0eb`;
+fallback `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`.
+[Ativação #42526288787](https://github.com/martaxi-boss/VPS/actions/runs/42526288787)
+PASS (8/8 serviços, SSH intacto). Ruflo executou `operation:cad-stl`
+**diretamente** na [ronda #42526587063](https://github.com/martaxi-boss/VPS/actions/runs/42526587063);
+revisão #42526667840 e [fecho #42526730098](https://github.com/martaxi-boss/VPS/actions/runs/42526730098)
+PASS, um STL 40×30×12 mm/furo ~10 mm, `status=completed`.
+Catálogo **458 entradas, 280 funções** preservado.
+[Provas, contrato e limites](docs/FERRARI_RUFLO_DIRECT_CAD_CERT_20261108.md).
+A Skill mantém a identidade **v1.0.20**; confirmar instalação ChatGPT à parte.
 
-
-**Estado operacional histórico anterior à ativação Ruflo direta — 08/11/2026:** Ferrari ativo na VPS `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`; fallback `427e1c33c6d10ca8ecd2103861adccd3d552c381` preservado. [Pré-teste real #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090) e [ativação protegida #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) **PASS**: 532 regressões, 40/40 ações, 8/8 serviços. Catálogo **173 programas, 280 funções** (20 base + 40 ações + 220 REA), 3 dependências e 2 fornecedores = **458 entradas**; **51 callable, 18 suportes sem ação direta**, sem reinstalações. A nova `prometheus-rule-check` usa o `promtool` privado já instalado para verificar regras YAML: uma operação funcional real, **não certificação de monitorização/alertas contínuos**. [Contrato e provas](docs/FERRARI_PROMETHEUS_REAL_20261108.md). Skill **v1.0.20** mantém a mesma identidade; a instalação no ChatGPT exige confirmação separada. GUI integral permanece não certificada. **Autonomia LLM sem anfitrião NÃO FAZ PARTE DO PRODUTO PEDIDO; a IA anfitriã ativa é o único cérebro partilhado.**
+**Histórico:** release anterior `3f0ba44b7d8475a74a63c6010d1e27063c04bf1e`
+e fallback então `427e1c33c6d10ca8ecd2103861adccd3d552c381`:
+532 regressões, 40/40 ações, 8/8 serviços. `prometheus-rule-check`
+certificou regras YAML, não monitorização contínua. IA anfitriã única,
+zero modelos LLM por agente.
 
 **F12–F14 (08/11):** [F12](docs/FERRARI_F12_HIGIENE_E_CERTIFICACAO_REAL_20261108.md): FreeCAD e yt-dlp PASS; [F13](docs/FERRARI_F13_OPENSHOT_REAL_20261108.md): OpenShot PASS; [F14 #42515392261](https://github.com/martaxi-boss/VPS/actions/runs/42515392261): SolveSpace SVG e Synfig PNG PASS; [OBS #42516534292](https://github.com/martaxi-boss/VPS/actions/runs/42516534292): MP4 400 frames/13,33s finalizado por FFmpeg PASS; MKV nativo incompleto. Audacity 4 sem automação certificada. **8/8 serviços, catálogo inalterado.** [F14](docs/FERRARI_F14_GUI_CERTIFICACOES_FINAL_20261108.md).
 
