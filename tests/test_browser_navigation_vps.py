@@ -74,6 +74,8 @@ class BrowserNavigationVpsTests(unittest.TestCase):
                 else:
                     self.assertNotEqual(result.returncode,0)
                     self.assertEqual(data["status"],"failed_navigation")
+                    self.assertIn("Browser quality gate failed_navigation:",result.stderr)
+                    self.assertIn("Non-functional link destination:",result.stderr)
                     self.assertTrue(any("Non-functional link destination" in x
                                         for x in data["navigation"]["findings"]))
 
