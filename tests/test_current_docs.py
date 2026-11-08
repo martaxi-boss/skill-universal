@@ -33,7 +33,7 @@ class CurrentFerrariDocsTests(unittest.TestCase):
         self.assertNotIn("Instalação na VPS: não iniciada", text)
         self.assertNotIn("0 ferramentas certificadas na VPS", text)
 
-    def test_host_ruflo_shared_ai_team_mandatory_and_not_falsely_certified(self):
+    def test_host_ruflo_shared_ai_team_is_certified_without_autonomous_models(self):
         bootstrap = (ROOT / "BOOTSTRAP.md").read_text(encoding="utf-8")
         skill = (ROOT / "skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
         portable = (ROOT / "skill/motor-universal-linux/references/bootstrap.md").read_text(encoding="utf-8")
@@ -44,11 +44,11 @@ class CurrentFerrariDocsTests(unittest.TestCase):
             self.assertIn("OBRIGATÓRIO", text)
             self.assertIn("NÃO", text)
         self.assertIn("única IA anfitriã partilhada", bootstrap)
-        self.assertIn("PORTA DE ACEITAÇÃO OBRIGATÓRIA", bootstrap)
-        self.assertIn("independent_agent_model_calls=0", bootstrap)
+        self.assertIn("CONTRATO DE ACEITAÇÃO — MODO IA ANFITRIÃ", bootstrap)
+        self.assertIn("zero por conceção", bootstrap)
         self.assertIn("42218479317", bootstrap)
         self.assertIn("não é, só por existir, uma API", bootstrap)
-        self.assertIn("BLOQUEIO FUNCIONAL DA EQUIPA", bootstrap)
+        self.assertIn("EQUIPA COM IA ANFITRIÃ — CERTIFICADA NOS TESTES REALIZADOS", bootstrap)
 
     def test_host_round_team_protocol_is_documented_without_fake_vps_claims(self):
         from engine import agent_team
