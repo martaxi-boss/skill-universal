@@ -25,6 +25,16 @@ class F13OpenShotTests(unittest.TestCase):
             with self.subTest(value=bad):
                 with self.assertRaises(RuntimeError):
                     m.answer(bad,"CHECK")
+    def test_real_openshot_nested_result_ids(self):
+        # Readback of real VPS blocked F13 first-run:
+        # result={revision, transaction_id, data:{id,...}}.
+        self.assertEqual(m.result_id({"revision":1,"transaction_id":"x",
+                                      "data":{"id":"KPUDL9QPWC","name":"synthetic-source.mp4"}},"IMPORTED_FILE"),"KPUDL9QPWC")
+        self.assertEqual(m.result_id({"data":{"id":"CLIP01"}},"EDITED_CLIP"),"CLIP01")
+        self.assertEqual(m.result_id({"clip":{"clip_id":"CLIP02"}},"EDITED_CLIP"),"CLIP02")
+        with self.assertRaisesRegex(RuntimeError,"MISSING_ID"):
+            m.result_id({"transaction_id":"t","data":{"name":"missing"}},"EDITED_CLIP")
+
     def test_editable_project_and_video_are_distinct_evidence(self):
         s=PATH.read_text(encoding="utf-8")
         for marker in ('"session", "start"', '"file", "import"',
