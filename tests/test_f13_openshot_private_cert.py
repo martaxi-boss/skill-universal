@@ -1,6 +1,7 @@
 """Ferrari F13 private OpenShot: isolate mode, reject false positive outputs."""
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
+from contextlib import nullcontext
 from unittest.mock import patch
 import unittest
 
@@ -38,7 +39,7 @@ class F13OpenShotTests(unittest.TestCase):
         with patch.object(m,"guard"),patch.object(m,"private_tools",return_value=("/private/openshot","/private/ffmpeg","/private/ffprobe")), \
              patch.object(m,"env_for",return_value={}), patch.object(m,"run",return_value="session clip export"):
             # A simple simulated CLI-help probe must explicitly say not certified.
-            with patch.object(m.tempfile,"TemporaryDirectory",return_value="/tmp"):
+            with patch.object(m.tempfile,"TemporaryDirectory",return_value=nullcontext("/tmp")):
                 res=m.probe()
         self.assertFalse(res["real_edit_export_certified"])
         self.assertEqual(res["mode"],"probe")
