@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "motor-ferrari",
-  "version": "1.0.1",
+  "name": "motor-universal-linux",
+  "version": "1.0.8",
   "description": "Plugin privado de controlo da Skill Universal do Motor Ferrari na VPS Ubuntu, através da ligação GitHub autenticada e da ponte existente.",
   "author": {
     "name": "Forretas TV"
