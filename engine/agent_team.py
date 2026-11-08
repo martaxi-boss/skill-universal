@@ -389,7 +389,14 @@ def _status(state):
             "reviews_recorded": state["reviews_recorded"],
             "autonomous_agent_model_calls": 0,
             "host_reasoning_mode": "external_host_rounds_only",
-            "ruflo_session_mode": "ephemeral_per_round"}
+            "ruflo_session_mode": "ephemeral_per_round",
+            "verified_tool_events": [
+                {"task": event["task"], "role": event["role"],
+                 "catalog_action": event["catalog_action"],
+                 "evidence_sha256": event["evidence_sha256"]}
+                for event in state.get("history", [])
+                if "catalog_action" in event
+            ][-MAX_TASKS:]}
 
 
 def _export(state, dest, extra=()):
@@ -572,8 +579,15 @@ def run(doc, dest, uploaded=None):
                                       "evidence_sha256": turn["evidence_sha256"]}
                     state["reviews_recorded"] += 1
             state["revision"] += 1
-            state["history"].append({"at": _now(), "event": turn["kind"],
-                   "task": task["id"], "role": turn["role"], "message": turn["message"][:240]})
+            event = {"at": _now(), "event": turn["kind"],
+                     "task": task["id"], "role": turn["role"],
+                     "message": turn["message"][:240]}
+            if turn["kind"] in {"invoke", "operation", "rea-mcp"}:
+                event["catalog_action"] = (turn["action"] if turn["kind"] == "invoke"
+                                            else "operation:" + turn["operation"]
+                                            if turn["kind"] == "operation" else "rea-mcp")
+                event["evidence_sha256"] = [entry["sha256"] for entry in evidence]
+            state["history"].append(event)
             _atomic(folder / "state.json", state)
             return _export(state, dest, extra)
         except Exception:
