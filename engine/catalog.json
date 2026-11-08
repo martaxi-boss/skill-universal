@@ -706,7 +706,12 @@
     },
     {
       "id": "ghidra",
-      "integration_review": {"group":"backend_needs_execution_proof","route_policy":"validate_existing_rea_path_first","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "backend_needs_execution_proof",
+        "route_policy": "validate_existing_rea_path_first",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "reverse",
       "core": {
         "id": "ghidra",
@@ -1429,7 +1434,12 @@
     },
     {
       "id": "comfyui",
-      "integration_review": {"group":"optional_model_runtime","route_policy":"model_weights_and_resource_acceptance_first","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_model_runtime",
+        "route_policy": "model_weights_and_resource_acceptance_first",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "media",
       "core": {
         "id": "comfyui",
@@ -1830,7 +1840,12 @@
     },
     {
       "id": "nextjs",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "core": {
         "id": "nextjs",
@@ -1951,7 +1966,12 @@
     },
     {
       "id": "playwright",
-      "integration_review": {"group":"reuse_existing_indirect","route_policy":"no_duplicate_direct_adapter","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "reuse_existing_indirect",
+        "route_policy": "no_duplicate_direct_adapter",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "core": {
         "id": "playwright",
@@ -2013,7 +2033,12 @@
     },
     {
       "id": "ruflo",
-      "integration_review": {"group":"reuse_existing_indirect","route_policy":"no_duplicate_direct_adapter","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "reuse_existing_indirect",
+        "route_policy": "no_duplicate_direct_adapter",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "dev",
       "core": {
         "id": "ruflo",
@@ -2320,7 +2345,12 @@
     },
     {
       "id": "ytdlp",
-      "integration_review": {"group":"standalone_cli_candidate","route_policy":"design_bounded_operation_before_callable","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "standalone_cli_candidate",
+        "route_policy": "design_bounded_operation_before_callable",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "media",
       "ubuntu": {
         "id": "ytdlp",
@@ -2375,7 +2405,6 @@
     },
     {
       "id": "prometheus",
-      "integration_review": {"group":"standalone_cli_candidate","route_policy":"design_bounded_operation_before_callable","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
       "category": "monitor",
       "ubuntu": {
         "id": "prometheus",
@@ -2757,7 +2786,12 @@
     },
     {
       "id": "freecad",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "cad",
       "ubuntu": {
         "id": "freecad",
@@ -2989,7 +3023,12 @@
     },
     {
       "id": "audacity",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "audio",
       "ubuntu": {
         "id": "audacity",
@@ -3047,7 +3086,12 @@
     },
     {
       "id": "obs",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "media",
       "ubuntu": {
         "id": "obs",
@@ -3164,7 +3208,12 @@
     },
     {
       "id": "solvespace",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "cad",
       "ubuntu": {
         "id": "solvespace",
@@ -3222,7 +3271,12 @@
     },
     {
       "id": "synfig",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "animation",
       "ubuntu": {
         "id": "synfig",
@@ -3281,7 +3335,12 @@
     },
     {
       "id": "openshot",
-      "integration_review": {"group":"optional_desktop_gui","route_policy":"require_real_headless_or_display_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "optional_desktop_gui",
+        "route_policy": "require_real_headless_or_display_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "media",
       "ubuntu": {
         "id": "openshot",
@@ -3400,7 +3459,12 @@
     },
     {
       "id": "tailwind",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "ubuntu": {
         "id": "tailwind",
@@ -3451,7 +3515,12 @@
     },
     {
       "id": "bootstrap",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "ubuntu": {
         "id": "bootstrap",
@@ -3502,7 +3571,12 @@
     },
     {
       "id": "shadcn",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "ubuntu": {
         "id": "shadcn",
@@ -3761,7 +3835,12 @@
     },
     {
       "id": "streamlit",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "data",
       "ubuntu": {
         "id": "streamlit",
@@ -3815,7 +3894,12 @@
     },
     {
       "id": "gradio",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "web",
       "ubuntu": {
         "id": "gradio",
@@ -3971,7 +4055,12 @@
     },
     {
       "id": "prefect",
-      "integration_review": {"group":"development_dependency","route_policy":"use_only_with_consumer_workflow","reviewed_at":"2026-11-08","scope":"triage_only_not_executable_certification"},
+      "integration_review": {
+        "group": "development_dependency",
+        "route_policy": "use_only_with_consumer_workflow",
+        "reviewed_at": "2026-11-08",
+        "scope": "triage_only_not_executable_certification"
+      },
       "category": "automation",
       "ubuntu": {
         "id": "prefect",
@@ -5801,13 +5890,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 457,
+    "all_catalog_entries": 458,
     "mcp_source_advertised": 229,
-    "functions": 279,
-    "functions_base_operations": 19,
+    "functions": 280,
+    "functions_base_operations": 20,
     "functions_typed_actions": 40,
     "functions_mcp": 220,
-    "all_universal_entries": 457
+    "all_universal_entries": 458
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -9881,6 +9970,17 @@
       "invocation": {
         "kind": "operation",
         "operation": "valkey-kv-test"
+      }
+    },
+    {
+      "id": "operation:prometheus-rule-check",
+      "name": "prometheus-rule-check",
+      "kind": "operation",
+      "program": "prometheus",
+      "category": "monitor",
+      "invocation": {
+        "kind": "operation",
+        "operation": "prometheus-rule-check"
       }
     }
   ],
