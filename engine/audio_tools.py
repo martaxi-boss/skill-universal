@@ -45,7 +45,10 @@ def available() -> bool:
             and (VENV / "lib/python3.12/site-packages/faster_whisper").is_dir()
             and MODEL.is_dir() and not MODEL.is_symlink()
             and (MODEL / "model.bin").is_file()
+            and not (MODEL / "model.bin").is_symlink()
+            and (MODEL / "model.bin").resolve(strict=True).is_relative_to(root)
             and (MODEL / "config.json").is_file()
+            and not (MODEL / "config.json").is_symlink()
             and MODEL.resolve(strict=True).is_relative_to(root))
     except (OSError, RuntimeError):
         return False
@@ -64,9 +67,10 @@ def transcribe(source: Path, output_dir: Path):
     source = Path(source)
     output_dir = Path(output_dir)
     if (source.is_symlink() or not source.is_file()
+            or not source.resolve(strict=True).is_relative_to(HOME.resolve(strict=True))
             or source.suffix.lower() not in AUDIO_SUFFIXES
             or not 200 <= source.stat().st_size <= MAX_AUDIO_BYTES):
-        raise ValueError("Ferrari ASR requires a regular WAV/FLAC/MP3/M4A/OGG file up to 2 MB")
+        raise ValueError("Ferrari ASR requires private regular WAV/FLAC/MP3/M4A/OGG up to 2 MB")
     if not available():
         raise RuntimeError("Ferrari private faster-whisper CPU/model is unavailable")
     if output_dir.is_symlink() or not output_dir.resolve().is_relative_to(HOME.resolve()):
@@ -115,9 +119,12 @@ def _worker(source: Path, output_dir: Path) -> int:
             or _sha256(MODEL / "model.bin") != MODEL_SHA256):
         raise RuntimeError("Ferrari private Whisper interpreter/model integrity failed")
     if (source.is_symlink() or not source.is_file()
+            or not source.resolve(strict=True).is_relative_to(HOME.resolve(strict=True))
+            or output_dir.is_symlink()
+            or not output_dir.resolve(strict=True).is_relative_to(HOME.resolve(strict=True))
             or source.suffix.lower() not in AUDIO_SUFFIXES
             or not 200 <= source.stat().st_size <= MAX_AUDIO_BYTES):
-        raise ValueError("Unapproved Ferrari audio input")
+        raise ValueError("Unapproved Ferrari audio input/output")
     started = time.monotonic()
     import av
     import numpy as np
