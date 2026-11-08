@@ -202,7 +202,7 @@ def obs_check(work):
             "--server-args=-screen 0 640x480x24 -nolisten tcp",
             exe,"--profile","FerrariBlank","--collection","FerrariBlank",
             "--scene","FerrariBlank","--startrecording","--multi","--disable-updater"],
-            cwd=work,env=env,capture_output if False else subprocess.PIPE,
+            cwd=work,env=env,stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,start_new_session=True)
     try:
         time.sleep(12)
