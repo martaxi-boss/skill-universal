@@ -1,5 +1,11 @@
 # Ferrari — triagem de instalação e integração de 19 programas (08/11/2026)
 
+## Atualização com provas reais — 08/11/2026
+
+A lista de **19** abaixo é histórica, de quando ainda não existia uma operação Prometheus. A [PR Ferrari #167](https://github.com/martaxi-boss/skill-universal/pull/167) acrescentou apenas **uma função verdadeira**, `prometheus-rule-check`, usando o programa privado já presente. [Pré-teste #42507407090](https://github.com/martaxi-boss/VPS/actions/runs/42507407090) e [ativação #42507525402](https://github.com/martaxi-boss/VPS/actions/runs/42507525402) **PASS**: 532 testes, 8 serviços, fallback preservado.
+
+**Novo estado:** 173 programas, **280 funções** (20 base + 40 ações + 220 REA), 3 dependências, 2 fornecedores = **458 entradas**, **51 callable e 18 programas de suporte** sem função direta. O grupo "CLI candidato" passa a incluir **apenas yt-dlp** (1). O Prometheus deixou de pertencer à lista de 19 suportes após teste funcional `promtool check rules`. A validação real de regras não equivale a monitorização contínua. [Âmbito e evidências](FERRARI_PROMETHEUS_REAL_20261108.md).
+
 ## Decisão
 
 **Não reinstalar em massa.** A presença de um executável, um pacote npm ou um
