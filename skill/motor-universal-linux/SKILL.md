@@ -5,11 +5,19 @@ description: Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de c
 
 # Motor Ferrari — Skill Universal
 
+## Estado operacional novo — 08/11/2026
+
+A **release realmente ativa** do motor na VPS é `9004c7a605f15c65d31b08c24bb4511b38a55f92` e o fallback preservado é `bf7f75f171d95b22635c00fc9c5150926c7a1ee8`. A implantação [VPS #42489187528](https://github.com/martaxi-boss/VPS/actions/runs/42489187528) passou **505 testes, 40/40 ações, 8/8 serviços**, incluindo discurso real público transcrito pela Skill, TXT/SRT e ZIP. Pin do validador GitHub da Skill alinhado com a release ativa. **A Skill instalada é a mesma identidade**, atualização do pacote cliente v1.0.10. Fonte de verdade: [BOOTSTRAP GitHub](https://github.com/martaxi-boss/skill-universal/blob/main/BOOTSTRAP.md).
+
+**Nova função executável `audio-transcribe`:** pedido `kind=operation`, `operation=audio-transcribe`, com `input.name=gravacao.wav` (também FLAC/MP3/M4A/OGG) e `input.content_base64` dos bytes. Opcional `acceptance={"required_extensions":[".txt",".srt",".json"]}`. Devolve `transcript.txt`, `subtitles.srt`, `transcript-report.json`, todos no `response.zip`. Limites atuais: **máximo 2 MB e 60 segundos**, modelo faster-whisper tiny CPU, idioma detetado automaticamente, sem internet nem APIs pagas no processamento. **Não é TTS/voz de anúncio, tradução certificada nem reconhecimento 100% exato.** Pedidos enviados para GitHub público não devem incluir gravações privadas ou dados pessoais.
+
+**Catálogo único agora:** 173 programas, **273 funções** (13 operações base + 40 ações tipadas + 220 REA), 3 dependências e 2 fornecedores = **451 registos**. Integrar uma função não dá automaticamente certificação a outras 25 aplicações instaladas sem adaptador, GUI/OBS ou autonomia LLM dos agentes Ruflo. É obrigatório mostrar estados distintos de instalação, integração e teste real.
+
 ## Identidade e fonte de verdade
 
 **UMA ÚNICA SKILL UNIVERSAL Ferrari; um motor e orquestrador próprios na VPS.** A IA anfitriã interpreta e orienta; o motor seleciona e executa ferramentas. Nunca substituir por Project Leader, pelo REA antigo, Ruflo ou outro coordenador. Não adicionar lógica à ponte SSH.
 
-**CATÁLOGO UNIVERSAL ÚNICO:** toda a informação do Ferrari está no mesmo `engine/catalog.json`: 173 programas, 272 interfaces de função integradas (REA incluído sem catálogo próprio), três dependências declaradas e dois fornecedores locais, num total de 450 registos de tipos diferentes. `engine/catalog_registry.py` constrói apenas vistas temporárias de compatibilidade; `unified_catalog().entries[]` é a vista integral de leitura. O GitHub e o cliente instalado podem ter versões diferentes; só o deploy e o inventário real certificam a VPS.
+**CATÁLOGO UNIVERSAL ÚNICO:** toda a informação do Ferrari está no mesmo `engine/catalog.json`: 173 programas, 273 interfaces de função integradas (REA incluído sem catálogo próprio), três dependências declaradas e dois fornecedores locais, num total de 451 registos de tipos diferentes. `engine/catalog_registry.py` constrói apenas vistas temporárias de compatibilidade; `unified_catalog().entries[]` é a vista integral de leitura. O GitHub e o cliente instalado podem ter versões diferentes; só o deploy e o inventário real certificam a VPS.
 
 **REGRA VINCULATIVA / REQUISITO OBRIGATÓRIO (07/11/2026):** UMA IA anfitriã partilhada (ChatGPT/Codex/Claude) → Ruflo sub-anfitrião → agentes especializados com tarefas e contexto por papel → colaboração e revisão → Ferrari/catálogo único/ferramentas → aceitação final. Ruflo e agentes NÃO SÃO OPCIONAIS para a arquitetura final. **A colaboração por rondas conduzidas pelo anfitrião já foi certificada** em #42325589374 e #42326357951; **agentes LLM que raciocinem autonomamente sem um anfitrião ativo NÃO foram certificados**. Não instalar um modelo pago por agente, nem inventar que a subscrição ChatGPT disponibiliza automaticamente uma API externa. O BOOTSTRAP canónico define as portas de aceitação.
 
@@ -161,4 +169,4 @@ Os testes antigos de CAD/Blender tinham usado executores globais; **essa situaç
 
 ### Vista integral sem outra ponte
 
-O único catálogo `engine/catalog.json` contém **173 programas + 272 interfaces de função (220 REA e 52 das demais operações) + 3 dependências centrais + 2 fornecedores = 450 registos distintos**, sem um segundo catálogo REA. O REA original pode anunciar 229 nomes, mas o Ferrari só admite os 220 aprovados. `kind=inventory` devolve `inventory.json` e `catalog.json` no mesmo `response.zip`; [readback pós-higiene #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) confirmou o estado real. Interface disponível não implica todas as funcionalidades internas ou formatos certificados.
+O único catálogo `engine/catalog.json` contém **173 programas + 273 interfaces de função (220 REA e 53 das demais operações) + 3 dependências centrais + 2 fornecedores = 451 registos distintos**, sem um segundo catálogo REA. O REA original pode anunciar 229 nomes, mas o Ferrari só admite os 220 aprovados. `kind=inventory` devolve `inventory.json` e `catalog.json` no mesmo `response.zip`; [readback pós-higiene #42297678715](https://github.com/martaxi-boss/VPS/actions/runs/42297678715) confirmou o estado real. Interface disponível não implica todas as funcionalidades internas ou formatos certificados.
