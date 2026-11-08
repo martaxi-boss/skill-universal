@@ -8,6 +8,7 @@ workers, does not use provider keys and does not create a resident daemon.
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ import subprocess
 import tempfile
 import time
 
-from engine import rea_mcp, tool_runtime
+from engine import rea_mcp, tool_runtime, quality_gate
 
 HOME=Path("/srv/projects/skill-universal")
 NODE=HOME/"runtimes/node-22.23.4/bin/node"
@@ -30,15 +31,18 @@ IDENTITY=re.compile(r"[a-z][a-z0-9_-]{0,39}\Z")
 def validate_job(doc):
     if not isinstance(doc,dict) or doc.get("kind")!="ruflo-host":
         raise ValueError("Expected Ferrari Ruflo host job")
-    if set(doc)-{"version","id","kind","input","host","roles","steps","max_parallel"}:
+    if set(doc)-{"version","id","kind","input","host","roles","steps","max_parallel","acceptance"}:
         raise ValueError("Unknown Ruflo job property")
     if doc.get("host") not in {"ChatGPT","Codex","Claude","other"}:
         raise ValueError("One selected host AI is required")
+    if "acceptance" in doc:
+        quality_gate.validate(doc["acceptance"])
     roles=doc.get("roles")
     steps=doc.get("steps")
     if not isinstance(roles,list) or not 2<=len(roles)<=4 or not isinstance(steps,list) or not 2<=len(steps)<=8:
         raise ValueError("Expected 2-4 roles and 2-8 tasks")
     ids=set()
+    role_types={}
     for item in roles:
         if not isinstance(item,dict) or set(item)!={"id","type"}:
             raise ValueError("Invalid Ruflo role")
@@ -46,6 +50,7 @@ def validate_job(doc):
         if not isinstance(rid,str) or not IDENTITY.fullmatch(rid) or rid in ids or kind not in ROLE_TYPES:
             raise ValueError("Unknown or duplicate Ruflo agent role")
         ids.add(rid)
+        role_types[rid]=kind
     if type(doc.get("max_parallel",2)) is not int or not 1<=doc.get("max_parallel",2)<=2:
         raise ValueError("Ferrari Ruflo max_parallel must be 1 or 2")
     names=set()
@@ -76,6 +81,14 @@ def validate_job(doc):
             if set(item)-{"id","role","kind","mcp_requests"}:
                 raise ValueError("Unexpected REA task parameters")
             rea_mcp.validate_requests(item.get("mcp_requests"))
+        elif kind=="review":
+            if (set(item)-{"id","role","kind","input_from","acceptance"} or
+                    role_types[role] not in {"reviewer","tester"} or
+                    item.get("input_from") not in names):
+                raise ValueError("A quality review must consume a prior artifact using a reviewer/tester role")
+            quality_gate.validate(item.get("acceptance"))
+            if not item.get("acceptance"):
+                raise ValueError("Quality review requires an acceptance policy")
         else:
             raise ValueError("Unsupported Ruflo worker kind")
         names.add(sid)
@@ -195,6 +208,7 @@ def run(doc,folder,uploaded=None):
     report={"kind":"ruflo-host","host":doc["host"],
             "execution_mode":"one_host_ai_prepared_role_decisions",
             "independent_agent_model_calls":0,"ruflo_version":"3.71.0",
+            "verified_quality_reviews":0,"unreviewed_roles_are_only_ledger_entries":True,
             "roles":[],"steps":[],"status":"failed","cleanup_verified":False}
     state=HOME/".runtime"
     if state.is_symlink() or not state.is_dir():
@@ -235,6 +249,20 @@ def run(doc,folder,uploaded=None):
                 out=dest/step["id"]
                 if step["kind"]=="invoke":
                     return tool_runtime.invoke(step["action"],str(source),str(out),step.get("query"))
+                if step["kind"]=="review":
+                    previous=results[step["input_from"]]["artifacts"]
+                    evidence=quality_gate.inspect(previous,step["acceptance"])
+                    if evidence["status"]!="passed":
+                        raise RuntimeError("Ruflo quality review rejected artifact: "+"; ".join(evidence["failures"])[:400])
+                    out.mkdir(mode=0o700)
+                    item=out/"quality-review.json"
+                    item.write_text(json.dumps({"source_task":step["input_from"],
+                        "reviewed_by":step["role"],"quality":evidence,
+                        "verified_inputs":[{"name":Path(p).name,
+                            "sha256":hashlib.sha256(Path(p).read_bytes()).hexdigest()} for p in previous]},
+                        ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+                    return {"confirmed":True,"artifacts":[str(item)],
+                            "executor":"ferrari-quality-gate","operation":"review"}
                 return rea_mcp.invoke(step["mcp_requests"],out,None)
             results={}
             waiting=list(doc["steps"])
@@ -261,8 +289,11 @@ def run(doc,folder,uploaded=None):
                            "result":{"verified":True,"host":doc["host"],
                                      "executor":record["executor"]}})
                         report["steps"].append(record)
+                        if step["kind"]=="review":
+                            report["verified_quality_reviews"]+=1
                     waiting=[s for s in waiting if s not in batch]
             artifacts=[p for result in results.values() for p in result["artifacts"]]
+            report["unreviewed_roles_are_only_ledger_entries"]=report["verified_quality_reviews"]==0
             report["status"]="completed"
         finally:
             if swarm_id:
