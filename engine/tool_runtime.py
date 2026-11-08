@@ -254,14 +254,16 @@ def inventory():
         base_ops=BASE_OPERATIONS.get(tool,[]) if available else []
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
         present=bool(path or evidence or builtin)
-        state=("callable" if callable_ops or base_ops else
+        state=("candidate_not_admitted" if entry.get("admission")=="upstream_candidate_unverified" else
+               "callable" if callable_ops or base_ops else
                "runtime_dependency_verified" if runtime_verified else
                "installed_unintegrated" if present else "not_detected")
         detection=("private_runtime_smoke" if runtime_verified else
                    "executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
                    "ferrari_cpu_source" if source_evidence else "ferrari_builtin" if builtin else None)
-        return {"id":tool,"category":entry["category"],"source":source,"installed":present,
+        return {"id":tool,"category":entry["category"],"source":source,
+                "admission":entry.get("admission"),"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,
                 "runtime_probe":dependency.get("runtime_probe") if runtime_verified else None,
@@ -275,6 +277,20 @@ def inventory():
     records=[inspect(x,"shortlist_56") for x in selected]
     used={x["id"] for x in selected}
     records.extend(inspect(x,"auxiliary_catalogue") for x in helpers if x["id"] not in used)
+    used={p["id"] for p in records}
+    # The previous inventory silently excluded ~67 tools present only as
+    # upstream candidates. Cover EVERY tool in the ONE universal catalogue
+    # without falsely treating an upstream wish-list as installed or approved.
+    for entry in catalog["tools"]:
+        if entry["id"] not in used:
+            record=dict(entry)
+            record["bin"]=record.get("default_binary",entry["id"])
+            records.append(inspect(record,"upstream_candidate" if
+                                   entry.get("admission")=="upstream_candidate_unverified"
+                                   else "additional_catalogue"))
+            used.add(entry["id"])
+    if len(records)!=len(catalog["tools"]) or len(used)!=len(records):
+        raise ValueError("Ferrari universal program catalogue inventory coverage mismatch")
     picked=records[:len(selected)]
     absent=[p for p in picked if not p["installed"]]
     missing_by_tier={}
@@ -308,6 +324,13 @@ def inventory():
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
+            "programs_catalogued":len(catalog["tools"]),
+            "programs_preflighted":len(records),
+            "upstream_candidates_not_admitted":sum(
+                x["status"]=="candidate_not_admitted" for x in records),
+            "upstream_candidates_detected":sum(
+                x["status"]=="candidate_not_admitted" and x["installed"]
+                for x in records),
             "shared_dependencies":dependencies,
             "note":"Read-only Ferrari-private program discovery. Functions share one universal catalog; distinct execution routes retain validation. Discovery is not certification."}
 
