@@ -129,12 +129,12 @@ jobs:
           assert Path("skill/motor-universal-linux/agents/openai.yaml").is_file()
           print("Ferrari plugin identity and Skill source: PASS")
           PY
-          mkdir -p dist-plugin/motor-universal-linux/skills
-          cp packaging/motor-ferrari/plugin.json dist-plugin/motor-universal-linux/plugin.json
-          cp -a skill/motor-universal-linux dist-plugin/motor-universal-linux/skills/
-          (cd dist-plugin && zip -q -r ../ferrari-plugin-update.zip motor-universal-linux)
+          mkdir -p dist-plugin/.codex-plugin dist-plugin/skills
+          cp packaging/motor-ferrari/plugin.json dist-plugin/.codex-plugin/plugin.json
+          cp -a skill/motor-universal-linux dist-plugin/skills/
+          (cd dist-plugin && zip -q -r ../ferrari-plugin-update.zip .codex-plugin skills)
           unzip -t ferrari-plugin-update.zip | tail -n 1
-          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^motor-universal-linux/skills/[^/]+/SKILL.md$')"
+          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^skills/[^/]+/SKILL.md$')"
           test "$skill_count" -eq 1
 
       - name: Publish Ferrari plugin update package
