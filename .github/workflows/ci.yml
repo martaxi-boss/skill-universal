@@ -121,7 +121,7 @@ jobs:
           import json
           from pathlib import Path
           plugin = json.loads(Path("packaging/motor-ferrari/plugin.json").read_text(encoding="utf-8"))
-          assert plugin["$schema"] == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+          assert plugin["interface"]["displayName"] == "motor-universal-linux"
           assert plugin["name"] == "motor-universal-linux"
           assert plugin["version"] == "1.0.8"
           skill = Path("skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
