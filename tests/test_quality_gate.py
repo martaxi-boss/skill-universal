@@ -164,9 +164,9 @@ class RufloQualityTests(unittest.TestCase):
                 created.write_text('{"ok":true}')
                 return {"confirmed": True, "artifacts": [str(created)],
                         "executor": str(home / "tools/jq")}
-            with patch.object(ruflo_host, "HOME", home), \\
-                 patch.object(ruflo_host, "RufloMCP", _FakeMCP), \\
-                 patch.object(ruflo_host.tool_runtime, "invoke", side_effect=fake_invoke):
+            with (patch.object(ruflo_host, "HOME", home),
+                  patch.object(ruflo_host, "RufloMCP", _FakeMCP),
+                  patch.object(ruflo_host.tool_runtime, "invoke", side_effect=fake_invoke)):
                 result = ruflo_host.run(job, home / "output", src)
             self.assertTrue(result["confirmed"])
             report = json.loads((home / "output" / "ruflo-host-report.json").read_text())
