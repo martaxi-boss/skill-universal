@@ -1,6 +1,6 @@
 # BOOTSTRAP — Motor Ferrari / Skill Universal Ubuntu
 
-**Estado 08/11:** Ferrari VPS `e83ed6d` ativo, `e0509d5` fallback; Skill única v1.0.8 atualizada. [QA e provas](docs/CORRECAO_QA_TRABALHOS_REAIS_20261108.md).
+**Estado operacional mais recente, 08/11/2026 (verificado na VPS):** Ferrari `bf7f75f171d95b22635c00fc9c5150926c7a1ee8` **ativo**, `c97441f629c758aed8954a6075e6774eb5dd967c` preservado para rollback, validador da ponte fixado à release ativa e **Skill única v1.0.9** instalada. [Ativação protegida #42487157833](https://github.com/martaxi-boss/VPS/actions/runs/42487157833) PASS: **501 testes, 40/40 executores e 8/8 serviços**. [Caso web válido #42487501805](https://github.com/martaxi-boss/VPS/actions/runs/42487501805) PASS com links e capturas; [caso web inválido #42487495200](https://github.com/martaxi-boss/VPS/actions/runs/42487495200) FAILURE intencional, com `browser-check.json`, PNG desktop/mobile e diagnóstico exato do link `href="#"` preservados no ZIP. [Prova e limites de QA](docs/QA_WEB_PONTA_A_PONTA_20261108.md). **Os estados e releases de 06–07/11 descritos abaixo são históricos**, não substituem esta prova atual. Autonomia LLM independente dos subagentes, qualidade de fala natural, todos os programas auxiliares e todas as funcionalidades GUI **não estão certificados a 100%**.
 
 **Vozes:** Piper original e Raquel; ver Skill.
 
