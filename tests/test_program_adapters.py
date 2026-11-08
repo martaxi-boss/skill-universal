@@ -64,6 +64,19 @@ class FerrariProgramAdaptersTests(unittest.TestCase):
             self.assertEqual(area, 5000)
             self.assertEqual(wkt, "POLYGON((0 0,100 0,100 50,0 50,0 0))")
 
+    def test_qgis_accepts_one_multipolygon_and_rejects_bad_shapes(self):
+        outer = [[0, 0], [100, 0], [100, 50], [0, 50], [0, 0]]
+        self.assertEqual(
+            a._single_polygon_area({"type": "Polygon", "coordinates": [outer]}), 5000)
+        self.assertEqual(
+            a._single_polygon_area({"type": "MultiPolygon", "coordinates": [[outer]]}), 5000)
+        with self.assertRaises(RuntimeError):
+            a._single_polygon_area({"type": "MultiPolygon",
+                                    "coordinates": [[outer], [outer]]})
+        with self.assertRaises(RuntimeError):
+            a._single_polygon_area({"type": "Polygon",
+                                    "coordinates": [[[0, 0], [100, 0], [0, 50]]]})
+
     def test_godot_generates_real_scene_and_checks_engine_exit(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
