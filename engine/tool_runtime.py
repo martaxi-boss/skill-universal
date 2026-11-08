@@ -10,7 +10,7 @@ import json
 import importlib.util
 import os
 from pathlib import Path
-from engine import runtime_discovery, catalog_registry
+from engine import runtime_discovery, catalog_registry, runtime_health
 import re
 import shutil
 import subprocess
@@ -192,11 +192,20 @@ def shared_dependencies(catalog):
             raise ValueError("Ferrari shared dependency outside project")
         present=(candidate.is_file() and os.access(candidate,os.X_OK))
         callers=[t["id"] for t in catalog["tools"] if name in t.get("requires",[])]
-        records.append({"id":name,"version":entry["version"],
-                        "path":str(candidate),"reuse_key":key,
-                        "required_by":callers,"present":present,
-                        "status":"present_unverified" if present else "not_detected",
-                        "compatibility_certified":False})
+        record={"id":name,"version":entry["version"],
+                "path":str(candidate),"reuse_key":key,
+                "required_by":callers,"present":present,
+                "status":"present_unverified" if present else "not_detected",
+                "compatibility_certified":False}
+        # Only fixed, whitelisted, project-private execution smoke tests.
+        # A version/standard-library probe does NOT certify third-party ABI
+        # compatibility. Preserve that distinction in the returned report.
+        if name in runtime_health.COMMANDS:
+            evidence=runtime_health.probe_dependency(record,HOME)
+            record["runtime_probe"]=evidence
+            if evidence["runtime_smoke_pass"]:
+                record["status"]="runtime_smoke_pass"
+        records.append(record)
     return records
 
 
@@ -213,10 +222,21 @@ def inventory():
     python=ecosystems["python"]["tools"]
     npm=ecosystems["npm"]["tools"]
     containers=ecosystems["containers"]["tools"]
+    dependencies=shared_dependencies(catalog)
+    # The auxiliary catalogue previously called Python, Node and Java
+    # "not detected" even though these are Ferrari-owned shared runtimes.
+    # Expose verified runtime dependencies WITHOUT inventing a typed action.
+    runtime_aliases={"python":"python-3.12", "node":"node-22", "java":"java-25"}
+    runtime_index={x["id"]:x for x in dependencies}
     def inspect(entry,source):
         tool=entry["id"]
         base_bin=entry.get("bin") or BINARIES.get(tool,tool)
         path=executable(tool,base_bin)
+        dependency=runtime_index.get(runtime_aliases.get(tool))
+        runtime_verified=bool(dependency and
+                              dependency.get("runtime_probe",{}).get("runtime_smoke_pass"))
+        if not path and runtime_verified:
+            path=dependency["path"]
         module_evidence=python.get(tool) if not path else None
         npm_evidence=npm.get(tool) if not path and not module_evidence else None
         container_evidence=containers.get(tool) if not path and not module_evidence and not npm_evidence else None
@@ -235,13 +255,19 @@ def inventory():
         evidence=module_evidence or npm_evidence or (container_evidence[0] if container_evidence else None) or source_evidence
         present=bool(path or evidence or builtin)
         state=("callable" if callable_ops or base_ops else
+               "runtime_dependency_verified" if runtime_verified else
                "installed_unintegrated" if present else "not_detected")
-        detection=("executable" if path else "python_module" if module_evidence else
+        detection=("private_runtime_smoke" if runtime_verified else
+                   "executable" if path else "python_module" if module_evidence else
                    "npm_package" if npm_evidence else "ferrari_container" if container_evidence else
                    "ferrari_cpu_source" if source_evidence else "ferrari_builtin" if builtin else None)
         return {"id":tool,"category":entry["category"],"source":source,"installed":present,
                 "path":path or (evidence or {}).get("location"),"detection":detection,
                 "ecosystem_evidence":evidence,
+                "runtime_probe":dependency.get("runtime_probe") if runtime_verified else None,
+                "integration_role":("shared_runtime" if runtime_verified else
+                                    "direct_action" if callable_ops or base_ops else
+                                    "installed_support_only" if present else "not_detected"),
                 "actions":callable_ops,"base_operations":base_ops,
                 "installation_tier":entry.get("installation_tier"),
                 "apt_candidate":entry.get("installation_candidate"),
@@ -282,7 +308,7 @@ def inventory():
             "missing_by_tier":missing_by_tier,
             "callable_actions":sum(len(x["actions"]) for x in records),
             "programs":records,"ecosystems":ecosystems,"expansion":expansion,
-            "shared_dependencies":shared_dependencies(catalog),
+            "shared_dependencies":dependencies,
             "note":"Read-only Ferrari-private program discovery. Functions share one universal catalog; distinct execution routes retain validation. Discovery is not certification."}
 
 def unified_catalog(*, inventory_now=None):
