@@ -17,9 +17,9 @@ class AudioTranscribeTests(unittest.TestCase):
         self.assertIn("audio-transcribe", tool_runtime.BASE_OPERATIONS["faster-whisper"])
         from engine import catalog_registry
         doc = catalog_registry.read_catalog()
-        self.assertEqual(doc["counts"]["functions_base_operations"], 14)
-        self.assertEqual(doc["counts"]["functions"], 274)
-        self.assertEqual(doc["counts"]["all_catalog_entries"], 452)
+        self.assertEqual(doc["counts"]["functions_base_operations"], 17)
+        self.assertEqual(doc["counts"]["functions"], 277)
+        self.assertEqual(doc["counts"]["all_catalog_entries"], 455)
         with self.assertRaises(ValueError):
             skill_job.validate_job({"version":1,"kind":"operation",
                                     "id":"asr-bad","operation":"not-a-real-tool"})
