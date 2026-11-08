@@ -1,24 +1,17 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "motor-ferrari",
-  "version": "1.0.1",
-  "description": "Plugin privado de controlo da Skill Universal do Motor Ferrari na VPS Ubuntu, através da ligação GitHub autenticada e da ponte existente.",
-  "author": {
-    "name": "Forretas TV"
+  "name": "motor-universal-linux",
+  "version": "1.0.8",
+  "description": "Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, web, imagens, vídeo, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.",
+  "interface": {
+    "displayName": "motor-universal-linux",
+    "shortDescription": "Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, web, imagens, vídeo, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.",
+    "longDescription": "Skill única de controlo do Motor Ferrari Ubuntu. Para pedidos de criação, programação, web, imagens, vídeo, áudio, PDF, CAD/BIM/3D, dados, engenharia reversa autorizada e automação, usando GitHub autenticado e os executores Ferrari reais na VPS.",
+    "developerName": "Workspace upload",
+    "category": "Other",
+    "capabilities": [],
+    "defaultPrompt": null
   },
-  "repository": "https://github.com/martaxi-boss/skill-universal",
-  "extensions": {
-    "com.openai": {
-      "interface": {
-        "displayName": "Motor Ferrari — Skill Universal",
-        "shortDescription": "Motor Ferrari na VPS Ubuntu",
-        "longDescription": "Utiliza o motor Ferrari independente na VPS Ubuntu através do conector GitHub e da ponte existente para executar trabalhos implementados no motor, incluindo programação, documentos, imagens, websites e engenharia reversa autorizada.",
-        "developerName": "Forretas TV",
-        "category": "Developer Tools",
-        "capabilities": [
-          "Interactive"
-        ]
-      }
-    }
+  "author": {
+    "name": "Workspace upload"
   }
 }

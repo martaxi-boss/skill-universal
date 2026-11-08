@@ -265,6 +265,13 @@ def inventory():
             try:
                 content=json.loads(report.read_text(encoding="utf-8"))
                 if content.get("project")=="motor-ferrari" and isinstance(content.get("items"),list):
+                    # These installation records are historical snapshots, NOT
+                    # a fresh runtime, APT or executable probe. Do not present
+                    # INSTALLED_* strings from this file as current host state.
+                    content=dict(content)
+                    content["evidence_scope"]="historical_installation_snapshot"
+                    content["live_revalidated"]=False
+                    content["snapshot_file"]=filename
                     expansion[group]=content
             except (OSError,ValueError,UnicodeError):
                 pass

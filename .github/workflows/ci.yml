@@ -121,20 +121,20 @@ jobs:
           import json
           from pathlib import Path
           plugin = json.loads(Path("packaging/motor-ferrari/plugin.json").read_text(encoding="utf-8"))
-          assert plugin["$schema"] == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
-          assert plugin["name"] == "motor-ferrari"
-          assert plugin["version"]
+          assert plugin["interface"]["displayName"] == "motor-universal-linux"
+          assert plugin["name"] == "motor-universal-linux"
+          assert plugin["version"] == "1.0.8"
           skill = Path("skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
           assert skill.splitlines()[:2] == ["---", "name: motor-universal-linux"]
           assert Path("skill/motor-universal-linux/agents/openai.yaml").is_file()
           print("Ferrari plugin identity and Skill source: PASS")
           PY
-          mkdir -p dist-plugin/motor-ferrari/skills
-          cp packaging/motor-ferrari/plugin.json dist-plugin/motor-ferrari/plugin.json
-          cp -a skill/motor-universal-linux dist-plugin/motor-ferrari/skills/
-          (cd dist-plugin && zip -q -r ../ferrari-plugin-update.zip motor-ferrari)
+          mkdir -p dist-plugin/.codex-plugin dist-plugin/skills
+          cp packaging/motor-ferrari/plugin.json dist-plugin/.codex-plugin/plugin.json
+          cp -a skill/motor-universal-linux dist-plugin/skills/
+          (cd dist-plugin && zip -q -r ../ferrari-plugin-update.zip .codex-plugin skills)
           unzip -t ferrari-plugin-update.zip | tail -n 1
-          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^motor-ferrari/skills/[^/]+/SKILL.md$')"
+          skill_count="$(unzip -Z1 ferrari-plugin-update.zip | grep -Ec '^skills/[^/]+/SKILL.md$')"
           test "$skill_count" -eq 1
 
       - name: Publish Ferrari plugin update package
