@@ -33,7 +33,7 @@ class FerrariPhase8Coverage(unittest.TestCase):
         # The Fase 8 matrix is a historical certificate for its 12 base
         # operations, not a mutable count of newer certified functions.
         self.assertEqual(len(found),12)
-        self.assertEqual(set(found),set(ferrari.OPS)-{"audio-transcribe","image-analyze","librecad-dxf-pdf","qgis-buffer-5m","godot-starter"})
+        self.assertEqual(set(found),set(ferrari.OPS)-{"audio-transcribe","image-analyze","librecad-dxf-pdf","qgis-buffer-5m","godot-starter","docling-docx-markdown","valkey-kv-test"})
         self.assertIn("audio-transcribe",ferrari.OPS)
 
     def test_private_counts_and_missing_tools_are_explicit(self):

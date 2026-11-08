@@ -18,7 +18,7 @@ EXPECTED_ACTIVE_SHA = "40c0e1cdf31b1fe9589ad8be90e5eac06eec2856"
 # Historical VPS phase-5 fixture preserves the original immutable bytes.
 EXPECTED_LEGACY_SCRIPT_BLOB = "2b1f7703b96a963af01af02bc9617e7554b85a98"
 # The source-tree test uses the newer adapter-gated preactivation script.
-EXPECTED_SCRIPT_BLOB = "6d733dcecaadd6f1cf7cb32b9844eb1ad6747d9c"
+EXPECTED_SCRIPT_BLOB = "1ebfa84c05fe1e35d3eec8cf874ea83edc72c9fe"
 LIVE_ROOT = os.environ.get("FERRARI_PHASE5_LIVE_ROOT")
 ROOT = (Path(LIVE_ROOT) if LIVE_ROOT else Path(__file__).resolve().parents[1]).resolve()
 SCRIPT = (ROOT / "current/install/vps-isolated-release.sh"

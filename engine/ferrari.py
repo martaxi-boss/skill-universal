@@ -338,7 +338,7 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
         raise ValueError("Unsupported operation: no arbitrary shell")
     if system()["distro"] != "ubuntu":
         raise RuntimeError("Ferrari execution is supported only on Ubuntu")
-    p=_input(source) if op not in {"web-template","svg-poster","blender-house","godot-starter"} else None
+    p=_input(source) if op not in {"web-template","svg-poster","blender-house","godot-starter","valkey-kv-test"} else None
     if op=="web-template" and source is not None:
         # Optional HTML input uses the existing Skill operation and transport;
         # no new operation ID, validator pin, SSH or 40-action manifest changes.
@@ -399,6 +399,12 @@ def run(op,output,source=None,title="Novo Projeto",layout="landing"):
             exe, artifacts = program_adapters.qgis_buffer(p, folder)
         else:
             exe, artifacts = program_adapters.godot_starter(folder)
+    elif op=="docling-docx-markdown":
+        from engine import document_tools
+        exe,artifacts=document_tools.convert(p,Path(output).resolve())
+    elif op=="valkey-kv-test":
+        from engine import cache_tools
+        exe,artifacts=cache_tools.prove(Path(output).resolve())
     elif op=="audio-transcribe":
         # One universal catalog entry, executed using the Ferrari-owned
         # faster-whisper venv and offline model. NOT a TTS or paid API route.

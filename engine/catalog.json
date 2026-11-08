@@ -5782,13 +5782,13 @@
     "npm_package_definitions": 9,
     "ferrari_managed_container_candidates": 13,
     "mcp_capabilities": 220,
-    "all_catalog_entries": 455,
+    "all_catalog_entries": 457,
     "mcp_source_advertised": 229,
-    "functions": 277,
-    "functions_base_operations": 17,
+    "functions": 279,
+    "functions_base_operations": 19,
     "functions_typed_actions": 40,
     "functions_mcp": 220,
-    "all_universal_entries": 455
+    "all_universal_entries": 457
   },
   "admission_policy": {
     "platform": "Ubuntu 24.04 LTS",
@@ -9840,6 +9840,28 @@
       "invocation": {
         "kind": "operation",
         "operation": "godot-starter"
+      }
+    },
+    {
+      "id": "operation:docling-docx-markdown",
+      "name": "docling-docx-markdown",
+      "kind": "operation",
+      "program": "docling",
+      "category": "docs",
+      "invocation": {
+        "kind": "operation",
+        "operation": "docling-docx-markdown"
+      }
+    },
+    {
+      "id": "operation:valkey-kv-test",
+      "name": "valkey-kv-test",
+      "kind": "operation",
+      "program": "valkey",
+      "category": "data",
+      "invocation": {
+        "kind": "operation",
+        "operation": "valkey-kv-test"
       }
     }
   ],

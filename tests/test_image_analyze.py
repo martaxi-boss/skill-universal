@@ -35,8 +35,8 @@ class PrivateOpenCVTests(unittest.TestCase):
     def test_single_catalog_and_no_global_runtime(self):
         self.assertIn("image-analyze", ferrari.OPS)
         self.assertIn("image-analyze", tool_runtime.BASE_OPERATIONS["opencv"])
-        self.assertEqual(len(ferrari.OPS), 17)
-        self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 17)
+        self.assertEqual(len(ferrari.OPS), 19)
+        self.assertEqual(len(tool_runtime.BASE_OPERATIONS), 19)
         source = Path(image_tools.__file__).read_text()
         for forbidden in ("apt-get", "sudo ", "pip install", "shell=True", "shutil.which"):
             self.assertNotIn(forbidden, source)
