@@ -42,9 +42,14 @@ class OneToolCatalogTests(unittest.TestCase):
         self.assertEqual(inv["registered_actions"], 40)
         self.assertEqual(inv["selected"], 55)
         self.assertEqual(len(inv["shared_dependencies"]), 3)
-        self.assertTrue(all(d["status"] in {"present_unverified","not_detected"}
-                            and not d["compatibility_certified"]
-                            for d in inv["shared_dependencies"]))
+        self.assertTrue(all(d["status"] in {
+            "present_unverified","not_detected","runtime_smoke_pass",
+            "runtime_smoke_failed","probe_unavailable"} and
+            not d["compatibility_certified"]
+            for d in inv["shared_dependencies"]))
+        for dependency in inv["shared_dependencies"]:
+            if dependency["status"]=="runtime_smoke_pass":
+                self.assertTrue(dependency["runtime_probe"]["runtime_smoke_pass"])
         self.assertTrue(any(p["id"] == "rea" for p in inv["programs"]))
 
     def test_private_paths_and_ecosystem_discovery_use_same_catalog(self):
