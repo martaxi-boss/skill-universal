@@ -156,6 +156,7 @@ class RufloCatalogOperationTests(unittest.TestCase):
             {"operation": "cad-stl"},
             {"operation": "cad-stl", "input_from": "$input", "query": "rm -rf /"},
             {"operation": "cad-stl", "input_from": "$input", "layout": "shell"},
+            {"operation": "cad-stl", "input_from": "$input", "layout": {}},
             {"operation": "svg-poster", "input_from": "$input"},
         ]
         for example in cases:
