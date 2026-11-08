@@ -110,41 +110,74 @@ def environment(work):
     return env
 
 def probe_video(path,env,work):
-    ffprobe=private_exe("ffmpeg")
-    # ffprobe is a separate binary in the same verified private FFmpeg group.
-    probe=str((ROOT/"tools/ubuntu-cli/bin/ffprobe"))
-    if not Path(probe).is_file() or not os.access(probe,os.X_OK) or not Path(probe).resolve(strict=True).is_relative_to(ROOT/"tools"):
+    """Require decodable OBS frames AND a fully finalized playable private MP4."""
+    ffmpeg=private_exe("ffmpeg")
+    probe=ROOT/"tools/ubuntu-cli/bin/ffprobe"
+    if not probe.is_file() or not os.access(probe,os.X_OK) or not probe.resolve(strict=True).is_relative_to(ROOT/"tools"):
         raise RuntimeError("F14_OBS_PRIVATE_FFPROBE_MISSING")
-    p=subprocess.run([probe,"-v","error","-count_frames","-show_entries",
-        "format=duration,size:stream=codec_type,codec_name,width,height,nb_read_frames",
-        "-of","json",str(path)],capture_output=True,text=True,cwd=work,env=env,
-        timeout=40,check=False)
-    info={}
-    try:info=json.loads(p.stdout)
-    except ValueError:pass
-    tracks=[x for x in info.get("streams",[]) if x.get("codec_type")=="video"]
-    duration=info.get("format",{}).get("duration")
-    frame_count=0
-    for t in tracks:
-        try:frame_count+=int(t.get("nb_read_frames",0))
-        except (ValueError,TypeError):pass
-    data={"ffprobe_exit":p.returncode,"ffprobe_error":p.stderr[-250:],
-          "streams":len(info.get("streams",[])),"video_streams":len(tracks),
-          "video_frames_decoded":frame_count,"reported_duration":duration,
-          "file_bytes":path.stat().st_size}
-    try:d=float(duration)
-    except (TypeError,ValueError):d=0.0
-    # Some interrupted MKVs omit duration but have independently decodable frames;
-    # actual frames are required, not just a container header.
-    valid=p.returncode==0 and len(tracks)>0 and frame_count>=8 and (d==0.0 or 0.5<=d<=30)
-    if valid:
-        data.update({"status":"pass","duration_seconds":d if d else None,
-                     "sha256":digest(path),"mode":"synthetic_obs_recording_with_decoded_video_frames",
-                     "mic_camera_desktop_and_stream_disabled":True,
-                     "full_GUI_certified":False})
-    else:
-        data.update({"status":"not_certified","reason":"recording_lacks_verified_decodable_video_frames"})
-    return data
+
+    def metadata(filename,timeout=45):
+        proc=subprocess.run([str(probe),"-v","error","-count_frames","-show_entries",
+            "format=duration,size:stream=codec_type,codec_name,width,height,nb_read_frames",
+            "-of","json",str(filename)],capture_output=True,text=True,cwd=work,env=env,
+            timeout=timeout,check=False)
+        try:obj=json.loads(proc.stdout)
+        except (ValueError,TypeError):obj={}
+        tracks=[x for x in obj.get("streams",[]) if x.get("codec_type")=="video"]
+        frames=0
+        for t in tracks:
+            try:frames+=int(t.get("nb_read_frames",0))
+            except (ValueError,TypeError):pass
+        try:seconds=float(obj.get("format",{}).get("duration"))
+        except (TypeError,ValueError):seconds=0.0
+        return {"exit":proc.returncode,"error":proc.stderr[-220:],
+                "video_streams":len(tracks),"video_frames_decoded":frames,
+                "duration_seconds":seconds,
+                "width":int(tracks[0].get("width") or 0) if tracks else 0,
+                "height":int(tracks[0].get("height") or 0) if tracks else 0,
+                "bytes":filename.stat().st_size}
+
+    source=metadata(path)
+    report={"source_MKV":source,"source_mkv_sha256":digest(path),
+            "native_obs_mkv_fully_finalized":source["duration_seconds"]>0 and not source["error"],
+            "private_ffmpeg_postprocess":False}
+    if source["exit"] or source["video_streams"]<1 or source["video_frames_decoded"]<8:
+        report.update({"status":"not_certified","reason":"OBS_MKV_has_no_verified_decodable_video"})
+        return report
+
+    # The F14 r2 recording contained 398 actual frames but lost its
+    # Matroska end metadata. Explicitly finalize a NEW video with
+    # Ferrari's already-installed private FFmpeg (no fake OBS-native PASS).
+    target=work/"ferrari-obs-finalized.mp4"
+    proc=subprocess.run([ffmpeg,"-hide_banner","-nostdin","-loglevel","error",
+         "-threads","2","-y","-fflags","+genpts","-i",str(path),
+         "-map","0:v:0","-an","-t","30","-c:v","mpeg4","-q:v","5",
+         "-pix_fmt","yuv420p","-movflags","+faststart",str(target)],
+         cwd=work,env=env,capture_output=True,text=True,timeout=150,check=False)
+    report["ffmpeg_exit"]=proc.returncode
+    report["ffmpeg_diagnostic"]=proc.stderr[-280:]
+    if proc.returncode or not target.is_file() or target.stat().st_size<3000:
+        report.update({"status":"not_certified","reason":"private_ffmpeg_could_not_finalize_OBS_video"})
+        return report
+    final=metadata(target,timeout=55)
+    report["final_MP4"]=final
+    b=target.read_bytes()
+    if (b[4:8]!=b"ftyp" or final["exit"] or final["error"] or
+            final["video_streams"]!=1 or final["video_frames_decoded"]<8 or
+            not (0.5<=final["duration_seconds"]<=30) or
+            final["width"]<160 or final["height"]<90):
+        report.update({"status":"not_certified","reason":"finalized_MP4_not_independently_validated"})
+        return report
+    report.update({"status":"pass","mode":"real_OBS_synthetic_video_followed_by_private_FFmpeg_MP4_finalization",
+          "private_ffmpeg_postprocess":True,
+          "final_mp4_sha256":digest(target),
+          "final_mp4_bytes":target.stat().st_size,
+          "final_duration_seconds":final["duration_seconds"],
+          "final_decoded_video_frames":final["video_frames_decoded"],
+          "camera_mic_desktop_streaming_disabled":True,
+          "OBS_native_recording_completeness_not_claimed":True,
+          "full_GUI_certified":False})
+    return report
 
 def attempt():
     guard()
