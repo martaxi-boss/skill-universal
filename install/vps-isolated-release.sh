@@ -294,6 +294,33 @@ print("FERRARI_PRIVATE_DOCUMENT_CACHE_SMOKE=PASS")
 FERRARI_DOCUMENT_CACHE_REAL
 fi
 
+# Verify one real Prometheus parser operation BEFORE promoting the candidate.
+# This uses the pre-installed Ferrari-private promtool; no daemon, network
+# listener, package installation or modification to other projects.
+if "$PRIVATE_PYTHON" - <<'FERRARI_PROMETHEUS_RULES_PRESENT'
+from engine import ferrari
+assert "prometheus-rule-check" in ferrari.OPS
+FERRARI_PROMETHEUS_RULES_PRESENT
+then
+  "$PRIVATE_PYTHON" - "$WORK" <<'FERRARI_PROMETHEUS_RULES_REAL'
+import json
+from pathlib import Path
+import sys
+from engine import ferrari
+work=Path(sys.argv[1])
+rules=work/"prometheus-test.yml"
+rules.write_text("groups:\n  - name: ferrari_synthetic\n    rules:\n      - record: ferrari_synthetic_metric\n        expr: vector(1)\n",encoding="utf-8")
+result=ferrari.run("prometheus-rule-check",str(work/"prometheus-rules"),source=str(rules))
+assert result["confirmed"] and len(result["artifacts"])==2,result
+metadata=json.loads((work/"prometheus-rules"/"prometheus-rules-report.json").read_text())
+assert metadata["program"]=="prometheus" and metadata["rules_validated"]==1
+assert metadata["offline"] is True and metadata["daemon_started"] is False
+assert metadata["metrics_ingestion_certified"] is False
+assert (work/"prometheus-rules"/"promtool-check.txt").is_file()
+print("FERRARI_PRIVATE_PROMETHEUS_RULES_REAL=PASS")
+FERRARI_PROMETHEUS_RULES_REAL
+fi
+
 if [[ "$MODE" == "--check" ]]; then
   echo FERRARI_RELEASE_NOT_ACTIVATED_CHECK_ONLY
   exit 0
