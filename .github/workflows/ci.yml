@@ -123,7 +123,7 @@ jobs:
           plugin = json.loads(Path("packaging/motor-ferrari/plugin.json").read_text(encoding="utf-8"))
           assert plugin["interface"]["displayName"] == "motor-universal-linux"
           assert plugin["name"] == "motor-universal-linux"
-          assert plugin["version"] == "1.0.17"
+          assert plugin["version"] == "1.0.18"
           skill = Path("skill/motor-universal-linux/SKILL.md").read_text(encoding="utf-8")
           assert skill.splitlines()[:2] == ["---", "name: motor-universal-linux"]
           assert Path("skill/motor-universal-linux/agents/openai.yaml").is_file()
