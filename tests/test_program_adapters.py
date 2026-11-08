@@ -31,8 +31,8 @@ class FerrariProgramAdaptersTests(unittest.TestCase):
             "godot-starter": "godot",
         }
         self.assertEqual(len(doc["tools"]), 173)
-        self.assertEqual(len(doc["functions"]), 277)
-        self.assertEqual(doc["counts"]["all_catalog_entries"], 455)
+        self.assertEqual(len(doc["functions"]), 279)
+        self.assertEqual(doc["counts"]["all_catalog_entries"], 457)
         for name, program in expected.items():
             with self.subTest(name=name):
                 self.assertIn(name, ferrari.OPS)
