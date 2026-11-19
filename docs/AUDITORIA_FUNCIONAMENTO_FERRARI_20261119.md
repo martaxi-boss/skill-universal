@@ -2,9 +2,44 @@
 
 ## Veredito
 
+**Cumprimento do sistema de trabalho: confirmado nos novos ensaios do contrato BOOTSTRAP descritos abaixo.** O anfitrião orientar rondas e indicar chamadas tipadas está previsto no projeto; não é uma falha de autonomia.
+
 **Operacional nos percursos ensaiados hoje; certificação integral de 100% do catálogo não demonstrada.** Não foi detetada uma avaria no transporte, inventário, execução jq por Ruflo ou compilação web ensaiados. Há limitações de cobertura e melhorias concretas de validação e evidência. Não se atribui uma percentagem artificial.
 
 Auditoria realizada através da instalação original `motor-universal-linux`, do conector GitHub autenticado e da ponte existente GitHub Actions → VPS → response.zip. Os ZIP foram descarregados e abertos nesta conversa. Não houve implantação, atualização de dependências, limpeza de ficheiros da VPS ou alteração da ponte.
+
+## Verificação específica do contrato BOOTSTRAP
+
+**O sistema de trabalho previsto no BOOTSTRAP foi respeitado nos ensaios abaixo.** A arquitetura é uma IA anfitriã partilhada que interpreta e conduz rondas; Ruflo gere papéis, tarefas e dependências; Ferrari resolve e executa os programas privados e produz as evidências; outro papel revê; o anfitrião aceita o fecho.
+
+Chamadas tipadas indicadas pelo anfitrião fazem parte desse contrato. Não constituem uma lacuna de autonomia. O BOOTSTRAP também permite ações diretas em pedidos simples. A exigência de uma IA autónoma na VPS que dispense o anfitrião não faz parte do sistema construído e não deve ser usada para o reprovar.
+
+### Novos testes reais realizados após reler o BOOTSTRAP e o código
+
+| Teste | Prova |
+|---|---|
+| Seleção automática sem indicar uma ação: pedido “Converter markdown para docx”; Ferrari escolheu Pandoc privado, gerou DOCX e o conteúdo foi aberto e conferido | [44627477949](https://github.com/martaxi-boss/VPS/actions/runs/44627477949) |
+| Equipa Ruflo: construtor, testador e revisor; duas tarefas dependentes e permissões explícitas | [44627516885](https://github.com/martaxi-boss/VPS/actions/runs/44627516885) |
+| Proteção real: tentativa de identificar antes de aprovar a peça foi recusada com “Task dependencies are not independently approved” | [44627718668](https://github.com/martaxi-boss/VPS/actions/runs/44627718668) |
+| Construtor executou operation:cad-stl dentro da tarefa Ruflo; produziu STL real | [44627857872](https://github.com/martaxi-boss/VPS/actions/runs/44627857872) |
+| Revisor aprovou depois de abrir e medir STL e recalcular SHA-256 | [44628023665](https://github.com/martaxi-boss/VPS/actions/runs/44628023665) |
+| Testador consumiu o mesmo STL aprovado através de input_from=peca; file-mime real, sem reenviar o ficheiro | [44628172545](https://github.com/martaxi-boss/VPS/actions/runs/44628172545) |
+| Segunda revisão confirmou MIME coerente e hash real | [44628330865](https://github.com/martaxi-boss/VPS/actions/runs/44628330865) |
+| Fecho: completed, duas tarefas aprovadas, duas ferramentas verificadas e duas revisões, revisão final 5 | [44628432120](https://github.com/martaxi-boss/VPS/actions/runs/44628432120) |
+
+A falha do teste de proteção era o resultado esperado; a chamada CAD seguinte foi aceite ainda na revisão 0, confirmando que a tentativa bloqueada não avançou a sessão.
+
+**Peça verificada:** STL ASCII, 61 164 bytes, 404 triângulos, dimensões 42 × 30 × 8 mm, malha com todas as arestas usadas duas vezes, Euler −2 e dois furos de diâmetro 6 mm. Volume 9 628,9007 mm³, desvio de 0,0134% face ao modelo ideal devido à discretização circular. SHA-256: `18ab019b703e8636842dc20b887cd7cf692569fb04ff07410e753907c03f3564`.
+
+A identificação devolveu exatamente `text/plain\n`, correto para STL ASCII; SHA-256 da evidência de 11 bytes: `51a74e08056080b9d9bfc8b4334795301d213e39a0fa7f2c213da37632a6d842`.
+
+O modo auto implementado seleciona um adaptador instalado a partir do pedido e extensão; recusa ausência de correspondência ou empate. Esta seleção simples foi provada com Pandoc. Os trabalhos de equipa usam as rondas tipadas do anfitrião previstas no contrato.
+
+A produção do DOCX, a conversão CAD e a identificação ocorreram na VPS pela Ferrari. A leitura do DOCX e as medições locais foram a revisão da evidência pelo anfitrião exigida pelo BOOTSTRAP. Não substituíram os executores Ferrari.
+
+Os envelopes Ruflo continuam com `quality_gate=not_certified`, pois não foi pedida política automática de aceitação; a prova geométrica, os hashes e as revisões são evidências separadas. O ensaio auto DOCX teve `quality_gate=passed`.
+
+Fontes de implementação consultadas: BOOTSTRAP.md, engine/skill_job.py, engine/agent_team.py, engine/ruflo_host.py, engine/orchestrator.py, engine/tool_runtime.py, engine/cad_tools.py e catálogo único.
 
 ## Identidade, código e distribuição
 
